@@ -137,25 +137,6 @@ _.initializeAllSemesters = function(){
   }
 }
 
-_.checkAdmin = function(){
-  //process.env.userPID
-  return new Promise((resolve, reject)=>{
-    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-      if(result != null){
-        if(result.admin == true){
-          resolve(true);
-        }
-        else{
-          resolve(false);
-        }
-      }
-      else{
-        resolve(false);
-      }
-    });
-  });
-}
-
 _.checkFaculty = function(){
   return new Promise((resolve, reject)=>{
     schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
@@ -239,6 +220,25 @@ _.listObjectToString = function (input) {
     result = result + input[key] + "; ";
   }
   return result;
+}
+
+_.checkAdmin = function(){
+  //process.env.userPID
+  return new Promise((resolve, reject)=>{
+    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
+      if(result != null){
+        if(result.admin == true){
+          resolve(true);
+        }
+        else{
+          resolve(false);
+        }
+      }
+      else{
+        resolve(false);
+      }
+    });
+  });
 }
 
 _.adminRole = function(res){

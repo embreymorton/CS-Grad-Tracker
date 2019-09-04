@@ -262,29 +262,6 @@ studentController.formPage = function(req, res){
   }
 }
 
-
-// studentController.formPage = function(req, res){
-//   if(req.params._id != null){
-//     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-//       var student = result;
-//       schema.Form.find({student:result._id}).exec().then(function(result){
-//         var formTitles = schema.Form.schema.path("defaultTitle").enumValues;
-//         var existingForms = result;
-//         var uploadSuccess = false;
-//         if(req.params.uploadSuccess == "true"){
-//           uploadSuccess = true;
-//         }
-//         res.render("../views/student/forms", {student: student, formTitles: formTitles, uploadSuccess: uploadSuccess, existingForms: existingForms});
-//       });
-      
-//     });
-//   }
-//   else{
-//     res.render("../views/error.ejs", {string: "StudentId incorrect"});
-//   }
-// }
-
-
 studentController.uploadForm = function(req, res){
   var studId = req.params._id;
   if(studId != null){
@@ -396,28 +373,6 @@ studentController.updateForm = function(req, res){
     res.render("../views/error.ejs", {string: "Did not include student ID or title of form"});
   }
 }
-
-//pdf version of forms
-// studentController.viewForm = function(req, res){
-//   if(req.params.title != null && req.params._id != null){
-//     //make sure student exists
-//     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-//       if(result != null){
-//         var filePath = path.join(__dirname, "../data/forms/"+req.params._id+req.params.title+".pdf");
-//         fs.access(filePath, function(err){
-//           if(err){
-//             res.render("../views/error.ejs", {string: "File does not exist."});
-//           } 
-//           else{
-//             var file = fs.createReadStream(filePath);
-//             res.setHeader("Content-type", "application/pdf");
-//             file.pipe(res);
-//           }
-//         });
-//       }
-//     });
-//   }
-// }
 
 studentController.courses = function(req, res){
   if(req.params._id != null){
