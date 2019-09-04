@@ -687,9 +687,5 @@ function getGrants(){
 	});
 }
 
-function getConnectedStudents(){
-  
-}
-
 
 module.exports = jobController;

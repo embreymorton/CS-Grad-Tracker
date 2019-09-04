@@ -81,19 +81,6 @@ studentViewController.jobs = function(req, res){
 }
 
 studentViewController.forms = function(req, res){
-  // schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
-  //   var student = result;
-  //   schema.Form.find({student:result._id}).exec().then(function(result){
-  //     var formTitles = schema.Form.schema.path("defaultTitle").enumValues;
-  //     var existingForms = result;
-  //     var uploadSuccess = false;
-  //     if(req.params.uploadSuccess == "true"){
-  //       uploadSuccess = true;
-  //     }
-  //     res.render("../views/studentView/forms", {student: student, formTitles: formTitles, uploadSuccess: uploadSuccess, existingForms: existingForms});
-  //   });
-    
-  // });
   schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
     var student = result;
     res.render("../views/studentView/forms.ejs", {student: student});
@@ -101,24 +88,6 @@ studentViewController.forms = function(req, res){
 }
 
 studentViewController.viewForm = function(req, res){
-  // if(req.params.title != null && req.params._id != null){
-  //   //make sure student exists
-  //   schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-  //     if(result != null){
-  //       var filePath = path.join(__dirname, "../data/forms/"+req.params._id+req.params.title+".pdf");
-  //       fs.access(filePath, function(err){
-  //         if(err){
-  //           res.render("../views/error.ejs", {string: "File does not exist."});
-  //         } 
-  //         else{
-  //           var file = fs.createReadStream(filePath);
-  //           res.setHeader("Content-type", "application/pdf");
-  //           file.pipe(res);
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
   var signature = "In place of your signature, please type your full legal name:";
   if(req.params.title != null && req.params.uploadSuccess != null){
     var uploadSuccess = false;
