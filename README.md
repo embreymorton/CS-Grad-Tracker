@@ -21,7 +21,7 @@ In the past, Shane Flannigan worked on this project.
 Database connection and entry point to starting the server.
 
 ### app.js
-Authentication logic and express setup (routes, statis resources)
+Authentication logic and express setup (routes, static resources)
 
 ### routes
 All routes referenced in app.js are here. For each route (get/post) there is an associated
@@ -36,7 +36,7 @@ primary code and database logic and also serves the files in the
 views folder.
 
 ### models
-The one file schema.js in models describes all the database objects
+The one file, schema.js, in models describes all the database objects
 in use. Controllers store and retrieve data from the database as
 these defined objects.
 
@@ -55,3 +55,12 @@ Currently unused
 Currently used only to store test excel files, was used in the past
 for storing pdfs/documents for student objects, as mongo does not
 handle pdfs well.
+
+### Overview
+For example, app.js defines a route as app.use("/course", require("./routes/course"));
+This is causing routes/course.js to handle all requests for 
+csgrad.cs.unc.edu/course* (* being anything after course).
+routes/course.js has a route: router.get("/", course.get) with "course" being the 
+exported controllers/CourseController.js file, then whenever a user navigates to
+csgrad.cs.unc.edu/course, CourseController.js's function "get" will handle the request
+and serve the view file views/course/index.ejs.
