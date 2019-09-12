@@ -13,6 +13,7 @@
     "client-sessions": "^0.8.0",
     "compression": "^1.7.3",
     "connect-multiparty": "^2.1.1",
+    "cypress": "^3.4.1",
     "ejs": "^2.6.1",
     "express": "^4.15.0",
     "formidable": "^1.2.1",
@@ -52,7 +53,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://sc.unc.edu/viggy96/grad_project.git"
+    "url": 
   },
   "keywords": [
     "cs",
@@ -61,7 +62,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://sc.unc.edu/viggy96/grad_project/issues"
+    
   },
-  "homepage": "https://sc.unc.edu/viggy96/grad_project"
+  
 }

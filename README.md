@@ -15,7 +15,35 @@ In the past, Shane Flannigan worked on this project.
 
 # Documentation
 
- ## File organization
+## Starting the app
+
+
+### Running the database
+First, since we are connecting to a mongodb database, download mongodb at
+
+For windows:
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+Follow all default options on the installer,
+after it is completed, run 
+"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe"
+
+This will need to be running any time you want to start the app.
+
+For Ubuntu:
+
+
+
+Note that because we are running "mongod.exe", it is a database running locally
+on the computer.
+
+### Cloning and starting the app.
+
+
+Now to start the app in development or production with
+mode=development node bin/www  or  mode=production node bin/www
+
+
+## File organization
 
 ### bin/www
 Database connection and entry point to starting the server.

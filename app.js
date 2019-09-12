@@ -41,50 +41,64 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
-// routes to use for api
-//app.use("/api", index);
-
+if(process.env.mode == "production"){
 //adds user pid to environmental variable if it doesn't already exist.
-app.use(function(req, res, next){
-	if(!process.env.userPID){
-		var user = req.get("X-REMOTE-USER-1");
-		https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
-			let data="";
-			resp.on("data", (chunk)=>{
-				data+=chunk;
-			});
-			resp.on("end", ()=>{
-        var index = data.indexOf("pid");
-        //maybe change this to be more robust
-				var pid = data.substring(index + 5, index + 14);
-				process.env.userPID = parseInt(pid);
-				res.redirect("/");
-			});
-		});
-	}
-	else{
-    var user = req.get("X-REMOTE-USER-1");
-    https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
-      let data="";
-      resp.on("data", (chunk)=>{
-        data+=chunk;
+  app.use(function(req, res, next){
+    if(!process.env.userPID){
+      var user = req.get("X-REMOTE-USER-1");
+      https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
+        let data="";
+        resp.on("data", (chunk)=>{
+          data+=chunk;
+        });
+        resp.on("end", ()=>{
+          var index = data.indexOf("pid");
+          //maybe change this to be more robust
+          var pid = data.substring(index + 5, index + 14);
+          process.env.userPID = parseInt(pid);
+          res.redirect("/");
+        });
       });
-      resp.on("end", ()=>{
-        var index = data.indexOf("pid");
-        //maybe change this to be more robust
-        var pid = data.substring(index + 5, index + 14);
-        process.env.userPID = parseInt(pid);
-        next();
+    }
+    else{
+      var user = req.get("X-REMOTE-USER-1");
+      https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
+        let data="";
+        resp.on("data", (chunk)=>{
+          data+=chunk;
+        });
+        resp.on("end", ()=>{
+          var index = data.indexOf("pid");
+          //maybe change this to be more robust
+          var pid = data.substring(index + 5, index + 14);
+          process.env.userPID = parseInt(pid);
+          next();
+        });
       });
-    });
-	}
-});
+    }
+  });
 
-//global username locals (middleware)
-app.use(function(req, res, next){
-  res.locals.user = req.get("X-REMOTE-USER-1");
-  next();
-});
+  //global username locals (middleware)
+  app.use(function(req, res, next){
+    res.locals.user = req.get("X-REMOTE-USER-1");
+    next();
+  });
+}
+else if(process.env.mode == "development"){
+  app.use(function(req, res, next){
+    if(!process.env.userPID){
+      process.env.userPID = #####;
+      res.locals.user = #####;
+      next();
+    }
+    else{
+      res.locals.user = #####;
+      process.env.pid = #####;
+      next();
+    }
+    
+  });
+}
 
 app.get("/logout", (req, res)=>{
 	 process.env.userPID = "---------";
@@ -92,6 +106,7 @@ app.get("/logout", (req, res)=>{
 })
 
 app.get("/", (req, res) => {
+  console.log(process.env.mode);
   console.log(process.env.userPID);
 
   schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
