@@ -39,9 +39,19 @@ on the computer.
 ### Cloning and starting the app.
 
 
-Now to start the app in development or production with
-mode=development node bin/www  or  mode=production node bin/www
+Now to start the app in development or production run the following commands:
 
+If running in dev as an ADMIN:
+npm run devAsAdmin
+
+If running in dev as a FACULTY:
+npm run devAsFaculty
+
+If running in dev as a STUDENT:
+npm run devAsStudent
+
+If running in production:
+mode=production node bin/www
 
 ## File organization
 

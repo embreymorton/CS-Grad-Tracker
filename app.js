@@ -87,17 +87,37 @@ if(process.env.mode == "production"){
 else if(process.env.mode == "development"){
   app.use(function(req, res, next){
     if(!process.env.userPID){
-      process.env.userPID = #####;
-      res.locals.user = #####;
-      next();
+      var doc = new schema[process.env.model]();
+      doc.onyen = process.env.ONYEN;
+      doc.firstName = process.env.FIRSTNAME;
+      doc.lastName = process.env.LASTNAME;
+      doc.pid = process.env.PID;
+      doc.active = process.env.ACTIVE;
+      if(process.env.admin != null){
+        doc.admin = process.env.ADMIN;
+        doc.save().then(function(result){
+          setupDevVariables(res);
+          next();
+        });
+      }
+      else{
+        doc.save().then(function(result){
+          setupDevVariables(res);
+          next();
+        });
+      }
     }
     else{
-      res.locals.user = #####;
-      process.env.pid = #####;
+      setupDevVariables(res);
       next();
     }
     
   });
+}
+
+function setupDevVariables(res){
+  process.env.userPID = process.env.PID;
+  res.locals.user = process.env.ONYEN;
 }
 
 app.get("/logout", (req, res)=>{
