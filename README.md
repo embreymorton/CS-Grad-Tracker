@@ -59,7 +59,7 @@ handle pdfs well.
 ### Overview
 For example, app.js defines a route as app.use("/course", require("./routes/course"));
 This is causing routes/course.js to handle all requests for 
-csgrad.cs.unc.edu/course* (* being anything after course).
+csgrad.cs.unc.edu/course\* (\* being anything after course).
 routes/course.js has a route: router.get("/", course.get) with "course" being the 
 exported controllers/CourseController.js file, then whenever a user navigates to
 csgrad.cs.unc.edu/course, CourseController.js's function "get" will handle the request
