@@ -24,20 +24,31 @@ First, since we are connecting to a mongodb database, download mongodb at
 For windows:
 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 Follow all default options on the installer,
-after it is completed, run 
-"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe"
+after it is completed, make sure you have created a directory:
+C:\data\db, then run 
+
+"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" in bash
 
 This will need to be running any time you want to start the app.
 
 For Ubuntu:
 
-
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 
 Note that because we are running "mongod.exe", it is a database running locally
 on the computer.
 
 ### Cloning and starting the app.
 
+If you do not have npm:
+
+Download NPM and nodejs at: https://nodejs.org/en/
+Add npm to your systems PATH after it has finished installing.
+
+Cloning and setting up the app: 
+git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git
+cd CS-Grad-Tracking
+npm install
 
 Now to start the app in development or production run the following commands:
 
