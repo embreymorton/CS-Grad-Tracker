@@ -104,8 +104,6 @@ router.post('/delete/:_id', authorizeAdmin, student.delete);
 
 router.post("/deleteJob", authorizeAdmin, student.deleteJob);
 
-router.post("/uploadForm/:_id", authorizeAdmin, student.uploadForm);
-
 router.post("/upload", authorizeAdmin, student.upload);
 
 router.post("/addJobs", authorizeAdmin, student.addJobs);
