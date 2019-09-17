@@ -45,7 +45,7 @@ studentController.post = function (req, res) {
     });
   }
   else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    res.render("../views/error.ejs", {string: "Either onyen, firstName, lastName, pid, or advisor is null"});
   }
 }
 
@@ -112,11 +112,7 @@ studentController.delete = function (req, res) {
     personal student documents, just delete the documents. 
     */
     schema.Student.findOneAndRemove({_id: id}).exec().then(function(result){
-      if(result){
-        schema.Form.find({student: id}).remove().exec();
-        res.redirect("/student");
-      }
-      else res.render("../views/error.ejs", {string: "StudentNotFound"});
+      res.render("../views/error.ejs", {string: "StudentNotFound"});
     });
   }
 }
@@ -259,51 +255,6 @@ studentController.formPage = function(req, res){
   }
   else{
     res.render("../views/error.ejs", {string: "StudentId incorrect"});
-  }
-}
-
-studentController.uploadForm = function(req, res){
-  var studId = req.params._id;
-  if(studId != null){
-    schema.Student.findOne({_id: studId}).exec().then(function(result){
-      if(result != null){
-        var student = result;
-        var form = new formidable.IncomingForm();
-        form.parse(req, function(err, fields, files){
-          if(fields.title != null){
-            var formObject = {title:"", student:""};
-            if(fields.title == "Other"){
-              formObject.title = fields.other;
-            }
-            else{
-              formObject.title = fields.title;
-            }
-            formObject.student = student._id;
-            schema.Form.findOne({title: formObject.title}).exec().then(function(result){
-              if(result == null){
-                var inputForm = new schema.Form(util.validateModelData(formObject, schema.Form));
-                inputForm.save().then(function(result){
-
-                }).catch(function(err){
-                res.render("../views/error.ejs", {string: "form failed to save"});
-                });
-              }
-              var f = files[Object.keys(files)[0]];
-              var newpath = path.join(__dirname, "../data/forms/"+student._id+formObject.title+".pdf");
-              fs.rename(f.path, newpath, function(err){
-                res.redirect("/student/forms/"+studId+"/true");
-              });
-            });
-          }
-        });
-      }
-      else{
-        res.render("../views/error.ejs", {string: "Student not found"});
-      }
-    });
-  }
-  else{
-    res.render("../views/error.ejs", {string: "Required param not found"});
   }
 }
 
