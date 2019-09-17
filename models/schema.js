@@ -90,20 +90,6 @@ var studentSchema = mongoose.Schema({
   grades: [{type:mongoose.Schema.Types.ObjectId, ref: "Grade"}]
 });
 
-// Forms
-var formSchema = mongoose.Schema({
-  title: String,
-  student: {type:mongoose.Schema.Types.ObjectId, ref: "Student"},
-  defaultTitle: {
-    type: String,
-    enum: ["Background Preparation Worksheet", "Course Waiver", "M.S. Program of Study",
-      "Outside Review Option", "Request for Appointment of M.S. Committee", "Ph.D. Program of Study",
-      "Report of Disapproval of Dissertation Proposal", "Technical Writing Requirement",
-      "Report of Preliminary Research Presentation", "Teaching Requirement", "Report of Research Discussion",
-      "Program Product Requirement", "Transfer Credit Request", "Student Progress Report", "Other"]
-  }
-});
-
 // Semesters
 var semesterSchema = mongoose.Schema({
   year: Number,
@@ -405,7 +391,6 @@ var CS13Schema = mongoose.Schema({
 schema.Admin = mongoose.model("Admin", adminSchema);
 schema.Faculty = mongoose.model("Faculty", facultySchema);
 schema.Student = mongoose.model("Student", studentSchema);
-schema.Form = mongoose.model("Form", formSchema);
 schema.Semester = mongoose.model("Semester", semesterSchema);
 schema.Course = mongoose.model("Course", courseSchema);
 schema.CourseInfo = mongoose.model("CourseInfo", courseInfoSchema);
