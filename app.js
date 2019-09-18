@@ -85,6 +85,9 @@ if(process.env.mode == "production"){
   });
 }
 else if(process.env.mode == "development"){
+
+  require('./controllers/util.js').deleteData();
+
   app.use(function(req, res, next){
     if(!process.env.userPID){
       var doc = new schema[process.env.model]();

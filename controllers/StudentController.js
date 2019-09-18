@@ -11,7 +11,6 @@ var studentController = {}
 
 studentController.post = function (req, res) {
   var input = req.body;
-  console.log(input);
   input = verifyBoolean(input);
 
   if(input.phdAwardedDate != ""){
@@ -29,14 +28,13 @@ studentController.post = function (req, res) {
       }
       else {
         input.onyen = input.onyen.toLowerCase();
-        input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
-        input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
         var inputStudent = new schema.Student(util.validateModelData(input, schema.Student));
         /*use the then function because save() is asynchronous. If you only have inputStudent.save(); res.redirect...
         it is possible that the data does not save in time (or load in time if performing queries that return data
         that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
         reliant on database operations inside of the then function of those operations*/
         inputStudent.save().then(function(result){
+          console.log("AFTER SAVING:", result);
           res.redirect("/student/edit/"+result._id);
         });
       }
@@ -138,6 +136,7 @@ studentController.edit = function(req, res){
   if(req.params._id){
     schema.Student.findOne({_id: req.params._id}).populate("semesterStarted").populate("advisor").exec().then(function(result){
       if(result != null){
+        console.log("WHEN FINDING", result);
         var pronouns, genders, ethnicities, residencies, degrees, semesters, student;
         student = result;
         pronouns = schema.Student.schema.path("pronouns").enumValues;
