@@ -31,7 +31,7 @@
 									<label class="col-md-4">Onyen</label>
 									<div class="col-md-8">
 										<div><%=student.onyen%></div>
-										<input type="hidden" class="form-control" name="onyen" value="<%=student.onyen%>" required/>
+										<input type="hidden" class="form-control input-onyen" name="onyen" value="<%=student.onyen%>" required/>
 									</div>
 								</div>
 
@@ -40,7 +40,7 @@
 										<label class="col-md-4">CSID</label>
 										<div class="col-md-8">
 											<div><%=student.csid%></div>
-											<input type="hidden" class="form-control" name="csid" value="<%=student.csid%>" required/>
+											<input type="hidden" class="form-control input-csid" name="csid" value="<%=student.csid%>" required/>
 										</div>
 									</div>
 								<%}%>
@@ -49,28 +49,28 @@
 									<label class="col-md-4">Email</label>
 									<div class="col-md-8">
 										<div><%=student.email%></div>
-										<input type="hidden" class="form-control" name="email" value="<%=student.email%>" required/>
+										<input type="hidden" class="form-control input-email" name="email" value="<%=student.email%>" required/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputFirstname" class="col-md-4">First name *</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputFirstname" name="firstName" value="<%=student.firstName%>" required/>
+										<input type="text" class="form-control input-first-name" id="inputFirstname" name="firstName" value="<%=student.firstName%>" required/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputLastname" class="col-md-4">Last name *</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputLastname" name="lastName" value="<%=student.lastName%>" required/>
+										<input type="text" class="form-control input-last-name" id="inputLastname" name="lastName" value="<%=student.lastName%>" required/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputPronouns" class="col-md-4">Pronouns</label>
 									<div class="col-md-8">
-										<select name="pronouns" class="form-control" id="inputPronouns">
+										<select name="pronouns" class="form-control input-pronouns" id="inputPronouns">
 											<% for(var i=0; i<pronouns.length; i++) { %>
 												<option value="<%= pronouns[i]%>" <% if(student.pronouns === pronouns[i]) { %> selected <% } %>><%=pronouns[i]%></option>
 											<% } %>
@@ -82,14 +82,14 @@
 									<label class="col-md-4">PID</label>
 									<div class="col-md-8">
 										<div><%=student.pid%></div>
-										<input type="hidden" class="form-control" name="pid" value="<%=student.pid%>" required/>
+										<input type="hidden" class="form-control input-pid" name="pid" value="<%=student.pid%>" required/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputStatus" class="col-md-4">Status</label>
 									<div class="col-md-8">
-										<select name="status" class="form-control" id="inputStatus">
+										<select name="status" class="form-control input-status" id="inputStatus">
 											<% for(var i=0; i<status.length; i++) { %>
 												<option value=<%= status[i]%> <% if(student.status === status[i]) { %> selected <% } %>><%=status[i]%></option>
 											<% } %>
@@ -100,14 +100,14 @@
 								<div class="form-group row">
 									<label for="inputAltname" class="col-md-4">Alternative name</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputAltname" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
+										<input type="text" class="form-control input-alternative-name" id="inputAltname" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputGender" class="col-md-4">Gender</label>
 									<div class="col-md-8">
-										<select name="gender" class="form-control" id="inputGender">
+										<select name="gender" class="form-control input-gender" id="inputGender">
 											<% for(var i=0; i<genders.length; i++) { %>
 												<option value=<%= genders[i]%> <% if(student.gender === genders[i]) { %> selected <% } %>><%=genders[i]%></option>
 											<% } %>
@@ -118,7 +118,7 @@
 								<div class="form-group row">
 									<label for="inputEthnicity" class="col-md-4">Ethnicity</label>
 									<div class="col-md-8">
-										<select name="ethnicity" class="form-control" id="inputEthnicity">
+										<select name="ethnicity" class="form-control input-ethnicity" id="inputEthnicity">
 											<% for(var i=0; i<ethnicities.length; i++) { %>
 												<option value=<%= ethnicities[i]%> <% if(student.ethnicity === ethnicities[i]) { %> selected <% } %>><%=ethnicities[i]%></option>
 											<% } %>
@@ -129,7 +129,7 @@
 								<div class="form-group row">
 									<label for="inputResidency" class="col-md-4">Residency</label>
 									<div class="col-md-8">
-										<select name="residency" class="form-control" id="inputResidency">
+										<select name="residency" class="form-control input-residency" id="inputResidency">
 											<% for(var i=0; i<residencies.length; i++) { %>
 												<option value=<%= residencies[i]%> <% if(student.residency === residencies[i]) { %> selected <% } %>><%=residencies[i]%></option>
 											<% } %>
@@ -140,14 +140,14 @@
 								<div class="form-group row">
 									<label for="inputEnteringStatus" class="col-md-4">Entering status</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputEnteringStatus" name="enteringStatus" <% if(student.enteringStatus != null) { %> value="<%=student.enteringStatus%>" <% } %>/>
+										<input type="text" class="form-control input-entering-status" id="inputEnteringStatus" name="enteringStatus" <% if(student.enteringStatus != null) { %> value="<%=student.enteringStatus%>" <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputResearchArea" class="col-md-4">Research area</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputResearchArea" name="researchArea" <% if(student.researchArea != null) { %> value="<%=student.researchArea%>" <% } %>/>
+										<input type="text" class="form-control input-research-area" id="inputResearchArea" name="researchArea" <% if(student.researchArea != null) { %> value="<%=student.researchArea%>" <% } %>/>
 									</div>
 								</div>
 
@@ -157,14 +157,14 @@
 								<div class="form-group row">
 									<label for="inputLeaveExtension" class="col-md-4">Leave extension</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" id="inputLeaveExtension" name="leaveExtension" <% if(student.leaveExtension != null) { %> value="<%=student.leaveExtension%>" <% } %>/>
+										<input type="text" class="form-control input-leave-extension" id="inputLeaveExtension" name="leaveExtension" <% if(student.leaveExtension != null) { %> value="<%=student.leaveExtension%>" <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputIntendedDegree" class="col-md-4">Intended degree</label>
 									<div class="col-md-8">
-										<select name="intendedDegree" class="form-control" id="inputIntendedDegree">
+										<select name="intendedDegree" class="form-control input-intended-degree" id="inputIntendedDegree">
 											<% for(var i=0; i<degrees.length; i++) { %>
 												<option value=<%= degrees[i]%> <% if(student.intenededDegree === degrees[i]) { %> selected <% } %>><%=degrees[i]%></option>
 											<% } %>
@@ -175,21 +175,21 @@
 								<div class="form-group row">
 									<label for="inputHoursCompleted" class="col-md-4">Hours completed</label>
 									<div class="col-md-8">
-										<input type="number" class="form-control" id="inputHoursCompleted" name="hoursCompleted" <% if(student.hoursCompleted != null) { %> value=<%=student.hoursCompleted%> <% } %>/>
+										<input type="number" class="form-control input-hours-completed" id="inputHoursCompleted" name="hoursCompleted" <% if(student.hoursCompleted != null) { %> value=<%=student.hoursCompleted%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputCitizenship" class="col-md-4">US Citizenship</label>
 									<div class="col-md-8">
-										<input type="checkbox" class="form-check-input" id="inputCitizenship" name="citizenship" value="true" <% if(student.citizenship === true) { %> checked <% } %>/>
+										<input type="checkbox" class="form-check-input input-citizenship" id="inputCitizenship" name="citizenship" value="true" <% if(student.citizenship === true) { %> checked <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputFundingEligibility" class="col-md-4">Funding eligibility</label>
 									<div class="col-md-8">
-										<select name="fundingEligibility" class="form-control" id="inputFundingEligibility">
+										<select name="fundingEligibility" class="form-control input-funding-eligibility" id="inputFundingEligibility">
 											<% for(var i=0;i<eligibility.length; i++) { %>
 												<option value="<%= eligibility[i]%>" <% if(student.fundingEligibility === eligibility[i]) { %> selected <% } %>><%=eligibility[i]%></option>
 											<% } %>
@@ -200,35 +200,35 @@
 								<div class="form-group row">
 									<label for="inputBackgroundApproved" class="col-md-4">Background approved</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputBackgroundApproved" name="backgroundApproved" <% if(student.backgroundApproved != null) { %> value=<%=student.backgroundApproved.toISOString().substring(0,10)%> <% } %> />
+										<input type="date" class="form-control input-background-approved" id="inputBackgroundApproved" name="backgroundApproved" <% if(student.backgroundApproved != null) { %> value=<%=student.backgroundApproved.toISOString().substring(0,10)%> <% } %> />
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputMastersAwarded" class="col-md-4">Masters awarded</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputMastersAwarded" name="mastersAwarded" <% if(student.mastersAwarded != null) { %> value=<%=student.mastersAwarded.toISOString().substring(0,10)%> <% } %> />
+										<input type="date" class="form-control input-masters-awarded" id="inputMastersAwarded" name="mastersAwarded" <% if(student.mastersAwarded != null) { %> value=<%=student.mastersAwarded.toISOString().substring(0,10)%> <% } %> />
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputPrpPassed" class="col-md-4">prp passed</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputPrpPassed" name="prpPassed" <% if(student.prpPassed != null) { %> value=<%=student.prpPassed.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-prp-passed" id="inputPrpPassed" name="prpPassed" <% if(student.prpPassed != null) { %> value=<%=student.prpPassed.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputBackgroundPrepWorksheetApproved" class="col-md-4">Background prep worksheet approved</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputBackgroundPrepWorksheetApproved" name="backgroundPrepWorksheetApproved" <% if(student.backgroundPrepWorksheetApproved != null) { %> value=<%=student.backgroundPrepWorksheetApproved.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-background-prep-worksheet-approved" id="inputBackgroundPrepWorksheetApproved" name="backgroundPrepWorksheetApproved" <% if(student.backgroundPrepWorksheetApproved != null) { %> value=<%=student.backgroundPrepWorksheetApproved.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputProgramOfStudyApproved" class="col-md-4">Program of study approved</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputProgramOfStudyApproved" name="programOfStudyApproved" <% if(student.programOfStudyApproved != null) { %> value=<%=student.programOfStudyApproved.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-program-of-study-approved" id="inputProgramOfStudyApproved" name="programOfStudyApproved" <% if(student.programOfStudyApproved != null) { %> value=<%=student.programOfStudyApproved.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
@@ -239,56 +239,56 @@
 								<div class="form-group row">
 									<label for="inputResearchPlanningMeeting" class="col-md-4">Research planning meeting</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputResearchPlanningMeeting" name="researchPlanningMeeting" <% if(student.researchPlanningMeeting != null) { %> value=<%=student.researchPlanningMeeting.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-research-planning-meeting" id="inputResearchPlanningMeeting" name="researchPlanningMeeting" <% if(student.researchPlanningMeeting != null) { %> value=<%=student.researchPlanningMeeting.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputCommitteeCompApproved" class="col-md-4">Committee comp approved</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputCommitteeCompApproved" name="committeeCompApproved" <% if(student.committeeCompApproved != null) { %> value=<%=student.committeeCompApproved.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-committee-comp-approved" id="inputCommitteeCompApproved" name="committeeCompApproved" <% if(student.committeeCompApproved != null) { %> value=<%=student.committeeCompApproved.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputPhdProposalApproved" class="col-md-4">phD proposal approved</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputPhdProposalApproved" name="phdProposalApproved" <% if(student.phdProposalApproved != null) { %> value=<%=student.phdProposalApproved.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-phd-proposal-approved" id="inputPhdProposalApproved" name="phdProposalApproved" <% if(student.phdProposalApproved != null) { %> value=<%=student.phdProposalApproved.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputOralExamPassed" class="col-md-4">Oral exam passed</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputOralExamPassed" name="oralExamPassed" <% if(student.oralExamPassed != null) { %> value=<%=student.oralExamPassed.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-oral-exam-passed" id="inputOralExamPassed" name="oralExamPassed" <% if(student.oralExamPassed != null) { %> value=<%=student.oralExamPassed.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputDissertationDefencePassed" class="col-md-4">Dissertation defence passed</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputDissertationDefencePassed" name="dissertationDefencePassed" <% if(student.dissertationDefencePassed != null) { %> value=<%=student.dissertationDefencePassed.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-dissertation-defence-passed" id="inputDissertationDefencePassed" name="dissertationDefencePassed" <% if(student.dissertationDefencePassed != null) { %> value=<%=student.dissertationDefencePassed.toISOString().substring(0,10)%> <% } %>/>
 									</div>	
 								</div>
 
 								<div class="form-group row">
 									<label for="inputDissertationSubmitted" class="col-md-4">Dissertation submitted</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputDissertationSubmitted" name="dissertationSubmitted" <% if(student.dissertationSubmitted != null) { %> value=<%=student.dissertationSubmitted.toISOString().substring(0,10)%> <% } %>/>
+										<input type="date" class="form-control input-dissertation-submitted" id="inputDissertationSubmitted" name="dissertationSubmitted" <% if(student.dissertationSubmitted != null) { %> value=<%=student.dissertationSubmitted.toISOString().substring(0,10)%> <% } %>/>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputPHDAwarded" class="col-md-4">PhD. Awarded</label>
 									<div class="col-md-8">
-										<input type="date" class="form-control" id="inputPHDAwarded" name="phdAwardedDate" <% if(student.phdAwardedDate != null) { %> value=<%=student.phdAwardedDate.toISOString().substring(0,10)%> <% } %> />
+										<input type="date" class="form-control input-phd-awarded" id="inputPHDAwarded" name="phdAwardedDate" <% if(student.phdAwardedDate != null) { %> value=<%=student.phdAwardedDate.toISOString().substring(0,10)%> <% } %> />
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputSemesterStarted" class="col-md-4">Semester started</label>
 									<div class="col-md-8">
-										<select name="semesterStarted" class="form-control" id="inputSemesterStarted">
+										<select name="semesterStarted" class="form-control input-semester-started" id="inputSemesterStarted">
 											<option value=""></option>
 											<% for(var i=0; i<semesters.length; i++) { %>
 												<option value=<%= semesters[i]._id%> <% if(student.semesterStarted != null && student.semesterStarted._id.equals(semesters[i]._id)) { %> selected <% } %>><%=semesters[i].season%> <%=semesters[i].year%></option>
@@ -300,7 +300,7 @@
 								<div class="form-group row">
 									<label for="inputAdvisor" class="col-md-4">Advisor</label>
 									<div class="col-md-8">
-										<select name="advisor" class="form-control" id="inputAdvisor" required>
+										<select name="advisor" class="form-control input-advisor" id="inputAdvisor" required>
 											<option value=""></option>
 											<% for(var i=0; i<faculty.length; i++) { %>
 												<option value=<%= faculty[i]._id%> <% if(student.advisor != null && student.advisor._id.equals(faculty[i]._id)) { %> selected <% } %>><%=faculty[i].lastName%>, <%=faculty[i].firstName%></option>
