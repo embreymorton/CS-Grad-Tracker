@@ -127,7 +127,7 @@ _.makeRegexp = function(input){
 
 //used just once to initialize all possible semesters
 _.initializeAllSemesters = function(){
-  schema.Semester.find({}).remove().exec();
+  schema.Semester.find({}).deleteMany().exec();
   var seasons = schema.Semester.schema.path("season").enumValues;
   for(var i = 2018; i < 2040; i++){
     for(var j = 0; j < seasons.length; j++){
@@ -255,5 +255,13 @@ _.adminRole = function(res){
       });
   });
 }
+
+_.deleteData = function(){
+  for(var key in schema){
+    schema[key].find({}).deleteMany().exec();
+  }
+  _.initializeAllSemesters();
+}
+
 
 module.exports = _;
