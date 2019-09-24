@@ -80,7 +80,7 @@ var studentSchema = mongoose.Schema({
   researchPlanningMeeting: Date,
   committeeCompApproved: Date,
   phdProposalApproved: Date,
-  phdAwardedDate: Date,
+  phdAwarded: Date,
   oralExamPassed: Date,
   dissertationDefencePassed: Date,
   dissertationSubmitted: Date,
