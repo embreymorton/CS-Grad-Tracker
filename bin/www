@@ -20,6 +20,8 @@ if (process.env.MONGODB_PASSWORD) {
     process.env.MONGODB_DATABASE
 }
 
+console.log(connectionString);
+
 var config = {
   production: connectionString || 'mongodb://localhost/cs_grad_data',
   development: connectionString || 'mongodb://localhost/cs_grad_data-dev',
