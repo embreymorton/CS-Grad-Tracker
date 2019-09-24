@@ -30,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
+    "cypress-file-upload": "^3.3.3",
     "mocha": "^5.2.0",
     "standard": "^9.0.1"
   },
