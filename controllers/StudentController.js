@@ -31,7 +31,6 @@ studentController.post = function (req, res) {
         that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
         reliant on database operations inside of the then function of those operations*/
         inputStudent.save().then(function(result){
-          console.log("AFTER SAVING:", result);
           res.redirect("/student/edit/"+result._id);
         });
       }
@@ -133,7 +132,6 @@ studentController.edit = function(req, res){
   if(req.params._id){
     schema.Student.findOne({_id: req.params._id}).populate("semesterStarted").populate("advisor").exec().then(function(result){
       if(result != null){
-        console.log("WHEN FINDING", result);
         var pronouns, genders, ethnicities, residencies, degrees, semesters, student;
         student = result;
         pronouns = schema.Student.schema.path("pronouns").enumValues;
