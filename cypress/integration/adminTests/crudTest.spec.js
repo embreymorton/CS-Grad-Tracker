@@ -1,15 +1,3 @@
-function visitStudentPage(){
-    cy.visit('http://localhost:8080');
-
-    //should be a new url (routes to /student because user is an admin)
-    cy.url().should('include', '/student');
-}
-
-function visitPage(link){
-    cy.visit('http://localhost:8080'+link);
-    cy.url().should('include', link);
-}
-
 const currentDate = "2019-09-19";
 const pastDate = "2019-02-02";
 
@@ -40,6 +28,13 @@ const studentTextFields = {
     'dissertation-submitted': currentDate,
 }
 
+const job = {
+    position: "TA",
+    supervisor: "admin, admin",
+    description: "A TA JOB",
+    hours: "4",
+}
+
 const studentDropdownFields = {
     pronouns: 'she, her',
     status: 'Active',
@@ -50,83 +45,20 @@ const studentDropdownFields = {
     'funding-eligibility': 'GUARANTEED',
 }
 
-describe("Visits the page", function(){
-    it('Visiting the homepage as admin should route to /student', function(){
-        
-        visitStudentPage();
-        
-    });
+const course = {
+    univNumber: '1234',
+    category: 'Theory',
+    topic: 'N/A',
+    section: '1',
+    faculty: 'admin, admin',
+    semester: 'FA 2018'
+}
 
-    it('Clicking on links in sidebar should route to correct pages', function(){
-        
-        visitStudentPage();
-
-        const sidebarButtons = {
-            '.report-button': '/report',
-            '.course-button': '/course',
-            '.faculty-button': '/faculty',
-            '.job-button': '/job',
-            '.student-button': '/student'
-        }
-
-        for(var key in sidebarButtons){
-            cy.get(key).click();
-            cy.url().should('contain', sidebarButtons[key]);
-        }
-    });
-
-    it('Clicking page specific sidebar links should route to correct pages', function(){
-        
-        visitStudentPage();
-
-        visitPage('/course');
-
-        cy.get('.create-course-button').click();
-        cy.url().should('contain', '/course/create');
-
-        cy.get('.upload-course-button').click();
-        cy.url().should('contain', '/course/upload');
-
-        cy.get('.upload-course-info-button').click();
-        cy.url().should('contain', '/course/uploadInfo');
-
-
-        visitPage('/faculty');
-
-        cy.get('.create-faculty-button').click();
-        cy.url().should('contain', '/faculty/create');
-
-        cy.get('.upload-faculty-button').click();
-        cy.url().should('contain', '/faculty/upload');
-
-        
-        visitPage('/job');
-
-        cy.get('.create-job-button').click();
-        cy.url().should('contain', '/job/create');
-
-        cy.get('.upload-job-button').click();
-        cy.url().should('contain', '/job/upload');
-
-        cy.get('.upload-grant-button').click();
-        cy.url().should('contain', '/job/uploadGrant');
-
-
-        visitPage('/student')
-
-        cy.get('.create-student-button').click();
-        cy.url().should('contain', '/student/create');
-
-        cy.get('.upload-student-button').click();
-        cy.url().should('contain', '/student/upload');
-
-        cy.get('.upload-courses-button').click();
-        cy.url().should('contain', '/student/uploadCourses');
-    });
+describe("Upload and create data", function(){
 
     it('Uploading course info should correctly store data in database', function(){
 
-        visitPage('/course/uploadInfo/false');
+        cy.visit('/course/uploadInfo/false');
 
         const fileName = '../../data/courseInfo.csv'
         cy.fixture(fileName).then(fileContent => {
@@ -135,7 +67,7 @@ describe("Visits the page", function(){
 
         cy.get('.upload-course-info-submit').click();
 
-        visitPage('/course/create');
+        cy.visit('/course/create');
         
         var re = /[0-9]{3}, [a-z,A-Z, ,&]*, [0-9] hours/;
         cy.get('.input-course-info > option')
@@ -143,16 +75,7 @@ describe("Visits the page", function(){
     })
 
     it('Creating a course should correctly add a course to the database', ()=>{
-        visitPage('/course/create');
-
-        const course = {
-            univNumber: '1234',
-            category: 'Theory',
-            topic: 'N/A',
-            section: '1',
-            faculty: 'admin, admin',
-            semester: 'FA 2018'
-        }
+        cy.visit('/course/create');
 
         cy.get('select[name=courseInfo] > option')
         .eq(1)
@@ -198,20 +121,51 @@ describe("Visits the page", function(){
         .contains(course.semester);
     });
 
+
     it('Creating a Job with role TA should correctly add a job to the database', ()=>{
+        cy.visit('/job/create');
+        
+
+        cy.get('.input-position')
+        .select(job.position)
+        .should('have.value', job.position);
+
+        cy.get('.input-supervisor')
+        .select(job.supervisor);
+
+        cy.get('.input-course > option')
+        .eq(1)
+        .then((element) => cy.get('.input-course').select(element.val()));;
+        
+        cy.get('.input-description')
+        .type(job.description)
+        .should('have.value', job.description);
+
+        cy.get('.input-hours')
+        .type(job.hours)
+        .should('have.value', job.hours);
+
+        cy.get('.submit-job').click();
+
+        cy.url().should('contain', '/job/edit');
+
+        cy.get('.input-position')
+        .should('have.value', job.position);
+
+        cy.get('.input-supervisor')
+        .invoke('text').should('include', job.supervisor);
+
+        cy.get('.input-description')
+        .should('have.value', job.description);
+
+        cy.get('.input-hours')
+        .should('have.value', job.hours);
     })
 
-    it('Creating a Job with role RA should correctly add a job to the database', ()=>{
-
-    })
-
-    it('Searching for a course should return the single course and you should be able to delete it', ()=>{
-
-    })
 
     it('Clicking on create student from /student and creating a student should add a student to the database', function(){
 
-        visitPage('/student/create');
+        cy.visit('/student/create');
 
         //fill in text field data to the student create form
         for(var key in studentTextFields){
@@ -247,17 +201,95 @@ describe("Visits the page", function(){
         }
     });
 
-    it('Should correctly upload courseInfo to courseInfo model in database', function(){
 
-        cy.visit('http://localhost:8080/course');
 
+});
+
+describe("Delete data", function(){
+
+    it('Searching for a job should return the single job and you should be able to delete it', ()=>{
+        cy.visit('/job');
+
+        searchJobHelper();
+
+        cy.get('.job-table').find('tr').should('have.length', 2);
+
+        //first column is position, check if it contains the expected value
+        cy.get('tbody > tr > td').eq(0).contains(job.position);
+
+        console.log(cy.get('tbody > tr > td').eq(1).invoke('text'));
+        cy.get('tbody > tr > td').eq(1).contains(job.supervisor);
+
+        cy.get('tbody > tr > td').eq(4).contains(job.hours);
+
+        cy.get('.delete-job-button').click();
+
+        searchJobHelper();
+
+        cy.contains('No jobs found.');
+    })
+
+    function searchJobHelper(){
+        cy.get('input[name=position]')
+        .type(job.position);
+
+        cy.get('select[name=supervisor]')
+        .select(job.supervisor);
+
+        cy.get('.search-job-submit').click();
+    }
+
+    it('Searching for a course should return the single course and you should be able to delete it', ()=>{
+        cy.visit('/course');
+
+        /*
+        Right now, I can't think of a good solution for getting the name/course number
+        to search for the course that was created earlier, because that data 
+        was uploaded in a separate csv and is not defined in this file. 
+        */
+        searchCourseHelper();
+
+        cy.get('.course-table').find('tr').should('have.length', 2);
+
+        cy.get('tbody > tr > td').eq(0).contains('101');
+
+        cy.get('tbody > tr > td').eq(3).contains('Fluency in Information Technology');
+
+        cy.get('.delete-course-button').click();
+
+        searchCourseHelper();
+
+        cy.contains('No courses found.');
+    })
+
+    function searchCourseHelper(){
+        cy.get('input[name=number]')
+        .type('101')
+
+        cy.get('input[name=name]')
+        .type('Fluency in Information Technology')
+
+        cy.get('.search-course-button').click();
+    }
+
+    it('Searching for a student should return the single student and you should be able to delete it', function(){
+        cy.visit('/student');
+
+        searchStudentHelper();
+
+        cy.get('.student-table').find('tr').should('have.length', 2);
+
+        //select first value of table to make sure it is the student we searched for
+        cy.get('tbody > tr > td').eq(0).contains(studentTextFields.onyen);
+
+        cy.get('.delete-student-submit').click();
+
+        searchStudentHelper();
+
+        cy.contains('No student found.');
     });
 
-
-
-    it('Searching for and clicking the trash button on /student should delete the student from the database', function(){
-        visitStudentPage();
-
+    function searchStudentHelper(){
         cy.get('.search-last-name')
         .type(studentTextFields["last-name"])
         .should('have.value', studentTextFields["last-name"])
@@ -267,10 +299,5 @@ describe("Visits the page", function(){
         .should('have.value', studentTextFields.pid)
 
         cy.get('.search-student-submit').click();
-
-        //select first value of table to make sure it is the student we searched for
-        cy.get('tbody > tr > td').eq(0).contains(studentTextFields.onyen);
-
-        cy.get('.delete-student-submit').click();
-    });
+    }
 })
