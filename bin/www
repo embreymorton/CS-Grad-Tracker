@@ -20,17 +20,9 @@ if (process.env.MONGODB_PASSWORD) {
     process.env.MONGODB_DATABASE
 }
 
-console.log(connectionString);
+var config = require('../config.js');
 
-var config = {
-  production: connectionString || 'mongodb://localhost/cs_grad_data',
-  development: connectionString || 'mongodb://localhost/cs_grad_data-dev',
-  test: connectionString || 'mongodb://localhost/cs_grad_data-test',
-  port: (process.env.MONGODB_PASSWORD) ? 8080 : 8080,
-  host: (process.env.MONGODB_PASSWORD) ? '0.0.0.0' : '127.0.0.1'
-}
-
-mongoose.connect(config[app.settings.env])
+mongoose.connect(config[process.env.mode])
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
