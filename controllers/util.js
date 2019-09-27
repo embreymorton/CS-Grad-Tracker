@@ -256,12 +256,5 @@ _.adminRole = function(res){
   });
 }
 
-_.deleteData = function(){
-  for(var key in schema){
-    schema[key].find({}).deleteMany().exec();
-  }
-  _.initializeAllSemesters();
-}
-
 
 module.exports = _;
