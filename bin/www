@@ -21,9 +21,9 @@ if (process.env.MONGODB_PASSWORD) {
 }
 
 var config = {
-  production: connectionString || 'mongodb://localhost/cs_grad_data',
-  development: connectionString || 'mongodb://localhost/cs_grad_data-dev',
-  test: connectionString || 'mongodb://localhost/cs_grad_data-test',
+  production: connectionString || 'mongodb://mongo:27017/cs_grad_data',
+  development: connectionString || 'mongodb://mongo:27017/cs_grad_data-dev',
+  test: connectionString || 'mongodb://mongo:27017/cs_grad_data-test',
   port: (process.env.MONGODB_PASSWORD) ? 8080 : 8080,
   host: (process.env.MONGODB_PASSWORD) ? '0.0.0.0' : '127.0.0.1'
 }
