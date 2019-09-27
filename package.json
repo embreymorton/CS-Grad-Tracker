@@ -43,9 +43,12 @@
     "start": "node bin/www",
     "cypress:open": "./node_modules/.bin/cypress open",
     "production": "cross-env mode=production node bin/www",
-    "devAsAdmin": "cross-env mode=development model=Faculty ONYEN=admin firstName=admin lastName=admin PID=999999999 active=true admin=true node bin/www && node deleteDatabase.js",
+    "db:reset": "cross-env mode=testing node dbReset.js", 
+    "devAsAdmin": "cross-env mode=development model=Faculty ONYEN=admin firstName=admin lastName=admin PID=999999999 active=true admin=true node bin/www",
     "devAsFaculty": "cross-env mode=development model=Faculty ONYEN=faculty firstName=faculty lastName=faculty PID=888888888 active=true admin=false node bin/www",
-    "devAsStudent": "cross-env mode=development model=Student ONYEN=student firstName=student lastName=student PID=777777777 active=true node bin/www"
+    "devAsStudent": "cross-env mode=development model=Student ONYEN=student firstName=student lastName=student PID=777777777 active=true node bin/www",
+    "testAsAdmin": "npm run db:reset & cross-env mode=testing model=Faculty ONYEN=admin firstName=admin lastName=admin PID=999999999 active=true admin=true node bin/www",
+    "testAsFaculty": "npm run db:reset & cross-env mode=testing model=Student ONYEN=student firstName=student lastName=student PID=777777777 active=true node bin/www"
   },
   "repository": {
     "type": "git",
