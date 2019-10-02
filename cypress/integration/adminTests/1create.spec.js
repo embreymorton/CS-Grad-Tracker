@@ -1,58 +1,12 @@
-const currentDate = "2019-09-19";
-const pastDate = "2019-02-02";
+var data = require('./data.js');
 
-const studentTextFields = {
-    onyen : 'fakeonyen',
-    csid : 'fakecsid',
-    email : 'fakeEmail@fake.com',
-    'first-name' : 'fake',
-    'last-name' : 'fake',
-    pid : '949949949',
-    'alternative-name': 'fake',
-    'entering-status': 'help',
-    'research-area': 'Systems',
-    'leave-extension': 'NO',
-    'hours-completed': '20',
-    'background-approved': currentDate,
-    'masters-awarded': pastDate,
-    'prp-passed': currentDate,
-    'background-prep-worksheet-approved': currentDate,
-    'program-of-study-approved': currentDate,
-    'research-planning-meeting': currentDate,
-    'committee-comp-approved': currentDate,
-    'phd-proposal-approved': currentDate,
-    'phd-awarded': pastDate,
-    'oral-exam-passed': currentDate,
-    'dissertation-defence-passed': currentDate,
-    'oral-exam-passed': currentDate,
-    'dissertation-submitted': currentDate,
-}
+const studentTextFields = data.studentTextFields;
 
-const job = {
-    position: "TA",
-    supervisor: "admin, admin",
-    description: "A TA JOB",
-    hours: "4",
-}
+const job = data.job;
 
-const studentDropdownFields = {
-    pronouns: 'she, her',
-    status: 'Active',
-    gender: 'FEMALE',
-    ethnicity: 'OTHER',
-    residency: 'YES',
-    'intended-degree': 'MASTERS',
-    'funding-eligibility': 'GUARANTEED',
-}
+const studentDropdownFields = data.studentDropdownFields;
 
-const course = {
-    univNumber: '1234',
-    category: 'Theory',
-    topic: 'N/A',
-    section: '1',
-    faculty: 'admin, admin',
-    semester: 'FA 2018'
-}
+const course = data.course;
 
 describe("Upload and create data", function(){
 
@@ -205,99 +159,3 @@ describe("Upload and create data", function(){
 
 });
 
-describe("Delete data", function(){
-
-    it('Searching for a job should return the single job and you should be able to delete it', ()=>{
-        cy.visit('/job');
-
-        searchJobHelper();
-
-        cy.get('.job-table').find('tr').should('have.length', 2);
-
-        //first column is position, check if it contains the expected value
-        cy.get('tbody > tr > td').eq(0).contains(job.position);
-
-        console.log(cy.get('tbody > tr > td').eq(1).invoke('text'));
-        cy.get('tbody > tr > td').eq(1).contains(job.supervisor);
-
-        cy.get('tbody > tr > td').eq(4).contains(job.hours);
-
-        cy.get('.delete-job-button').click();
-
-        searchJobHelper();
-
-        cy.contains('No jobs found.');
-    })
-
-    function searchJobHelper(){
-        cy.get('input[name=position]')
-        .type(job.position);
-
-        cy.get('select[name=supervisor]')
-        .select(job.supervisor);
-
-        cy.get('.search-job-submit').click();
-    }
-
-    it('Searching for a course should return the single course and you should be able to delete it', ()=>{
-        cy.visit('/course');
-
-        /*
-        Right now, I can't think of a good solution for getting the name/course number
-        to search for the course that was created earlier, because that data 
-        was uploaded in a separate csv and is not defined in this file. 
-        */
-        searchCourseHelper();
-
-        cy.get('.course-table').find('tr').should('have.length', 2);
-
-        cy.get('tbody > tr > td').eq(0).contains('101');
-
-        cy.get('tbody > tr > td').eq(3).contains('Fluency in Information Technology');
-
-        cy.get('.delete-course-button').click();
-
-        searchCourseHelper();
-
-        cy.contains('No courses found.');
-    })
-
-    function searchCourseHelper(){
-        cy.get('input[name=number]')
-        .type('101')
-
-        cy.get('input[name=name]')
-        .type('Fluency in Information Technology')
-
-        cy.get('.search-course-button').click();
-    }
-
-    it('Searching for a student should return the single student and you should be able to delete it', function(){
-        cy.visit('/student');
-
-        searchStudentHelper();
-
-        cy.get('.student-table').find('tr').should('have.length', 2);
-
-        //select first value of table to make sure it is the student we searched for
-        cy.get('tbody > tr > td').eq(0).contains(studentTextFields.onyen);
-
-        cy.get('.delete-student-submit').click();
-
-        searchStudentHelper();
-
-        cy.contains('No student found.');
-    });
-
-    function searchStudentHelper(){
-        cy.get('.search-last-name')
-        .type(studentTextFields["last-name"])
-        .should('have.value', studentTextFields["last-name"])
-
-        cy.get('.search-pid')
-        .type(studentTextFields.pid)
-        .should('have.value', studentTextFields.pid)
-
-        cy.get('.search-student-submit').click();
-    }
-})
