@@ -7,7 +7,7 @@ mongoose.Promise = require('bluebird')
 
 var config = require('./config.js');
 
-mongoose.connect(config[process.env.mode]);
+mongoose.connect(config[process.env.mode], {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
