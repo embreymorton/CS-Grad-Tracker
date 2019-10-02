@@ -21,7 +21,7 @@
 				
 				<div class='col-lg-10 panelbg text-center'>
 					<h1>Job description</h1>
-					<table align="center" border="1" class="table display-table table-dark">
+					<table align="center" border="1" class="table display-table table-striped table-bordered">
 						<thead>
 							<tr>
 								<th scope="col">Position</th>
@@ -51,7 +51,7 @@
 					</table>
 					<h3 class="space">Students holding this job</h3>
 					<% if(studentsWithJob.length > 0) { %>
-					<table align="center" border="1" class="table display-table table-dark">
+					<table align="center" border="1" class="table display-table table-striped table-bordered student-holding-job-table">
 						<thead>
 							<tr>
 								<th scope="col">Last name</th>
@@ -68,7 +68,7 @@
 									<form action="/job/unassign" method="post">
 										<input type="hidden" name="studentId" value=<%=studentsWithJob[i]._id%> />
 										<input type="hidden" name="jobId" value=<%=job._id%> />
-										<button type="submit" class="btn btn-danger">Delete</button>
+										<button type="submit" class="btn btn-danger unassign-job-submit-button">Delete</button>
 									</form>
 								</td>
 							</tr>
@@ -85,7 +85,7 @@
 						<div class="form-group row">
 							<label for="inputStudents" class="col-md-2 offset-md-3">Students</label>
 							<div class="col-md-4">
-								<select name="students" class="form-control" id="inputStudents" multiple required>
+								<select name="students" class="form-control assign-student-select" id="inputStudents" multiple required>
 									<option value=""></option>
 									<% for(var i=0; i < students.length; i++){ %>
 										<option value=<%=students[i]._id%>><%=students[i].lastName%>, <%=students[i].firstName%></option>
@@ -96,7 +96,7 @@
 
 						<div class="form-group row align-items-end">
 							<div class="col-md-4 offset-md-4">
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="submit" class="btn btn-primary assign-job-submit-button">Submit</button>
 							</div>
 						</div>
 
