@@ -1,3 +1,5 @@
+var data = require('./data');
+
 describe("Page visit and page javascript", function(){
     
     it('Visiting the homepage as admin should route to /student', function(){
@@ -5,7 +7,6 @@ describe("Page visit and page javascript", function(){
         cy.visit('/')
 
         cy.url().should('include', '/student');
-        
     });
 
     it('Clicking on links in sidebar should route to correct pages', function(){
@@ -71,6 +72,29 @@ describe("Page visit and page javascript", function(){
 
         cy.get('.upload-courses-button').click();
         cy.url().should('contain', '/student/uploadCourses');
+
+        //add section that clicks on student top nav bar
+
+        cy.visit('/student');
+
+        data.searchStudentHelper();
+
+        cy.get('.edit-student-button').click();
+
+        cy.get('.student-navigation-edit-button').click()
+        cy.url().should('contain', '/student/edit');
+
+        cy.get('.student-navigation-jobs-button').click();
+        cy.url().should('contain', '/student/jobs');
+
+        cy.get('.student-navigation-forms-button').click();
+        cy.url().should('contain', '/student/forms');
+
+        cy.get('.student-navigation-courses-button').click();
+        cy.url().should('contain', '/student/courses');
+
+        cy.get('.student-navigation-notes-button').click();
+        cy.url().should('contain', '/student/notes');
     });
 
     it('Javascript on job page should correctly hide elements', ()=>{

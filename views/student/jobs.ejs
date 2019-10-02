@@ -26,7 +26,7 @@
 					<h1>Job history</h1>
 
 					<% if(student.jobHistory.length>0) { %>
-						<table align="center" border="1" class="table display-table table-striped table-bordered">
+						<table align="center" border="1" class="table display-table table-striped table-bordered job-history-table">
 							<thead>
 								<tr>
 									<th scope="col">Position</th>
@@ -43,7 +43,7 @@
 								<% for(var i=0; i<job.length; i++) { %>
 									<tr>
 										<td><%= job[i].position%></td>
-										<td><%= job[i].supervisor.lastName%>,  <%=job[i].supervisor.firstName%></td>
+										<td><%= job[i].supervisor.lastName%>, <%=job[i].supervisor.firstName%></td>
 										<% if(job[i].course != null) { %>
 										<td><%= job[i].course.department%> <%= job[i].course.number%>, <%=job[i].course.section%></td>
 										<% } else { %>
@@ -60,7 +60,7 @@
 											<form action="/student/deleteJob" method="post">
 												<input type="hidden" name="studentId" value=<%=student._id%> />
 												<input type="hidden" name="jobId" value=<%=job[i]._id%> />
-												<button type="submit" class="btn btn-danger">Delete</button>
+												<button type="submit" class="btn btn-danger job-delete-button">Delete</button>
 											</form>
 										</td>
 									</tr>
@@ -76,7 +76,7 @@
 						<div class="form-group row">
 							<label for="inputJobs" class="col-md-2 offset-md-3">Jobs</label>
 							<div class="col-md-4">
-								<select name="jobs" class="form-control" id="inputJobs" multiple required>
+								<select name="jobs" class="form-control job-select" id="inputJobs" multiple required>
 									<option value=""></option>
 									<% for(var i=0; i < jobs.length; i++){ %>
 										<option value=<%=jobs[i]._id%>><%=jobs[i].position%>, <%=jobs[i].supervisor.lastName%>, <%=jobs[i].supervisor.firstName%>, <%=jobs[i].semester.season%> <%=jobs[i].semester.year%></option>
@@ -89,7 +89,7 @@
 
 						<div class="form-group row align-items-end">
 							<div class="col-md-4 offset-md-4">
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="submit" class="btn btn-primary job-select-submit-button">Submit</button>
 							</div>
 						</div>
 					</form>
