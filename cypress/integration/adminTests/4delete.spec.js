@@ -67,7 +67,11 @@ describe("Delete data", ()=>{
         cy.get('.search-course-button').click();
     }
 
+<<<<<<< HEAD
     it('Searching for a student should return the single student and you should be able to delete it', ()=>{
+=======
+    it('Searching for a student should return the single student and you should be able to delete it', function(){
+>>>>>>> Finished basic tests when logged in with role admin.
         cy.visit('/student');
 
         data.searchStudentHelper();
