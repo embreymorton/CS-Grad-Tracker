@@ -1,14 +1,16 @@
-describe("Page visit and page javascript", function(){
+var data = require('./data');
+
+describe("Page visit and page javascript", ()=>{
     
-    it('Visiting the homepage as admin should route to /student', function(){
+    it('Visiting the homepage as admin should route to /student', ()=>{
+        cy.request("POST", '/changeUser', {model:"Faculty", onyen:"faculty", firstName:"faculty", lastName:"faculty", pid:"888888888", active:"true", admin:"false"});
         
         cy.visit('/')
 
         cy.url().should('include', '/student');
-        
     });
 
-    it('Clicking on links in sidebar should route to correct pages', function(){
+    it('Clicking on links in sidebar should route to correct pages', ()=>{
         
         cy.visit('/student');
 
@@ -26,7 +28,7 @@ describe("Page visit and page javascript", function(){
         }
     });
 
-    it('Clicking page specific sidebar links should route to correct pages', function(){
+    it('Clicking page specific sidebar links should route to correct pages', ()=>{
 
         cy.visit('/course');
 
@@ -71,6 +73,29 @@ describe("Page visit and page javascript", function(){
 
         cy.get('.upload-courses-button').click();
         cy.url().should('contain', '/student/uploadCourses');
+
+        //add section that clicks on student top nav bar
+
+        cy.visit('/student');
+
+        data.searchStudentHelper();
+
+        cy.get('.edit-student-button').click();
+
+        cy.get('.student-navigation-edit-button').click()
+        cy.url().should('contain', '/student/edit');
+
+        cy.get('.student-navigation-jobs-button').click();
+        cy.url().should('contain', '/student/jobs');
+
+        cy.get('.student-navigation-forms-button').click();
+        cy.url().should('contain', '/student/forms');
+
+        cy.get('.student-navigation-courses-button').click();
+        cy.url().should('contain', '/student/courses');
+
+        cy.get('.student-navigation-notes-button').click();
+        cy.url().should('contain', '/student/notes');
     });
 
     it('Javascript on job page should correctly hide elements', ()=>{
