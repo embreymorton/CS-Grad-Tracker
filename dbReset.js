@@ -5,9 +5,11 @@
 var mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 
-var config = require('./config.js');
+require('dotenv').config();
 
-mongoose.connect(config[process.env.mode], {useNewUrlParser: true, useUnifiedTopology: true});
+console.log(process.env.databaseString);
+
+mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
