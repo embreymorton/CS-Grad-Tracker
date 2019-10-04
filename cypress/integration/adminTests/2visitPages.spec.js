@@ -1,15 +1,16 @@
 var data = require('./data');
 
-describe("Page visit and page javascript", function(){
+describe("Page visit and page javascript", ()=>{
     
-    it('Visiting the homepage as admin should route to /student', function(){
+    it('Visiting the homepage as admin should route to /student', ()=>{
+        cy.request("POST", '/changeUser', {model:"Faculty", onyen:"faculty", firstName:"faculty", lastName:"faculty", pid:"888888888", active:"true", admin:"false"});
         
         cy.visit('/')
 
         cy.url().should('include', '/student');
     });
 
-    it('Clicking on links in sidebar should route to correct pages', function(){
+    it('Clicking on links in sidebar should route to correct pages', ()=>{
         
         cy.visit('/student');
 
@@ -27,7 +28,7 @@ describe("Page visit and page javascript", function(){
         }
     });
 
-    it('Clicking page specific sidebar links should route to correct pages', function(){
+    it('Clicking page specific sidebar links should route to correct pages', ()=>{
 
         cy.visit('/course');
 
