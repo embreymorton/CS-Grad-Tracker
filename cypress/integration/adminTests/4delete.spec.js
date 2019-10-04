@@ -8,7 +8,7 @@ const studentDropdownFields = data.studentDropdownFields;
 
 const course = data.course;
 
-describe("Delete data", function(){
+describe("Delete data", ()=>{
 
     it('Searching for a job should return the single job and you should be able to delete it', ()=>{
         cy.visit('/job');
@@ -67,7 +67,7 @@ describe("Delete data", function(){
         cy.get('.search-course-button').click();
     }
 
-    it('Searching for a student should return the single student and you should be able to delete it', function(){
+    it('Searching for a student should return the single student and you should be able to delete it', ()=>{
         cy.visit('/student');
 
         data.searchStudentHelper();

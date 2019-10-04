@@ -8,9 +8,9 @@ const studentDropdownFields = data.studentDropdownFields;
 
 const course = data.course;
 
-describe("Upload and create data", function(){
+describe("Upload and create data", ()=>{
 
-    it('Uploading course info should correctly store data in database', function(){
+    it('Uploading course info should correctly store data in database', ()=>{
 
         cy.visit('/course/uploadInfo/false');
 
@@ -117,7 +117,7 @@ describe("Upload and create data", function(){
     })
 
 
-    it('Clicking on create student from /student and creating a student should add a student to the database', function(){
+    it('Clicking on create student from /student and creating a student should add a student to the database', ()=>{
 
         cy.visit('/student/create');
 
