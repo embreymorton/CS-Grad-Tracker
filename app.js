@@ -84,35 +84,15 @@ if(process.env.mode == "production"){
     next();
   });
 }
-else if(process.env.mode == "development"){
-  app.use(function(req, res, next){
-    if(!process.env.userPID){
-      var doc = new schema[process.env.model]();
-      doc.onyen = process.env.ONYEN;
-      doc.firstName = process.env.FIRSTNAME;
-      doc.lastName = process.env.LASTNAME;
-      doc.pid = process.env.PID;
-      doc.active = process.env.ACTIVE;
-      if(process.env.admin != null){
-        doc.admin = process.env.ADMIN;
-        doc.save().then(function(result){
-          setupDevVariables(res);
-          next();
-        });
-      }
-      else{
-        doc.save().then(function(result){
-          setupDevVariables(res);
-          next();
-        });
-      }
+else if(process.env.mode == "development" || process.env.mode == "testing"){
+
+  schema.Semester.find({}).exec().then((result)=>{
+    if(result.length == 0){
+      require('./controllers/util.js').initializeAllSemesters();
     }
-    else{
-      setupDevVariables(res);
-      next();
-    }
-    
-  });
+  })
+
+  app.use("/changeUser", require("./routes/userChange"));
 }
 
 function setupDevVariables(res){

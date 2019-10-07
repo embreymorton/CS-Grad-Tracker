@@ -11,12 +11,8 @@ var studentController = {}
 
 studentController.post = function (req, res) {
   var input = req.body;
-  console.log(input);
   input = verifyBoolean(input);
-
-  if(input.phdAwardedDate != ""){
-    input.status = "Graduated";
-  }
+  
   //verify that the required fields are not null
   if(input.onyen != null && input.firstName != null && input.lastName != null && input.pid != null && input.pid != NaN && input.advisor != null){
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
@@ -29,8 +25,6 @@ studentController.post = function (req, res) {
       }
       else {
         input.onyen = input.onyen.toLowerCase();
-        input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
-        input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
         var inputStudent = new schema.Student(util.validateModelData(input, schema.Student));
         /*use the then function because save() is asynchronous. If you only have inputStudent.save(); res.redirect...
         it is possible that the data does not save in time (or load in time if performing queries that return data

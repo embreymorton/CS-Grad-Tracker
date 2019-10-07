@@ -1,2 +1,4 @@
 # Node modules
-node_modulescypress/integration/firsttest.spec.js
+node_modules
+package-lock.json
+.env

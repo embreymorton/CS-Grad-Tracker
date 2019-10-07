@@ -13,6 +13,7 @@
     "compression": "^1.7.3",
     "cross-env": "^5.2.1",
     "cypress": "^3.4.1",
+    "dotenv": "^8.1.0",
     "ejs": "^2.6.1",
     "express": "^4.15.0",
     "formidable": "^1.2.1",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
+    "cypress-file-upload": "^3.3.3",
     "mocha": "^5.2.0",
     "standard": "^9.0.1"
   },
@@ -40,10 +42,9 @@
   },
   "scripts": {
     "start": "node bin/www",
-    "production": "cross-env mode=production node bin/www",
-    "devAsAdmin": "cross-env mode=development model=Faculty ONYEN=admin firstName=admin lastName=admin PID=999999999 active=true admin=true node bin/www",
-    "devAsFaculty": "cross-env mode=development model=Faculty ONYEN=faculty firstName=faculty lastName=faculty PID=888888888 active=true admin=false node bin/www",
-    "devAsStudent": "cross-env mode=development model=Student ONYEN=student firstName=student lastName=student PID=777777777 active=true node bin/www"
+    "cypress:open": "./node_modules/.bin/cypress open",
+    "db:reset": "node dbReset.js",
+    "test": "npm run db:reset & node bin/www"
   },
   "repository": {
     "type": "git",
