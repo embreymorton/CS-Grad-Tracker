@@ -72,7 +72,7 @@ var studentSchema = mongoose.Schema({
 	  enum: ["NOT GUARANTEED", "GUARANTEED", "PROBATION"],
 	  default: "NOT GUARANTEED"
   },
-  backgroundApproved: Date,
+  backgroundApproved: String,
   mastersAwarded: Date,
   prpPassed: Date,
   backgroundPrepWorksheetApproved: Date,
@@ -80,7 +80,7 @@ var studentSchema = mongoose.Schema({
   researchPlanningMeeting: Date,
   committeeCompApproved: Date,
   phdProposalApproved: Date,
-  phdAwardedDate: Date,
+  phdAwarded: Date,
   oralExamPassed: Date,
   dissertationDefencePassed: Date,
   dissertationSubmitted: Date,
@@ -158,7 +158,7 @@ var grantSchema = mongoose.Schema({
 var noteSchema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   title: String,
-  date: Date,
+  date: String,
   note: String
 })
 
