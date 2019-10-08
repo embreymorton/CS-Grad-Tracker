@@ -6,6 +6,8 @@ var compress = require("compression")
 var https = require("https");
 var schema = require("./models/schema.js");
 
+require('dotenv').config();
+
 var app = express()
 
 // express api setup
@@ -42,6 +44,7 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 app.use(express.static(path.join(__dirname, "public")))
 
 if(process.env.mode == "production"){
+  console.log("PRODUCTION");
 //adds user pid to environmental variable if it doesn't already exist.
   app.use(function(req, res, next){
     if(!process.env.userPID){
