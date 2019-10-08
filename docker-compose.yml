@@ -13,6 +13,9 @@ services:
     #Link to mongoDB
     depends_on:
       - mongo
+    #Volume for app
+    volumes:
+      - .:/app
   #Database name
   mongo:
     container_name: mongo
@@ -21,3 +24,6 @@ services:
     #Expose ports for mongo
     ports:
       - "27017:27017"
+    #Volume for db
+    volumes:
+      - .:/dbdata
