@@ -11,6 +11,9 @@ const course = data.course;
 describe("Delete data", ()=>{
 
     it('Searching for a job should return the single job and you should be able to delete it', ()=>{
+
+        cy.visit('/changeUser/admin');
+        
         cy.visit('/job');
 
         data.searchJobHelper();
