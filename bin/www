@@ -25,7 +25,7 @@ var config = {
   development: connectionString || 'mongodb://mongo:27017/cs_grad_data-dev',
   test: connectionString || 'mongodb://mongo:27017/cs_grad_data-test',
   port: (process.env.MONGODB_PASSWORD) ? 8080 : 8080,
-  host: (process.env.MONGODB_PASSWORD) ? '0.0.0.0' : '127.0.0.1'
+  host: (process.env.MONGODB_PASSWORD) ? '0.0.0.0' : '172.18.0.3'
 }
 
 mongoose.connect(config[app.settings.env])

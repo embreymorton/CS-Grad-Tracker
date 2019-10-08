@@ -18,6 +18,9 @@ COPY . .
 #Exposed port
 EXPOSE 8080:8080
 
+#Attempt a run of the system
+#RUN npm run devAsAdmin
+
 #Commands to run
-CMD [ "npm", "start" ]
+CMD [ "npm", "start", "mongo://mongo:27017/cs_grad_data", "-n", "0.0.0.0"]
 
