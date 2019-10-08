@@ -12,6 +12,8 @@ describe("Upload and create data", ()=>{
 
     it('Uploading course info should correctly store data in database', ()=>{
 
+        cy.visit('/changeUser/admin');
+
         cy.visit('/course/uploadInfo/false');
 
         const fileName = '../../data/courseInfo.csv'
