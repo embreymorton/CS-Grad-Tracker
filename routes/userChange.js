@@ -4,31 +4,10 @@ var router = express.Router();
 
 var schema = require("../models/schema");
 
-var admin = {
-    onyen: "admin",
-    firstName: "admin",
-    lastName: "admin",
-    pid: 999999999,
-    active: true,
-    admin: true
-}
-
-var faculty = {
-    onyen: "faculty",
-    firstName: "faculty",
-    lastName: "faculty",
-    pid: 888888888,
-    active: true,
-    admin: false
-}
-
-var student = {
-    onyen: "student",
-    firstName: "student",
-    lastName: "student",
-    pid: 777777777,
-    active: true
-}
+var testRoles = require("../data/testRoles");
+var admin = testRoles.admin;
+var faculty = testRoles.faculty;
+var student = testRoles.student;
 
 var updateEnv = (object, res)=>{
     process.env.userPID = object.pid;
