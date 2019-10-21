@@ -1,3 +1,5 @@
+var student = require('../../../data/testRoles').student
+
 describe('Test student routes and functionality', ()=>{
     it('When logged in as student, get taken to studentView page', ()=>{
         cy.visit('/changeUser/student')
@@ -17,12 +19,15 @@ describe('Test student routes and functionality', ()=>{
 
     it('Able to update some basic info on the student page', ()=>{
         cy.get('.input-first-name')
+        .clear()
         .type(updateStudent["first-name"])
 
         cy.get('.input-last-name')
+        .clear()
         .type(updateStudent["last-name"])
 
         cy.get('.input-alt-name')
+        .clear()
         .type(updateStudent["alternative-name"])
 
         cy.get('.select-gender')
@@ -41,6 +46,14 @@ describe('Test student routes and functionality', ()=>{
             cy.get('.student-table').contains(updateStudent[key])
         }
 
+        cy.get('.select-gender')
+        .select('OTHER')
+        cy.get('.select-ethnicity')
+        .select('OTHER')
+        cy.get('.select-residency')
+        .select('NO')
+        cy.get('.update-button-submit').click();
+
     })
 
     it('Should be able to click top navigation bar and be brought to correct pages', ()=>{
@@ -57,7 +70,31 @@ describe('Test student routes and functionality', ()=>{
     })
 
     it('Student should be able to see a job they are holding', ()=>{
-        router.post("/post", job.post);
+        
+        cy.visit('/changeUser/admin')
+        cy.visit('/job/create')
+
+        const studJob = {
+            position: "RA",
+            supervisor: "admin, admin",
+            semester: "FA 2018"
+        }
+
+        cy.get('.input-position').select(studJob.position)
+        cy.get('.input-supervisor').select(studJob.supervisor)
+        cy.get('.input-semester').select(studJob.semester)
+        cy.get('.submit-job').click()
+        cy.visit('/job')
+        cy.get('.assign-job-button').click()
+        cy.get('.assign-student-select').select(updateStudent["last-name"] + ", "+updateStudent["first-name"])
+        cy.get('.assign-job-submit-button').click()
+
+        cy.visit('/changeUser/student')
+        cy.visit('/studentView/jobs')
+        cy.get('.student-job-table').find('tr').should('have.length', 2);
+        cy.contains(studJob.position)
+        cy.contains(studJob.supervisor)
+        cy.contains(studJob.semester)
     })
 
     
