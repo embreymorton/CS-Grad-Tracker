@@ -20,6 +20,9 @@ const visitSingleStudent = ()=>{
 
 describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
     it('Should be able to assign a job to a student on the job assign page', ()=>{
+
+        cy.visit('/changeUser/admin');
+        
         cy.visit('/job');
 
         data.searchJobHelper();
