@@ -3,9 +3,9 @@ var data = require('./data');
 describe("Page visit and page javascript", ()=>{
     
     it('Visiting the homepage as admin should route to /student', ()=>{
-        cy.request("POST", '/changeUser', {model:"Faculty", onyen:"faculty", firstName:"faculty", lastName:"faculty", pid:"888888888", active:"true", admin:"false"});
+        cy.visit('/changeUser/admin');
         
-        cy.visit('/')
+        cy.visit('/');
 
         cy.url().should('include', '/student');
     });
