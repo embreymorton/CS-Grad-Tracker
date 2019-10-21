@@ -113,3 +113,95 @@ routes/course.js has a route: router.get("/", course.get) with "course" being th
 exported controllers/CourseController.js file, then whenever a user navigates to
 csgrad.cs.unc.edu/course, CourseController.js's function "get" will handle the request
 and serve the view file views/course/index.ejs.
+
+
+# Docker (compose) Documentation
+
+Starting the app
+
+- First docker desktop is recommended as windows systems will need linux 
+containers
+- Once you have it installed, look at the docker icon in the system 
+tray, switch to linux containters and restart*
+- With docker installed, sign into your docker user account
+- Using a command line/shell, navigate to the target of docker using  
+`cd`
+- Once inside, docker will require two basic files at the least to run, 
+a dockerfile and yml file
+
+## Dockerfile
+
+(This file is building the image)
+
+- The first portion of the Dockerfile should define the skeleton to use 
+for the image either with an image you define (`FROM scratch`) or 
+predefined of your choice (`FROM alpine:latest`, `FROM node:latest`, 
+etc.)
+- Next is a place for the directory once its being build (`WORKDIR 
+/(named-place)`)
+- If you have an already built app you are building from, you can 
+duplicate the json file instead of creating a requirements file
+- IF THE APP IS Already built: `app: COPY package.json /(named-place)`
+- After this you will `RUN npm install`
+- IF THE APP IS Newly built: define libraries needed for your `FROM 
+image:version`, ie. for `FROM python:latest`, `requirements.txt` might 
+have `Flask, Redis`, which you define in the dockerfile by `RUN pip 
+install --trusted-host pypi.python.org -r requirements.txt`
+-Now we can bundle everything into the docker image with `COPY . .`
+- Use a port `EXPOSE 0000:0000` 
+- And define the commands to run `CMD [ "npm", "start", 
+"mongo://mongo:27017/cs_grad_data", "-n", "0.0.0.0"]`
+*- Final portion of the commands to run are binding the mongo ip to all 
+available address' so another bind can be made for the docker VM*
+
+## docker-compose.yml
+
+(This file provides important information for the dockerfile image)
+
+- It's good practice to begin by defining the `version: "#"`, of the yml 
+file
+- Next, create a header that defines all the services:
+- Services are the portions of the docker image, databases, base app, 
+etc.
+- For a general purpose app, this is where the skeleton from the 
+dockerfile is made to image and a database if needed
+- Defining a skeleton, begin by a name for the service like `app:`
+- Next define the `container_name: (often the name of the service)`, 
+which is used for docker's image
+- Now properties can be defined in short or immense detail, for most, 
+you want to `build: .`, to make the docker container, expose some 
+`ports: - "0000:0000"`, and link to the database service with 
+`depends_on: - mongo`
+- If the ability to dynamically update while working (not requiring 
+`build docker-compose`) add `volumes: -.:/app`, or whatever you named 
+the skeleton*
+- For defining a database, begin by a name for the service as well, but 
+convention states to name it by the database language used like `mongo:`
+- This step is the same as the skeleton, `container_name: mongo`
+- This is important as well as the next step, here you build your image 
+from docker, `image: mongo`
+- And you expose ports for that image, in this case, mongo uses 27017 
+so, `ports: - "27017:27017"`
+*- Make sure that all the connection details are correct in your app if 
+you have already defined them before ie. check for the docker VM ip and 
+make sure to bind that VM ip to your machines ip then make sure your 
+machine is bound to your database*
+- Volumes can be made for the database as well, `volumes: - .:/dbdata`
+
+### Starting up
+
+- With these two files done, docker desktop up, docker set to linux 
+containers, memory available enough, your database open and docker 
+shared devices set to your main drive
+- You can begin by typing `docker-compose build`, to build everything
+- Afterward, you can check the docker images made by `docker image ls`
+- If you run `docker-compose up -d`, for detached
+- You can now run `docker-compose ps`, to see what's running
+- To stop use `docker-compose stop`, or `docker-compose down`
+- You can also shell into the running docker images by `docker-compose 
+exec (container_name) bash`
+*- Sometimes this requires `winpty docker-compose exec (container_name) 
+bash`, for windows*
+*- Windows firewall can also block shared access to the C drive, which 
+the docker VM needs to store information*
+
