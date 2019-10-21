@@ -21,7 +21,7 @@
 					<h1>Job history</h1>
 
 					<% if(student.jobHistory.length>0) { %>
-						<table align="center" border="1" class="table display-table table-striped table-bordered">
+						<table align="center" border="1" class="table display-table table-striped table-bordered student-job-table">
 							<thead>
 								<tr>
 									<th scope="col">Position</th>
@@ -36,7 +36,7 @@
 								<% for(var i=0; i<job.length; i++) { %>
 									<tr>
 										<td><%= job[i].position%></td>
-										<td><%= job[i].supervisor.lastName%>,  <%=job[i].supervisor.firstName%></td>
+										<td><%= job[i].supervisor.lastName%>, <%=job[i].supervisor.firstName%></td>
 										<td><%= job[i].semester.season%> <%=job[i].semester.year%></td>
 										<% if(job[i].course != null) { %>
 										<td><%= job[i].course.department%> <%= job[i].course.number%>, <%=job[i].course.section%></td>
