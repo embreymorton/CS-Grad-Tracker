@@ -85,6 +85,7 @@ studentController.put = function (req, res) {
   if(input.phdAwardedDate != ""){
     input.status = "Graduated";
   }
+  
   var input = util.validateModelData(input, schema.Student);
   if (input.onyen != null && input.firstName != null && input.lastName != null && input.pid != null && input.pid != NaN) {
     schema.Student.findOneAndUpdate({_id: input._id}, input).exec().then(function(result){
@@ -106,7 +107,12 @@ studentController.delete = function (req, res) {
     personal student documents, just delete the documents. 
     */
     schema.Student.findOneAndRemove({_id: id}).exec().then(function(result){
-      res.render("../views/error.ejs", {string: "StudentNotFound"});
+      if(result){
+        res.redirect('/student');
+      }
+      else{
+        res.render("../views/error.ejs", {string: "StudentNotFound"});
+      }
     });
   }
 }
