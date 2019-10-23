@@ -138,6 +138,9 @@ facultyController.put = function (req, res) {
   if(input.admin == null){
     input.admin = false;
   }
+  if(input.email == null){
+    input.email = "None";
+  }
   var input = util.validateModelData(input, schema.Faculty);
   if (util.allFieldsExist(input, schema.Faculty)) {
     schema.Faculty.findOneAndUpdate({_id: input._id}, input).exec().then(function (result) {
