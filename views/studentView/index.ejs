@@ -19,27 +19,27 @@
 						<div class="row">
 							<label for="inputFirstname" class="col-md-4">First name *</label>
 							<div class="col-md-8">
-								<input type="text" class="form-control" id="inputFirstname" name="firstName" value="<%=student.firstName%>" required/>
+								<input type="text" class="form-control input-first-name" id="inputFirstname" name="firstName" value="<%=student.firstName%>" required/>
 							</div>
 						</div>
 
 						<div class="row">
 							<label for="inputLastname" class="col-md-4">Last name *</label>
 							<div class="col-md-8">
-								<input type="text" class="form-control" id="inputLastname" name="lastName" value="<%=student.lastName%>" required/>
+								<input type="text" class="form-control input-last-name" id="inputLastname" name="lastName" value="<%=student.lastName%>" required/>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label for="inputAltname" class="col-md-4">Alternative name</label>
 							<div class="col-md-8">
-								<input type="text" class="form-control" id="inputAltname" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
+								<input type="text" class="form-control input-alt-name" id="inputAltname" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label for="inputGender" class="col-md-4">Gender</label>
 							<div class="col-md-8">
-								<select name="gender" class="form-control" id="inputGender">
+								<select name="gender" class="form-control select-gender" id="inputGender">
 									<% for(var i=0; i<genders.length; i++) { %>
 										<option value=<%= genders[i]%> <% if(student.gender === genders[i]) { %> selected <% } %>><%=genders[i]%></option>
 									<% } %>
@@ -50,7 +50,7 @@
 						<div class="form-group row">
 							<label for="inputEthnicity" class="col-md-4">Ethnicity</label>
 							<div class="col-md-8">
-								<select name="ethnicity" class="form-control" id="inputEthnicity">
+								<select name="ethnicity" class="form-control select-ethnicity" id="inputEthnicity">
 									<% for(var i=0; i<ethnicities.length; i++) { %>
 										<option value=<%= ethnicities[i]%> <% if(student.ethnicity === ethnicities[i]) { %> selected <% } %>><%=ethnicities[i]%></option>
 									<% } %>
@@ -61,7 +61,7 @@
 						<div class="form-group row">
 							<label for="inputResidency" class="col-md-4">Residency</label>
 							<div class="col-md-8">
-								<select name="residency" class="form-control" id="inputResidency">
+								<select name="residency" class="form-control select-residency" id="inputResidency">
 									<option value=<%=student.residency%> /><%=student.residency%></option>
 									<option value="NO">NO</option>
 									<option value="APPLIED">APPLIED</option>
@@ -70,7 +70,7 @@
 						</div>
 
 						<div class="col-md-8 offset-md-2">
-							<button type="submit" class="btn btn-success">Update</button>
+							<button type="submit" class="btn btn-success update-button-submit">Update</button>
 						</div>
 
 					</form>
@@ -330,7 +330,7 @@
 
 					<div class="row">
 						<div class="col-md-6 offset-md-3">
-							<table align="center" border="1" class="table display-table table-striped table-bordered">
+							<table align="center" border="1" class="table display-table table-striped table-bordered student-table">
 									<thead>
 										<tr>
 											<th scope="col">Field</th>
