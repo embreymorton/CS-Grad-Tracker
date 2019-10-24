@@ -1,4 +1,3 @@
-
 # CS-Grad-Tracking
 
 Software Toolsmith project for UNC-CH grad department
@@ -15,116 +14,33 @@ In the past, Shane Flannigan worked on this project.
 
 # Documentation
 
-## Starting the app
+*  [Starting the app with docker](#starting-the-app-with-docker)
+*  [Starting the app without docker](#starting-the-app-without-docker)
+*  [File organization](#file-organization)
+*  [Testing](#testing)
+
+# Starting the app with docker
+
+## Basics
+
+- Have docker installed on your machine.
+- Pick your desired values for your .env file from the folder envFiles, and save it 
+in .env in the root directory (CS-Grad-Tracking)
+- Run `docker-compose build`
+- Run `docker-compose up` after the build is finished
+- Access the app at localhost:8080 in a browser.
 
 
-### Running the database
-First, since we are connecting to a mongodb database, download mongodb at
-
-For windows:
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
-Follow all default options on the installer,
-after it is completed, make sure you have created a directory:
-C:\data\db, then run 
-
-"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" in bash
-
-This will need to be running any time you want to start the app.
-
-For Ubuntu:
-
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
-
-Note that because we are running "mongod.exe", it is a database running locally
-on the computer.
-
-### Cloning and starting the app.
-
-If you do not have npm:
-
-Download NPM and nodejs at: https://nodejs.org/en/
-Add npm to your systems PATH after it has finished installing.
-
-Cloning and setting up the app: 
-git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git
-cd CS-Grad-Tracking
-npm install
-
-Now to start the app in development or production run the following commands:
-
-If running in dev as an ADMIN:
-npm run devAsAdmin
-
-If running in dev as a FACULTY:
-npm run devAsFaculty
-
-If running in dev as a STUDENT:
-npm run devAsStudent
-
-If running in production:
-mode=production node bin/www
-
-## File organization
-
-### bin/www
-Database connection and entry point to starting the server.
-
-### app.js
-Authentication logic and express setup (routes, static resources)
-
-### routes
-All routes referenced in app.js are here. For each route (get/post) there is an associated
-url and controller function.
-
-Many of the route files contain middleware that checks a user's role
-before allowing access.
-
-### controllers
-The controllers have the referenced functions from routes and contains
-primary code and database logic and also serves the files in the
-views folder.
-
-### models
-The one file, schema.js, in models describes all the database objects
-in use. Controllers store and retrieve data from the database as
-these defined objects.
-
-### views
-Contains .ejs files, which are essentially html files with embedded
-javascript. Each .ejs file represents a page that a user can see, or
-a component that is reused across multiple web pages.
-
-### public
-Contains css and image resources.
-
-### test
-Currently unused
-
-### data
-Currently used only to store test excel files, was used in the past
-for storing pdfs/documents for student objects, as mongo does not
-handle pdfs well.
-
-### Overview
-For example, app.js defines a route as app.use("/course", require("./routes/course"));
-This is causing routes/course.js to handle all requests for 
-csgrad.cs.unc.edu/course\* (\* being anything after course).
-routes/course.js has a route: router.get("/", course.get) with "course" being the 
-exported controllers/CourseController.js file, then whenever a user navigates to
-csgrad.cs.unc.edu/course, CourseController.js's function "get" will handle the request
-and serve the view file views/course/index.ejs.
-
-
-# Docker (compose) Documentation
+## In-depth Docker (compose) Documentation
 
 Starting the app
 
-- First docker desktop is recommended as windows systems will need linux 
+- First docker desktop is recommended if you are using mac or windows, as windows systems will need linux 
 containers
 - Once you have it installed, look at the docker icon in the system 
 tray, switch to linux containters and restart*
 - With docker installed, sign into your docker user account
-- Using a command line/shell, navigate to the target of docker using  
+- Using a command line/shell, navigate to the target of docker (in our case, cd to CS-Grad-Tracking) using  
 `cd`
 - Once inside, docker will require two basic files at the least to run, 
 a dockerfile and yml file
@@ -191,7 +107,7 @@ machine is bound to your database*
 ### Starting up
 
 - With these two files done, docker desktop up, docker set to linux 
-containers, memory available enough, your database open and docker 
+containers, memory available enough, and docker 
 shared devices set to your main drive
 - You can begin by typing `docker-compose build`, to build everything
 - Afterward, you can check the docker images made by `docker image ls`
@@ -205,3 +121,103 @@ bash`, for windows*
 *- Windows firewall can also block shared access to the C drive, which 
 the docker VM needs to store information*
 
+## Starting the app without Docker
+
+
+### Running the database
+First, since we are connecting to a mongodb database, download mongodb at
+
+For windows:
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+Follow all default options on the installer,
+after it is completed, make sure you have created a directory:
+C:\data\db, then run 
+
+"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" in bash
+
+This will need to be running any time you want to start the app.
+
+For Ubuntu:
+
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+Note that because we are running "mongod.exe", it is a database running locally
+on the computer.
+
+### Cloning and starting the app.
+
+If you do not have npm:
+
+Download NPM and nodejs at: https://nodejs.org/en/
+Add npm to your systems PATH after it has finished installing.
+
+Cloning and setting up the app: 
+git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git
+cd CS-Grad-Tracking
+npm install
+
+Select your desired environmental values from the appropriate file in envFiles,
+and add it to a .env file in the root directory (CS-Grad-Tracking)
+
+Now to start the app run the command: 
+
+`npm start`
+
+## File organization
+
+### bin/www
+Database connection and entry point to starting the server.
+
+### app.js
+Authentication logic and express setup (routes, static resources)
+
+### routes
+All routes referenced in app.js are here. For each route (get/post) there is an associated
+url and controller function.
+
+Many of the route files contain middleware that checks a user's role
+before allowing access.
+
+### controllers
+The controllers have the referenced functions from routes and contains
+primary code and database logic and also serves the files in the
+views folder.
+
+### models
+The one file, schema.js, in models describes all the database objects
+in use. Controllers store and retrieve data from the database as
+these defined objects.
+
+### views
+Contains .ejs files, which are essentially html files with embedded
+javascript. Each .ejs file represents a page that a user can see, or
+a component that is reused across multiple web pages.
+
+### public
+Contains css and image resources.
+
+### test
+Currently unused
+
+### data
+Currently used only to store test excel files, was used in the past
+for storing pdfs/documents for student objects, as mongo does not
+handle pdfs well.
+
+### Overview
+For example, app.js defines a route as app.use("/course", require("./routes/course"));
+This is causing routes/course.js to handle all requests for 
+csgrad.cs.unc.edu/course\* (\* being anything after course).
+routes/course.js has a route: router.get("/", course.get) with "course" being the 
+exported controllers/CourseController.js file, then whenever a user navigates to
+csgrad.cs.unc.edu/course, CourseController.js's function "get" will handle the request
+and serve the view file views/course/index.ejs.
+
+## Testing
+
+### Basics
+
+- Run the app, whether with docker or not. It should be running on localhost:8080
+- Run `npx cypress open` or `npm run cypress:open`
+- A cypress test window should appear (on mac and windows--not sure about linux)
+- Run whichever tests are desired
