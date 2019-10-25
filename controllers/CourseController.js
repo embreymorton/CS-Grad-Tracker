@@ -366,19 +366,24 @@ courseController.upload = function(req, res){
         facultyName[1] = new RegExp(facultyName[1], "i");
         var spaceReg = /\s* \s*/;
         var semester = element.semester.split(spaceReg);
+        semester[0] = semester[0].toLowerCase();
         switch(semester[0]){
           case "Spring":
           case "spring":
             semester[0] = "SP"
+            break;
           case "Fall":
           case "fall":
             semester[0] = "FA"
+            break;
           case "Summer1":
           case "summer1":
             semester[0] = "S1"
+            break;
           case "Summer2":
           case "summer2":
             semester[0] = "S2"
+            break;
           default:
             //res.render("../views/error.ejs", {string: "Issue with semester formatting, check" + element.semester[0] + " " + element.semester[1]})
         }
