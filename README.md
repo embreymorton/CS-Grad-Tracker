@@ -18,6 +18,7 @@ In the past, Shane Flannigan worked on this project.
 *  [Starting the app without docker](#starting-the-app-without-docker)
 *  [File organization](#file-organization)
 *  [Testing](#testing)
+*  [Deployment](#deployment)
 
 # Starting the app with docker
 
@@ -221,3 +222,36 @@ and serve the view file views/course/index.ejs.
 - Run `npx cypress open` or `npm run cypress:open`
 - A cypress test window should appear (on mac and windows--not sure about linux)
 - Run whichever tests are desired
+
+
+## Deployment
+
+Deployed on the virtual machine csgrad.cs.unc.edu
+
+Access the VM at https://vmm.cs.unc.edu, and by asking David Cowhig for access.
+
+### Database
+
+Install mongodb:
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+Run the mongod service:
+`sudo service mongod start`
+
+### Processes
+
+I am using a process manager for the deployment, PM2.
+`npm install pm2@latest -g`
+
+
+To enable process restarting, use the command: `systemctl enable mongod.service`
+
+
+
+Commands to start a fresh process that restarts on crash or vm restart.
+- `sudo -i`
+- `cd ../CS-Grad-Tracking`   (CD to wherever the folder containing the project is)
+- `pm2 start "npm start"`
+- `pm2 startup`
+
+Now the app should be running and should continue to run after restarts or crashes.
