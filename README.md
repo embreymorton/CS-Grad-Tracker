@@ -230,6 +230,15 @@ Deployed on the virtual machine csgrad.cs.unc.edu
 
 Access the VM at https://vmm.cs.unc.edu, and by asking David Cowhig for access.
 
+### Clone project
+
+First get access to the gitlab project, then run
+
+`git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git`
+
+To get the project on the VM.
+
+
 ### Database
 
 Install mongodb:
