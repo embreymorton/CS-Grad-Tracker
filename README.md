@@ -238,6 +238,15 @@ https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 Run the mongod service:
 `sudo service mongod start`
 
+### Nginx
+
+Follow this to install nginx: https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04-quickstart
+- Steps 1-3
+
+Follow this to add the port our app is running on locally to nginx: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
+- Start at "Set Up Nginx as a Reverse Proxy Server"
+- Set the port as 8080 (as that is the port we are running the app on)
+
 ### Processes
 
 I am using a process manager for the deployment, PM2.
