@@ -10,7 +10,7 @@ require('dotenv').config();
 
 var app = express()
 
-// express api setup
+
 app
   .use(compress())
   .use(sessions({
@@ -26,26 +26,35 @@ app
     if (req.headers.uid) {
       res.cookie("onyen", req.headers.uid, { httponly: false })
     }
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
     next()
   })
 
+//setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
 
 //bootstrap static resource
 app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")))
 
-//
+//node_modules statis resource
 app.use(express.static(path.join(__dirname, "node_modules")))
 
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
+/*
+  When in production, X-REMOTE-USER-1 is set by nginx
+  to be the user's csid if they successfully login
+
+  This is then used with onyenldap (yes this is very bad
+  because it is possible for people's csid's to be different
+  although it usually isnt. Need to figure out a way to get 
+  the pid without assuming the csid is the same as an onyen)
+  to get a user's pid, which is then stored in process.env.userPID
+  which is then used for logic in the rest of the app.
+*/
 if(process.env.mode == "production"){
-  console.log("PRODUCTION");
-//adds user pid to environmental variable if it doesn't already exist.
+//middleware executed before every request
   app.use(function(req, res, next){
     if(!process.env.userPID){
       var user = req.get("X-REMOTE-USER-1");
@@ -81,26 +90,29 @@ if(process.env.mode == "production"){
     }
   });
 
-  //global username locals (middleware)
+  /*
+    Middleware executed to store the user's csid in
+    res.locals.user.  
+  */
   app.use(function(req, res, next){
     res.locals.user = req.get("X-REMOTE-USER-1");
     next();
   });
 }
 else if(process.env.mode == "development" || process.env.mode == "testing"){
-
+  /*
+    initialize all semesters if they have not been initialized.
+    This is required because the database is reset if the app is 
+    run using `npm test`
+  */
   schema.Semester.find({}).exec().then((result)=>{
     if(result.length == 0){
       require('./controllers/util.js').initializeAllSemesters();
     }
   })
 
+  //add routes to allow user changes
   app.use("/changeUser", require("./routes/userChange"));
-}
-
-function setupDevVariables(res){
-  process.env.userPID = process.env.PID;
-  res.locals.user = process.env.ONYEN;
 }
 
 app.get("/logout", (req, res)=>{
@@ -109,9 +121,6 @@ app.get("/logout", (req, res)=>{
 })
 
 app.get("/", (req, res) => {
-  console.log(process.env.mode);
-  console.log(process.env.userPID);
-
   schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
     if(result != null){
       if(result.admin == true){ //admin
@@ -143,6 +152,10 @@ app.use("/student", require("./routes/student"));
 app.use("/studentView", require("./routes/studentView"));
 
 app.use("/report", require("./routes/report"));
+
+
+//need to look into error handling before modifying or removing the following 2 middleware functions
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {
