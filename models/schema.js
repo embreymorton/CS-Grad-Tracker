@@ -2,14 +2,6 @@
 var mongoose = require("mongoose");
 var schema = {};
 
-// Administrators
-var adminSchema = mongoose.Schema({
-  onyen: String,
-  firstName: String,
-  lastName: String,
-  pid: Number
-});
-
 // Faculty
 var facultySchema = mongoose.Schema({
   onyen: String,
@@ -386,9 +378,7 @@ var CS13Schema = mongoose.Schema({
   altPrint1: String,
   altPrint2: String
 });
-  
 
-schema.Admin = mongoose.model("Admin", adminSchema);
 schema.Faculty = mongoose.model("Faculty", facultySchema);
 schema.Student = mongoose.model("Student", studentSchema);
 schema.Semester = mongoose.model("Semester", semesterSchema);

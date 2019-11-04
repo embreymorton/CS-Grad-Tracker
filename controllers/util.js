@@ -34,7 +34,7 @@ _.validateModelData = function (input, model) {
 }
 
 /*
-@description verifies that all fields for a given
+verifies that all fields for a given
 document exist for the corresponding model
 
 @param input document to be checked
@@ -53,46 +53,6 @@ _.allFieldsExist = function(input, model) {
     }
   }
   return true; 
-}
-
-/*
-pretty sure we don't need this.
-the browser just sends the input fields, and all we have to
-do is make all fields that are text/string into regular
-expressions and feed that into the mongoose search 
-operations, no need to convert to proper js regular expressions
-because there is no point where the data is every surrounded by
-"/"s and isn't a correct regular expression
-*/
-// Transforms expressions surrounded by "/"s to proper JS regular expressions
-_.regexTransform = function (input) {
-  for (var key in input) {
-    if (input[key] !== undefined && input[key] !== null) {
-      if (input[key].constructor === Array) {
-        for (var i = 0; i < input[key].length; i++) {
-          if(isNaN(input[key])){
-          input[key][i] = (input[key][i].match(regexSlashes))
-           ? new RegExp(input[key][i].substring(1, input[key][i].length - 1), "ig") : input[key][i]
-          }
-          else{
-            input[key][i] = (input[key][i].toString().match(regexSlashes))
-           ? new RegExp(input[key][i].substring(1, input[key][i].length - 1), "ig") : input[key][i]
-          }
-        }
-        input[key] = {$in: input[key]}
-      } else {
-        if(isNaN(input[key])){
-          input[key] = (input[key].match(regexSlashes))
-           ? new RegExp(input[key].substring(1, input[key].length - 1), "ig") : input[key]
-        }
-        else{
-          input[key] = (input[key].toString().match(regexSlashes))
-           ? new RegExp(input[key].substring(1, input[key].length -1), "ig") : input[key]
-        }
-      }
-    }
-  }
-  return input
 }
 
 /*
@@ -137,6 +97,10 @@ _.initializeAllSemesters = function(){
   }
 }
 
+/*
+  checkFaculty is a promise that resolves as true if the user is
+  a faculty, otherwise it resolves as false.
+*/
 _.checkFaculty = function(){
   return new Promise((resolve, reject)=>{
     schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
@@ -150,6 +114,10 @@ _.checkFaculty = function(){
   });
 }
 
+/*
+  checkAdvisor is a promise that resolves as true if the user is an
+  advisor of the passed in student, and resolves false otherwise.
+*/
 _.checkAdvisor = function(studentID){
   return new Promise((resolve, reject)=>{
     schema.Student.findOne({_id: studentID}).exec().then(function(result){
@@ -172,6 +140,11 @@ _.checkAdvisor = function(studentID){
   });
 }
 
+/*
+  checkAdvisorAdmin is a promise that resolves as true if the user is
+  an admin, or if the user is an advisor of the passed in studentID, and
+  resolves as false otherwise.
+*/
 _.checkAdvisorAdmin = function(studentID){
   return new Promise((resolve, reject)=>{
     schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
@@ -201,6 +174,11 @@ _.checkAdvisorAdmin = function(studentID){
   });
 }
 
+/*
+  checkStudent is a promise that resolves as true if a student with
+  pid: process.env.userPID is found in the student table/model and
+  resolves as false otherwise.
+*/
 _.checkStudent = function(){
   return new Promise((resolve, reject)=>{
     schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
@@ -222,8 +200,11 @@ _.listObjectToString = function (input) {
   return result;
 }
 
+/*
+  checkAdmin is a promise that searches the faculty table/model and resolves to true
+  if the faculty is an admin, otherwise it resolves to false
+*/
 _.checkAdmin = function(){
-  //process.env.userPID
   return new Promise((resolve, reject)=>{
     schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
       if(result != null){
@@ -241,6 +222,11 @@ _.checkAdmin = function(){
   });
 }
 
+/*
+  adminRole is a promise that stores whether the user is an admin
+  in res.locals, and resolves true if the user is an admin and resolves
+  as false otherwise
+*/
 _.adminRole = function(res){
   return new Promise((resolve, reject)=>{
       _.checkAdmin().then(function(result){
