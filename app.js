@@ -56,48 +56,29 @@ app.use(express.static(path.join(__dirname, "public")))
 if(process.env.mode == "production"){
 //middleware executed before every request
   app.use(function(req, res, next){
-    if(!process.env.userPID){
-      var user = req.get("X-REMOTE-USER-1");
-      https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
-        let data="";
-        resp.on("data", (chunk)=>{
-          data+=chunk;
-        });
-        resp.on("end", ()=>{
-          var index = data.indexOf("pid");
-          //maybe change this to be more robust
-          var pid = data.substring(index + 5, index + 14);
-          process.env.userPID = parseInt(pid);
-          res.redirect("/");
-        });
-      });
-    }
-    else{
-      var user = req.get("X-REMOTE-USER-1");
-      https.get("https://onyenldap.cs.unc.edu/onyenldap.php?onyen="+user, resp=>{
-        let data="";
-        resp.on("data", (chunk)=>{
-          data+=chunk;
-        });
-        resp.on("end", ()=>{
-          var index = data.indexOf("pid");
-          //maybe change this to be more robust
-          var pid = data.substring(index + 5, index + 14);
-          process.env.userPID = parseInt(pid);
-          next();
-        });
-      });
-    }
+    var user = req.get("X-REMOTE-USER-1")
+    schema.Student.findOne({csid: user}).exec().then((result) => {
+      if(result != null){
+        process.env.userPID = result.pid;
+        res.locals.user = result.csid;
+        next();
+      }
+      else{
+        schema.Faculty.findOne({csid: user}).exec().then((result) => {
+          if(result != null){
+            process.env.userPID = result.pid;
+            res.locals.user = result.csid;
+            next();
+          }
+          else{
+            process.env.userPID = null;
+            next();
+          }
+        })
+      }
+    })
   });
 
-  /*
-    Middleware executed to store the user's csid in
-    res.locals.user.  
-  */
-  app.use(function(req, res, next){
-    res.locals.user = req.get("X-REMOTE-USER-1");
-    next();
-  });
 }
 else if(process.env.mode == "development" || process.env.mode == "testing"){
   /*
