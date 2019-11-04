@@ -218,17 +218,19 @@ and serve the view file views/course/index.ejs.
 
 ### Basics
 
-- Run the app, whether with docker or not. It should be running on localhost:8080
+- Run the app, with npm test, whether with docker or not. It should be running on localhost:8080
 - Run `npx cypress open` or `npm run cypress:open`
 - A cypress test window should appear (on mac and windows--not sure about linux)
 - Run whichever tests are desired
 
 
-## Deployment
+# Deployment
 
 Deployed on the virtual machine csgrad.cs.unc.edu
 
 Access the VM at https://vmm.cs.unc.edu, and by asking David Cowhig for access.
+
+## Deploying without Docker
 
 ### Clone project
 
@@ -255,6 +257,7 @@ Follow this to install nginx: https://www.digitalocean.com/community/tutorials/h
 Follow this to add the port our app is running on locally to nginx: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
 - Start at "Set Up Nginx as a Reverse Proxy Server"
 - Set the port as 8080 (as that is the port we are running the app on)
+- under `location / {` add two lines: `auth_pam   "Secure Zone";` and `auth_pam_service_name "nginx";` This requires users to log in with their cslogin before accessing any of the app.
 
 ### Processes
 
@@ -273,3 +276,11 @@ Commands to start a fresh process that restarts on crash or vm restart.
 - `pm2 startup`
 
 Now the app should be running and should continue to run after restarts or crashes.
+
+## Deploying with Docker
+
+- Install docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+- Follow [Nginx](#nginx) (part of deploying without docker)
+- Clone the project
+- `cd <project directory>`
+- Follow [basics](#basics) under [Starting the app with docker](#starting-the-app-with-docker)
