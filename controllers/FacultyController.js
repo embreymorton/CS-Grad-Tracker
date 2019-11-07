@@ -302,6 +302,9 @@ facultyController.upload = function(req, res){
       if(element.admin == null){
         element.admin = false;
       }
+      if(element.email == null){
+        element.email = "";
+      }
       //verify that all fields exist
       //if(util.allFieldsExist(element, schema.Faculty)){
       if(element.firstName != null && element.pid != null && element.onyen != null){
@@ -309,18 +312,18 @@ facultyController.upload = function(req, res){
         schema.Faculty.findOne({pid: element.pid}).exec().then(function(result){
           if(result != null){
             result.onyen = element.onyen;
-            result.csID = element.csID;
+            result.csid = element.csid;
             result.firstName = element.firstName;
             result.lastName = element.lastName;
             result.sectionNumber = element.sectionNumber;
             result.active = element.active;
             result.admin = element.admin;
+            result.email = element.email;
             result.save(function(error){
               if(error){
                 res.render("../views/error.ejs", {string: element.firstName + " did not save because there is something wrong with the data."});
               }
               count++;
-              console.log(count);
               if(count == data.length){
                 res.redirect("/faculty/upload/true");
               }
