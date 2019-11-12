@@ -19,6 +19,7 @@ In the past, Shane Flannigan worked on this project.
 *  [File organization](#file-organization)
 *  [Testing](#testing)
 *  [Deployment](#deployment)
+*  [System overview](#system-overview)
 
 # Starting the app with docker
 
@@ -284,3 +285,20 @@ Now the app should be running and should continue to run after restarts or crash
 - Clone the project
 - `cd <project directory>`
 - Follow [basics](#basics) under [Starting the app with docker](#starting-the-app-with-docker)
+
+# System overview
+
+This nodejs app is in the form of server-rendered html. That is, whenever you visit a page, submit a form, 
+click a search button, etc. you are making a request to the server which then processes this request and
+returns appropriate html.
+
+
+
+When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this is how the system works together:
+- The nodejs express app is running on port 8080
+- The mongodb database is running on port 27017
+- Nginx is running on the vm which is reverse proxying port 8080 to the world, so that anyone can try to access it
+- Nginx uses auth-pam to use the CS department's kerberos system to secure any possible route on port 8080; if you visit csgrad.cs.unc.edu, you will be prompted for a login
+- So whenever you attempt to access csgrad.cs.unc.edu, kerberos requires you to enter your CS credentials.
+- If the login is successful, app logic checks the CS credentials against the users in the database to verify that the user can use the system.
+- On most requests to the app, a query to the database is made and the resulting data is added to the html page to be rendered.
