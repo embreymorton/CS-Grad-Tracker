@@ -327,27 +327,8 @@ courseController.upload = function(req, res){
     var f = files[Object.keys(files)[0]];
     var workbook = XLSX.readFile(f.path);
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    var headers = {};
-    var data = [];
-    var i = 0;
-    for(var field in schema.Course.schema.obj){
-      headers[String.fromCharCode(i+65)] = field;
-      i++;
-    }
-    for(z in worksheet) {
-        if(z[0] === '!') continue;
-        //parse out the column, row, and value
-        var col = z.substring(0,1);
-        var row = parseInt(z.substring(1));
-        var value = worksheet[z].v;
-
-        if(!data[row]) data[row]={};
-        data[row][headers[col]] = value;
-    }
-    //drop those first two rows which are empty
-    data.shift();
-    data.shift();
-    //try to create models
+    var data = XLSX.utils.sheet_to_json(worksheet);
+    
     var count = 0;
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
@@ -385,7 +366,7 @@ courseController.upload = function(req, res){
             semester[0] = "S2"
             break;
           default:
-            //res.render("../views/error.ejs", {string: "Issue with semester formatting, check" + element.semester[0] + " " + element.semester[1]})
+            
         }
         schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
           if(result != null){
@@ -449,7 +430,7 @@ courseController.upload = function(req, res){
                       }
                     }).catch(function(err){
 
-                      //res.render("../views/error.ejs", {string: element.name+" did not save because something is wrong with it."});
+                      res.render("../views/error.ejs", {string: element.name+" did not save because something is wrong with it. Error: "+err});
                     });
                   }
                   else{
@@ -459,7 +440,7 @@ courseController.upload = function(req, res){
                         res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-                      res.render("../views/error.ejs", {string: element.name + " " + element.number+" did not update because something was wrong with it."});
+                      res.render("../views/error.ejs", {string: element.name + " " + element.number+" did not update because something was wrong with it. Error: "+err});
                       return;
                     });
                   }
@@ -537,29 +518,8 @@ courseController.uploadInfo = function(req, res){
     var f = files[Object.keys(files)[0]];
     var workbook = XLSX.readFile(f.path, {cellDates:true});
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    var headers = {};
-    var data = [];
-    var i = 0;
-    var j = 0;
-    for(var field in schema.CourseInfo.schema.obj){
-      headers[String.fromCharCode(i+65)] = field;
-      i++;
-    }
-    for(z in worksheet) {
-      if(z[0] === '!') continue;
-      //parse out the column, row, and value
-      var col = z.substring(0,1);
-      var row = parseInt(z.substring(1));
-      var value = worksheet[z].v;
-
-      if(!data[row]) data[row]={};
-      data[row][headers[col]] = value;
-    }
-    //drop those first two rows which are empty
-    data.shift();
-    data.shift();
-    //try to create models
-    //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
+    var data = XLSX.utils.sheet_to_json(worksheet);
+   
     var count = 0;
     data.forEach(function(element){
       //verify that all fields exist
