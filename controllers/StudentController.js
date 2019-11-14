@@ -562,55 +562,10 @@ studentController.upload = function(req, res){
     var workbook = XLSX.readFile(f.path, {cellDates:true, cellNF: false, cellText:false});
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet, {dateNF:"YYYY-MM-DD"})
-    console.log("ASEDLKFJ:SDFJ:")
-    console.log(data)
-    // var headers = {};
-    // var data = [];
-    // var i = 0;
-    // var j = 0;
-    // for(var field in schema.Student.schema.obj){
-    //   if(field != "jobHistory" && field != "courseHistory"){
-    //     if(i > 25){
-    //       i = 0;
-    //       j = 1;
-    //     }
-    //     if(j == 1){
-    //       headers[String.fromCharCode(65)+String.fromCharCode(i+65)] = field;
-    //     }
-    //     else{
-    //       headers[String.fromCharCode(i+65)] = field;
-    //     }
-    //     i++;
-    //   }
-    // }
-    // for(z in worksheet) {
-    //     if(z[0] === '!') continue;
-    //     //parse out the column, row, and value
-    //     var tt = 0;
-    //     //z contains the position in the sheet, so A1, A2, etc
-    //     for(var i = 0; i < z.length; i++){
-    //       if(!isNaN(z[i])){
-    //         tt = i;
-    //         break;
-    //       }
-    //     }
-    //     var col = z.substring(0,tt);
-    //     var row = parseInt(z.substring(tt));
-    //     var value = worksheet[z].v;
 
-    //     if(!data[row]) data[row]={};
-    //     data[row][headers[col]] = value;
-    // }
-    // //drop those first two rows which are empty
-    // data.shift();
-    // data.shift();
-    //try to create models
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
-    //for(let element of data){
     data.forEach(function(element){
-      console.log("CURRENTLY USING ELEMENT")
-      console.log(element)
       //verify that all fields exist
       if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null && element.advisor != null){
         element.onyen = element.onyen[0].toUpperCase() + element.onyen.toLowerCase().slice(1);

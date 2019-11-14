@@ -18,7 +18,7 @@ _.validateModelData = function (input, model) {
       if (m[key].instance === "Array") {
         result[key] = input[key];
       } else if (m[key].instance === "Boolean") {
-        result[key] = Boolean(input[key]);
+        result[key] = (input[key].toString().toLowerCase() == 'true');
       } else if (m[key].instance === "Number") {
         result[key] = parseInt(input[key]);
       } else if (m[key].instance === "ObjectID") {

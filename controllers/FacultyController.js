@@ -272,62 +272,20 @@ facultyController.upload = function(req, res){
     var f = files[Object.keys(files)[0]];
     var workbook = XLSX.readFile(f.path);
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    var headers = {};
-    var data = [];
-    var i = 0;
-    for(var field in schema.Faculty.schema.obj){
-      headers[String.fromCharCode(i+65)] = field;
-      i++;
-    }
-    for(z in worksheet) {
-        if(z[0] === '!') continue;
-        //parse out the column, row, and value
-        var col = z.substring(0,1);
-        var row = parseInt(z.substring(1));
-        var value = worksheet[z].v;
-
-        if(!data[row]) data[row]={};
-        data[row][headers[col]] = value;
-    }
-    //drop those first two rows which are empty
-    data.shift();
-    data.shift();
-    //try to create models
+    var data = XLSX.utils.sheet_to_json(worksheet)
     var count = 0;
+
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
-      if(element.active == null){
-        element.active = true;
-      }
-      if(element.admin == null){
-        element.admin = false;
-      }
-      if(element.email == null){
-        element.email = "";
-      }
-      //verify that all fields exist
-      //if(util.allFieldsExist(element, schema.Faculty)){
-      if(element.firstName != null && element.pid != null && element.onyen != null){
+      element = util.validateModelData(element, schema.Faculty)
+      if(element.firstName != null && element.pid != null && element.onyen != null && element.csid != null){
         //get faculty lastname/firstname
-        schema.Faculty.findOne({pid: element.pid}).exec().then(function(result){
+        schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true}).exec().then(function(result){
           if(result != null){
-            result.onyen = element.onyen;
-            result.csid = element.csid;
-            result.firstName = element.firstName;
-            result.lastName = element.lastName;
-            result.sectionNumber = element.sectionNumber;
-            result.active = element.active;
-            result.admin = element.admin;
-            result.email = element.email;
-            result.save(function(error){
-              if(error){
-                res.render("../views/error.ejs", {string: element.firstName + " did not save because there is something wrong with the data."});
-              }
-              count++;
+            count++;
               if(count == data.length){
                 res.redirect("/faculty/upload/true");
               }
-            });
           }
           else{
             var inputFaculty = new schema.Faculty(element);
@@ -337,13 +295,13 @@ facultyController.upload = function(req, res){
                 res.redirect("/faculty/upload/true");
               }
             }).catch(function(err){
-              res.render("../views/error.ejs", {string: element.firstName+" did not save because something is wrong with it."});
+              res.render("../views/error.ejs", {string: element.firstName+" did not save because something is wrong with it. Error: " + err});
             });
           }
         });
       }
       else{
-        res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field."});
+        res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field: Either firstName, pid, onyen, or csid are null"});
       }
     });
   });
