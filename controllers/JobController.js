@@ -281,35 +281,41 @@ jobController.uploadPage = function(req, res){
   });
 }
 
+/*
+As of 11/14/2019, I've decided not to use this as making jobs on the website itself
+is likely just as fast as putting it in the right database format, and this code below
+is not written well/very complicated and hard to debug.
+*/
 jobController.upload = function(req, res){
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files){
     var f = files[Object.keys(files)[0]];
     var workbook = XLSX.readFile(f.path);
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    var headers = {};
-    var data = [];
-    headers[String.fromCharCode(65)] = "onyen";
-    var i = 1;
-    for(var field in schema.Job.schema.obj){
-    	if(field != "fundingSource"){
-			headers[String.fromCharCode(i+65)] = field;
-			i++;
-		}
-    }
-    for(z in worksheet) {
-        if(z[0] === '!') continue;
-        //parse out the column, row, and value
-        var col = z.substring(0,1);
-        var row = parseInt(z.substring(1));
-        var value = worksheet[z].v;
+    var data = XLSX.utils.sheet_to_json(worksheet);
+    // var headers = {};
+    // var data = [];
+    // headers[String.fromCharCode(65)] = "onyen";
+    // var i = 1;
+    // for(var field in schema.Job.schema.obj){
+    // 	if(field != "fundingSource"){
+		// 	headers[String.fromCharCode(i+65)] = field;
+		// 	i++;
+		// }
+    // }
+    // for(z in worksheet) {
+    //     if(z[0] === '!') continue;
+    //     //parse out the column, row, and value
+    //     var col = z.substring(0,1);
+    //     var row = parseInt(z.substring(1));
+    //     var value = worksheet[z].v;
 
-        if(!data[row]) data[row]={};
-        data[row][headers[col]] = value;
-    }
-    //drop those first two rows which are empty
-    data.shift();
-    data.shift();
+    //     if(!data[row]) data[row]={};
+    //     data[row][headers[col]] = value;
+    // }
+    // //drop those first two rows which are empty
+    // data.shift();
+    // data.shift();
     //try to create models
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
@@ -473,37 +479,14 @@ jobController.uploadGrant = function(req, res){
 	form.parse(req, function(err, fields, files){
 		var f = files[Object.keys(files)[0]];
 		var workbook = XLSX.readFile(f.path);
-		var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-		var headers = {};
-		var data = [];
-		var i = 0;
-		for(var field in schema.Grant.schema.obj){
-		  headers[String.fromCharCode(i+65)] = field;
-		  i++;
-		}
-		for(z in worksheet) {
-		    if(z[0] === '!') continue;
-		    //parse out the column, row, and value
-		    var col = z.substring(0,1);
-		    var row = parseInt(z.substring(1));
-		    var value = worksheet[z].v;
-
-		    if(!data[row]) data[row]={};
-		    data[row][headers[col]] = value;
-		}
-		//drop those first two rows which are empty
-		data.shift();
-		data.shift();
-		//try to create models
-		//have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
+    var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    var data = XLSX.utils.sheet_to_json(worksheet);
+		
 		var count = 0;
 		data.forEach(function(element){
-			//verify that required fields exist
 			
 			if(element.name != null){
-				console.log(element.name);
 				schema.Grant.findOne({name:element.name}).exec().then(function(result){
-					console.log("ABC")
 					if(result == null){
 					  var inputGrant = new schema.Grant(element);
 					  inputGrant.save().then(function(result){
@@ -642,7 +625,7 @@ jobController.download = function(req, res){
       if(result[i].course != null){
         result[i].course = result[i].course.department + " " + result[i].course.number + " " + result[i].course.section;
       }
-      result[i].supervisor = result[i].supervisor.lastName + " " + result[i].supervisor.firstName;
+      result[i].supervisor = result[i].supervisor.lastName + ", " + result[i].supervisor.firstName;
       result[i].semester = result[i].semester.season + " " + result[i].semester.year;
     }
     var wb = XLSX.utils.book_new();
