@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <!-- <head>
+    <meta charset="UTF-8" />
+    <title>SPA SDK Sample</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  </head>
+
+  <body>
+    <h2>SPA Authentication Sample</h2>
+    <p>Welcome to our page!</p>
+    <button id="btn-login" disabled="false" onclick="login()">Log in</button>
+    <button id="btn-logout" disabled="false" onclick="logout()">Log out</button>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.2/auth0-spa-js.production.js"></script>
+    <script src="js/app.js"></script>
+  </body> -->
+  <body className="Loginpage-body">
+    <div>
+        <h1>
+            <span className="Loginpage-headerone">
+                UNC-CH
+                Graduate
+                Tracking
+            </span>
+        <link rel="stylesheet" type="text/css" href="/css/main.css" />
+        </h1>
+        <Form className="login-form">
+            <FormGroup>
+                <Input 
+                    id="PID"
+                    minLength="9"
+                    name="PID"
+                    onChange={this.handleInputChange}
+                    onKeyPress={this.handleKeyPress}
+                    placeholder="PID"
+                    required
+                    type="PID"
+                    value={this.state.PID}
+                />
+            </FormGroup>
+            <FormGroup>
+                <Input
+                    id="password"
+                    minLength="4"
+                    name="password"
+                    onChange={this.handleInputChange}
+                    onKeyPress={this.handleKeyPress}
+                    placeholder="password"
+                    required
+                    type="password"
+                    value={this.state.password}
+                />
+            </FormGroup>
+        </Form>
+        <div>
+            <a
+            className="Loginpage-link"
+            href="https://csgrad.cs.unc.edu"
+            target="_blank"
+            rel="noopener noreferrer"
+            >
+            Forgot your password?
+            </a>
+        <br/>
+            <Button 
+                id="btn-login" 
+                disabled="true" 
+                onclick="login()"
+                className="Loginpage-button"
+                href="https://csgrad.cs.unc.edu"
+            >
+                Login
+            </Button>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.auth0.com/js/auth0-spa-js/1.2/auth0-spa-js.production.js"></script>
+<script src="js/app.js"></script>
+
+</html>

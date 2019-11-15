@@ -121,7 +121,7 @@ table {
 
 .fabutton {
 	background: none;
-	padding:0px:
+	padding:0px;
 	border:none;
 }
 
@@ -176,3 +176,96 @@ This is for highlighting search text on index pages
 	font-size:10px;
 	height:38px;
 }
+
+.Loginpage {
+	text-align: center;
+  }
+  
+  .Loginpage-logo {
+	height: 40vmin;
+  }
+  
+  .Loginpage-header {
+	background-color: #7BAFD4;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+  }
+  
+  .Loginpage-body {
+	background-color: white;
+	background-image: url("./assets/old_well_yeungb.jpg");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	min-height: 100vh;
+	filter: blur(2px);
+	display: flex;
+  }
+  
+  .Loginpage-link {
+	color: #7BAFD4;
+	font-size: 12px;
+	display: 5px;
+	position: absolute;
+	top: 61%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+	width: 13%;
+	text-align: Left;
+  }
+  
+  .login-form {
+	display: 5px;
+	position: absolute;
+	top: 56%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+	width: 40%;
+	text-align: center;
+  }
+  
+  .Loginpage-headerone {
+	font-weight: bold;
+	color: #7BAFD4;
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+	font-weight: bold;
+	border: 3px solid #7BAFD4;
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+	width: 12%;
+	padding: 10px;
+	text-align: left;
+  }
+  
+  .allpieces {
+	font-weight: bold;
+  }
+  
+  .Loginpage-button {
+	background-color: #7BAFD4;
+	text-align: center;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 5%;
+	position: absolute;
+	top: 66%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+	width: 13%;
+	text-align: center;
+  }

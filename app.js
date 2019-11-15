@@ -5,11 +5,13 @@ var bodyParser = require("body-parser")
 var compress = require("compression")
 var https = require("https");
 var schema = require("./models/schema.js");
+const { join } = require("path");
 
 require('dotenv').config();
 
 var app = express()
 
+let auth0 = null;
 
 app
   .use(compress())
@@ -42,6 +44,36 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
+// Endpoint to serve the configuration file
+app.get("/auth_config.json", (req, res) => {
+  res.sendFile(join(__dirname, "auth_config.json"));
+});
+
+// Serve the index page for all other requests
+app.get("/*", (_, res) => {
+  res.sendFile(join(__dirname, "/index.html"));
+});
+
+const fetchAuthConfig = () => fetch("/auth_config.json");
+
+const configureClient = async () => {
+  const response = await fetchAuthConfig();
+  const config = await response.json();
+
+  auth0 = await createAuth0Client({
+    domain: config.domain,
+    client_id: config.clientId
+  });
+};
+
+if (typeof window === 'undefined') {
+  global.window = {}
+}
+
+window.onload = async () => {
+  await configureClient();
+}
+
 /*
   When in production, X-REMOTE-USER-1 is set by nginx
   to be the user's csid if they successfully login
@@ -53,74 +85,6 @@ app.use(express.static(path.join(__dirname, "public")))
   to get a user's pid, which is then stored in process.env.userPID
   which is then used for logic in the rest of the app.
 */
-if(process.env.mode == "production"){
-//middleware executed before every request
-  app.use(function(req, res, next){
-    var user = req.get("X-REMOTE-USER-1")
-    schema.Student.findOne({csid: user}).exec().then((result) => {
-      if(result != null){
-        process.env.userPID = result.pid;
-        res.locals.user = result.csid;
-        next();
-      }
-      else{
-        schema.Faculty.findOne({csid: user}).exec().then((result) => {
-          if(result != null){
-            process.env.userPID = result.pid;
-            res.locals.user = result.csid;
-            next();
-          }
-          else{
-            process.env.userPID = null;
-            next();
-          }
-        })
-      }
-    })
-  });
-
-}
-else if(process.env.mode == "development" || process.env.mode == "testing"){
-  /*
-    initialize all semesters if they have not been initialized.
-    This is required because the database is reset if the app is 
-    run using `npm test`
-  */
-  schema.Semester.find({}).exec().then((result)=>{
-    if(result.length == 0){
-      require('./controllers/util.js').initializeAllSemesters();
-    }
-  })
-
-  //add routes to allow user changes
-  app.use("/changeUser", require("./routes/userChange"));
-}
-
-app.get("/logout", (req, res)=>{
-	 process.env.userPID = "---------";
-	 res.redirect("http://logout@csgrad.cs.unc.edu");
-})
-
-app.get("/", (req, res) => {
-  schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-    if(result != null){
-      if(result.admin == true){ //admin
-        res.redirect("/student");
-      } else { //advisor
-        res.redirect("/student");
-      }
-    }
-    else{
-      schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
-        if(result != null){ //student
-          res.redirect("/studentView");
-        } else {
-          res.render("./error.ejs", {string: "Failed Authentication"});
-        }
-      });
-    }
-  });
-});
 
 app.use("/course", require("./routes/course"));
 
