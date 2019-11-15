@@ -51,7 +51,7 @@ app.get("/auth_config.json", (req, res) => {
 
 // Serve the index page for all other requests
 app.get("/*", (_, res) => {
-  res.sendFile(join(__dirname, "/index.html"));
+  res.sendFile(join(__dirname, "/Loginpage.js"));
 });
 
 const fetchAuthConfig = () => fetch("/auth_config.json");
