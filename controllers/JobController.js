@@ -339,6 +339,7 @@ jobController.upload = function(req, res){
                         //if the job doesn't exist, try to make it
                         if(result == null){
                           var inputJob = new schema.Job(element);
+                          
                           inputJob.save().then(function(result){
                             //save to student's job history
                             if(element.onyen != null){
@@ -374,7 +375,7 @@ jobController.upload = function(req, res){
                       });
                     }
                     else{
-                      res.render("../views/error.ejs", {string: element.position+" "+element.supervisor+" did not save because the course/faculty/semester is incorrect."});
+                      res.render("../views/error.ejs", {string: element.position+" "+element.supervisor.firstName+" did not save because the course/faculty/semester is incorrect."});
                     }
                   });
                 }
