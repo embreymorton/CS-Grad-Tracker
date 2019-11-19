@@ -565,6 +565,7 @@ studentController.upload = function(req, res){
 
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
+    //for(let element of data){
     data.forEach(function(element){
       //verify that all fields exist
       if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null && element.advisor != null){

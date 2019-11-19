@@ -15,7 +15,11 @@ global.server = {}
 Once a connection with the database has been secured, start the app
 on host:port
 */
+<<<<<<< HEAD
 mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+=======
+mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true})
+>>>>>>> auth0
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
