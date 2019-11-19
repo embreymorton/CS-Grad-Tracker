@@ -7,22 +7,35 @@ var https = require("https");
 var schema = require("./models/schema.js");
 const { join } = require("path");
 
-require('dotenv').config();
+const expressSession = require("express-session");
+const passport = require("passport");
+const Auth0Strategy = require("passport-auth0");
 
 require('dotenv').config();
 
 var app = express()
 
 let auth0 = null;
+/*Instead of auth0 permissions system use auth0 to login and use the
+ given email to check against database to determine the user role
+*/
+
+//session configuration
+const session = {
+  secret: "ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW",
+  cookie: {},
+  resave: false,
+  saveUninitialized: false
+};
+
+if (app.get("mode") === "production") {
+  // Serve secure cookies, requires HTTPS
+  session.cookie.secure = true;
+}
 
 app
   .use(compress())
-  .use(sessions({
-    cookieName: "gradInfoSession",
-    secret: "ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW",
-    duration: 3 * 60 * 60 * 1000,
-    activeDuration: 2 * 60 * 1000
-  }))
+  .use(expressSession(session))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .set("view cache", true)
