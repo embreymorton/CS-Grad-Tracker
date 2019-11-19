@@ -440,11 +440,7 @@ courseController.upload = function(req, res){
                         res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-<<<<<<< HEAD
                       res.render("../views/error.ejs", {string: element.name + " " + element.number+" did not update because something was wrong with it. Error: "+err});
-=======
-                      res.render("../views/error.ejs", {string: element.name + " " + element.number+" did not update because something was wrong with it."});
->>>>>>> auth0
                       return;
                     });
                   }

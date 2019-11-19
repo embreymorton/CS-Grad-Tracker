@@ -292,23 +292,7 @@ facultyController.upload = function(req, res){
         //get faculty lastname/firstname
         schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true}).exec().then(function(result){
           if(result != null){
-<<<<<<< HEAD
             count++;
-=======
-            result.onyen = element.onyen;
-            result.csid = element.csid;
-            result.firstName = element.firstName;
-            result.lastName = element.lastName;
-            result.sectionNumber = element.sectionNumber;
-            result.active = element.active;
-            result.admin = element.admin;
-            result.email = element.email;
-            result.save(function(error){
-              if(error){
-                res.render("../views/error.ejs", {string: element.firstName + " did not save because there is something wrong with the data."});
-              }
-              count++;
->>>>>>> auth0
               if(count == data.length){
                 res.redirect("/faculty/upload/true");
               }
