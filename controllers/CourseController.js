@@ -374,23 +374,18 @@ courseController.upload = function(req, res){
             schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
               if(result != null){
                 element.semester = result._id;
+                element.category = element.category.toLowerCase();
                 switch(element.category){
                   case "t":
-                  case "T":
-                  case "Theory":
                   case "theory":
                     element.category = "Theory";
                     break;
                   case "s":
-                  case "S":
-                  case "Systems":
                   case "systems":
                     element.category = "Systems";
                     break;
                   case "a":
-                  case "A":
                   case "applications":
-                  case "Applications":
                     element.category = "Appls";
                     break;
                   default:

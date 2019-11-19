@@ -274,30 +274,19 @@ facultyController.upload = function(req, res){
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet)
     var count = 0;
-
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
       element = util.validateModelData(element, schema.Faculty)
       if(element.firstName != null && element.pid != null && element.onyen != null && element.csid != null){
-        //get faculty lastname/firstname
+        
+        //find one and update automatically inserts even if empty
         schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true}).exec().then(function(result){
-          if(result != null){
-            count++;
-              if(count == data.length){
-                res.redirect("/faculty/upload/true");
-              }
+          count++;
+          if(count == data.length){
+            res.redirect("/faculty/upload/true");
           }
-          else{
-            var inputFaculty = new schema.Faculty(element);
-            inputFaculty.save().then(function(result){
-              count++;
-              if(count == data.length){
-                res.redirect("/faculty/upload/true");
-              }
-            }).catch(function(err){
-              res.render("../views/error.ejs", {string: element.firstName+" did not save because something is wrong with it. Error: " + err});
-            });
-          }
+        }).catch((err)=>{
+          res.render("../views/error.ejs", {string: err});
         });
       }
       else{
