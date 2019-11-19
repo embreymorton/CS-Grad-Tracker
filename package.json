@@ -6,10 +6,7 @@
   "instances": "max",
   "exec_mode": "cluster",
   "dependencies": {
-<<<<<<< HEAD
-=======
     "@auth0/auth0-spa-js": "^1.5.0",
->>>>>>> auth0
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
