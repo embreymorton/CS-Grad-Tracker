@@ -95,6 +95,7 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 app.use(express.static(path.join(__dirname, "public")))
 
 app.get("/", (req, res) => {
+  
   res.redirect("/student");
   // schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
   //   if(result != null){
@@ -117,7 +118,6 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  console.log(req.user)
   if(req.user != undefined){
     console.log("REACH HERE")
     var email = req.user._json.email;
@@ -129,7 +129,6 @@ app.use((req, res, next) => {
       }
       else{
         schema.Faculty.findOne({email: email}).exec().then((result) => {
-          console.log(result);
           if(result != null){
             process.env.userPID = result.pid;
             res.locals.user = result.csid;
