@@ -20,6 +20,29 @@ let auth0 = null;
  given email to check against database to determine the user role
 */
 
+const strategy = new Auth0Strategy(
+  {
+    domain: process.env.AUTH0_DOMAIN,
+    clientID: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    callbackURL:
+      process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback"
+  },
+  function(accessToken, refreshToken, extraParams, profile, done) {
+    /**
+     * Access tokens are used to authorize users to an API
+     * (resource server)
+     * accessToken is the token to call the Auth0 API
+     * or a secured third-party API
+     * extraParams.id_token has the JSON Web Token
+     * profile has all the information from the user
+     */
+    return done(null, profile);
+  }
+);
+
+
+
 //session configuration
 const session = {
   secret: "ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW",
@@ -46,6 +69,18 @@ app
     next()
   })
 
+passport.use(strategy);
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 //setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
@@ -59,35 +94,69 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
-// Endpoint to serve the configuration file
-app.get("/auth_config.json", (req, res) => {
-  res.sendFile(join(__dirname, "auth_config.json"));
+app.get("/", (req, res) => {
+  res.redirect("/student");
+  // schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
+  //   if(result != null){
+  //     if(result.admin == true){ //admin
+  //       res.redirect("/student");
+  //     } else { //advisor
+  //       res.redirect("/student");
+  //     }
+  //   }
+  //   else{
+  //     schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
+  //       if(result != null){ //student
+  //         res.redirect("/studentView");
+  //       } else {
+  //         res.render("./error.ejs", {string: "Failed Authentication"});
+  //       }
+  //     });
+  //   }
+  // });
 });
 
-// Serve the index page for all other requests
-app.get("/*", (_, res) => {
-  res.sendFile(join(__dirname, "/Loginpage.js"));
+app.use((req, res, next) => {
+  console.log(req.user)
+  if(req.user != undefined){
+    console.log("REACH HERE")
+    var email = req.user._json.email;
+    schema.Student.findOne({email: email}).exec().then((result) => {
+      if(result != null){
+        process.env.userPID = result.pid;
+        res.locals.user = result.csid;
+        next();
+      }
+      else{
+        schema.Faculty.findOne({email: email}).exec().then((result) => {
+          console.log(result);
+          if(result != null){
+            process.env.userPID = result.pid;
+            res.locals.user = result.csid;
+            next();
+          }
+          else{
+            process.env.userPID = 000000000;
+            next();
+          }
+        })
+      }
+    });
+  }
+  else{
+    process.env.userPID = 000000000;
+    next();
+  }
+  
 });
 
-const fetchAuthConfig = () => fetch("/auth_config.json");
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next();
+});
 
-const configureClient = async () => {
-  const response = await fetchAuthConfig();
-  const config = await response.json();
 
-  auth0 = await createAuth0Client({
-    domain: config.domain,
-    client_id: config.clientId
-  });
-};
 
-if (typeof window === 'undefined') {
-  global.window = {}
-}
-
-window.onload = async () => {
-  await configureClient();
-}
 
 /*
   When in production, X-REMOTE-USER-1 is set by nginx
@@ -113,6 +182,7 @@ app.use("/studentView", require("./routes/studentView"));
 
 app.use("/report", require("./routes/report"));
 
+app.use("/", require("./routes/auth"));
 
 //need to look into error handling before modifying or removing the following 2 middleware functions
 
