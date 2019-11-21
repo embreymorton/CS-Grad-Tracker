@@ -37,4 +37,9 @@ data.uploadCourse = {
     semester: "FA 2019"
 }
 
+data.uploadGrant = {
+    name1: "Grant for testing",
+    name2: "GRANT 2 for testing"
+}
+
 module.exports = data;

@@ -70,7 +70,36 @@ describe("Upload data", ()=>{
     })
 
     it('Uploading a grant xlsx/csv should correctly store data in the database', ()=>{
+        cy.visit('/job/uploadGrant/false')
+
+        const fileName = filePath + '4grantUpload.csv'
+        cy.fixture(fileName).then(fileContent => {
+            cy.get('.grant-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+        });
+
+        cy.get('.grant-upload-submit-button').click()
         
+        cy.visit('/job/create')
+
+        cy.get('.input-funding-source > option').eq(1).should('have.text', data.uploadGrant.name2)
+        cy.get('.input-funding-source > option').eq(2).should('have.text', data.uploadGrant.name1)
+    })
+
+    it('Uploading courseInfo xlsx/csv should correctly store data in the database', ()=>{
+        cy.visit('/course/uploadinfo/false')
+
+        const fileName = filePath + '5courseinfoUpload.csv'
+        cy.fixture(fileName).then(fileContent => {
+            cy.get('.upload-course-info-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+        });
+
+        cy.get('.upload-course-info-submit').click()
+        
+        cy.visit('/course/create')
+
+        var re = /[0-9]{3}, [a-z,A-Z, ,&]*, [0-9] hours/;
+        cy.get('.input-course-info > option')
+        .eq(1).invoke('text').should('match', re);
     })
 
 })
