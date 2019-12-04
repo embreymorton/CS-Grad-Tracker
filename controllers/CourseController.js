@@ -374,23 +374,18 @@ courseController.upload = function(req, res){
             schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
               if(result != null){
                 element.semester = result._id;
+                element.category = element.category.toLowerCase();
                 switch(element.category){
                   case "t":
-                  case "T":
-                  case "Theory":
                   case "theory":
                     element.category = "Theory";
                     break;
                   case "s":
-                  case "S":
-                  case "Systems":
                   case "systems":
                     element.category = "Systems";
                     break;
                   case "a":
-                  case "A":
                   case "applications":
-                  case "Applications":
                     element.category = "Appls";
                     break;
                   default:
@@ -512,30 +507,40 @@ courseController.uploadInfoPage = function(req, res){
 
 courseController.uploadInfo = function(req, res){
 
-  schema.CourseInfo.find({}).remove().exec();
+  schema.CourseInfo.find({}).deleteMany().exec();
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files){
     var f = files[Object.keys(files)[0]];
     var workbook = XLSX.readFile(f.path, {cellDates:true});
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet);
-   
     var count = 0;
-    data.forEach(function(element){
-      //verify that all fields exist
-      if(util.allFieldsExist(element, schema.CourseInfo)){
-        var inputCourseInfo = new schema.CourseInfo(element);
-        inputCourseInfo.save().then(function(result){
-          count++;
-          if(count == data.length){
-            res.redirect("/course/uploadInfo/true");
-          }
-        });
-      }
-      else{
-        res.render("../views/error.ejs", {string: "A column is missing information."});
-      }
-    });
+
+    var ogkeys = Object.keys(schema.CourseInfo.schema.obj);
+    var keys = data.length > 0 ? Object.keys(data[0]) : [];
+    if(ogkeys.join() == keys.join()){
+    //remember to check that headers from worksheet match
+      data.forEach(function(element){
+        //verify that all fields exist
+        if(util.allFieldsExist(element, schema.CourseInfo)){
+          var inputCourseInfo = new schema.CourseInfo(element);
+          inputCourseInfo.save().then(function(result){
+            count++;
+            if(count == data.length){
+              res.redirect("/course/uploadInfo/true");
+            }
+          }).catch((err)=>{
+            res.render("../views/error.ejs", {string: err})
+          });
+        }
+        else{
+          res.render("../views/error.ejs", {string: "A column is missing information."});
+        }
+      });
+    }
+    else{
+      res.render("../views/error.ejs", {string: "One of the headers is wrong"});
+    }
   });               
 }
 

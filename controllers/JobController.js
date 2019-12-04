@@ -482,7 +482,7 @@ jobController.uploadGrant = function(req, res){
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet);
 		
-		var count = 0;
+    var count = 0;
 		data.forEach(function(element){
 			
 			if(element.name != null){
