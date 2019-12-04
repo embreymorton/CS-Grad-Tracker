@@ -33,15 +33,8 @@ facultyController.post = function (req, res) {
   /*html checkboxes don't send false if the box is checked, it just sends nothing,
   so check if input.active equals null, if it is, that means the box wasn't checked,
   so input.active should be assigned the value false*/
-  if(input.active == null){
-    input.active = false;
-  }
-  if(input.admin == null){
-    input.admin = false;
-  }
-  if(input.email == null){
-    input.email = "None";
-  }
+  input.active == null ? input.active = false : input.active = true;
+  input.admin == null ? input.admin = false : input.admin = true;
   //Verify that all fields exist. Should be though if front end is done correctly.
   if(util.allFieldsExist(input, schema.Faculty)){
     /*onyen and pid are unique, so look for faculty using those two fields to check
@@ -132,15 +125,8 @@ facultyController.get = function (req, res) {
  */
 facultyController.put = function (req, res) {
   var input = req.body;
-  if(input.active == null){
-    input.active = false;
-  }
-  if(input.admin == null){
-    input.admin = false;
-  }
-  if(input.email == null){
-    input.email = "None";
-  }
+  input.active == null ? input.active = false : input.active = true;
+  input.admin == null ? input.admin = false : input.admin = true;
   var input = util.validateModelData(input, schema.Faculty);
   if (util.allFieldsExist(input, schema.Faculty)) {
     schema.Faculty.findOneAndUpdate({_id: input._id}, input).exec().then(function (result) {
@@ -277,8 +263,18 @@ facultyController.upload = function(req, res){
 
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
-      element = util.validateModelData(element, schema.Faculty)
-      if(element.firstName != null && element.pid != null && element.onyen != null && element.csid != null){
+      if(element.active == null){
+        element.active = true;
+      }
+      if(element.admin == null){
+        element.admin = false;
+      }
+      if(element.email == null){
+        element.email = "";
+      }
+      //verify that all fields exist
+      //if(util.allFieldsExist(element, schema.Faculty)){
+      if(element.firstName != null && element.pid != null && element.onyen != null){
         //get faculty lastname/firstname
         schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true}).exec().then(function(result){
           if(result != null){
