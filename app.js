@@ -95,60 +95,75 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
-app.get("/", (req, res) => {
-  
-  res.redirect("/student");
-  // schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-  //   if(result != null){
-  //     if(result.admin == true){ //admin
-  //       res.redirect("/student");
-  //     } else { //advisor
-  //       res.redirect("/student");
-  //     }
-  //   }
-  //   else{
-  //     schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
-  //       if(result != null){ //student
-  //         res.redirect("/studentView");
-  //       } else {
-  //         res.render("./error.ejs", {string: "Failed Authentication"});
-  //       }
-  //     });
-  //   }
-  // });
-});
 
-app.use((req, res, next) => {
-  if(req.user != undefined){
-    console.log("REACH HERE")
-    var email = req.user._json.email;
-    schema.Student.findOne({email: email}).exec().then((result) => {
-      if(result != null){
-        process.env.userPID = result.pid;
-        res.locals.user = result.csid;
-        next();
+
+
+if(process.env.mode == "production" || process.env.mode == "development"){
+  app.use((req, res, next) => {
+    if(req.user != undefined){
+      var email = req.user._json.email;
+      schema.Student.findOne({email: email}).exec().then((result) => {
+        if(result != null){
+          process.env.userPID = result.pid;
+          res.locals.user = result.csid;
+          next();
+        }
+        else{
+          schema.Faculty.findOne({email: email}).exec().then((result) => {
+            if(result != null){
+              process.env.userPID = result.pid;
+              res.locals.user = result.csid;
+              next();
+            }
+            else{
+              process.env.userPID = 000000000;
+              next();
+            }
+          })
+        }
+      });
+    }
+    else{
+      process.env.userPID = 000000000;
+      next();
+    }
+  });
+
+  app.get("/", (req, res) => {
+    if(req.user != undefined){
+      var email = req.user._json.email;
+      schema.Faculty.findOne({email: "takoda@cs.unc.edu"}).exec().then(function(result){
+        if(result != null){
+          res.redirect('/student')
+        }
+        else{
+          schema.Student.findOne({email: email}).exec().then(function(result){
+            if(result != null){ //student
+              res.redirect("/studentView");
+            } else {
+              res.render("./error.ejs", {string: "Failed Authentication, you are not a user in the database"});
+            }
+          });
+        }
+      });
+    }
+    else{
+      res.render("./error.ejs", {string: "Please log in"});
+    }
+    
+  });
+}
+else{
+    schema.Semester.find({}).exec().then((result)=>{
+      if(result.length == 0){
+        require('./controllers/util.js').initializeAllSemesters();
       }
-      else{
-        schema.Faculty.findOne({email: email}).exec().then((result) => {
-          if(result != null){
-            process.env.userPID = result.pid;
-            res.locals.user = result.csid;
-            next();
-          }
-          else{
-            process.env.userPID = 000000000;
-            next();
-          }
-        })
-      }
-    });
-  }
-  else{
-    process.env.userPID = 000000000;
-    next();
-  }
+    })
   
-});
+    //add routes to allow user changes
+    app.use("/changeUser", require("./routes/userChange"));
+  
+}
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();

@@ -206,7 +206,6 @@ _.listObjectToString = function (input) {
 */
 _.checkAdmin = function(){
   return new Promise((resolve, reject)=>{
-    console.log(process.env.userPID);
     schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
       if(result != null){
         if(result.admin == true){

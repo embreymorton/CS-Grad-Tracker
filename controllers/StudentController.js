@@ -12,9 +12,8 @@ var studentController = {}
 studentController.post = function (req, res) {
   var input = req.body;
   input = verifyBoolean(input);
-  console.log(input)
   //verify that the required fields are not null
-  if(input.onyen != null && input.firstName != null && input.lastName != null && input.pid != null && input.pid != NaN && input.advisor != null){
+  if(input.onyen != null && input.email != null && input.advisor != null){
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
     schema.Student.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}]}).exec().then(function (result) {
       if (result != null){
@@ -26,7 +25,6 @@ studentController.post = function (req, res) {
       else {
         input.onyen = input.onyen.toLowerCase();
         var inputStudent = new schema.Student(util.validateModelData(input, schema.Student));
-        console.log(inputStudent)
         /*use the then function because save() is asynchronous. If you only have inputStudent.save(); res.redirect...
         it is possible that the data does not save in time (or load in time if performing queries that return data
         that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
@@ -269,9 +267,7 @@ studentController.viewForm = function(req, res){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       if(result != null){
         var student = result;
-        console.log(req.params.title);
         schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
-          console.log(result);
           var form = {};
           if(result != null){
             form = result;
@@ -310,7 +306,6 @@ studentController.updateForm = function(req, res){
           else{
             var inputModel = new schema[req.params.title](input);
             inputModel.save().then(function(result){
-              console.log(result);
               res.redirect("/student/forms/viewForm/"+studentId+"/"+req.params.title+"/true");
             });
           }
@@ -625,12 +620,10 @@ studentController.upload = function(req, res){
                 schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student)).exec().then(function(result){
                   count++;
                   if(count == data.length){
-                    console.log(result)
                     res.redirect("/student/upload/true");
                   }
                 }).catch(
                   function(err){
-                    console.log(element)
                     res.render("../views/error.ejs", {string: element.lastName+" did not update because something was wrong with it."});
                     return;
                   });
@@ -710,7 +703,6 @@ studentController.notesPage = function(req, res){
 }
 
 studentController.updateNote = function (req, res) {
-  console.log(input+" " +_id)
   var input = req.body;
   var _id = req.params.noteId;
   //verify that the required fields are not null
@@ -722,7 +714,6 @@ studentController.updateNote = function (req, res) {
         input.student = req.params._id;
         util.allFieldsExist(input, schema.Note);
 
-        console.log(input);
         schema.Note.findOneAndUpdate({_id: _id}, input).exec().then(function(result){
           if(result != null){
             res.redirect("/student/notes/"+req.params._id);
@@ -755,7 +746,7 @@ studentController.addNewNote = function (req, res) {
         input.student = req.params._id;
         util.allFieldsExist(input, schema.Note);
 
-        console.log(input);
+
         var inputModel = new schema.Note(input);
         inputModel.save().then(function(result){
           res.redirect("/student/notes/"+req.params._id);
