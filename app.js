@@ -95,7 +95,7 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
-
+console.log("AB");
 
 
 if(process.env.mode == "production" || process.env.mode == "development"){
@@ -169,8 +169,6 @@ app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   next();
 });
-
-
 
 
 /*

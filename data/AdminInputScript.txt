@@ -1,0 +1,11 @@
+db.faculties.insertOne({
+    onyen: "person",
+    csid: "person",
+    email: "fff@yahoo.com",
+    firstName: "person",
+    lastName: "person",
+    pid: 000000000,
+    sectionNumber: 001,
+    active: true,
+    admin: true
+})
