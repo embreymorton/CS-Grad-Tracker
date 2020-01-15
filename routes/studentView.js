@@ -4,6 +4,15 @@ var router = express.Router();
 
 var student = require("../controllers/StudentViewController.js");
 
+router.use((req, res, next)=>{
+    if(process.env.accessLevel == 1){
+        next();
+    }
+    else{
+        res.render("../views/error.ejs", {string: "You are not a student or have incorrectly authenticated."})
+    }
+})
+
 router.get("/", student.get);
 
 router.get("/courses", student.courses);

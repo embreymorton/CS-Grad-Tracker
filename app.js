@@ -104,6 +104,7 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       schema.Student.findOne({email: email}).exec().then((result) => {
         if(result != null){
           process.env.userPID = result.pid;
+          process.env.accessLevel = 1;
           res.locals.user = result.csid;
           next();
         }
@@ -112,10 +113,17 @@ if(process.env.mode == "production" || process.env.mode == "development"){
             if(result != null){
               process.env.userPID = result.pid;
               res.locals.user = result.csid;
+              if(result.admin){
+                process.env.accessLevel = 3;
+              }
+              else{
+                process.env.accessLevel = 2;
+              }
               next();
             }
             else{
               process.env.userPID = "INVALID";
+              process.env.accessLevel = 0;
               next();
             }
           })
@@ -124,14 +132,11 @@ if(process.env.mode == "production" || process.env.mode == "development"){
     }
     else{
       process.env.userPID = "INVALID";
+      process.env.accessLevel = 0;
       next();
       
     }
   });
-
-  app.use((req, res, next)=>{
-
-  })
 
   app.get("/", (req, res) => {
     if(req.user != undefined){

@@ -7,50 +7,47 @@ var schema = require("../models/schema");
 var student = require('../controllers/StudentController.js');
 
 function authorizeAdmin(req, res, next){
-	util.checkAdmin().then(function(result){
-		if(result){
-			next();
-		}
-		else{
-			res.render("../views/error.ejs", {string:"Not admin"});
-		}
-	});
+	if(process.env.accessLevel == 3){
+		next();
+	}
+	else{
+		res.render("../views/error.ejs", {string: "Not admin"});
+	}
 }
 
 function authorizeFaculty(req, res, next){
-	util.checkFaculty().then(function(result){
-		if(result){
-			next();
-		}
-		else{
-			res.render("../views/error.ejs", {string:"Not faculty"});
-		}
-	});
+	if(process.env.accessLevel >= 2){
+		next();
+	}
+	else{
+		res.render("../views/error.ejs", {string: "Not faculty"});
+	}
 }
 
 function authorizeAdvisor(req, res, next){
-		util.checkAdmin().then(function(result){
-			if(result){
-				next();
-			}
-			else{
-				util.checkAdvisor(req.params._id).then(function(result){
-					if(result){
-						next();
-					}
-					else{
-						res.render("../views/error.ejs", {string:"Not the advisor of the student"});
-					}
-				})
-			}
-		});
-	
+		if(process.env.accessLevel == 3){
+			next();
+		}
+		else{
+			util.checkAdvisor(req.params._id).then(function(result){
+				if(result){
+					next();
+				}
+				else{
+					res.render("../views/error.ejs", {string:"Not the advisor of the student"});
+				}
+			})
+		}
 }
 
 router.use(function(req, res, next){
-	util.adminRole(res).then(function(result){
-		next();
-	});
+	if(process.env.accessLevel == 3){
+		res.locals.admin = true;
+	}
+	else{
+		res.locals.admin = false;
+	}
+	next();
 });
 
 router.use(function(req, res, next){

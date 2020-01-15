@@ -4,32 +4,15 @@ var util = require("../controllers/util");
 
 var course = require("../controllers/CourseController");
 
-router.use((req, res, next)=>{
-	util.pidIsNumber().then((result)=>{
-		if(result){
-			next();
-		}
-		else{
-			res.render("../views/error.ejs", {string: "Not logged in"})
-		}
-	})
-});
-
 router.use(function(req, res, next){
-	util.adminRole(res).then(function(result){
+	if(process.env.accessLevel == 3){
+		res.locals.admin = true;
 		next();
-	});
-});
-
-router.use(function(req, res, next){
-	util.checkAdmin().then(function(result){
-		if(result){
-			next();	
-		}
-		else{
-			res.render("../views/error.ejs", {string:"Not admin"});
-		}
-	});
+	}
+	else{
+		res.locals.admin = false;
+		res.render("../views/error.ejs", {string: "Not admin"});
+	}
 });
 
 
