@@ -44,27 +44,28 @@ router.get("/callback", (req, res, next) => {
 
 router.get("/logout", (req, res) => {
     req.logOut();
+
+
   
-    let returnTo = req.protocol + "://" + req.hostname;
-    const port = req.connection.localPort;
+    // let returnTo = req.protocol + "://" + req.hostname;
+    // const port = req.connection.localPort;
   
-    if (port !== undefined && port !== 8080 && port !== 443) {
-      returnTo =
-        process.env.mode === "production"
-          ? `${returnTo}/`
-          : `${returnTo}:${port}/`;
-    }
+    // if (port !== undefined && port !== 8080 && port !== 443) {
+    //   returnTo =
+    //     process.env.mode === "production"
+    //       ? `${returnTo}/`
+    //       : `${returnTo}:${port}/`;
+    // }
   
-    const logoutURL = new URL(
-      util.format("https://%s/logout", process.env.AUTH0_DOMAIN)
-    );
-    const searchString = querystring.stringify({
-      client_id: process.env.AUTH0_CLIENT_ID,
-      returnTo: returnTo
-    });
-    logoutURL.search = searchString;
-  
-    res.redirect(logoutURL);
+    // const logoutURL = new URL(
+    //   util.format("https://%s/logout", process.env.AUTH0_DOMAIN)
+    // );
+    // const searchString = querystring.stringify({
+    //   client_id: process.env.AUTH0_CLIENT_ID,
+    //   returnTo: returnTo
+    // });
+    // logoutURL.search = searchString;
+    res.redirect(process.env.AUTH0_LOGOUT_URL);
 });
 /**
  * Module Exports

@@ -4,6 +4,17 @@ var util = require("../controllers/util");
 
 var course = require("../controllers/CourseController");
 
+router.use((req, res, next)=>{
+	util.pidIsNumber().then((result)=>{
+		if(result){
+			next();
+		}
+		else{
+			res.render("../views/error.ejs", {string: "Not logged in"})
+		}
+	})
+});
+
 router.use(function(req, res, next){
 	util.adminRole(res).then(function(result){
 		next();
@@ -20,6 +31,7 @@ router.use(function(req, res, next){
 		}
 	});
 });
+
 
 router.get("/", course.get);
 

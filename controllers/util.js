@@ -243,4 +243,16 @@ _.adminRole = function(res){
 }
 
 
+_.pidIsNumber = ()=>{
+  return new Promise((resolve, reject)=>{
+    if(process.env.userPID == "INVALID"){
+      resolve(false);
+      res.render("../views/error.ejs", {string: "You aren't logged in."})
+    }
+    else{
+      resolve(true)
+    }
+  });
+};
+
 module.exports = _;

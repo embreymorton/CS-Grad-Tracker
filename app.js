@@ -95,12 +95,11 @@ app.use(express.static(path.join(__dirname, "node_modules")))
 //public static resource
 app.use(express.static(path.join(__dirname, "public")))
 
-console.log("AB");
-
 
 if(process.env.mode == "production" || process.env.mode == "development"){
   app.use((req, res, next) => {
     if(req.user != undefined){
+      
       var email = req.user._json.email;
       schema.Student.findOne({email: email}).exec().then((result) => {
         if(result != null){
@@ -116,7 +115,7 @@ if(process.env.mode == "production" || process.env.mode == "development"){
               next();
             }
             else{
-              process.env.userPID = 000000000;
+              process.env.userPID = "INVALID";
               next();
             }
           })
@@ -124,15 +123,20 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       });
     }
     else{
-      process.env.userPID = 000000000;
+      process.env.userPID = "INVALID";
       next();
+      
     }
   });
+
+  app.use((req, res, next)=>{
+
+  })
 
   app.get("/", (req, res) => {
     if(req.user != undefined){
       var email = req.user._json.email;
-      schema.Faculty.findOne({email: "takoda@cs.unc.edu"}).exec().then(function(result){
+      schema.Faculty.findOne({email: email}).exec().then(function(result){
         if(result != null){
           res.redirect('/student')
         }
