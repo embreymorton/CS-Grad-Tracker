@@ -5,6 +5,22 @@ describe('Test student routes and functionality', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
+
+    it('Make sure student can not access job, course, and student create routes', ()=>{
+        cy.visit('/changeUser/student');
+        
+        cy.visit('/student');
+        cy.contains('Not faculty');
+
+        cy.visit('/course');
+        cy.contains('Not admin');
+
+        cy.visit('/job');
+        cy.contains('Not admin');
+
+        cy.visit('/faculty');
+        cy.contains('Not admin');
+    })
     
     it('When logged in as student, get taken to studentView page', ()=>{
         cy.visit('/changeUser/student')
