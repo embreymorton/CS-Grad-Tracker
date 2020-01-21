@@ -97,9 +97,7 @@ studentViewController.viewForm = function(req, res){
     schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
       if(result != null){
         var student = result;
-        console.log(req.params.title);
         schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
-          console.log(result);
           var form = {};
           if(result != null){
             form = result;
@@ -124,7 +122,6 @@ studentViewController.viewForm = function(req, res){
 }
 
 studentViewController.updateForm = function(req, res){
-  console.log("ABC");
   var input = req.body;
   if(req.params.title != null){
     schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
@@ -138,7 +135,6 @@ studentViewController.updateForm = function(req, res){
           else{
             var inputModel = new schema[req.params.title](input);
             inputModel.save().then(function(result){
-              console.log(result);
               res.redirect("/studentView/forms/"+req.params.title+"/true");
             });
           }

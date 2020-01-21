@@ -28,7 +28,6 @@ describe("Delete data", ()=>{
         //first column is position, check if it contains the expected value
         cy.get('tbody > tr > td').eq(0).contains(job.position);
 
-        console.log(cy.get('tbody > tr > td').eq(1).invoke('text'));
         cy.get('tbody > tr > td').eq(1).contains(job.supervisor);
 
         cy.get('tbody > tr > td').eq(4).contains(job.hours);
@@ -54,9 +53,9 @@ describe("Delete data", ()=>{
 
         cy.get('.course-table').find('tr').should('have.length', 2);
 
-        cy.get('tbody > tr > td').eq(0).contains('101');
+        cy.get('tbody > tr > td').eq(0).contains('065');
 
-        cy.get('tbody > tr > td').eq(3).contains('Fluency in Information Technology');
+        cy.get('tbody > tr > td').eq(3).contains('FYS');
 
         cy.get('.delete-course-button').click();
 
@@ -67,10 +66,10 @@ describe("Delete data", ()=>{
 
     function searchCourseHelper(){
         cy.get('input[name=number]')
-        .type('101')
+        .type('065')
 
         cy.get('input[name=name]')
-        .type('Fluency in Information Technology')
+        .type('FYS')
 
         cy.get('.search-course-button').click();
     }

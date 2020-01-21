@@ -64,7 +64,6 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .set("view cache", true)
   .use((req, res, next)=>{
-    console.log(req.sessionID);
     next();
   })
 

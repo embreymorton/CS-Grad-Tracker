@@ -27,8 +27,6 @@ var jobController = {};
  */
 jobController.post = function (req, res) {
   var input = req.body;
-  
-  console.log(input);
   input = util.validateModelData(input, schema.Job);
   if(input.position != null && input.supervisor != null){
     //attempt to populate faculty, if they don't exist, error will be caught
@@ -555,7 +553,6 @@ jobController.assign = function(req, res){
         if(typeof(input.students) == "string"){
           input.students = [input.students];
         }
-        //console.log(typeof(input.students));
         input.students.forEach(function(student){
           schema.Student.findOne({_id: student}).exec().then(function(result){
             if(result != null){

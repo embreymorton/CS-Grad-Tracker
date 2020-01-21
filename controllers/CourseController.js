@@ -396,9 +396,8 @@ courseController.upload = function(req, res){
                 //check if the course is already in the courseInfo schema
                 //if not, add it
                 // if(element.name == "Internet Services & Protocols"){
-                //   console.log(element.number);
                 //   schema.CourseInfo.findOne({number: element.number, hours: element.hours, name: element.name}).exec().then(function(result){
-                //     console.log(result);
+                //     
                 //   })
                 // }
 

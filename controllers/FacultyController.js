@@ -59,7 +59,6 @@ facultyController.post = function (req, res) {
         inputFaculty.save().then(function(result){
           /*result of save function is the newly created faculty object, so
           access _id from result*/
-          console.log(result);
           res.redirect("/faculty/edit/"+result._id);
         });
       }
