@@ -63,12 +63,11 @@ app
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .set("view cache", true)
-  .use(function (req, res, next) {
-    if (req.headers.uid) {
-      res.cookie("onyen", req.headers.uid, { httponly: false })
-    }
-    next()
+  .use((req, res, next)=>{
+    console.log(req.sessionID);
+    next();
   })
+
 
 passport.use(strategy);
 app.use(passport.initialize());
@@ -103,27 +102,27 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       var email = req.user._json.email;
       schema.Student.findOne({email: email}).exec().then((result) => {
         if(result != null){
-          process.env.userPID = result.pid;
-          process.env.accessLevel = 1;
+          req.session.userPID = result.pid;
+          req.session.accessLevel = 1;
           res.locals.user = result.csid;
           next();
         }
         else{
           schema.Faculty.findOne({email: email}).exec().then((result) => {
             if(result != null){
-              process.env.userPID = result.pid;
+              req.session.userPID = result.pid;
               res.locals.user = result.csid;
               if(result.admin){
-                process.env.accessLevel = 3;
+                req.session.accessLevel = 3;
               }
               else{
-                process.env.accessLevel = 2;
+                req.session.accessLevel = 2;
               }
               next();
             }
             else{
-              process.env.userPID = "INVALID";
-              process.env.accessLevel = 0;
+              req.session.userPID = "INVALID";
+              req.session.accessLevel = 0;
               next();
             }
           })
@@ -131,8 +130,8 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       });
     }
     else{
-      process.env.userPID = "INVALID";
-      process.env.accessLevel = 0;
+      req.session.userPID = "INVALID";
+      req.session.accessLevel = 0;
       next();
       
     }
@@ -168,10 +167,20 @@ else{
         require('./controllers/util.js').initializeAllSemesters();
       }
     })
-  
     //add routes to allow user changes
     app.use("/changeUser", require("./routes/userChange"));
   
+    app.get("/", (req, res)=>{
+      if(req.session.accessLevel >= 2){
+        res.redirect("/student");
+      }
+      if(req.session.accessLevel == 1){
+        res.redirect("/studentView")
+      }
+      else{
+        
+      }
+    })
 }
 
 app.use((req, res, next) => {

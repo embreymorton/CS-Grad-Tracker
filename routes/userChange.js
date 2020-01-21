@@ -9,8 +9,8 @@ var admin = testRoles.admin;
 var faculty = testRoles.faculty;
 var student = testRoles.student;
 
-var updateEnv = (object, res)=>{
-    process.env.userPID = object.pid;
+var updateEnv = (req, object, res)=>{
+    req.session.userPID = object.pid;
     res.locals.user = object.onyen;
     res.send("Success");
 }
@@ -20,11 +20,13 @@ router.get("/admin", (req, res)=>{
         if(result == null){
             var saveAdmin = new schema.Faculty(admin);
             saveAdmin.save().then((result)=>{
-                updateEnv(result, res);
+                req.session.accessLevel = 3;
+                updateEnv(req, result, res);
             });
         }
         else{
-            updateEnv(result, res);
+            req.session.accessLevel = 3;
+            updateEnv(req, result, res);
         }
     })
 });
@@ -34,11 +36,13 @@ router.get("/faculty", (req, res)=>{
         if(result == null){
             var saveFaculty = new schema.Faculty(faculty);
             saveFaculty.save().then((result)=>{
-                updateEnv(result, res);
+                req.session.accessLevel = 2;
+                updateEnv(req, result, res);
             });
         }
         else{
-            updateEnv(result, res);
+            req.session.accessLevel = 2;
+            updateEnv(req, result, res);
         }
     })
 })
@@ -48,11 +52,13 @@ router.get("/student", (req, res)=>{
         if(result == null){
             var saveStudent = new schema.Student(student);
             saveStudent.save().then((result)=>{
-                updateEnv(result, res);
+                req.session.accessLevel = 1;
+                updateEnv(req, result, res);
             });
         }
         else{
-            updateEnv(result, res);
+            req.session.accessLevel = 1;
+            updateEnv(req, result, res);
         }
     })
 })

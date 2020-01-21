@@ -41,7 +41,7 @@ studentViewController.put = function (req, res) {
 }
 
 studentViewController.get = function(req, res){
-  schema.Student.findOne({pid: process.env.userPID}).populate("semesterStarted").populate("advisor").exec().then(function(result){
+  schema.Student.findOne({pid: req.session.userPID}).populate("semesterStarted").populate("advisor").exec().then(function(result){
     if(result != null){
       result = result.toJSON();
       var genders, ethnicities, student;
@@ -60,7 +60,7 @@ studentViewController.get = function(req, res){
 
 studentViewController.jobs = function(req, res){
 
-  schema.Student.findOne({pid: process.env.userPID}).populate("jobHistory").populate({path:"jobHistory", populate:{path:"supervisor"}})
+  schema.Student.findOne({pid: req.session.userPID}).populate("jobHistory").populate({path:"jobHistory", populate:{path:"supervisor"}})
   .populate({path:"jobHistory", populate:{path:"semester"}}).populate({path:"jobHistory", populate:{path:"course"}}).exec().then(function(result){
     result.jobHistory.sort(function(a, b){
       if(a.semester.year == b.semester.year){
@@ -81,7 +81,7 @@ studentViewController.jobs = function(req, res){
 }
 
 studentViewController.forms = function(req, res){
-  schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
+  schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
     var student = result;
     res.render("../views/studentView/forms.ejs", {student: student});
   });
@@ -94,7 +94,7 @@ studentViewController.viewForm = function(req, res){
     if(req.params.uploadSuccess == "true"){
       uploadSuccess = true;
     }
-    schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
+    schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
       if(result != null){
         var student = result;
         console.log(req.params.title);
@@ -127,7 +127,7 @@ studentViewController.updateForm = function(req, res){
   console.log("ABC");
   var input = req.body;
   if(req.params.title != null){
-    schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
+    schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
       if(result != null){
         var studentId = result._id;
         
@@ -155,7 +155,7 @@ studentViewController.updateForm = function(req, res){
 }
 
 studentViewController.courses = function(req, res){
-  schema.Student.findOne({pid: process.env.userPID}).populate({
+  schema.Student.findOne({pid: req.session.userPID}).populate({
     path:"grades",
     populate:{path:"course", populate:{path:"semester"}}
   }).populate({
@@ -181,7 +181,7 @@ studentViewController.courses = function(req, res){
 }
 
 studentViewController.downloadCourses = function(req, res){
-  schema.Student.findOne({pid: process.env.userPID}).populate({
+  schema.Student.findOne({pid: req.session.userPID}).populate({
     path:"grades",
     populate:{path:"course", populate:{path:"semester"}}
   }).populate({

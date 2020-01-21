@@ -1,6 +1,11 @@
 var student = require('../../../data/testRoles').student
 
 describe('Test student routes and functionality', ()=>{
+
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
     it('When logged in as student, get taken to studentView page', ()=>{
         cy.visit('/changeUser/student')
 

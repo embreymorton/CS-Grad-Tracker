@@ -2,6 +2,10 @@ var data = require('./data');
 
 describe("Page visit and page javascript", ()=>{
     
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
     it('Visiting the homepage as admin should route to /student', ()=>{
         cy.visit('/changeUser/admin');
         

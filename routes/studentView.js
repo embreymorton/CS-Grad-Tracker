@@ -5,7 +5,7 @@ var router = express.Router();
 var student = require("../controllers/StudentViewController.js");
 
 router.use((req, res, next)=>{
-    if(process.env.accessLevel == 1){
+    if(req.session.accessLevel == 1){
         next();
     }
     else{

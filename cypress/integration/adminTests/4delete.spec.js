@@ -10,6 +10,11 @@ const course = data.course;
 
 describe("Delete data", ()=>{
 
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
+
     it('Searching for a job should return the single job and you should be able to delete it', ()=>{
 
         cy.visit('/changeUser/admin');

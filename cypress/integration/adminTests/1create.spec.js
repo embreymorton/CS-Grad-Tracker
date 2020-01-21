@@ -10,6 +10,10 @@ const course = data.course;
 
 describe("Upload and create data", ()=>{
 
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+
     it('Uploading course info should correctly store data in database', ()=>{
 
         cy.visit('/changeUser/admin');

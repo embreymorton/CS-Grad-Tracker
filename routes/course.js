@@ -5,7 +5,7 @@ var util = require("../controllers/util");
 var course = require("../controllers/CourseController");
 
 router.use(function(req, res, next){
-	if(process.env.accessLevel == 3){
+	if(req.session.accessLevel == 3){
 		res.locals.admin = true;
 		next();
 	}

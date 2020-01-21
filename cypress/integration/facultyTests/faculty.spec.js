@@ -1,6 +1,10 @@
 
 describe('Test the routes that a faculty should/should not be able to access', ()=>{
 
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
     it('Make sure faculty can not access job, course, and student create routes', ()=>{
 
         cy.visit('/changeUser/faculty');

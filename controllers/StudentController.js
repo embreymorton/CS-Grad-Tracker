@@ -51,29 +51,18 @@ studentController.get = function (req, res) {
   if(temp != "" && temp != null && temp != undefined){
    input.status = temp;
   }
-  var admin, faculty;
-  util.checkAdmin().then(function(result){
-    if(result){
-      admin = true;
-    }
-    else{
-      admin = false;
-    }
-    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-      if(admin){
+  var admin;
+  if(req.session.accessLevel == 3){
+    admin = true;
+  } else {
+    admin = false;
+  }
 
-      }
-      else{
-        //originally here to allow only students that a faculty is an advisor for
-        //to be seen, but now, to uncomplicate other user signatures on forms, we
-        //allow all faculty to see all students
-        //input.advisor = result._id;
-      }
-      schema.Student.find(input).sort({lastName:1, firstName:1}).exec().then(function (result) {
-        res.render("../views/student/index.ejs", {students: result, admin: admin, search: search});
-      }).catch(function (err) {
-        res.json({"error": err.message, "origin": "student.get"})
-      });
+  schema.Faculty.findOne({pid: req.session.userPID}).exec().then(function(result){
+    schema.Student.find(input).sort({lastName:1, firstName:1}).exec().then(function (result) {
+      res.render("../views/student/index.ejs", {students: result, admin: admin, search: search});
+    }).catch(function (err) {
+      res.json({"error": err.message, "origin": "student.get"})
     });
   });
 }
@@ -273,7 +262,7 @@ studentController.viewForm = function(req, res){
             form = result;
           }
           var isStudent = false;
-          util.checkAdvisorAdmin(req.params._id).then(function(result){
+          util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function(result){
             var hasAccess;
             if(result){hasAccess = true;}
             else{hasAccess = false;}

@@ -7,7 +7,7 @@ var schema = require("../models/schema");
 var student = require('../controllers/StudentController.js');
 
 function authorizeAdmin(req, res, next){
-	if(process.env.accessLevel == 3){
+	if(req.session.accessLevel == 3){
 		next();
 	}
 	else{
@@ -16,7 +16,7 @@ function authorizeAdmin(req, res, next){
 }
 
 function authorizeFaculty(req, res, next){
-	if(process.env.accessLevel >= 2){
+	if(req.session.accessLevel >= 2){
 		next();
 	}
 	else{
@@ -25,11 +25,11 @@ function authorizeFaculty(req, res, next){
 }
 
 function authorizeAdvisor(req, res, next){
-		if(process.env.accessLevel == 3){
+		if(req.session.accessLevel == 3){
 			next();
 		}
 		else{
-			util.checkAdvisor(req.params._id).then(function(result){
+			util.checkAdvisor(req.session.userPID, req.params._id).then(function(result){
 				if(result){
 					next();
 				}
@@ -41,7 +41,7 @@ function authorizeAdvisor(req, res, next){
 }
 
 router.use(function(req, res, next){
-	if(process.env.accessLevel == 3){
+	if(req.session.accessLevel == 3){
 		res.locals.admin = true;
 	}
 	else{

@@ -98,33 +98,16 @@ _.initializeAllSemesters = function(){
 }
 
 /*
-  checkFaculty is a promise that resolves as true if the user is
-  a faculty, otherwise it resolves as false.
-*/
-_.checkFaculty = function(){
-  return new Promise((resolve, reject)=>{
-    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-      if(result != null){
-        resolve(true);
-      }
-      else{
-        resolve(false);
-      }
-    });
-  });
-}
-
-/*
   checkAdvisor is a promise that resolves as true if the user is an
   advisor of the passed in student, and resolves false otherwise.
 */
-_.checkAdvisor = function(studentID){
+_.checkAdvisor = function(facultyID, studentID){
   return new Promise((resolve, reject)=>{
     schema.Student.findOne({_id: studentID}).exec().then(function(result){
       if(result != null){
         if(result.advisor != null){
           schema.Faculty.findOne({_id: result.advisor}).exec().then(function(result){
-            if(result.pid == process.env.userPID){
+            if(result.pid == facultyID){
               resolve(true);
             } else {
               resolve(false);
@@ -145,9 +128,9 @@ _.checkAdvisor = function(studentID){
   an admin, or if the user is an advisor of the passed in studentID, and
   resolves as false otherwise.
 */
-_.checkAdvisorAdmin = function(studentID){
+_.checkAdvisorAdmin = function(facultyID, studentID){
   return new Promise((resolve, reject)=>{
-    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
+    schema.Faculty.findOne({pid: facultyID}).exec().then(function(result){
       if(result.admin == true){
         resolve(true);
       }
@@ -156,7 +139,7 @@ _.checkAdvisorAdmin = function(studentID){
           if(result != null){
             if(result.advisor != null){
               schema.Faculty.findOne({_id: result.advisor}).exec().then(function(result){
-                if(result.pid == process.env.userPID){
+                if(result.pid == facultyID){
                   resolve(true);
                 } else {
                   resolve(false);
@@ -174,23 +157,6 @@ _.checkAdvisorAdmin = function(studentID){
   });
 }
 
-/*
-  checkStudent is a promise that resolves as true if a student with
-  pid: process.env.userPID is found in the student table/model and
-  resolves as false otherwise.
-*/
-_.checkStudent = function(){
-  return new Promise((resolve, reject)=>{
-    schema.Student.findOne({pid: process.env.userPID}).exec().then(function(result){
-      if(result != null){
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-    });
-  });
-}
-
 _.listObjectToString = function (input) {
   var result = "Search: ";
   for (var key in input) {
@@ -199,60 +165,5 @@ _.listObjectToString = function (input) {
   }
   return result;
 }
-
-/*
-  checkAdmin is a promise that searches the faculty table/model and resolves to true
-  if the faculty is an admin, otherwise it resolves to false
-*/
-_.checkAdmin = function(){
-  return new Promise((resolve, reject)=>{
-    schema.Faculty.findOne({pid: process.env.userPID}).exec().then(function(result){
-      if(result != null){
-        if(result.admin == true){
-          resolve(true);
-        }
-        else{
-          resolve(false);
-        }
-      }
-      else{
-        resolve(false);
-      }
-    });
-  });
-}
-
-/*
-  adminRole is a promise that stores whether the user is an admin
-  in res.locals, and resolves true if the user is an admin and resolves
-  as false otherwise
-*/
-_.adminRole = function(res){
-  return new Promise((resolve, reject)=>{
-      _.checkAdmin().then(function(result){
-        if(result){
-          res.locals.admin = true;
-          resolve(true);
-        }
-        else{
-          res.locals.admin = false;
-          resolve(false);
-        }
-      });
-  });
-}
-
-
-_.pidIsNumber = ()=>{
-  return new Promise((resolve, reject)=>{
-    if(process.env.userPID == "INVALID"){
-      resolve(false);
-      res.render("../views/error.ejs", {string: "You aren't logged in."})
-    }
-    else{
-      resolve(true)
-    }
-  });
-};
 
 module.exports = _;

@@ -19,6 +19,11 @@ const visitSingleStudent = ()=>{
 }
 
 describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
+    
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
     it('Should be able to assign a job to a student on the job assign page', ()=>{
 
         cy.visit('/changeUser/admin');

@@ -2,7 +2,11 @@ var data = require('./data.js')
 
 describe("Upload data", ()=>{
     const filePath = '../../data/InOrderUploadTests/'
-
+    
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce('connect.sid')
+    })
+    
     it('Uploading Admin should correctly store data in database', ()=>{
 
         cy.visit('/changeUser/admin')
