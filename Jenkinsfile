@@ -14,7 +14,7 @@ pipeline {
         stage('Dependencies') {
             steps {
                 sh 'npm i'
-            }  
+            }   
         }
         stage('Build') {
             steps {
