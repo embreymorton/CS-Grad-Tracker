@@ -7,7 +7,7 @@ pipeline {
         mode='testing'
         databaseString='mongodb://localhost/cs_grad_data-test'
         port=8080
-        host=127.0.0.1
+        host='127.0.0.1'
     }
 
     stages {
