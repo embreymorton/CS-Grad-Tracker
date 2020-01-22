@@ -3,7 +3,7 @@ pipeline {
 
     tools {nodejs "node"}
      
-     environment { 
+     environment {  
         mode='testing'
         databaseString='mongodb://localhost/cs_grad_data-test'
         port=8080
