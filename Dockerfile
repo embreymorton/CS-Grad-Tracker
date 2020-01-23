@@ -22,5 +22,5 @@ EXPOSE 8080:8080
 #RUN npm run devAsAdmin
 
 #Commands to run
-CMD [ "npm", "start", "mongo://mongo:27017/cs_grad_data", "-n", "0.0.0.0"]
+CMD [ "npm", "test", "mongo://mongo:27017/cs_grad_data", "-n", "0.0.0.0"]
 
