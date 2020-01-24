@@ -27,4 +27,6 @@ install_dependencies:
 
 testing_testing:
   stage: test
-  script: npm test
+  script:
+    - npm test & wait-on http://localhost:8080
+    - npx cypress open
