@@ -50,7 +50,7 @@
     "db:reset": "node dbReset.js",
     "test": "npm run db:reset & node bin/www",
     "cypress:ci": "concurrently \"cypress run\" --kill-others \"test\" --success first",
-    "test2": "start-server-and-test test http://localhost:8080 cy:run"
+    "testo": "start-server-and-test test http://localhost:8080 cy:run"
   },
   "repository": {
     "type": "git",
