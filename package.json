@@ -48,9 +48,8 @@
     "cypress:open": "./node_modules/.bin/cypress open",
     "cy:run": "cypress run",
     "db:reset": "node dbReset.js",
-    "test": "npm run db:reset & node bin/www",
-    "cypress:ci": "concurrently \"cypress run\" --kill-others \"test\" --success first",
-    "testo": "start-server-and-test test http://localhost:8080 cy:run"
+    "test": "start-server-and-test test http://localhost:8080 cy:run",
+    "cypress:ci": "concurrently \"cypress run\" --kill-others \"test\" --success first"
   },
   "repository": {
     "type": "git",
