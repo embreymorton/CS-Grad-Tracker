@@ -21,7 +21,6 @@ install_dependencies:
   stage: build
   script:
     - npm install
-    - npm install -g wait-on
   artifacts:
     paths:
       - node_modules/
@@ -29,5 +28,4 @@ install_dependencies:
 testing_testing:
   stage: test
   script:
-    - npm test & wait-on http://localhost:8080
-    - npx cypress open
+    - npm test2
