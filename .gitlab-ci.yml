@@ -2,7 +2,7 @@ image: node:latest
 
 variables:
     mode: "testing"
-    databaseString: "mongodb://localhost/cs_grad_data-test"
+    databaseString: "mongodb://mongo:27017/cs_grad_data-test"
     port: "8080"
     host: "127.0.0.1"
 
