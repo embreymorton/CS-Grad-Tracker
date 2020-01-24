@@ -21,28 +21,6 @@ let auth0 = null;
  asdasd
 */
 
-const strategy = new Auth0Strategy(
-  {
-    domain: process.env.AUTH0_DOMAIN,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    callbackURL:
-      process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback"
-  },
-  function(accessToken, refreshToken, extraParams, profile, done) {
-    /**
-     * Access tokens are used to authorize users to an API
-     * (resource server)
-     * accessToken is the token to call the Auth0 API
-     * or a secured third-party API
-     * extraParams.id_token has the JSON Web Token
-     * profile has all the information from the user
-     */
-    return done(null, profile);
-  }
-);
-
-
 
 //session configuration
 const session = {
@@ -68,18 +46,6 @@ app
   })
 
 
-passport.use(strategy);
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
 //setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
@@ -95,6 +61,39 @@ app.use(express.static(path.join(__dirname, "public")))
 
 
 if(process.env.mode == "production" || process.env.mode == "development"){
+  const strategy = new Auth0Strategy(
+    {
+      domain: process.env.AUTH0_DOMAIN,
+      clientID: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      callbackURL:
+        process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback"
+    },
+    function(accessToken, refreshToken, extraParams, profile, done) {
+      /**
+       * Access tokens are used to authorize users to an API
+       * (resource server)
+       * accessToken is the token to call the Auth0 API
+       * or a secured third-party API
+       * extraParams.id_token has the JSON Web Token
+       * profile has all the information from the user
+       */
+      return done(null, profile);
+    }
+  );
+
+  passport.use(strategy);
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
+
+  passport.deserializeUser((user, done) => {
+    done(null, user);
+  });
+
   app.use((req, res, next) => {
     if(req.user != undefined){
       
