@@ -28,4 +28,4 @@ install_dependencies:
 testing_testing:
   stage: test
   script:
-    - npm test
+    - npm ci:test
