@@ -33,6 +33,7 @@ install_dependencies:
       - node_modules/
 
 testing_testing:
+  image: cypress/base:10
   stage: test
   script:
     - npm install -g start-server-and-test
