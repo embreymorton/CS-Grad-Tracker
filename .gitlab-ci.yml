@@ -29,4 +29,5 @@ testing_testing:
   stage: test
   script:
     - npm install -g start-server-and-test
+    - npm install cypress
     - npm run ci

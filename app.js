@@ -167,7 +167,7 @@ else{
     })
     //add routes to allow user changes
     app.use("/changeUser", require("./routes/userChange"));
-  
+   
     app.get("/", (req, res)=>{
       if(req.session.accessLevel >= 2){
         res.redirect("/student");
