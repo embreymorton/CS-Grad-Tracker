@@ -13,16 +13,17 @@ stages:
   - build
   - test
 
-before_script:
-  - apt-get install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 cache:
   paths:
     - node_modules/
+    - cache/Cypress
 
 install_dependencies:
   stage: build
   script:
     - npm install
+    - npx cypress cache path
+    - npx cypress cache list
   artifacts:
     paths:
       - node_modules/
