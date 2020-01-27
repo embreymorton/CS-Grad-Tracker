@@ -172,11 +172,11 @@ else{
       if(req.session.accessLevel >= 2){
         res.redirect("/student");
       }
-      if(req.session.accessLevel == 1){
+      else if(req.session.accessLevel == 1){
         res.redirect("/studentView")
       }
       else{
-        
+        res.render("./error.ejs", {string: "U are not logged in"});
       }
     })
 }

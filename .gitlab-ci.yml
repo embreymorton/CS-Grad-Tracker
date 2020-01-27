@@ -28,6 +28,5 @@ install_dependencies:
 testing_testing:
   stage: test
   script:
-    - npm install -g wait-on
-    - npm test & wait-on http://localhost:8080
-    - npx cypress run
+    - npm install -g start-server-and-test
+    - npm run ci
