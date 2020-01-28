@@ -22,7 +22,7 @@ data.uploadStudent = {
     gender: "FEMALE",
     residency: "YES",
     intendedDegree: "MASTERS",
-    backgroundApproved: "2019-09-17",
+    backgroundApproved: "2019-09-18",
     semesterStarted: "FA 2019",
     advisor: "test, test"
 }
