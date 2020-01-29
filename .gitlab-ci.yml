@@ -47,6 +47,6 @@ testing_testing:
     - npm run ci
 
 deployment:
-  stage: deployment
+  type: deploy
   script:
     -ssh root@csgrad.cs.unc.edu "cd .."
