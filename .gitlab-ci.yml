@@ -10,6 +10,13 @@ variables:
     CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
 
 
+before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
 services:
     - mongo:latest
 
@@ -38,3 +45,8 @@ testing_testing:
   script:
     - npm install -g start-server-and-test
     - npm run ci
+
+deployment:
+  stage: deployment
+  script:
+    -ssh root@csgrad.cs.unc.edu "cd .."
