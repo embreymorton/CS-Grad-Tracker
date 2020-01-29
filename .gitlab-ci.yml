@@ -24,6 +24,7 @@ stages:
   - build
   - test
 
+
 cache:
   paths:
     - .npm
@@ -47,6 +48,5 @@ testing_testing:
     - npm run ci
 
 deployment:
-  type: deploy
   script:
-    -ssh root@csgrad.cs.unc.edu "cd .."
+    - ssh root@csgrad.cs.unc.edu "cd .."
