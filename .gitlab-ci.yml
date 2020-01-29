@@ -1,4 +1,5 @@
 image: node:latest
+image: cypress/base:10
 
 variables:
     mode: "testing"
@@ -23,7 +24,6 @@ cache:
     - cache/Cypress
 
 install_dependencies:
-  image: cypress/base:10
   stage: build
   script:
     - npm ci
@@ -34,7 +34,6 @@ install_dependencies:
       - node_modules/
 
 testing_testing:
-  image: cypress/base:10
   stage: test
   script:
     - npm install -g start-server-and-test
