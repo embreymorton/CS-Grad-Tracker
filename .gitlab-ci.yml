@@ -23,6 +23,7 @@ services:
 stages:
   - build
   - test
+  - deploy
 
 
 cache:
@@ -48,5 +49,6 @@ testing_testing:
     - npm run ci
 
 deployment:
+  stage: deploy
   script:
     - ssh root@csgrad.cs.unc.edu "cd .."
