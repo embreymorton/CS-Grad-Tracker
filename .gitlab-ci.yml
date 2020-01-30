@@ -30,7 +30,7 @@ before_script:
   ##
 
   ## - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-  - echo -n "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null
+  - echo -n "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   ##
   ## Create the SSH directory and give it the right permissions
   ##
