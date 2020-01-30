@@ -31,8 +31,8 @@ before_script:
 
   ## - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
 
-  - echo "${SSH_PRIVATE_KEY}" | tr -d ' ' | base64 --decode | ssh-add -
-
+  ## - echo "${SSH_PRIVATE_KEY}" | tr -d ' ' | base64 --decode | ssh-add -
+  - echo "$SSH_PRIVATE_KEY" | dos2unix | ssh-add -
   ##
   ## Create the SSH directory and give it the right permissions
   ##
