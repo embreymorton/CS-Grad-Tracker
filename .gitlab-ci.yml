@@ -8,7 +8,6 @@ variables:
     host: "127.0.0.1"
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
     CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
-    passphrase 
 
 
 before_script:
