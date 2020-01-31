@@ -82,8 +82,3 @@ deployment:
     - cd ../CS-Grad-Tracking
     - git checkout master
     - git pull
-    - git status
-    - "/usr/local/bin/pm2 status"
-    - "/usr/local/bin/pm2 stop \"npm start\" "
-    - pm2 start "npm start"
-    - pm2 startup systemd
