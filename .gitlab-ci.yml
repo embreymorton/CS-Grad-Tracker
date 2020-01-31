@@ -82,7 +82,8 @@ deployment:
     - ifconfig
     - cd ../CS-Grad-Tracking
     - git checkout master
-    - git pull origin/master
+    - git pull
+    - git status
     - pm2 status
     - pm2 stop "npm start"
     - pm2 start "npm start"
