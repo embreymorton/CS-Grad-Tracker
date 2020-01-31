@@ -73,13 +73,14 @@ testing_testing:
   stage: test
   script:
     - npm install -g start-server-and-test
-    - npm run ci
 
 deployment:
   stage: deploy
   script:
     - ssh root@csgrad.cs.unc.edu
     - cd ../CS-Grad-Tracking
+    - ls
+    - git checkout master
     - git pull
     - pm2 status
     - pm2 stop "npm start"
