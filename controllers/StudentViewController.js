@@ -155,6 +155,7 @@ studentViewController.updateForm = function(req, res){
             });
           }
 
+          //also add admins at some point?
           mailOptions.to = studentInfo.advisor.email;
           mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
           
