@@ -79,18 +79,3 @@ deployment:
   script:
     - ssh root@csgrad.cs.unc.edu "cd ~ && cd ../CS-Grad-Tracking && git checkout master && git pull && pm2 stop \"npm start\" && pm2 start \"npm start\" "
     ## - npm install pm2@latest -g
-    - ls
-    - cd ..
-    - ls
-    - cd CS-Grad-Tracking
-    - git checkout master
-    - git pull
-    - git status
-    - cd ..
-    - ls
-    - cd /usr/local/bin
-    - ls
-    - /usr/local/bin/pm2 status
-    - /usr/local/bin/pm2 stop "npm start" 
-    - pm2 start "npm start"
-    - pm2 startup systemd
