@@ -77,7 +77,7 @@ testing_testing:
 deployment:
   stage: deploy
   script:
-    - ssh root@csgrad.cs.unc.edu "ls && cd .. && ls"
+    - ssh root@csgrad.cs.unc.edu "cd ~ && cd ../CS-Grad-Tracking && git checkout master && git pull && pm2 stop \"npm start\" && pm2 start \"npm start\" "
     ## - npm install pm2@latest -g
     - ls
     - cd ..
