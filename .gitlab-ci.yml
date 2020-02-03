@@ -73,7 +73,7 @@ testing_testing:
   stage: test
   script:
     - npm install -g start-server-and-test
-    - npm ci
+    - npm run ci
 
 deployment:
   stage: deploy
