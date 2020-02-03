@@ -83,6 +83,9 @@ deployment:
     - git checkout master
     - git pull
     - git status
+    - cd ..
+    - cd /usr/local/bin
+    - ls
     - /usr/local/bin/pm2 status
     - /usr/local/bin/pm2 stop "npm start" 
     - pm2 start "npm start"
