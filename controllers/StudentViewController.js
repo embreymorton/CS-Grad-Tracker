@@ -6,9 +6,24 @@ var path = require("path");
 var XLSX = require("xlsx");
 var formidable = require("formidable");
 var mongoose = require("mongoose");
+var nodemailer = require('nodemailer');
 
 var studentViewController = {};
 
+var transport = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: process.env.gmailUser,
+    pass: process.env.gmailPass
+  }
+})
+
+var mailOptions = {
+  from: process.env.gmailUser, // sender address
+  to: "", // list of receivers
+  subject: "", // Subject line
+  text: "No reply", // plaintext body
+}
 
 /*
 Students only allowed to edit their:
@@ -124,9 +139,10 @@ studentViewController.viewForm = function(req, res){
 studentViewController.updateForm = function(req, res){
   var input = req.body;
   if(req.params.title != null){
-    schema.Student.findOne({pid: req.session.userPID}).exec().then(function(result){
+    schema.Student.findOne({pid: req.session.userPID}).populate("advisor").exec().then(function(result){
       if(result != null){
         var studentId = result._id;
+        var studentInfo = result;
         
         schema[req.params.title].findOneAndUpdate({student: studentId}, input).exec().then(function(result){
           if(result != null){
@@ -138,6 +154,20 @@ studentViewController.updateForm = function(req, res){
               res.redirect("/studentView/forms/"+req.params.title+"/true");
             });
           }
+
+          mailOptions.to = studentInfo.advisor.email;
+          mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
+          
+          transport.sendMail(mailOptions, function(error, response){
+            if(error){
+                console.log(error);
+            }else{
+                console.log("Message sent: " + response.message);
+            }
+            // if you don't want to use this transport object anymore, uncomment following line
+           transport.close(); // shut down the connection pool, no more messages
+          });
+
         });
       }
       else{

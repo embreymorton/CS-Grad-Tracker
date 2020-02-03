@@ -79,6 +79,9 @@ deployment:
   script:
     - ssh root@csgrad.cs.unc.edu
     ## - npm install pm2@latest -g
+    - ls
+    - cd ..
+    - ls
     - cd ../CS-Grad-Tracking
     - git checkout master
     - git pull
