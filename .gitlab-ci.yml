@@ -78,12 +78,14 @@ deployment:
   stage: deploy
   script:
     - ssh root@csgrad.cs.unc.edu
+    - sudo -v
     ## - npm install pm2@latest -g
     - cd ../CS-Grad-Tracking
     - git checkout master
     - git pull
     - git status
     - cd ..
+    - ls
     - cd /usr/local/bin
     - ls
     - /usr/local/bin/pm2 status
