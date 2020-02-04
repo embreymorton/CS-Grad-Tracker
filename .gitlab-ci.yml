@@ -6,7 +6,6 @@ variables:
     port: "8080"
     host: "127.0.0.1"
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
-    CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
 
 
 before_script:
@@ -23,6 +22,7 @@ before_script:
  
   ##
   ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  ## SSH_PRIVATE_KEY is stored on gitlab.com - Settings - CI/CD - Variables
   ## We're using tr to fix line endings which makes ed25519 keys work
   ## without extra base64 encoding.
   ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
@@ -42,7 +42,6 @@ before_script:
   - git config --global user.email "takoda@cs.unc.edu"
   - git config --global user.name "takoda1"
 
-
 services:
     - mongo:latest
 
@@ -56,14 +55,11 @@ cache:
   paths:
     - .npm
     - node_modules/
-    - cache/Cypress
 
 install_dependencies:
   stage: build
   script:
     - npm ci
-    - npx cypress cache path
-    - npx cypress cache list
   artifacts:
     paths:
       - node_modules/
@@ -79,4 +75,3 @@ deployment:
   stage: deploy
   script:
     - ssh root@csgrad.cs.unc.edu "cd ~ && cd ../CS-Grad-Tracking && git checkout master && git pull && npm install && pm2 stop \"npm start\" && pm2 start \"npm start\" "
-    ## - npm install pm2@latest -g
