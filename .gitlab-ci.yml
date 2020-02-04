@@ -6,6 +6,7 @@ variables:
     port: "8080"
     host: "127.0.0.1"
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
+    CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
 
 
 before_script:
@@ -55,11 +56,14 @@ cache:
   paths:
     - .npm
     - node_modules/
+    - cache/Cypress
 
 install_dependencies:
   stage: build
   script:
     - npm ci
+    - npx cypress cache path
+    - npx cypress cache list
   artifacts:
     paths:
       - node_modules/
