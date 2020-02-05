@@ -178,7 +178,7 @@ else{
       else{
         res.render("./error.ejs", {string: "U are not logged in"});
       }
-    })
+    }) 
 }
 
 app.use((req, res, next) => {
