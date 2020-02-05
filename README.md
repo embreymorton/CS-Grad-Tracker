@@ -198,9 +198,6 @@ a component that is reused across multiple web pages.
 ### public
 Contains css and image resources.
 
-### test
-Currently unused
-
 ### data
 Currently used only to store test excel files, was used in the past
 for storing pdfs/documents for student objects, as mongo does not
@@ -219,8 +216,11 @@ and serve the view file views/course/index.ejs.
 
 ### Basics
 
-- Run the app, with npm test, whether with docker or not. It should be running on localhost:8080
-- Run `npx cypress open` or `npm run cypress:open`
+- Configure the .env to have mode as testing and the database as ...-test
+- Run the command `npm run ci` to run the command inline.
+- To run the tests in a visible browser and not just in command line:
+- As in the first point, configure .env, then `npm run start-ci` to start the server
+- To start cypress: npx cypress open
 - A cypress test window should appear (on mac and windows--not sure about linux)
 - Run whichever tests are desired
 
