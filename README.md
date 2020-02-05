@@ -19,6 +19,7 @@ In the past, Shane Flannigan worked on this project.
 *  [File organization](#file-organization)
 *  [Testing](#testing)
 *  [Deployment](#deployment)
+*  [CI/CD](#ci/cd)
 *  [System overview](#system-overview)
 
 # Starting the app with docker
@@ -220,7 +221,7 @@ and serve the view file views/course/index.ejs.
 - Run the command `npm run ci` to run the command inline.
 - To run the tests in a visible browser and not just in command line:
 - As in the first point, configure .env, then `npm run start-ci` to start the server
-- To start cypress: npx cypress open
+- To start cypress: `npx cypress open`
 - A cypress test window should appear (on mac and windows--not sure about linux)
 - Run whichever tests are desired
 
@@ -258,7 +259,6 @@ Follow this to install nginx: https://www.digitalocean.com/community/tutorials/h
 Follow this to add the port our app is running on locally to nginx: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
 - Start at "Set Up Nginx as a Reverse Proxy Server"
 - Set the port as 8080 (as that is the port we are running the app on)
-- under `location / {` add two lines: `auth_pam   "Secure Zone";` and `auth_pam_service_name "nginx";` This requires users to log in with their cslogin before accessing any of the app.
 
 ### Processes
 
@@ -286,6 +286,13 @@ Now the app should be running and should continue to run after restarts or crash
 - `cd <project directory>`
 - Follow [basics](#basics) under [Starting the app with docker](#starting-the-app-with-docker)
 
+# CI/CD
+We are using Gitlab's CI/CD to automatically run tests and deploy to the virtual machine csgrad.cs.unc.edu
+- The file used to cause this is .gitlab-ci.yml
+- In order to set up sshing into the virtual machine, I generated a new key pair.
+- I stored the new private key in Gitlab - Settings - CI/CD - Variables
+- I stored the public key on the VM in ~/.ssh/authorized_keys
+
 # System overview
 
 This nodejs app is in the form of server-rendered html. That is, whenever you visit a page, submit a form, 
@@ -293,6 +300,15 @@ click a search button, etc. you are making a request to the server which then pr
 returns appropriate html.
 
 
+## Auth0
+We are using Auth0, this is the process we used to configure it and is what you should use
+should you ever hook up your own auth0 account.
+- In .env, update AUTH0_CLIENT_ID, AUTH0_DOMAIN, AUTH0_CLIENT_SECRET to your values (look at Auth0 docs for where to find these)
+- In the Auth0 settings page for your app, setup the appropriate URLS
+- Allowed callback URLs: http://localhost:8080/callback, http://csgrad.cs.unc.edu/callback
+- Allowed web origins: http://localhost:8080, http://csgrad.cs.unc.edu
+- Allowed logout urls: http://localhost:8080, http://csgrad.cs.unc.edu
+- In connections, turn off Username-Password-Authentication and make sure google-oauth2 is enabled.
 
 When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this is how the system works together:
 - The nodejs express app is running on port 8080
