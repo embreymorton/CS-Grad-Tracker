@@ -19,8 +19,12 @@ In the past, Shane Flannigan worked on this project.
 *  [File organization](#file-organization)
 *  [Testing](#testing)
 *  [Deployment](#deployment)
-*  [CI/CD](#ci/cd)
+*  [CI/CD](#cicd)
 *  [System overview](#system-overview)
+
+# Important note
+- Acquire a copy of a .env file from someone who has worked previously on the project
+- Never check this into source control/git
 
 # Starting the app with docker
 
