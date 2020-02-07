@@ -104,7 +104,7 @@
 									<div>Comp 915: Technical Communication in CS. File CS-02 if waived.*</div>
 								</div>
 								<div class="col-md-2">
-									<select name="comp915" class="form-control" id="inputStatus">
+									<select name="comp915" class="form-control" >
 										<option value=<%=form.comp915%>><%=form.comp915%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -132,95 +132,42 @@
 							<div class="row">
 								<div class="col-md-2">
 									<div>Category*</div>
-									<select name="breadthCourseCategory1" class="form-control" required>
-										<option value=<%=form.breadthCourseCategory1%> ><%=form.breadthCourseCategory1%> </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
 
-									<select name="breadthCourseCategory2" class="form-control">
-										<option value=<%=form.breadthCourseCategory2%>><%=form.breadthCourseCategory2%> required </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
+									<% for(var i = 0; i < 6; i++) { %>
+										<select name="breadthCourseCategory" class="form-control" required>
+											<% if(form.breadthCourseCategory != null) { %> <option value=<%=form.breadthCourseCategory[i]%> > <%=form.breadthCourseCategory[i]%> </option> <% } %>
+											<option value="T">T</option>
+											<option value="S">S</option>
+											<option value="A">A</option>
+											<option value="O">O</option>
+										</select>
+									<% } %>
 
-									<select name="breadthCourseCategory3" class="form-control">
-										<option value=<%=form.breadthCourseCategory3%>><%=form.breadthCourseCategory3%> required </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
-
-									<select name="breadthCourseCategory4" class="form-control">
-										<option value=<%=form.breadthCourseCategory4%>><%=form.breadthCourseCategory4%> required </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
-
-									<select name="breadthCourseCategory5" class="form-control">
-										<option value=<%=form.breadthCourseCategory5%>><%=form.breadthCourseCategory5%> required </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
-
-									<select name="breadthCourseCategory6" class="form-control">
-										<option value=<%=form.breadthCourseCategory6%>><%=form.breadthCourseCategory6%> required </option>
-										<option value="T">T</option>
-										<option value="S">S</option>
-										<option value="A">A</option>
-										<option value="O">O</option>
-									</select>
 								</div>
+
+
 								<div class="col-md-6">
+
 									<div>Course Number, Title, & Name of Univ.*</div>
-									<input type="text" class="form-control" name="breadthCourseInfo1" value="<%=form.breadthCourseInfo1%>" required />
 
-									<input type="text" class="form-control" name="breadthCourseInfo2" value="<%=form.breadthCourseInfo2%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseInfo3" value="<%=form.breadthCourseInfo3%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseInfo4" value="<%=form.breadthCourseInfo4%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseInfo5" value="<%=form.breadthCourseInfo5%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseInfo6" value="<%=form.breadthCourseInfo6%>" required />
+									<% for(var i = 0; i < 6; i++) { %>
+										<input type="text" class="form-control" name="breadthCourseInfo" <% if(form.breadthCourseInfo != null) { %> value="<%=form.breadthCourseInfo[i]%>" <% } %> required />
+									<% } %>
 								</div>
+
 								<div class="col-md-2">
 									<div>Semester/Year*</div>
-									<input type="text" class="form-control" name="breadthCourseDate1" value="<%=form.breadthCourseDate1%>" required />
 
-									<input type="text" class="form-control" name="breadthCourseDate2" value="<%=form.breadthCourseDate2%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseDate3" value="<%=form.breadthCourseDate3%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseDate4" value="<%=form.breadthCourseDate4%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseDate5" value="<%=form.breadthCourseDate5%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseDate6" value="<%=form.breadthCourseDate6%>" required />
+									<% for(var i = 0; i < 6; i++) { %>
+										<input type="text" class="form-control" name="breadthCourseDate" <% if(form.breadthCourseDate != null) { %> value="<%=form.breadthCourseDate[i]%>" <% } %> required />
+									<% } %>
 								</div>
+
 								<div class="col-md-2">
 									<div>Grade*</div>
-									<input type="text" class="form-control" name="breadthCourseGrade1" value="<%=form.breadthCourseGrade1%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseGrade2" value="<%=form.breadthCourseGrade2%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseGrade3" value="<%=form.breadthCourseGrade3%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseGrade4" value="<%=form.breadthCourseGrade4%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseGrade5" value="<%=form.breadthCourseGrade5%>" required />
-
-									<input type="text" class="form-control" name="breadthCourseGrade6" value="<%=form.breadthCourseGrade6%>" required />
+									<% for(var i = 0; i < 6; i++) { %>
+										<input type="text" class="form-control" name="breadthCourseGrade" <% if(form.breadthCourseGrade != null) { %> value="<%=form.breadthCourseGrade[i]%>" <% } %> required />
+									<% } %>
 
 								</div>
 							</div>
@@ -235,37 +182,26 @@
 								<div class="col-md-6">
 									<div>Course Number, Title, & Name of Univ*</div>
 
-									<input type="text" class="form-control" name="concentrationCourseInfo1" value="<%=form.concentrationCourseInfo1%>" required />
-
-									<input type="text" class="form-control" name="concentrationCourseInfo2" value="<%=form.concentrationCourseInfo2%>" required />
-
-									<input type="text" class="form-control" name="concentrationCourseInfo3" value="<%=form.concentrationCourseInfo3%>" required />
-
-									<input type="text" class="form-control" name="concentrationCourseInfo4" value="<%=form.concentrationCourseInfo4%>" required />
-
+									<% for(var i = 0; i < 4; i++) { %>
+										<input type="text" class="form-control" name="concentrationCourseInfo" <% if(form.concentrationCourseInfo != null) { %> value="<%=form.concentrationCourseInfo[i]%>" <% } %> required />
+									<% } %>
 
 								</div>
 								<div class="col-md-3">
 									<div>Semester/Year*</div>
 
-									<input type="text" class="form-control" name="concentrationCourseDate1" value="<%=form.concentrationCourseDate1%>" required />
+									<% for(var i = 0; i < 4; i++) { %>
+										<input type="text" class="form-control" name="concentrationCourseDate" <% if(form.concentrationCourseDate != null) { %> value="<%=form.concentrationCourseDate[i]%>" <% } %> required />
+									<% } %>
 
-									<input type="text" class="form-control" name="concentrationCourseDate2" value="<%=form.concentrationCourseDate2%>" required />
-
-									<input type="text" class="form-control" name="concentrationCourseDate3" value="<%=form.concentrationCourseDate3%>" required />
-
-									<input type="text" class="form-control" name="concentrationCourseDate4" value="<%=form.concentrationCourseDate4%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Credit/Hours*</div>
 
-									<input type="number" class="form-control" name="concentrationCourseHours1" value="<%=form.concentrationCourseHours1%>" required />
+									<% for(var i = 0; i < 4; i++) { %>
+										<input type="number" class="form-control" name="concentrationCourseHours" <% if(form.concentrationCourseHours != null) { %> value="<%=form.concentrationCourseHours[i]%>" <% } %> required />
+									<% } %>
 
-									<input type="number" class="form-control" name="concentrationCourseHours2" value="<%=form.concentrationCourseHours2%>" required />
-
-									<input type="number" class="form-control" name="concentrationCourseHours3" value="<%=form.concentrationCourseHours3%>" required />
-
-									<input type="number" class="form-control" name="concentrationCourseHours4" value="<%=form.concentrationCourseHours4%>" required />
 								</div>
 							</div>
 							
@@ -278,23 +214,19 @@
 								<div class="col-md-4">
 									<div>Course Number & Title*</div>
 
-									<input type="text" class="form-control" name="otherCourseInfo1" value="<%=form.otherCourseInfo1%>" required />
+									<% for(var i = 0; i < 4; i++) { %>
+										<input type="text" class="form-control" name="otherCourseInfo" <% if(form.otherCourseInfo != null) { %> value="<%=form.otherCourseInfo[i]%>" <% } %> required />
+									<% } %>
 
-									<input type="text" class="form-control" name="otherCourseInfo2" value="<%=form.otherCourseInfo2%>" required />
-
-									<input type="text" class="form-control" name="otherCourseInfo3" value="<%=form.otherCourseInfo3%>" required />
-
-									<input type="text" class="form-control" name="otherCourseInfo4" value="<%=form.otherCourseInfo4%>" required />
 								</div>
 								<div class="col-md-2">
 									<div>Credit Hours*</div>
-									<input type="number" class="form-control" name="otherCourseHours1" value="<%=form.otherCourseHours1%>" required />
 
-									<input type="number" class="form-control" name="otherCourseHours2" value="<%=form.otherCourseHours2%>" required />
+									
+									<% for(var i = 0; i < 4; i++) { %>
+										<input type="number" class="form-control" name="otherCourseHours" <% if(form.otherCourseHours != null) { %> value="<%=form.otherCourseHours[i]%>" <% } %> required />
+									<% } %>
 
-									<input type="number" class="form-control" name="otherCourseHours3" value="<%=form.otherCourseHours3%>" required />
-
-									<input type="number" class="form-control" name="otherCourseHours4" value="<%=form.otherCourseHours4%>" required />
 								</div>
 							</div>
 
@@ -333,7 +265,7 @@
 							<div>A. Background Preperation worksheet*</div>
 							<div class="col-md-4">
 								
-								<select name="backgroundPrepWorkSheet" class="form-control" id="inputStatus">
+								<select name="backgroundPrepWorkSheet" class="form-control" >
 									<option value=<%=form.backgroundPrepWorkSheet%>><%=form.backgroundPrepWorkSheet%></option>
 									<option value=false>False</option>
 									<option value=true>True</option>
@@ -343,7 +275,7 @@
 							<div>B. Program Product requirement*</div>
 							<div class="col-md-4">
 								
-								<select name="programProductRequirement" class="form-control" id="inputStatus">
+								<select name="programProductRequirement" class="form-control">
 									<option value=<%=form.programProductRequirement%>><%=form.programProductRequirement%></option>
 									<option value=false>False</option>
 									<option value=true>True</option>
@@ -352,7 +284,7 @@
 
 							<div>C. PhD. Written Exam(a.k.a. the writing requirement)*</div>
 							<div class="col-md-4">
-								<select name="PHDWrittenExam" class="form-control" id="inputStatus">
+								<select name="PHDWrittenExam" class="form-control">
 									<option value=<%=form.PHDWrittenExam%>><%=form.PHDWrittenExam%></option>
 									<option value=false>False</option>
 									<option value=true>True</option>
@@ -361,7 +293,7 @@
 
 							<div>D. PhD Oral Comprehensive Exam*</div>
 							<div class="col-md-4">
-								<select name="PHDOralExam" class="form-control" id="inputStatus">
+								<select name="PHDOralExam" class="form-control" >
 									<option value=<%=form.PHDOralExam%>><%=form.PHDOralExam%></option>
 									<option value=false>False</option>
 									<option value=true>True</option>
@@ -388,48 +320,15 @@
 
 							<div class="row">
 								<div class="col-md-6">
-
-									<div class="form-group row">
-										<label class="col-md-2">1.* </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName1" name="committee1" value="<%=form.committee1%>" required />
+									
+									<% for(var i = 0; i < 6; i++) { %>
+										<div class="form-group row">
+											<label class="col-md-2"><%=i+1%>.* </label>
+											<div class="col-md-10">
+												<input type="text" class="form-control" id="committeeName<%=i+1%>" name="committee" <% if(form.committee != null) { %> value="<%=form.committee[i]%>" <% } %> required />
+											</div>
 										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-2">2.* </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName2" name="committee2" value="<%=form.committee2%>" required />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-2">3.* </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName3" name="committee3" value="<%=form.committee3%>" required />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-2">4.* </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName4" name="committee4" value="<%=form.committee4%>" required />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-2">5.* </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName5" name="committee5" value="<%=form.committee5%>"required />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-2">6. </label>
-										<div class="col-md-10">
-											<input type="text" class="form-control" id="committeeName6" name="committee6" value="<%=form.committee6%>"/>
-										</div>
-									</div>
+									<% } %>
 
 								</div>
 
