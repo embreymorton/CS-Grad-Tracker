@@ -240,15 +240,13 @@ var CS05Schema = mongoose.Schema({
   name: String, pid: Number, dateSubmitted: String,
   oralComprehensiveExam: Boolean,
   thesis: Boolean,
-  nominee1: String, nominee1Department:String, nominee1Status: String,
-  nominee2: String, nominee2Department:String, nominee2Status: String,
-  nominee3: String, nominee3Department:String, nominee3Status: String,
-  nominee4: String, nominee4Department:String, nominee4Status: String,
-  nominee5: String, nominee5Department:String, nominee5Status: String,
+  nominees: [String],
+  nomineeDepartments: [String],
+  nomineeStatuses: [String],
   thesisAdviser: String,
   committeeChairman: String,
   directorSignature: String, directorDateSigned: String
-})
+}) 
 
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},

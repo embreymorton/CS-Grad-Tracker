@@ -112,144 +112,56 @@
 								<div class="col-md-3">
 									<strong>Department</strong>
 								</div>
+								<% if(!isStudent) { %>
 								<div class="col-md-3">
 									<strong>Graduate Faculty status</strong>
 								</div>
+							    <% } %>
 								<div class="col-md-1">
-									<strong>Select Adviser</strong>
+									<strong>Adviser</strong>
 								</div>
 								<div class="col-md-1">
-									<strong>Select Chairman</strong>
+									<strong>Chairman</strong>
 								</div>
 							</div>
-
+							
 							<div class="row">
 								<div class="col-md-4">
 
-									<div class="form-group row">
-										<label class="col-md-1">1. </label>
-										<div class="col-md-11">
-											<input type="text" class="form-control" name="nominee1" value="<%=form.nominee1%>" id="nominee1Name" />
+									<% for(var i = 0; i < 5; i++) { %>
+										<div class="form-group row">
+											<label class="col-md-1"><%= i+1 %>. </label>
+											<div class="col-md-11">
+												<input type="string" class="form-control" name="nominees" <% if(form.nominees != null) { %> value="<%=form.nominees[i]%>" <% } %> id="nominee<%=i+1%>Name" />
+											</div>
 										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-1">2. </label>
-										<div class="col-md-11">
-											<input type="text" class="form-control" name="nominee2" value="<%=form.nominee2%>" id="nominee2Name" />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-1">3. </label>
-										<div class="col-md-11">
-											<input type="text" class="form-control" name="nominee3" value="<%=form.nominee3%>" id="nominee3Name" />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-1">4. </label>
-										<div class="col-md-11">
-											<input type="text" class="form-control" name="nominee4" value="<%=form.nominee4%>" id="nominee4Name" />
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<label class="col-md-1">5. </label>
-										<div class="col-md-11">
-											<input type="text" class="form-control" name="nominee5" value="<%=form.nominee5%>" id="nominee5Name" />
-										</div>
-									</div>
+									<% } %>
 
 								</div>
+
 								<div class="col-md-3">
-									<div class="form-group row">
-										<div class="col-md-12">
-											<input type="text" class="form-control" name="nominee1Department" value="<%=form.nominee1Department%>"/>
-										</div>
-									</div>
 
-									<div class="form-group row">
-										<div class="col-md-12">
-											<input type="text" class="form-control" name="nominee2Department" value="<%=form.nominee2Department%>"/>
+									<% for(var i = 0; i < 5; i++) { %>
+										<div class="form-group row">
+											<label class="col-md-1"><%= i+1 %>. </label>
+											<div class="col-md-11">
+												<input type="string" class="form-control" name="nomineeDepartments" <% if(form.nomineeDepartments != null) { %> value="<%=form.nomineeDepartments[i]%>" <% } %> id="nominee<%=i+1%>Department" />
+											</div>
 										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<input type="text" class="form-control" name="nominee3Department" value="<%=form.nominee3Department%>"/>
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<input type="text" class="form-control" name="nominee4Department" value="<%=form.nominee4Department%>"/>
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<input type="text" class="form-control" name="nominee5Department" value="<%=form.nominee5Department%>"/>
-										</div>
-									</div>
+									<% } %>
 								</div>
 
 								<% if(!isStudent) { %>
 								<div class="col-md-3">
-									<div class="form-group row">
-										<div class="col-md-12">
-											<select name="nominee1Status" class="form-control">
-												<option value=<%=form.nominee1Status%>><%=form.nominee1Status%></option>
-												<option value="Full">Full</option>
-												<option value="Limited">Limited</option>
-												<option value="Special">Special</option>
-											</select>
-										</div>
-									</div>
 
-									<div class="form-group row">
-										<div class="col-md-12">
-											<select name="nominee2Status" class="form-control">
-												<option value=<%=form.nominee2Status%>><%=form.nominee2Status%></option>
-												<option value="Full">Full</option>
-												<option value="Limited">Limited</option>
-												<option value="Special">Special</option>
-											</select>
+									<% for(var i = 0; i < 5; i++) { %>
+										<div class="form-group row">
+											<label class="col-md-1"><%= i+1 %>. </label>
+											<div class="col-md-11">
+												<input type="string" class="form-control" name="nomineeStatuses" <% if(form.nomineeStatuses != null) { %> value="<%=form.nomineeStatuses[i]%>" <% } %> id="nominee<%=i+1%>Status" />
+											</div>
 										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<select name="nominee3Status" class="form-control">
-												<option value=<%=form.nominee3Status%>><%=form.nominee3Status%></option>
-												<option value="Full">Full</option>
-												<option value="Limited">Limited</option>
-												<option value="Special">Special</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<select name="nominee4Status" class="form-control">
-												<option value=<%=form.nominee4Status%>><%=form.nominee4Status%></option>
-												<option value="Full">Full</option>
-												<option value="Limited">Limited</option>
-												<option value="Special">Special</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="form-group row">
-										<div class="col-md-12">
-											<select name="nominee5Status" class="form-control">
-												<option value=<%=form.nominee5Status%>><%=form.nominee5Status%></option>
-												<option value="Full">Full</option>
-												<option value="Limited">Limited</option>
-												<option value="Special">Special</option>
-											</select>
-										</div>
-									</div>
+									<% } %>
 
 								</div>
 								<% } %>
@@ -277,10 +189,7 @@
 
 							</div>
 
-
 							<hr></hr>
-
-							
 
 							<div class="row">
 								<div class="col-md-1">

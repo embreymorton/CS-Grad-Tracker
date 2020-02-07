@@ -249,33 +249,36 @@ studentController.formPage = function(req, res){
 studentController.viewForm = function(req, res){
   var signature = "In place of your signature, please type your full legal name:";
   if(req.params.title != null && req.params._id != null && req.params.uploadSuccess != null){
-    var uploadSuccess = false;
-    if(req.params.uploadSuccess == "true"){
-      uploadSuccess = true;
-    }
-    schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-      if(result != null){
-        var student = result;
-        schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
-          var form = {};
-          if(result != null){
-            form = result;
-          }
-          var isStudent = false;
-          util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function(result){
-            var hasAccess;
-            if(result){hasAccess = true;}
-            else{hasAccess = false;}
-            var postMethod = "/student/forms/update/"+student._id+"/"+req.params.title;
-            res.render("../views/student/"+req.params.title, {student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess});
+    schema.Faculty.find({}).exec().then((result)=>{
+      var faculty = result;
+      var uploadSuccess = false;
+      if(req.params.uploadSuccess == "true"){
+        uploadSuccess = true;
+      }
+      schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
+        if(result != null){
+          var student = result;
+          schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
+            var form = {};
+            if(result != null){
+              form = result;
+            }
+            var isStudent = false;
+            util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function(result){
+              var hasAccess;
+              if(result){hasAccess = true;}
+              else{hasAccess = false;}
+              var postMethod = "/student/forms/update/"+student._id+"/"+req.params.title;
+              res.render("../views/student/"+req.params.title, {student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess, faculty: faculty});
+            });
+            
           });
-          
-        });
-      }
-      else{
-        res.render("..views/error.ejs", {string: "Student id not specified."});
-      }
-    });
+        }
+        else{
+          res.render("..views/error.ejs", {string: "Student id not specified."});
+        }
+      })
+    })
   }
 }
 
