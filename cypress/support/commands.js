@@ -25,3 +25,5 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 import 'cypress-file-upload';
+
+import '../../data/testRoles';
