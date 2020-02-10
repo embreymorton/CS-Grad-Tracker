@@ -60,16 +60,16 @@
 
 						<form action="<%=postMethod%>" method="post">
 
-							<input type="hidden" class="form-control" name="student" value=<%=student._id%> />
+							<input type="hidden" class="form-control " name="student" value=<%=student._id%> />
 
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 							<hr></hr>
@@ -84,11 +84,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="comp521Covered" value="<%=form.comp521Covered%>" required />
+									<input type="text" class="form-control covered521" name="comp521Covered" value="<%=form.comp521Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="comp521Date" value="<%=form.comp521Date%>" required />
+									<input type="text" class="form-control date521" name="comp521Date" value="<%=form.comp521Date%>" required />
 								</div>
 							</div>
 
@@ -100,11 +100,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="comp520Covered" value="<%=form.comp520Covered%>" required />
+									<input type="text" class="form-control covered520" name="comp520Covered" value="<%=form.comp520Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="comp520Date" value="<%=form.comp520Date%>" required />
+									<input type="text" class="form-control date520" name="comp520Date" value="<%=form.comp520Date%>" required />
 								</div>
 							</div>
 
@@ -116,11 +116,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="comp530Covered" value="<%=form.comp530Covered%>" required />
+									<input type="text" class="form-control covered530" name="comp530Covered" value="<%=form.comp530Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="comp530Date" value="<%=form.comp530Date%>" required />
+									<input type="text" class="form-control date530" name="comp530Date" value="<%=form.comp530Date%>" required />
 								</div>
 							</div>
 
@@ -136,11 +136,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="comp524Covered" value="<%=form.comp524Covered%>" required />
+									<input type="text" class="form-control covered524" name="comp524Covered" value="<%=form.comp524Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="comp524Date" value="<%=form.comp524Date%>" required />
+									<input type="text" class="form-control date524" name="comp524Date" value="<%=form.comp524Date%>" required />
 								</div>
 							</div>
 
@@ -152,11 +152,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="comp541Covered" value="<%=form.comp541Covered%>" required />
+									<input type="text" class="form-control covered541" name="comp541Covered" value="<%=form.comp541Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="comp541Date" value="<%=form.comp541Date%>" required />
+									<input type="text" class="form-control date541" name="comp541Date" value="<%=form.comp541Date%>" required />
 								</div>
 							</div>
 							
@@ -169,11 +169,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control" name="math661Covered" value="<%=form.math661Covered%>" required />
+									<input type="text" class="form-control covered661" name="math661Covered" value="<%=form.math661Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control" name="math661Date" value="<%=form.math661Date%>" required />
+									<input type="text" class="form-control date661" name="math661Date" value="<%=form.math661Date%>" required />
 								</div>
 							</div>
 
@@ -187,11 +187,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="studentSignature" value="<%=form.studentSignature%>" required />
+									<input type="text" class="form-control student-signed" name="studentSignature" value="<%=form.studentSignature%>" required />
 								</div>
 								<div class="col-md-2">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="studentDateSigned" value="<%=form.studentDateSigned%>" required />
+									<input type="text" class="form-control student-signed-date" name="studentDateSigned" value="<%=form.studentDateSigned%>" required />
 								</div>
 							</div>
 
@@ -202,11 +202,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="advisorSignature" value="<%=form.advisorSignature%>" required />
+									<input type="text" class="form-control advisor-signed" name="advisorSignature" value="<%=form.advisorSignature%>" required />
 								</div>
 								<div class="col-md-2">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
+									<input type="text" class="form-control advisor-signed-date" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
 								</div>
 							</div>
 							<% } else { %>
@@ -222,7 +222,7 @@
 							</div>
 							<% } %>
 
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS01BSMS-submit">Submit</button>
 						</form>
 
 						<% } else{%>

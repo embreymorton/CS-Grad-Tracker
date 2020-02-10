@@ -73,10 +73,7 @@ describe('Test CS01 submissions', ()=>{
 
     it('Submit CS01 form from student side, check to make sure values from admin submission are there', ()=>{
         cy.visit('/changeUser/student')
-        cy.visit('/studentView')
-        cy.get('.student-forms').click();
-
-        cy.get('.CS01').click();
+        cy.visit('/studentView/forms/CS01/false')
 
         cy.get('.student-name').should('have.value', student.lastName + ", " + student.firstName)
         cy.get('.student-pid').should('have.value', student.pid.toString())
@@ -84,14 +81,14 @@ describe('Test CS01 submissions', ()=>{
 
         for(let key in CS01){
             if(key != "advisor-signature" && key != "advisor-signature-date")
-            cy.get('.' + key).should('have.value', CS01[key]).clear().type(CS01[key]);
+            cy.get('.' + key).should('have.value', CS01[key]).clear().type(CS01[key] + "A");
         }
 
         cy.get('.CS01-submit').click();
 
         for(let key in CS01){
             if(key != "advisor-signature" && key != "advisor-signature-date")
-            cy.get('.' + key).should('have.value', CS01[key]);
+            cy.get('.' + key).should('have.value', CS01[key] + "A");
         }
 
         cy.contains(CS01["advisor-signature"])
