@@ -14,6 +14,7 @@ In the past, Shane Flannigan worked on this project.
 
 # Documentation
 
+*  [Environmental Variables](#environmental-variables)
 *  [Starting the app with docker](#starting-the-app-with-docker)
 *  [Starting the app without docker](#starting-the-app-without-docker)
 *  [File organization](#file-organization)
@@ -23,8 +24,13 @@ In the past, Shane Flannigan worked on this project.
 *  [System overview](#system-overview)
 
 # Important note
-- Acquire a copy of a .env file from someone who has worked previously on the project
+- MAKE SURE to acquire a copy of a .env file from someone who has worked previously on the project
 - Never check this into source control/git
+
+# Environmental Variables
+- There are several AUTH0 fields required, detailed in the AUTH0 section.
+- There is also gmailUser and gmailPass which are used for email notifications through nodemailer.
+- These are just credentials for a gmail account setup specifically for this app.
 
 # Starting the app with docker
 
