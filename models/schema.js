@@ -304,10 +304,8 @@ var CS09Schema = mongoose.Schema({
   researchResponsible: String,
   present: String,
   advisorSignature: String, advisorDateSigned: String,
-  committeeSignature1: String, committeeDateSigned1: String,
-  committeeSignature2: String, committeeDateSigned2: String,
-  committeeSignature3: String, committeeDateSigned3: String,
-  committeeSignature4: String, committeeDateSigned4: String,
+  committeeSignature: [String],
+  committeeDateSigned: [String],
   presentationDate: String,
   conceptIntegration: Number,
   creativity: Number,
@@ -336,12 +334,7 @@ var CS11Schema = mongoose.Schema({
 var CS12Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   name: String, pid: Number, email: String, dateMet: String,
-  committeeSignature1: String,
-  committeeSignature2: String,
-  committeeSignature3: String,
-  committeeSignature4: String,
-  committeeSignature5: String,
-  committeeSignature6: String
+  committeeSignature: [String]
 });
 
 var CS13Schema = mongoose.Schema({

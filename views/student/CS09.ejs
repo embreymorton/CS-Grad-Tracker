@@ -203,18 +203,16 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="committeeSignature1" value="<%=form.committeeSignature1%>" required />
-									<input type="text" class="form-control" name="committeeSignature2" value="<%=form.committeeSignature2%>" required />
-									<input type="text" class="form-control" name="committeeSignature3" value="<%=form.committeeSignature3%>" required />
-									<input type="text" class="form-control" name="committeeSignature4" value="<%=form.committeeSignature4%>" />
+									<% for(let i = 0; i < 4; i++){ %>
+										<input type="text" class="form-control" name="committeeSignature" <% if(form.committeeSignature != null) { %> value="<%=form.committeeSignature[i]%>" <% } %> required />
+									<% } %>
 								</div>
 									
 								<div class="col-md-2">
 									<div>Date*</div>
-									<input type="text" class="form-control" name="committeeDateSigned1" value="<%=form.committeeDateSigned1%>" required />
-									<input type="text" class="form-control" name="committeeDateSigned2" value="<%=form.committeeDateSigned2%>" required />
-									<input type="text" class="form-control" name="committeeDateSigned3" value="<%=form.committeeDateSigned3%>" required />
-									<input type="text" class="form-control" name="committeeDateSigned4" value="<%=form.committeeDateSigned4%>" />
+									<% for(let i = 0; i < 4; i++){ %>
+										<input type="text" class="form-control" name="committeeDateSigned" <% if(form.committeeDateSigned != null) { %> value="<%=form.committeeDateSigned[i]%>"  <% } %> required />
+									<% } %>
 								</div>
 							</div>
 
