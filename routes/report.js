@@ -18,4 +18,6 @@ router.use(function(req, res, next){
 
 router.get("/", report.get);
 
+router.get("/progressReport", report.getProgressReport);
+
 module.exports = router;
