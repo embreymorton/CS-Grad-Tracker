@@ -12,7 +12,6 @@ let aggregateData = (progressReport)=>{
     schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').lean().exec().then(function(result){
       progressReport = result;
       let students = result;
-      console.log(progressReport)
       for(let i = 0; i < students.length; i++){
         schema.Note.find({student: students[i]._id}).then((result)=>{
           progressReport[i].notes = result;

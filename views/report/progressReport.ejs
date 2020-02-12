@@ -28,6 +28,16 @@
 									<th scope="col" class="col-progress-report-first">First Name</th>
 									<th scope="col" class="col-progress-report-advisor">Advisor</th>
                                     <th scope="col" class="col-progress-report-prp">PRP Passed CS09</th>
+                                    <th scope="col" class="col-progress-report-notes">Technical writing approved CS08</th>
+                                    <th scope="col" class="col-progress-report-notes">Background Prep wksht approved</th>
+                                    <th scope="col" class="col-progress-report-notes">Research discussion 3 Faculty CS12</th>
+                                    <th scope="col" class="col-progress-report-notes">Prog prod Requirement CS13</th>
+                                    <th scope="col" class="col-progress-report-notes">Program of study approved CS06</th>
+                                    <th scope="col" class="col-progress-report-notes">Committee Comp Approved (COMM form)</th>
+                                    <th scope="col" class="col-progress-report-notes">PhD Proposal Approved (COMM form)</th>
+                                    <th scope="col" class="col-progress-report-notes">Oral Exam passed (DER form)</th>
+                                    <th scope="col" class="col-progress-report-notes">Dis defense passed (DER form)</th>
+                                    <th scope="col" class="col-progress-report-notes">Dissertation submitted</th>
                                     <th scope="col" class="col-progress-report-notes">Notes</th>
 								</tr>
 							</thead>
@@ -39,6 +49,16 @@
 										<td><%= report[i].firstName%></td>
 										<td><%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%></td>
                                         <td><%= report[i].prpPassed%></td>
+                                        <td></td>
+                                        <td><%= report[i].backgroundPrepWorksheetApproved%></td>
+                                        <td><%= report[i].researchPlanningMeeting%></td>
+                                        <td></td>
+                                        <td><%= report[i].programOfStudyApproved%></td>
+                                        <td><%= report[i].committeeCompApproved%></td>
+                                        <td><%= report[i].phdProposalApproved%></td>
+                                        <td><%= report[i].oralExamPassed%></td>
+                                        <td><%= report[i].dissertationDefencePassed%></td>
+                                        <td><%= report[i].dissertationSubmitted%></td>
                                         <td>
                                         <% for(var j=0; j< report[i].notes.length; j++) { %>
                                         <%= report[i].notes[j].note%> <br/>
