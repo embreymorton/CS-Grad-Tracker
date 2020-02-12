@@ -10,12 +10,16 @@ Takoda Ren and Sebastian Crowell are the students currently working on this proj
 
 In the past, Shane Flannigan worked on this project.
 
+# Context
+Current graduate student forms and progress data is all either in paper or in a system that has limited access (only a few administrators can access it).
+We are trying to put student progress, data, and forms (and eventually grades) in a web app that is accessible by all parties that need access to this information (the students,
+faculty, administrators).
+
 * Web site: csgrad.cs.unc.edu
 
 # Documentation
 
 *  [Environmental Variables](#environmental-variables)
-*  [Context](#context)
 *  [Starting the app with docker](#starting-the-app-with-docker)
 *  [Starting the app without docker](#starting-the-app-without-docker)
 *  [File organization](#file-organization)
@@ -27,9 +31,6 @@ In the past, Shane Flannigan worked on this project.
 # Important note
 - MAKE SURE to acquire a copy of a .env file from someone who has worked previously on the project
 - Never check this into source control/git
-
-# Context
-
 
 # Environmental Variables
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
