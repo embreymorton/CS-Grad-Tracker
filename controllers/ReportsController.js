@@ -14,8 +14,6 @@ let aggregateData = (progressReport)=>{
       let students = result;
       console.log(progressReport)
       for(let i = 0; i < students.length; i++){
-        console.log("A")
-        console.log(progressReport)
         schema.Note.find({student: students[i]._id}).then((result)=>{
           progressReport[i].notes = result;
           if(i == students.length - 1){
@@ -38,11 +36,8 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = (req, res) => {
-  console.log("ABC");
   let progressReport = [];
   aggregateData(progressReport).then((result)=>{
-    console.log("THIS IS RESULT");
-    console.log(result);
     res.render('../views/report/progressReport.ejs', {report: result});
   }).catch((error)=>{
     res.render('../views/error.ejs', {string: error});
