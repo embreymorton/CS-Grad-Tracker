@@ -15,6 +15,7 @@ In the past, Shane Flannigan worked on this project.
 # Documentation
 
 *  [Environmental Variables](#environmental-variables)
+*  [Context](#context)
 *  [Starting the app with docker](#starting-the-app-with-docker)
 *  [Starting the app without docker](#starting-the-app-without-docker)
 *  [File organization](#file-organization)
@@ -26,6 +27,9 @@ In the past, Shane Flannigan worked on this project.
 # Important note
 - MAKE SURE to acquire a copy of a .env file from someone who has worked previously on the project
 - Never check this into source control/git
+
+# Context
+
 
 # Environmental Variables
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
@@ -320,11 +324,10 @@ should you ever hook up your own auth0 account.
 - Allowed logout urls: http://localhost:8080, http://csgrad.cs.unc.edu
 - In connections, turn off Username-Password-Authentication and make sure google-oauth2 is enabled.
 
-When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this is how the system works together:
-- The nodejs express app is running on port 8080
+When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this is how we currently have it set up:
+- A nodejs express app is running on port 8080
 - The mongodb database is running on port 27017
 - Nginx is running on the vm which is reverse proxying port 8080 to the world, so that anyone can try to access it
-- Nginx uses auth-pam to use the CS department's kerberos system to secure any possible route on port 8080; if you visit csgrad.cs.unc.edu, you will be prompted for a login
-- So whenever you attempt to access csgrad.cs.unc.edu, kerberos requires you to enter your CS credentials.
-- If the login is successful, app logic checks the CS credentials against the users in the database to verify that the user can use the system.
-- On most requests to the app, a query to the database is made and the resulting data is added to the html page to be rendered.
+- Logins use auth0's google SSO.
+- If the login is successful, app logic checks the CS credentials against the users in the database to authenticate.
+- The app is configured as server rendered html, rather than a framework like react.
