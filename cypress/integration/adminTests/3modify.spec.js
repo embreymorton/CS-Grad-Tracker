@@ -41,6 +41,8 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
         
         cy.get('.assign-job-submit-button').click();
 
+        cy.wait(2000);
+
         cy.get('.student-holding-job-table').find('tr').should('have.length', 2);
 
         cy.get('.student-holding-job-table > tbody > tr > td').eq(0).contains(studentTextFields["last-name"]);
