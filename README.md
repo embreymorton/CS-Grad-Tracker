@@ -16,6 +16,7 @@ We are trying to put student progress, data, and forms (and eventually grades) i
 faculty, administrators).
 
 * Web site: csgrad.cs.unc.edu
+* Trello board (private) https://trello.com/b/MKj0CumI/grad-tracking
 
 # Documentation
 
