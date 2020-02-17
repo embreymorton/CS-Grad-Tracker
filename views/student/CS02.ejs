@@ -63,15 +63,15 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-4">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 								<div class="col-md-4">
 									<div>Date submitted</div>
-									<input type="text" class="form-control" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
+									<input type="text" class="form-control date-submitted" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
 								</div>
 							</div>
 
@@ -80,7 +80,7 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div>Course Number:</div>
-									<input type="text" class="form-control" name="courseNumber" value="<%=form.courseNumber%>" required />
+									<input type="text" class="form-control course-number" name="courseNumber" value="<%=form.courseNumber%>" required />
 								</div>
 							</div>
 
@@ -90,7 +90,7 @@
 								<div class="col-md-6">
 									<div>Basis for Waiver</div>
 									<div>Options: Prior course work, More Advanced Course Here, Other</div>
-									<input type="text" class="form-control" name="basisWaiver" value="<%=form.basisWaiver%>" required />
+									<input type="text" class="form-control basis-waiver" name="basisWaiver" value="<%=form.basisWaiver%>" required />
 								</div>
 							</div>
 
@@ -102,11 +102,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="advisorSignature" value="<%=form.advisorSignature%>" required />
+									<input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
+									<input type="text" class="form-control advisor-date-signed" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
 								</div>
 							</div>
 
@@ -116,11 +116,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="instructorSignature" value="<%=form.instructorSignature%>" required />
+									<input type="text" class="form-control instructor-signature" name="instructorSignature" value="<%=form.instructorSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="instructorDateSigned" value="<%=form.instructorDateSigned%>" required />
+									<input type="text" class="form-control instructor-date-signed" name="instructorDateSigned" value="<%=form.instructorDateSigned%>" required />
 								</div>
 							</div>
 
@@ -154,7 +154,7 @@
 
 							<% } %>
 
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS02-submit">Submit</button>
 						</form>
 					</div>
 				</div>
