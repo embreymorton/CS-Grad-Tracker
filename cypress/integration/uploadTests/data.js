@@ -13,9 +13,9 @@ data.uploadFaculty = {
 }
 
 data.uploadStudent = {
-    onyen: "Fakeonyen",
-    firstName: "Fake",
-    lastName: "Fake",
+    onyen: "fakeonyen",
+    firstName: "fake",
+    lastName: "fake",
     pid: 949949949,
     status: "Active",
     pronouns: "she, her",

@@ -557,9 +557,6 @@ studentController.upload = function(req, res){
     data.forEach(function(element){
       //verify that all fields exist
       if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null && element.advisor != null){
-        element.onyen = element.onyen[0].toUpperCase() + element.onyen.toLowerCase().slice(1);
-        element.firstName = element.firstName[0].toUpperCase() + element.firstName.toLowerCase().slice(1);
-        element.lastName = element.lastName[0].toUpperCase() + element.lastName.toLowerCase().slice(1);
         var commaReg = /\s*,\s*/;
         var facultyName = [null, null];
         //if(element.advisor != null){

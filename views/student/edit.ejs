@@ -197,6 +197,13 @@
 								</div>
 
 								<div class="form-group row">
+									<label for="inputSemestersOnLeave" class="col-md-4">Semesters on Leave</label>
+									<div class="col-md-8">
+										<input type="number" class="form-control input-semesters-on-leave" id="inputSemestersOnLeave" name="semestersOnLeave" value=<%=student.semestersOnLeave %> />
+									</div>
+								</div>
+
+								<div class="form-group row">
 									<label for="inputBackgroundApproved" class="col-md-4">Background approved</label>
 									<div class="col-md-8">
 										<input type="date" class="form-control input-background-approved" id="inputBackgroundApproved" name="backgroundApproved" value=<%=student.backgroundApproved%> />
@@ -339,4 +346,43 @@
 			</div>
 		</div>
 	</body>
+
+	<script type="text/javascript">
+		let handleChange = ()=>{
+			let today = new Date();
+			console.log("ABC");
+			let semestersOnLeave = document.getElementById("inputSemestersOnLeave").value;
+			let semesterTemp = document.getElementById("inputSemesterStarted");
+			let semesterStarted = semesterTemp.options[semesterTemp.selectedIndex].text;
+			semesterStarted = semesterStarted.split(" ");
+			if(semestersOnLeave != null && semesterStarted != null) {
+				let currentMonth = today.getMonth()+1;
+				let currentYear = today.getFullYear();
+				let activeSemesters = 0;
+				console.log(currentMonth + " "+ currentYear+ " "+ semesterStarted)
+				if(currentMonth < 8){
+					//its currently spring
+					activeSemesters = (currentYear - semesterStarted[1])*2 - semestersOnLeave;
+					if(semesterStarted[0] == "FA"){
+						activeSemesters--;
+					}
+				}
+				else{
+					//its currently fall
+					activeSemesters = (currentYear - semesterStarted[1])*2 - semestersOnLeave;
+					if(semesterStarted[0] == "SP"){
+						activeSemesters++;
+					}
+				}
+				if(activeSemesters > 10){
+					document.getElementById("inputFundingEligibility").value = 'NOT GUARANTEED';
+				}
+			}
+		}
+
+		document.getElementById("inputSemestersOnLeave").addEventListener("change", function(){ handleChange(); }, false);
+
+		document.getElementById("inputSemesterStarted").addEventListener("change", function(){ handleChange(); }, false);
+	</script>
+
 </html>

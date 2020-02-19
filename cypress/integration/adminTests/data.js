@@ -15,6 +15,7 @@ data.studentTextFields = {
     'research-area': 'Systems',
     'leave-extension': 'NO',
     'hours-completed': '20',
+    'semesters-on-leave': '99',
     'background-approved': currentDate,
     'masters-awarded': pastDate,
     'prp-passed': currentDate,
