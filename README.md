@@ -15,6 +15,11 @@ Current graduate student forms and progress data is all either in paper or in a 
 We are trying to put student progress, data, and forms (and eventually grades) in a web app that is accessible by all parties that need access to this information (the students,
 faculty, administrators).
 
+Users:
+- Students - Can see basic personal data, can submit forms, can see what jobs they hold.
+- Faculty - Can see all data on students that they advise - including their forms.
+- Administrators - Can create/edit everything - students, student forms, jobs, faculty, courses.
+
 * Web site: csgrad.cs.unc.edu
 * Trello board (private) https://trello.com/b/MKj0CumI/grad-tracking
 
