@@ -62,15 +62,15 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-4">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 								<div class="col-md-4">
 									<div>Date submitted</div>
-									<input type="text" class="form-control" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
+									<input type="text" class="form-control date-submitted" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
 								</div>
 							</div>
 
@@ -79,7 +79,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div><strong>Brief Description of project:</strong></div>
-									<textarea class="form-control" rows="6" name="projectDescription" required><%=form.projectDescription%></textarea>
+									<textarea class="form-control project-description" rows="6" name="projectDescription" required><%=form.projectDescription%></textarea>
 								</div>
 							</div>
 
@@ -88,7 +88,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Is the documentation proprietary?</div>
-									<select name="docProprietary" class="form-control" id="inputStatus">
+									<select name="docProprietary" class="form-control doc-proprietary" id="inputStatus">
 										<option value=<%=form.docProprietary%>><%=form.docProprietary%></option>
 										<option value=false>No. The documentation is attached.</option>
 										<option value=true>Yes. A non-disclosure agreement is attached.</option>
@@ -102,11 +102,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="studentSignature" value="<%=form.studentSignature%>" required />
+									<input type="text" class="form-control student-signature" name="studentSignature" value="<%=form.studentSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="studentDateSigned" value="<%=form.studentDateSigned%>" required />
+									<input type="text" class="form-control student-date-signed" name="studentDateSigned" value="<%=form.studentDateSigned%>" required />
 								</div>
 							</div>
 
@@ -118,11 +118,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="chairmanSignature" value="<%=form.chairmanSignature%>" required />
+									<input type="text" class="form-control chairman-signature" name="chairmanSignature" value="<%=form.chairmanSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="chairmanDateSigned" value="<%=form.chairmanDateSigned%>" required />
+									<input type="text" class="form-control chairman-date-signed" name="chairmanDateSigned" value="<%=form.chairmanDateSigned%>" required />
 								</div>
 							</div>
 
@@ -131,7 +131,7 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div>Approved:</div>
-									<select name="approved" class="form-control" id="inputStatus">
+									<select name="approved" class="form-control approved" id="inputStatus">
 										<option value=<%=form.approved%>><%=form.approved%></option>
 										<option value=false>Not approved.</option>
 										<option value=true>Approved</option>
@@ -167,7 +167,7 @@
 
 							<div class="verticalSpace" />
 
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS04-submit">Submit</button>
 						</form>
 					</div>
 				</div>
