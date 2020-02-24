@@ -41,15 +41,11 @@ describe('Test CS01MSBS submissions', ()=>{
         cy.get('.student-name').should('have.value', student.lastName + ", " + student.firstName)
         cy.get('.student-pid').should('have.value', student.pid.toString())
 
-        for(let key in CS01BSMS){
-            cy.get('.' + key).clear().type(CS01BSMS[key]);
-        }
-
+        util.fillCleanFormAsAdmin(CS01BSMS);
+        
         cy.get('.CS01BSMS-submit').click();
 
-        for(let key in CS01BSMS){
-            cy.get('.' + key).should('have.value', CS01BSMS[key]);
-        }
+        util.checkFormAsAdmin(CS01BSMS);
     });
 
     it('Submit CS01BSMS form from student side', ()=>{
@@ -59,22 +55,18 @@ describe('Test CS01MSBS submissions', ()=>{
         cy.get('.student-name').should('have.value', student.lastName + ", " + student.firstName)
         cy.get('.student-pid').should('have.value', student.pid.toString())
 
-        for(let key in CS01BSMS){
-            if(key != "advisor-signed" && key != "advisor-signed-date"){
-                cy.get('.' + key).should('have.value', CS01BSMS[key]).clear().type(CS01BSMS[key] + "A");
-            }
-        }
+        cy.contains(CS01BSMS["advisor-signed"]);
+        cy.contains(CS01BSMS["advisor-signed-date"]);
+
+        delete CS01BSMS["advisor-signed"];
+        delete CS01BSMS["advisor-signed-date"];
+
+        util.fillFormAsStudent(CS01BSMS);
 
         cy.get('.CS01BSMS-submit').click();
 
-        for(let key in CS01BSMS){
-            if(key != "advisor-signed" && key != "advisor-signed-date"){
-                cy.get('.' + key).should('have.value', CS01BSMS[key] + "A");
-            }
-        }
+        util.checkFormAsStudent(CS01BSMS);
 
-        cy.contains(CS01BSMS["advisor-signed"]);
-        cy.contains(CS01BSMS["advisor-signed-date"]);
     });
 
 })

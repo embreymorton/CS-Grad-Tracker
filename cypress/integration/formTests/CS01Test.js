@@ -59,15 +59,11 @@ describe('Test CS01 submissions', ()=>{
         cy.get('.student-name').should('have.value', student.lastName + ", " + student.firstName)
         cy.get('.student-pid').should('have.value', student.pid.toString())
 
-        for(let key in CS01){
-            cy.get('.' + key).clear().type(CS01[key]);
-        }
+        util.fillCleanFormAsAdmin(CS01);
         
         cy.get('.CS01-submit').click();
 
-        for(let key in CS01){
-            cy.get('.' + key).should('have.value', CS01[key]);
-        }
+        util.checkFormAsAdmin(CS01);
 
     })
 
@@ -78,21 +74,18 @@ describe('Test CS01 submissions', ()=>{
         cy.get('.student-name').should('have.value', student.lastName + ", " + student.firstName)
         cy.get('.student-pid').should('have.value', student.pid.toString())
 
+        cy.contains(CS01["advisor-signature"]);
+        cy.contains(CS01["advisor-signature-date"]);
 
-        for(let key in CS01){
-            if(key != "advisor-signature" && key != "advisor-signature-date")
-            cy.get('.' + key).should('have.value', CS01[key]).clear().type(CS01[key] + "A");
-        }
+        delete CS01["advisor-signature"];
+        delete CS01["advisor-signature-date"];
+
+        util.fillFormAsStudent(CS01);
 
         cy.get('.CS01-submit').click();
 
-        for(let key in CS01){
-            if(key != "advisor-signature" && key != "advisor-signature-date")
-            cy.get('.' + key).should('have.value', CS01[key] + "A");
-        }
+        util.checkFormAsStudent(CS01);
 
-        cy.contains(CS01["advisor-signature"])
-        cy.contains(CS01["advisor-signature-date"])
     });
 
 })
