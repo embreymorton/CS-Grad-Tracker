@@ -52,22 +52,22 @@
 
 						<% if(hasAccess) { %>
 						
-						<form action="/student/forms/update/<%=student._id%>/CS05" method="post">
+						<form action="<%=postMethod%>" method="post">
 
 							<input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
 							<div class="row">
 								<div class="col-md-4">
 									<div>Name*</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-4">
 									<div>PID*</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 								<div class="col-md-4">
 									<div>Date submitted*</div>
-									<input type="text" class="form-control" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
+									<input type="text" class="form-control date-submitted" name="dateSubmitted" value="<%=form.dateSubmitted%>" required />
 								</div>
 							</div>
 
@@ -78,7 +78,7 @@
 									<div>Appointment for Oral Comprehensive Examination*</div>
 								</div>
 								<div class="col-md-2">
-									<select name="oralComprehensiveExam" class="form-control" id="inputStatus">
+									<select name="oralComprehensiveExam" class="form-control oral-comprehensive-exam" id="inputStatus">
 										<option value=<%=form.oralComprehensiveExam%>><%=form.oralComprehensiveExam%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -93,7 +93,7 @@
 									<div>Thesis*</div>
 								</div>
 								<div class="col-md-2">
-									<select name="thesis" class="form-control" id="inputStatus">
+									<select name="thesis" class="form-control thesis" id="inputStatus">
 										<option value=<%=form.thesis%>><%=form.thesis%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -132,7 +132,7 @@
 										<div class="form-group row">
 											<label class="col-md-1"><%= i+1 %>. </label>
 											<div class="col-md-11">
-												<input type="string" class="form-control" name="nominees" <% if(form.nominees != null) { %> value="<%=form.nominees[i]%>" <% } %> id="nominee<%=i+1%>Name" />
+												<input type="string" class="form-control nominees<%=i+1%>" name="nominees" <% if(form.nominees != null) { %> value="<%=form.nominees[i]%>" <% } %> id="nominee<%=i+1%>Name" />
 											</div>
 										</div>
 									<% } %>
@@ -145,7 +145,7 @@
 										<div class="form-group row">
 											<label class="col-md-1"><%= i+1 %>. </label>
 											<div class="col-md-11">
-												<input type="string" class="form-control" name="nomineeDepartments" <% if(form.nomineeDepartments != null) { %> value="<%=form.nomineeDepartments[i]%>" <% } %> id="nominee<%=i+1%>Department" />
+												<input type="string" class="form-control nominee-departments<%=i+1%>" name="nomineeDepartments" <% if(form.nomineeDepartments != null) { %> value="<%=form.nomineeDepartments[i]%>" <% } %> id="nominee<%=i+1%>Department" />
 											</div>
 										</div>
 									<% } %>
@@ -158,7 +158,7 @@
 										<div class="form-group row">
 											<label class="col-md-1"><%= i+1 %>. </label>
 											<div class="col-md-11">
-												<input type="string" class="form-control" name="nomineeStatuses" <% if(form.nomineeStatuses != null) { %> value="<%=form.nomineeStatuses[i]%>" <% } %> id="nominee<%=i+1%>Status" />
+												<input type="string" class="form-control nominee-statuses<%=i+1%>" name="nomineeStatuses" <% if(form.nomineeStatuses != null) { %> value="<%=form.nomineeStatuses[i]%>" <% } %> id="nominee<%=i+1%>Status" />
 											</div>
 										</div>
 									<% } %>
@@ -170,7 +170,7 @@
 									<% for(var i = 1; i < 6; i++) { %>
 										<div class="form-group row">
 											<div class="col-md-12">
-												<button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off" 
+												<button type="button" class="btn btn-outline-primary select-advisor<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off" 
 												id="advisor<%=i%>" onclick=selectadvisor(<%=i%>)>A</button>
 											</div>
 										</div>
@@ -180,7 +180,7 @@
 									<% for(var i = 1; i < 6; i++) { %>
 										<div class="form-group row">
 											<div class="col-md-12">
-												<button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off" 
+												<button type="button" class="btn btn-outline-primary select-chairman<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off" 
 												id="committee<%=i%>" onclick=selectCommittee(<%=i%>)>C</button>
 											</div>
 										</div>
@@ -196,7 +196,7 @@
 									<div>Thesis advisor:</div>
 								</div>
 								<div class="col-md-3">
-									<input type="hidden" class="form-control" name="thesisadvisor" value="<%=form.thesisadvisor%>" id="thesisadvisorInput" required />
+									<input type="hidden" class="form-control thesis-advisor" name="thesisadvisor" value="<%=form.thesisadvisor%>" id="thesisadvisorInput" required />
 									<%=form.thesisadvisor%>
 								</div>
 							</div>
@@ -209,7 +209,7 @@
 									
 								</div>
 								<div class="col-md-3">
-									<input type="hidden" class="form-control" name="committeeChairman" value="<%=form.committeeChairman%>" id="committeeChairmanInput" required />
+									<input type="hidden" class="form-control committee-chairman" name="committeeChairman" value="<%=form.committeeChairman%>" id="committeeChairmanInput" required />
 									<%=form.committeeChairman%>
 								</div>
 							</div>
@@ -222,11 +222,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="directorSignature" value="<%=form.directorSignature%>" required />
+									<input type="text" class="form-control director-signature" name="directorSignature" value="<%=form.directorSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									<div>Date signed*</div>
-									<input type="text" class="form-control" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
+									<input type="text" class="form-control director-date-signed" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
 								</div>
 							</div>
 
@@ -246,7 +246,7 @@
 
 							<div class="verticalSpace" />
 
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS05-submit">Submit</button>
 						</form>
 
 						<% } else{%>
