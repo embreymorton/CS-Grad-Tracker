@@ -113,7 +113,7 @@
 								<div class="col-md-1">
 									<div>Department</div>
 									<% for(let i = 0; i < 10; i++) { %>
-									<input id="departmentInput" type="text" class="form-control department<%=i+1%>" name="dept" value="COMP" required />
+									<input id="departmentInput" type="text" class="form-control dept<%=i+1%>" name="dept" value="COMP" required />
 									<% } %>
 								</div>
 								<div class="col-md-2">
@@ -181,7 +181,7 @@
 							<div class="row">
 								<div class="col-md-3">
 									<select name="comprehensivePaper" class="form-control comprehensive-paper" id="inputStatus" required>
-										<option value=<%=form.comprehensivePaper%>><%=form.comprehensivePaper%></option>
+										<option value="<%=form.comprehensivePaper%>""><%=form.comprehensivePaper%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
 									</select>
@@ -225,7 +225,7 @@
 							<div class="row">
 								<div class="col-md-3">
 									<select name="comprehensiveExam" class="form-control comprehensive-exam" id="inputStatus" required>
-										<option value=<%=form.comprehensiveExam%>><%=form.comprehensiveExam%></option>
+										<option value="<%=form.comprehensiveExam%>""><%=form.comprehensiveExam%></option>
 										<option value="Comprehensive Paper">Comprehensive Paper(CS-08)</option>
 										<option value="MS Oral Comprehensive Exam">MS Oral Comprehensive Exam</option>
 									</select>
@@ -253,10 +253,10 @@
 							<i><%=signature%></i>
 							<div class="row">
 								<div class="col-md-2">
-									Adviser signature:
+									advisor signature:
 								</div>
 								<div class="col-md-4">
-									<input type="text" class="form-control" name="adviserSignature" value="<%=form.adviserSignature%>" required />
+									<input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required />
 								</div>
 							</div>
 
@@ -265,8 +265,8 @@
 							<div>Approved:</div>
 							<div class="row">
 								<div class="col-md-3">
-									<select name="approved" class="form-control" id="inputStatus" required>
-										<option value=<%=form.approved%>><%=form.approved%></option>
+									<select name="approved" class="form-control approved" id="inputStatus" required>
+										<option value="<%=form.approved%>"><%=form.approved%></option>
 										<option value="Approved by Graduate Studies Committee">Approved by Graduate Studies Committee</option>
 										<option value="Disapproved">Disapproved</option>
 									</select>
@@ -276,7 +276,7 @@
 							<div>Reason of Diapproval:</div>
 							<div class="row">
 								<div class="col-md-4">
-									<textarea class="form-control" rows="6" name="approvalReason"><%=form.approvalReason%></textarea>
+									<textarea class="form-control approval-reason" rows="6" name="approvalReason"><%=form.approvalReason%></textarea>
 								</div>
 							</div>
 
@@ -286,21 +286,21 @@
 							<div class="row">
 								<div class="col-md-4">
 									<div>Director Signature:</div>
-									<input type="text" class="form-control" name="directorSignature" value="<%=form.directorSignature%>" required />
+									<input type="text" class="form-control director-signature" name="directorSignature" value="<%=form.directorSignature%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Date signed</div>
-									<input type="text" class="form-control" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
+									<input type="text" class="form-control director-date-signed" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
 								</div>
 							</div>
 
 							<% } else { %>
 							<div class="row">
 								<div class="col-md-2">
-									Adviser signature:
+									advisor signature:
 								</div>
 								<div class="col-md-4">
-									<%=form.adviserSignature%>
+									<%=form.advisorSignature%>
 								</div>
 							</div>
 
@@ -335,7 +335,7 @@
 							</div>
 							<% } %>
 
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS03-submit">Submit</button>
 						</form>
 
 						<% } else{%>

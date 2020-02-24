@@ -219,7 +219,7 @@ var CS03Schema = mongoose.Schema({
   outsideReview: Boolean,
   comprehensiveExam: String,
   studentSignature: String,
-  adviserSignature: String,
+  advisorSignature: String,
   approved: String,
   approvalReason: String,
   directorSignature: String, directorDateSigned: String
@@ -243,7 +243,7 @@ var CS05Schema = mongoose.Schema({
   nominees: [String],
   nomineeDepartments: [String],
   nomineeStatuses: [String],
-  thesisAdviser: String,
+  thesisadvisor: String,
   committeeChairman: String,
   directorSignature: String, directorDateSigned: String
 }) 
@@ -270,7 +270,7 @@ var CS06Schema = mongoose.Schema({
   PHDWrittenExam: Boolean,
   PHDOralExam: Boolean,
   committee: [String],
-  adviser: String, chairman: String,
+  advisor: String, chairman: String,
   chairSignature: String,
   approved: String,
   reasonApproved: String,
@@ -348,8 +348,8 @@ var CS13Schema = mongoose.Schema({
   comp523Name: String,
   hadJob: Boolean,
   jobInfo: String,
-  adviserName: String,
-  adviserSignature: String,
+  advisorName: String,
+  advisorSignature: String,
   alternative: Boolean,
   product: String,
   client: String,

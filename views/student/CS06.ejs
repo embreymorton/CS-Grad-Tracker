@@ -337,7 +337,7 @@
 										<div class="form-group row">
 											<div class="col-md-12">
 												<button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off" 
-												id="adviser<%=i%>" onclick=selectAdviser(<%=i%>)>A</button>
+												id="advisor<%=i%>" onclick=selectadvisor(<%=i%>)>A</button>
 											</div>
 										</div>
 									<% } %>
@@ -361,11 +361,11 @@
 
 							<div class="row">
 								<div class="col-md-1">
-									<div>Adviser:</div>
+									<div>advisor:</div>
 								</div>
 								<div class="col-md-3">
-									<input type="hidden" class="form-control" name="adviser" id="adviserInput" value="<%=form.adviser%>" required />
-									<%=form.adviser%>
+									<input type="hidden" class="form-control" name="advisor" id="advisorInput" value="<%=form.advisor%>" required />
+									<%=form.advisor%>
 								</div>
 							</div>
 
@@ -382,7 +382,7 @@
 
 							<hr></hr>
 
-							<div><strong>Committee Adviser</strong>(or Chair if different from adviser)*</div>
+							<div><strong>Committee advisor</strong>(or Chair if different from advisor)*</div>
 							<div>By signing here, the chair indicates that all items above have been approved by the majority of the committee.</div>
 							<i><%=signature%></i>
 							<div class="col-md-4">
@@ -445,15 +445,15 @@
 		<%- include("../partials/bootstrapScripts.ejs") %>
 	</body>
 	<script type="text/javascript">
-		function selectAdviser(number){
+		function selectadvisor(number){
 			for(var i = 1; i < 7; i++){
 				if(i != number){
-					document.getElementById("adviser"+i).classList.remove("active");
-					document.getElementById("adviser"+i).ariaPressed = false;
+					document.getElementById("advisor"+i).classList.remove("active");
+					document.getElementById("advisor"+i).ariaPressed = false;
 				}
 			}
 			var tempName = document.getElementById("committeeName"+number).value;
-			document.getElementById("adviserInput").value = tempName;
+			document.getElementById("advisorInput").value = tempName;
 		}
 
 		function selectChairman(number){

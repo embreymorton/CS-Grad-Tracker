@@ -118,7 +118,7 @@
 								</div>
 							    <% } %>
 								<div class="col-md-1">
-									<strong>Adviser</strong>
+									<strong>advisor</strong>
 								</div>
 								<div class="col-md-1">
 									<strong>Chairman</strong>
@@ -171,7 +171,7 @@
 										<div class="form-group row">
 											<div class="col-md-12">
 												<button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off" 
-												id="adviser<%=i%>" onclick=selectAdviser(<%=i%>)>A</button>
+												id="advisor<%=i%>" onclick=selectadvisor(<%=i%>)>A</button>
 											</div>
 										</div>
 									<% } %>
@@ -193,11 +193,11 @@
 
 							<div class="row">
 								<div class="col-md-1">
-									<div>Thesis Adviser:</div>
+									<div>Thesis advisor:</div>
 								</div>
 								<div class="col-md-3">
-									<input type="hidden" class="form-control" name="thesisAdviser" value="<%=form.thesisAdviser%>" id="thesisAdviserInput" required />
-									<%=form.thesisAdviser%>
+									<input type="hidden" class="form-control" name="thesisadvisor" value="<%=form.thesisadvisor%>" id="thesisadvisorInput" required />
+									<%=form.thesisadvisor%>
 								</div>
 							</div>
 
@@ -259,15 +259,15 @@
 		<%- include("../partials/bootstrapScripts.ejs") %>
 	</body>
 	<script type="text/javascript">
-		function selectAdviser(number){
+		function selectadvisor(number){
 			for(var i = 1; i < 6; i++){
 				if(i != number){
-					document.getElementById("adviser"+i).classList.remove("active");
-					document.getElementById("adviser"+i).ariaPressed = false;
+					document.getElementById("advisor"+i).classList.remove("active");
+					document.getElementById("advisor"+i).ariaPressed = false;
 				}
 			}
 			var tempName = document.getElementById("nominee"+number+"Name").value;
-			document.getElementById("thesisAdviserInput").value = tempName;
+			document.getElementById("thesisadvisorInput").value = tempName;
 		}
 
 		function selectCommittee(number){
