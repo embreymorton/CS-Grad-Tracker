@@ -64,17 +64,33 @@ util.checkFormAsStudent = (formData)=>{
 }
 
 util.selectDropdowns = (formData) => {
+
     for(let key in formData){
-        cy.get('.' + key)
-        .select(formData[key])
-        .should('have.value', formData[key]);
+        if(Array.isArray(formData[key])){
+            for(var i = 1; i <= formData[key].length; i++){
+                cy.get('.'+key+i).select(formData[key][i - 1]).should('have.value', formData[key][i - 1]);
+            }
+        }
+        else{
+            cy.get('.'+key).select(formData[key]).should('have.value', formData[key]);
+        }
     }
 }
 
 util.checkDropdowns = (formData) => {
+
     for(let key in formData){
-        cy.get('.' + key)
-        .should('have.value', formData[key]);
+
+        if(Array.isArray(formData[key])){
+            for(var i = 1; i <= formData[key].length; i++){
+                cy.get('.'+key+i).should('have.value', formData[key][i - 1]);
+            }
+        }
+        else{
+            cy.get('.' + key).should('have.value', formData[key]);
+        }
+
+        
     }
 }
 
