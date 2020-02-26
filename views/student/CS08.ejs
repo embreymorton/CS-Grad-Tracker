@@ -60,21 +60,21 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div>Semester</div>
-									<input type="text" class="form-control" name="semester" value="<%=form.semester%>" required/>
+									<input type="text" class="form-control semester" name="semester" value="<%=form.semester%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Year</div>
-									<input type="number" class="form-control" name="year" value=<%=form.year%> required />
+									<input type="number" class="form-control year" name="year" value=<%=form.year%> required />
 								</div>
 							</div>
 
@@ -82,8 +82,7 @@
 
 							<strong>Title of Paper:</strong>
 							<div class="col-md-4">
-								<textarea class="form-control" rows="6" name="title" required><%=form.title%>
-								</textarea>
+								<textarea class="form-control title" rows="6" name="title" required><%=form.title%></textarea>
 							</div>
 
 
@@ -100,11 +99,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Primary Reader</div>
-									<input type="text" class="form-control" name="primaryReader" value="<%=form.primaryReader%>" required/>
+									<input type="text" class="form-control primary-reader" name="primaryReader" value="<%=form.primaryReader%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date Draft Received</div>
-									<input type="text" class="form-control" name="primaryDate" value="<%=form.primaryDate%>" required />
+									<input type="text" class="form-control primary-date" name="primaryDate" value="<%=form.primaryDate%>" required />
 								</div>
 							</div>
 
@@ -113,11 +112,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Secondary Reader</div>
-									<input type="text" class="form-control" name="secondaryReader" value="<%=form.secondaryReader%>" required/>
+									<input type="text" class="form-control secondary-reader" name="secondaryReader" value="<%=form.secondaryReader%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date Draft Received</div>
-									<input type="text" class="form-control" name="secondaryDate" value="<%=form.secondaryDate%>" required />
+									<input type="text" class="form-control secondary-date" name="secondaryDate" value="<%=form.secondaryDate%>" required />
 								</div>
 							</div>
 
@@ -133,11 +132,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="primarySignature" value="<%=form.primarySignature%>" required/>
+									<input type="text" class="form-control primary-signature" name="primarySignature" value="<%=form.primarySignature%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date</div>
-									<input type="text" class="form-control" name="primarySignedDate" value="<%=form.primarySignedDate%>" required />
+									<input type="text" class="form-control primary-signed-date" name="primarySignedDate" value="<%=form.primarySignedDate%>" required />
 								</div>
 							</div>
 
@@ -145,11 +144,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="secondarySignature" value="<%=form.secondarySignature%>" required/>
+									<input type="text" class="form-control secondary-signature" name="secondarySignature" value="<%=form.secondarySignature%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date</div>
-									<input type="text" class="form-control" name="secondarySignedDate" value="<%=form.secondarySignedDate%>" required />
+									<input type="text" class="form-control secondary-signed-date" name="secondarySignedDate" value="<%=form.secondarySignedDate%>" required />
 								</div>
 							</div>
 
@@ -212,7 +211,7 @@
 
 							<div class="verticalSpace"/>
 							
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS08-submit">Submit</button>
 						</form>
 					</div>
 				</div>

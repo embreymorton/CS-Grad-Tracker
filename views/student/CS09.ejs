@@ -58,11 +58,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name*</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID*</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 
@@ -77,7 +77,7 @@
 									Title of PRP topic:*
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="prpTitle" value="<%=form.prpTitle%>" required/>
+									<input type="text" class="form-control prp-title" name="prpTitle" value="<%=form.prpTitle%>" required/>
 								</div>
 							</div>
 
@@ -88,7 +88,7 @@
 									Research Advisor:*
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="researchAdvisor" value="<%=form.researchAdvisor%>" required/>
+									<input type="text" class="form-control research-advisor" name="researchAdvisor" value="<%=form.researchAdvisor%>" required/>
 								</div>
 							</div>
 
@@ -99,7 +99,7 @@
 									<div>Has this PRP topic already been submitted to a peer-reviewed conference or journal? *</div>
 								</div>
 								<div class="col-md-2">
-									<select name="peerReviewed" class="form-control" id="inputStatus" required>
+									<select name="peerReviewed" class="form-control peer-reviewed" id="inputStatus" required>
 										<option value=<%=form.peerReviewed%>><%=form.peerReviewed%></option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -114,7 +114,7 @@
 									If yes, give the full author list:
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="authors" value="<%=form.authors%>"/>
+									<input type="text" class="form-control authors" name="authors" value="<%=form.authors%>"/>
 								</div>
 							</div>
 
@@ -125,7 +125,7 @@
 									If yes, was the paper accepted:
 								</div>
 								<div class="col-md-2">
-									<select name="paperAccepted" class="form-control" id="inputStatus">
+									<select name="paperAccepted" class="form-control paper-accepted" id="inputStatus">
 										<option value=<%=form.paperAccepted%>><%=form.paperAccepted%></option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -135,7 +135,7 @@
 									Notification Date:
 								</div>
 								<div class="col-md-2">
-									<input type="text" class="form-control" name="paperNotifyDate" value="<%=form.paperNotifyDate%>"/>
+									<input type="text" class="form-control paper-notify-date" name="paperNotifyDate" value="<%=form.paperNotifyDate%>"/>
 								</div>
 							</div>
 
@@ -147,7 +147,7 @@
 									<div>Are reviews currently available to your committee,  or will they become available prior to the presentation?*</div>
 								</div>
 								<div class="col-md-2">
-									<select name="reviewsAvailable" class="form-control" id="inputStatus" required>
+									<select name="reviewsAvailable" class="form-control reviews-available" id="inputStatus" required>
 										<option value=<%=form.reviewsAvailable%>><%=form.reviewsAvailable%></option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -159,8 +159,7 @@
 
 							<div>What part of the research were you responsible for?*</div>
 							<div class="col-md-4">
-								<textarea class="form-control" rows="6" name="researchResponsible" required><%=form.researchResponsible%>
-								</textarea>
+								<textarea class="form-control research-responsible" rows="6" name="researchResponsible" required><%=form.researchResponsible%></textarea>
 							</div>
 
 							<div class="verticalSpace" />
@@ -170,7 +169,7 @@
 									<div>Will you present the entire project, or just your contribution?*</div>
 								</div>
 								<div class="col-md-2">
-									<input type="text" class="form-control" name="present" value="<%=form.present%>" required/>
+									<input type="text" class="form-control present" name="present" value="<%=form.present%>" required/>
 								</div>
 							</div>
 
@@ -184,11 +183,11 @@
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="advisorSignature" value="<%=form.advisorSignature%>" required />
+									<input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required />
 								</div>
 								<div class="col-md-2">
 									Date*
-									<input type="text" class="form-control" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
+									<input type="text" class="form-control advisor-date-signed" name="advisorDateSigned" value="<%=form.advisorDateSigned%>" required />
 								</div>
 							</div>
 
@@ -204,14 +203,14 @@
 								<div class="col-md-5">
 									<i><%=signature%></i>
 									<% for(let i = 0; i < 4; i++){ %>
-										<input type="text" class="form-control" name="committeeSignature" <% if(form.committeeSignature != null) { %> value="<%=form.committeeSignature[i]%>" <% } %> required />
+										<input type="text" class="form-control committee-signature<%=i+1%>" name="committeeSignature" <% if(form.committeeSignature != null) { %> value="<%=form.committeeSignature[i]%>" <% } %> required />
 									<% } %>
 								</div>
 									
 								<div class="col-md-2">
 									<div>Date*</div>
 									<% for(let i = 0; i < 4; i++){ %>
-										<input type="text" class="form-control" name="committeeDateSigned" <% if(form.committeeDateSigned != null) { %> value="<%=form.committeeDateSigned[i]%>"  <% } %> required />
+										<input type="text" class="form-control committee-date-signed<%=i+1%>" name="committeeDateSigned" <% if(form.committeeDateSigned != null) { %> value="<%=form.committeeDateSigned[i]%>"  <% } %> required />
 									<% } %>
 								</div>
 							</div>
@@ -224,7 +223,7 @@
 									Preliminary research presentation date*:
 								</div>
 								<div class="col-md-2">
-									<input type="text" class="form-control" name="presentationDate" value="<%=form.presentationDate%>" required />
+									<input type="text" class="form-control presentation-date" name="presentationDate" value="<%=form.presentationDate%>" required />
 								</div>
 							</div>
 
@@ -235,7 +234,7 @@
 									Integration of concepts*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="conceptIntegration" min="-3" max="3" step=".25" value=<%=form.conceptIntegration%> />
+									<input type="range" class="concept-integration" name="conceptIntegration" min="-3" max="3" step=".25" value=<%=form.conceptIntegration%> />
 								</div>
 							</div>
 
@@ -245,7 +244,7 @@
 								</div>
 
 								<div class="col-md-5">
-									<input type="range" name="creativity" min="-3" max="3" step=".25" value=<%=form.creativity%> />
+									<input type="range" class="creativity" name="creativity" min="-3" max="3" step=".25" value=<%=form.creativity%> />
 								</div>
 
 							</div>
@@ -256,7 +255,7 @@
 									Clarity*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="clarity" min="-3" max="3" step=".25" value=<%=form.clarity%> />
+									<input type="range" class="clarity" name="clarity" min="-3" max="3" step=".25" value=<%=form.clarity%> />
 								</div>
 							</div>
 
@@ -265,7 +264,7 @@
 									Abstraction and formality*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="abstractionFormality" min="-3" max="3" step=".25" value=<%=form.abstractionFormality%> />
+									<input type="range" class="abstraction-formality" name="abstractionFormality" min="-3" max="3" step=".25" value=<%=form.abstractionFormality%> />
 								</div>
 							</div>
 
@@ -274,7 +273,7 @@
 									Organization*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="organization" min="-3" max="3" step=".25" value=<%=form.organization%> />
+									<input type="range" class="organization" name="organization" min="-3" max="3" step=".25" value=<%=form.organization%> />
 								</div>
 							</div>
 
@@ -283,7 +282,7 @@
 									Writing*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="writing" min="-3" max="3" step=".25" value=<%=form.writing%> />
+									<input type="range" class="writing" name="writing" min="-3" max="3" step=".25" value=<%=form.writing%> />
 									
 								</div>
 							</div>
@@ -293,7 +292,7 @@
 									Presentation*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="presentation" min="-3" max="3" step=".25" value=<%=form.presentation%> />
+									<input type="range" class="presentation" name="presentation" min="-3" max="3" step=".25" value=<%=form.presentation%> />
 									
 								</div>
 							</div>
@@ -303,7 +302,7 @@
 									Answering questions*
 								</div>
 								<div class="col-md-5">
-									<input type="range" name="answeringQuestion" min="-3" max="3" step=".25" value=<%=form.answeringQuestion%> />
+									<input type="range" class="answering-question" name="answeringQuestion" min="-3" max="3" step=".25" value=<%=form.answeringQuestion%> />
 								</div>
 							</div>
 
@@ -336,8 +335,7 @@
 
 							<div><strong>Feedback on Research, Presentation, and Paper:</strong></div>
 							<div class="col-md-4">
-								<textarea class="form-control" rows="6" name="feedback" ><%=form.feedback%>
-								</textarea>
+								<textarea class="form-control feedback" rows="6" name="feedback" ><%=form.feedback%></textarea>
 							</div>
 
 							<% } else{ %>
@@ -373,18 +371,15 @@
 							</div>
 							<div class="row">
 								<div class="col-md-5">
-									<div><%=form.committeeSignature1%></div>
-									<div><%=form.committeeSignature2%></div>
-									<div><%=form.committeeSignature3%></div>
-									<div><%=form.committeeSignature4%></div>
+									<% for(var i = 0; i < 4; i ++){ %>
+										<div><%=form.committeeSignature[i]%></div>
+									<% } %>
 								</div>
 									
 								<div class="col-md-2">
-									
-									<div><%=form.committeeDateSigned1%></div>
-									<div><%=form.committeeDateSigned2%></div>
-									<div><%=form.committeeDateSigned3%></div>
-									<div><%=form.committeeDateSigned4%></div>
+									<% for(var i = 0; i < 4; i ++){ %>
+										<div><%=form.committeeDateSigned[i]%></div>
+									<% } %>							
 								</div>
 							</div>
 
@@ -499,7 +494,7 @@
 
 							<div class="verticalSpace"/>
 							
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS09-submit">Submit</button>
 						</form>
 					</div>
 				</div>

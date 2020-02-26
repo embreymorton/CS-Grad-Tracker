@@ -60,11 +60,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 
@@ -74,7 +74,7 @@
 
 							<strong>COMMENTS:</strong>
 							<div class="col-md-4">
-								<textarea class="form-control" rows="6" name="comments" required><%=form.comments%></textarea>
+								<textarea class="form-control comments" rows="6" name="comments" required><%=form.comments%></textarea>
 							</div>
 
 							<% if(!isStudent) {%>
@@ -84,11 +84,11 @@
 								<div class="col-md-5">
 									
 									<i><%=signature%></i>
-									<input type="text" class="form-control" name="chairmanSignature" value="<%=form.chairmanSignature%>" required />
+									<input type="text" class="form-control chairman-signature" name="chairmanSignature" value="<%=form.chairmanSignature%>" required />
 								</div>
 								<div class="col-md-3">
 									Date
-									<input type="text" class="form-control" name="chairmanDateSigned" value="<%=form.chairmanDateSigned%>" required />
+									<input type="text" class="form-control chairman-date-signed" name="chairmanDateSigned" value="<%=form.chairmanDateSigned%>" required />
 								</div>
 							</div>
 
@@ -110,7 +110,7 @@
 
 							<div class="verticalSpace"/>
 							
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS07-submit">Submit</button>
 						</form>
 					</div>
 				</div>
