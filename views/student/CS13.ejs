@@ -59,22 +59,22 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.firstName%> <%=student.lastName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.firstName%>, <%=student.lastName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 							<div class="verticalSpace"> </div>
 							<div class="row">
 								<div class="col-md-6">
 									<div>E-mail Address</div>
-									<input type="text" class="form-control" name="email" value="<%=form.email%>" required/>
+									<input type="text" class="form-control email" name="email" value="<%=form.email%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date</div>
-									<input type="number" class="form-control" name="dateMet" value="<%=form.dateMet%>" required />
+									<input type="text" class="form-control date" name="dateMet" value="<%=form.dateMet%>" required />
 								</div>
 							</div>
 							<hr size="50" color="black"></hr>
@@ -82,7 +82,7 @@
 							<h4 class="underline">Comp 523</h4>
 							<div class="row">
 								<div class="col-md-2">
-									<select name="comp523" class="form-control" id="inputStatus">
+									<select name="comp523" class="form-control comp523" id="inputStatus">
 										<option value=<%=form.comp523%>><%=form.comp523%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -94,8 +94,7 @@
 							</div>
 							<div class="verticalSpace"> </div>
 
-							<% if(!isStudent) {%>
-
+							
 							<div class="row">
 								<div class="col-md-6">
 									<div>COMP 523 Instructor Signature</div>
@@ -104,12 +103,24 @@
 									<div>Instructor Printed Name</div>
 								</div>
 							</div>
+							<% if(!isStudent) {%>
+							
 							<div class="row">
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="comp523Signature" value="<%=form.comp523Signature%>" required/>
+									<input type="text" class="form-control comp523-signature" name="comp523Signature" value="<%=form.comp523Signature%>" required/>
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="comp523Name" value="<%=form.comp523Name%>" required/>
+									<input type="text" class="form-control comp523-name" name="comp523Name" value="<%=form.comp523Name%>" required/>
+								</div>
+							</div>
+
+							<% } else { %>
+							<div class="row">
+								<div class="col-md-6">
+									<%=form.comp523Signature%>
+								</div>
+								<div class="col-md-6">
+									<%=form.comp523Name%>
 								</div>
 							</div>
 
@@ -120,7 +131,7 @@
 							<h4 class="underline">Industry Experience</h4>
 							<div class="row">
 								<div class="col-md-2">
-									<select name="hadJob" class="form-control" id="inputStatus">
+									<select name="hadJob" class="form-control had-job" id="inputStatus">
 										<option value=<%=form.hadJob%>><%=form.hadJob%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -138,16 +149,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<input type="textarea" class="form-control" name="jobInfo" value="<%=form.jobInfo%>" required/>
-								</div>
-							</div>
-							<div class="verticalSpace"> </div>
-							<div class="row">
-								<div class="col-md-2">
-									<div>Student Name:</div>
-								</div>
-								<div class="col-md-6">
-									<input type="text" class="form-control" name="name" value="<%=student.firstName%> <%=student.lastName%>" required/>
+									<input type="textarea" class="form-control job-info" name="jobInfo" value="<%=form.jobInfo%>" required/>
 								</div>
 							</div>
 							<div class="verticalSpace"> </div>
@@ -159,16 +161,31 @@
 									<div>advisor Name:</div>
 								</div>
 								<div class="col-md-4">
-									<input type="text" class="form-control" name="advisorName" value="<%=form.advisorName%>" required/>
+									<input type="text" class="form-control advisor-name" name="advisorName" value="<%=form.advisorName%>" required/>
 								</div>
 								<div class="col-md-2">
 									<div>advisor Signature:</div>
 								</div>
 								<div class="col-md-4">
-									<input type="text" class="form-control" name="advisorSignature" value="<%=form.advisorSignature%>" required/>
+									<input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required/>
 								</div>
 							</div>
 
+							<% } else {%>
+								<div class="row">
+									<div class="col-md-2">
+										<div>advisor Name:</div>
+									</div>
+									<div class="col-md-4">
+										<%=form.advisorName%>
+									</div>
+									<div class="col-md-2">
+										<div>advisor Signature:</div>
+									</div>
+									<div class="col-md-4">
+										<%=form.advisorSignature%>
+									</div>
+								</div>
 							<% } %>
 
 							<hr size="50" color="black"></hr>
@@ -176,7 +193,7 @@
 							<h4 class="underline">Alternative</h4>
 							<div class="row">
 								<div class="col-md-2">
-									<select name="alternative" class="form-control" id="inputStatus">
+									<select name="alternative" class="form-control alternative" id="inputStatus">
 										<option value=<%=form.alternative%>><%=form.alternative%></option>
 										<option value=false>False</option>
 										<option value=true>True</option>
@@ -194,7 +211,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<input type="textarea" class="form-control" name="product" value="<%=form.product%>" required/>
+									<input type="textarea" class="form-control product" name="product" value="<%=form.product%>" required/>
 								</div>
 							</div>
 							<div class="verticalSpace"> </div>
@@ -203,13 +220,13 @@
 									<div>Client:</div>
 								</div>
 								<div class="col-md-4">
-									<input type="text" class="form-control" name="client" value="<%=form.client%>" required/>
+									<input type="text" class="form-control client" name="client" value="<%=form.client%>" required/>
 								</div>
 								<div class="col-md-2">
 									<div>Position:</div>
 								</div>
 								<div class="col-md-4">
-									<input type="text" class="form-control" name="position" value="<%=form.position%>" required/>
+									<input type="text" class="form-control position" name="position" value="<%=form.position%>" required/>
 								</div>
 							</div>
 							<div class="verticalSpace"> </div>
@@ -226,10 +243,10 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="altSignature1" value="<%=form.altSignature1%>" required/>
+									<input type="text" class="form-control alt-signature1" name="altSignature1" value="<%=form.altSignature1%>" required/>
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" name="altSignature2" value="<%=form.altSignature2%>" required/>
+									<input type="text" class="form-control alt-signature2" name="altSignature2" value="<%=form.altSignature2%>" required/>
 								</div>
 							</div>
 							<div class="verticalSpace"> </div>
@@ -275,7 +292,7 @@
 
 							<div class="verticalSpace"> </div>
 							<div class="verticalSpace"> </div>
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS13-submit">Submit</button>
 						</form>
 					</div>
 				</div>
