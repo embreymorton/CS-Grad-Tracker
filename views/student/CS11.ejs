@@ -60,11 +60,11 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 
@@ -76,7 +76,7 @@
 									<div>(Full responsibility includes planning, teaching, and grading)</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="fullResponsibility" value="<%=form.fullResponsibility%>" required/>
+									<input type="text" class="form-control full-responsibility" name="fullResponsibility" value="<%=form.fullResponsibility%>" required/>
 								</div>
 							</div>
 
@@ -88,7 +88,7 @@
 									<div>(Graduate Course)</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="partialResponsibility" value="<%=form.partialResponsibility%>" required/>
+									<input type="text" class="form-control partial-responsibility" name="partialResponsibility" value="<%=form.partialResponsibility%>" required/>
 								</div>
 							</div>
 
@@ -100,13 +100,13 @@
 									<div>(Fall, Spring, Summer I/II, Maymester)</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="semester" value="<%=form.semester%>" required/>
+									<input type="text" class="form-control semester" name="semester" value="<%=form.semester%>" required/>
 								</div>
 								<div class="col-md-1">
 									<div>Year:</div>
 								</div>
 								<div class="col-md-2">
-									<input type="number" min="2015" max="2100" class="form-control" name="year" value="<%=form.year%>" required/>
+									<input type="number" class="form-control year" name="year" value="<%=form.year%>" required/>
 								</div>
 							</div>
 
@@ -117,7 +117,7 @@
 									<div>Supervising Faculty Member:</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="supervisor" value="<%=form.supervisor%>" required/>
+									<input type="text" class="form-control supervisor" name="supervisor" value="<%=form.supervisor%>" required/>
 								</div>
 							</div>
 
@@ -128,13 +128,13 @@
 									<div>Signature of supervisor:</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="supervisorSignature" value="<%=form.supervisorSignature%>" required/>
+									<input type="text" class="form-control supervisor-signature" name="supervisorSignature" value="<%=form.supervisorSignature%>" required/>
 								</div>
 								<div class="col-md-1">
 									<div>Date:</div>
 								</div>
 								<div class="col-md-2">
-									<input type="text" class="form-control" name="supervisorDateSigned" value="<%=form.supervisorDateSigned%>" required/>
+									<input type="text" class="form-control supervisor-date-signed" name="supervisorDateSigned" value="<%=form.supervisorDateSigned%>" required/>
 								</div>
 							</div>
 
@@ -142,7 +142,7 @@
 
 							<strong>Other (please describe and attach supporting material)</strong>
 							<div class="col-md-4">
-								<textarea class="form-control" rows="6" name="other"><%=form.other%></textarea>
+								<textarea class="form-control other" rows="6" name="other"><%=form.other%></textarea>
 							</div>
 
 							<hr/>
@@ -153,7 +153,7 @@
 									<div>Approved:</div>
 								</div>
 								<div class="col-md-3">
-									<select name="approved" class="form-control" id="inputStatus">
+									<select name="approved" class="form-control approved" id="inputStatus">
 										<option value=<%=form.approved%>><%=form.approved%></option>
 										<option value="Approved">Approved</option>
 										<option value="Disapproved">Disapproved</option>
@@ -166,11 +166,11 @@
 							<div class="row">
 								<div class="col-md-4">
 									Director of Graduate Studies signature
-									<input type="text" class="form-control" name="directorSignature" value="<%=form.directorSignature%>" required />
+									<input type="text" class="form-control director-signature" name="directorSignature" value="<%=form.directorSignature%>" required />
 								</div>
 								<div class="col-md-2">
 									Date signed
-									<input type="text" class="form-control" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
+									<input type="text" class="form-control director-date-signed" name="directorDateSigned" value="<%=form.directorDateSigned%>" required />
 								</div>
 							</div>
 							
@@ -200,7 +200,7 @@
 
 							<div class="verticalSpace"/>
 							
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS11-submit">Submit</button>
 						</form>
 					</div>
 				</div>
