@@ -58,22 +58,22 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div>Name*</div>
-									<input type="text" class="form-control" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
+									<input type="text" class="form-control student-name" name="name" value="<%=student.lastName%>, <%=student.firstName%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>PID*</div>
-									<input type="number" class="form-control" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
 								</div>
 							</div>
 
 							<div class="row">
 								<div class="col-md-6">
 									<div>Email address*</div>
-									<input type="text" class="form-control" name="email" value="<%=form.email%>" required/>
+									<input type="text" class="form-control email" name="email" value="<%=form.email%>" required/>
 								</div>
 								<div class="col-md-6">
 									<div>Date met*</div>
-									<input type="text" class="form-control" name="dateMet" value="<%=form.dateMet%>" required />
+									<input type="text" class="form-control date" name="dateMet" value="<%=form.dateMet%>" required />
 								</div>
 							</div>
 
@@ -92,7 +92,7 @@
 									
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="committeeSignature" <% if(form.committeeSignature != null) { %>  value="<%=form.committeeSignature[i]%>" <% }%> required/>
+									<input type="text" class="form-control committee<%=i+1%>" name="committeeSignature" <% if(form.committeeSignature != null) { %>  value="<%=form.committeeSignature[i]%>" <% }%> required/>
 								</div>
 							</div>
 							<% } %>
@@ -114,7 +114,7 @@
 							<% } %>
 							<div class="verticalSpace"/>
 							
-							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary CS12-submit">Submit</button>
 						</form>
 					</div>
 				</div>
