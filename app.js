@@ -15,7 +15,7 @@ require('dotenv').config();
 
 var app = express()
 
-let auth0 = null;
+let auth0 = null; 
 /*Instead of auth0 permissions system use auth0 to login and use the
  given email to check against database to determine the user role
  asdasd
