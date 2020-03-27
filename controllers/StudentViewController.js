@@ -154,20 +154,22 @@ studentViewController.updateForm = function(req, res){
               res.redirect("/studentView/forms/"+req.params.title+"/true");
             });
           }
-
-          //also add admins at some point?
-          mailOptions.to = studentInfo.advisor.email;
-          mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
+          util.checkFormCompletion(studentId).then((result) => {
+              //ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
+              mailOptions.to = studentInfo.advisor.email+"";
+              mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
+              mailOptions.text = "The student has completed the following forms as of now: " + result;
+              transport.sendMail(mailOptions, function (error, response) {
+                  if (error) {
+                      console.log(error);
+                  } else {
+                      console.log("Message sent");
+                  }
+                  // if you don't want to use this transport object anymore, uncomment following line
+                  transport.close(); // shut down the connection pool, no more messages
+              });
+          })
           
-          transport.sendMail(mailOptions, function(error, response){
-            if(error){
-                console.log(error);
-            }else{
-                console.log("Message sent: " + response.message);
-            }
-            // if you don't want to use this transport object anymore, uncomment following line
-           transport.close(); // shut down the connection pool, no more messages
-          });
 
         });
       }

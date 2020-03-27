@@ -165,10 +165,14 @@ else{
         require('./controllers/util.js').initializeAllSemesters();
       }
     })
+
+    
     //add routes to allow user changes
     app.use("/changeUser", require("./routes/userChange"));
    
-    app.get("/", (req, res)=>{
+    app.get("/", (req, res) => {
+        req.session.accessLevel = 1;
+        req.session.userPID = 730093699;
       if(req.session.accessLevel >= 2){
         res.redirect("/student");
       }

@@ -166,4 +166,48 @@ _.listObjectToString = function (input) {
   return result;
 }
 
+_.checkFormCompletion = (studentID) => {
+    return new Promise((resolve, reject) => {
+        let completedForms = [];
+        schema.CS01BSMS.findOne({ student: studentID }).exec().then((result) => {
+            if (result != null && result.name != null) {
+                completedForms.push("CS01BSMS");
+            }
+            for (var i = 1; i <= 13; i++) {
+                let currentForm = "";
+                if (i < 10) {
+                    currentForm = "0" + i;
+                }
+                else {
+                    currentForm = i;
+                }
+                if (i != 10) {
+                    checkOneForm(currentForm, completedForms, studentID).then((result) => {
+                        if ("13" == result) {
+                            resolve(completedForms);
+                        }
+                    }).catch((error) => {
+                        reject(error);
+                    })
+                }
+            }
+        })
+        
+    });
+}
+
+checkOneForm = (currentForm, completedForms, studentID) => {
+    return new Promise((resolve, reject) => {
+        console.log("CS" + currentForm);
+        schema["CS" + currentForm].findOne({ student: studentID }).exec().then((result) => {
+            if (result != null && result.name != null) {
+                completedForms.push("CS" + currentForm);
+            }
+            resolve(currentForm);
+        }).catch((error) => {
+            reject(error);
+        })
+    });
+}
+
 module.exports = _;
