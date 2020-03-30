@@ -350,7 +350,6 @@
 	<script type="text/javascript">
 		let handleChange = ()=>{
 			let today = new Date();
-			console.log("ABC");
 			let semestersOnLeave = document.getElementById("inputSemestersOnLeave").value;
 			let semesterTemp = document.getElementById("inputSemesterStarted");
 			let semesterStarted = semesterTemp.options[semesterTemp.selectedIndex].text;
@@ -381,8 +380,6 @@
 		}
 
 		document.getElementById("inputSemestersOnLeave").addEventListener("change", function(){ handleChange(); }, false);
-
 		document.getElementById("inputSemesterStarted").addEventListener("change", function(){ handleChange(); }, false);
 	</script>
-
 </html>

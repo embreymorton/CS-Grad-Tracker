@@ -20,15 +20,27 @@ let aggregateData = (progressReport)=>{
           }
         }).catch((error)=>{
           console.log(error)
-          resolve(false);
+          reject(error);
         });
       }
     }).catch((error)=>{
       console.log(error)
-      resolve(false);
+      reject(error);
     });
   });
 }
+
+let aggregateTuitionData  = (progressReport)=>{
+  return new Promise((resolve, reject)=>{
+    schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').lean().exec().then(function(result){
+      tuitionReport = result;
+      resolve(tuitionReport);
+    }).catch((error)=>{
+      console.log(error)
+      reject(error);
+    });
+  });
+};
 
 reportController.get = function (req, res) {
   res.render("../views/report/index.ejs", {});
@@ -54,6 +66,15 @@ reportController.download = function(req, res){
     res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     fs.createReadStream(filePath).pipe(res);
   });
+}
+
+reportController.getTutionReport = (req, res) => {
+  let tutionReport = [];
+  aggregateTuitionData(tutionReport).then((result)=> {
+    res.render('../views/report/tuitionReport.ejs', {report: result});
+  }).catch((error)=>{
+    res.render('../views/error.ejs', {string: error});
+  })
 }
 
 module.exports = reportController;
