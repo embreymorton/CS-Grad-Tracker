@@ -32,9 +32,39 @@ let aggregateData = (progressReport)=>{
 
 let aggregateTuitionData  = (progressReport)=>{
   return new Promise((resolve, reject)=>{
-    schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').lean().exec().then(function(result){
-      tuitionReport = result;
-      resolve(tuitionReport);
+    schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').populate('semesterStarted').lean().exec().then(function(result){
+        tuitionReport = result;
+        let today = new Date();
+        for (let i = 0; i < result.length; i++) {
+            let semestersOnLeave = result[i].semestersOnLeave;
+            let semesterStarted = result[i].semesterStarted;
+            console.log(semesterStarted)
+            let activeSemesters = 0;
+            if (semestersOnLeave != null && semesterStarted != null) {
+                let currentMonth = today.getMonth() + 1;
+                let currentYear = today.getFullYear();
+                console.log(currentMonth + " " + currentYear + " " + semesterStarted)
+                if (currentMonth < 8) {
+                    //its currently spring
+                    activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave;
+                    if (semesterStarted.season == "FA") {
+                        activeSemesters--;
+                    }
+                }
+                else {
+                    //its currently fall
+                    activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave;
+                    if (semesterStarted.season == "SP") {
+                        activeSemesters++;
+                    }
+                }
+            }
+            tuitionReport[i].activeSemesters = activeSemesters;
+        }
+        tuitionReport.sort((a, b)=> {
+            return a.activeSemesters - b.activeSemesters;
+        });
+        resolve(tuitionReport);
     }).catch((error)=>{
       console.log(error)
       reject(error);
@@ -68,7 +98,7 @@ reportController.download = function(req, res){
   });
 }
 
-reportController.getTutionReport = (req, res) => {
+reportController.getTuitionReport = (req, res) => {
   let tutionReport = [];
   aggregateTuitionData(tutionReport).then((result)=> {
     res.render('../views/report/tuitionReport.ejs', {report: result});

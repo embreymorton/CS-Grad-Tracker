@@ -47,7 +47,11 @@
 									<tr>
 										<td><%= report[i].lastName%></td>
 										<td><%= report[i].firstName%></td>
-										<td><%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%></td>
+										<td>
+										<% if(report[i].advisor != null){ %>
+										<%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
+										<% } %>
+										</td>
                                         <td><%= report[i].prpPassed%></td>
                                         <td><%= report[i].technicalWritingApproved%></td>
                                         <td><%= report[i].backgroundPrepWorksheetApproved%></td>

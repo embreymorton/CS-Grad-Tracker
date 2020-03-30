@@ -20,4 +20,6 @@ router.get("/", report.get);
 
 router.get("/progressReport", report.getProgressReport);
 
+router.get("/tuitionReport", report.getTuitionReport);
+
 module.exports = router;
