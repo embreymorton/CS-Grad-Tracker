@@ -54,8 +54,8 @@ Users:
 ## Development/testing mode .env tweeks
 - mode=production  or  mode=development
 - databaseString='mongodb://localhost/cs_grad_data-prod'  or  databaseString='mongodb://localhost/cs_grad_data-dev'
-- AUTH0_CALLBACK_URL=http://localhost.cs.unc.edu/callback
-- AUTH0_LOGOUT_URL=http://localhost.cs.unc.edu
+- AUTH0_CALLBACK_URL=http://localhost:8080/callback
+- AUTH0_LOGOUT_URL=http://localhost:8080
 
 ## Starting the app without Docker
 
