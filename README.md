@@ -21,6 +21,7 @@ Users:
 - Administrators - Can create/edit everything - students, student forms, jobs, faculty, courses.
 
 * Web site: csgrad.cs.unc.edu
+* Requires UNC campus VPN to access the website.
 * Trello board (private) https://trello.com/b/MKj0CumI/grad-tracking
 
 # Documentation
