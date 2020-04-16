@@ -43,6 +43,19 @@ Users:
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
 - There is also gmailUser and gmailPass which are used for email notifications through nodemailer.
 - These are just credentials for a gmail account setup specifically for this app.
+- There are two general .env setups, you will need to tweek the variables listed below to get it to run in a certain setup
+
+## Production mode .env tweeks
+- mode=production
+- databaseString='mongodb://localhost/cs_grad_data-prod'
+- AUTH0_CALLBACK_URL=http://csgrad.cs.unc.edu/callback
+- AUTH0_LOGOUT_URL=http://csgrad.cs.unc.edu
+
+## Development/testing mode .env tweeks
+- mode=production  or  mode=development
+- databaseString='mongodb://localhost/cs_grad_data-prod'  or  databaseString='mongodb://localhost/cs_grad_data-dev'
+- AUTH0_CALLBACK_URL=http://localhost.cs.unc.edu/callback
+- AUTH0_LOGOUT_URL=http://localhost.cs.unc.edu
 
 ## Starting the app without Docker
 
