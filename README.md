@@ -10,6 +10,9 @@ Takoda Ren and Sebastian Crowell are the students currently working on this proj
 
 In the past, Shane Flannigan worked on this project.
 
+# Contacts
+Takoda Ren ... takoda.ren@gmail.com
+
 # Context
 Current graduate student forms and progress data is all either in paper or in a system that has limited access (only a few administrators can access it).
 We are trying to put student progress, data, and forms (and eventually grades) in a web app that is accessible by all parties that need access to this information (the students,
