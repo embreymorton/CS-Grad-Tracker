@@ -227,7 +227,7 @@ We are using Gitlab's CI/CD to automatically run tests and deploy to the virtual
 - The file used to cause this is .gitlab-ci.yml
 - In order to set up sshing into the virtual machine, I generated a new key pair.
 - I stored the new private key in Gitlab - Settings - CI/CD - Variables
-- I stored the public key on the VM in ~/.ssh/authorized_keys
+- I stored the public key on the VM in ~/.ssh/authorized_keys 
 
 # System overview
 
