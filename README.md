@@ -10,6 +10,9 @@ Takoda Ren and Sebastian Crowell are the students currently working on this proj
 
 In the past, Shane Flannigan worked on this project.
 
+# Contacts
+Takoda Ren ... takoda.ren@gmail.com
+
 # Context
 Current graduate student forms and progress data is all either in paper or in a system that has limited access (only a few administrators can access it).
 We are trying to put student progress, data, and forms (and eventually grades) in a web app that is accessible by all parties that need access to this information (the students,
@@ -21,6 +24,7 @@ Users:
 - Administrators - Can create/edit everything - students, student forms, jobs, faculty, courses.
 
 * Web site: csgrad.cs.unc.edu
+* Requires UNC campus VPN to access the website.
 * Trello board (private) https://trello.com/b/MKj0CumI/grad-tracking
 
 # Documentation
@@ -42,6 +46,19 @@ Users:
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
 - There is also gmailUser and gmailPass which are used for email notifications through nodemailer.
 - These are just credentials for a gmail account setup specifically for this app.
+- There are two general .env setups, you will need to tweek the variables listed below to get it to run in a certain setup
+
+## Production mode .env tweeks
+- mode=production
+- databaseString='mongodb://localhost/cs_grad_data-prod'
+- AUTH0_CALLBACK_URL=http://csgrad.cs.unc.edu/callback
+- AUTH0_LOGOUT_URL=http://csgrad.cs.unc.edu
+
+## Development/testing mode .env tweeks
+- mode=production  or  mode=development
+- databaseString='mongodb://localhost/cs_grad_data-prod'  or  databaseString='mongodb://localhost/cs_grad_data-dev'
+- AUTH0_CALLBACK_URL=http://localhost:8080/callback
+- AUTH0_LOGOUT_URL=http://localhost:8080
 
 ## Starting the app without Docker
 
