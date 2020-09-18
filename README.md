@@ -289,6 +289,10 @@ is how we currently have it set up:
 
 # Starting the app with docker
 
+_Note: as of September, 2020, we've had trouble getting this to work. We
+suggest instead to follow the above instructions for getting the app to run
+without Docker._
+
 ## Basics
 
 - Have docker installed on your machine.
