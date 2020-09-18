@@ -151,6 +151,7 @@ Contains css and image resources.
 ### data
 Currently used only to store test excel files, was used in the past for storing
 pdfs/documents for student objects, as mongo does not handle pdfs well.
+Contains Input Scripts as .txt files used to register new users in the database.
 
 ### Overview
 For example, app.js defines a route as
@@ -269,8 +270,8 @@ should use should you ever hook up your own auth0 account.
   `http://csgrad.cs.unc.edu/callback`
 - Allowed web origins: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
 - Allowed logout urls: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
-- In connections, turn off Username-Password-Authentication and make sure
-  google-oauth2 is enabled.
+- In connections, make sure Username-Password-Authentication and google-oauth2 
+  are enabled.
 
 When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this
 is how we currently have it set up:
@@ -279,7 +280,7 @@ is how we currently have it set up:
 - The mongodb database is running on port 27017
 - Nginx is running on the vm which is reverse proxying port 8080 to the world,
   so that anyone can try to access it
-- Logins use auth0's google SSO.
+- Logins use auth0's google SSO and Username-Password-Authentication.
 - If the login is successful, app logic checks the CS credentials against the
   users in the database to authenticate.
 - The app is configured as server rendered html, rather than a framework like
