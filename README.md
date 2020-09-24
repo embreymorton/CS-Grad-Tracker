@@ -152,6 +152,10 @@ Contains css and image resources.
 Currently used only to store test excel files, was used in the past for storing
 pdfs/documents for student objects, as mongo does not handle pdfs well.
 Contains Input Scripts as .txt files used to register new users in the database.
+Use email '+' operator for each account type.
+Ex: email+student@gmail.com
+    email+faculty@gmail.com
+    email+admin@gmail.com
 
 ### Overview
 For example, app.js defines a route as
