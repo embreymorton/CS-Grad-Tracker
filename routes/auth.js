@@ -43,29 +43,28 @@ router.get("/callback", (req, res, next) => {
 });
 
 router.get("/logout", (req, res) => {
-    req.logOut();
+    req.logout();
 
+    const port = req.connection.localPort;
+    let returnTo = req.protocol + "://" + req.hostname + ':' + port;
+  
+    /*if (port !== undefined && port !== 80 && port !== 443) {
+        console.log('hi');
+        returnTo =
+         process.env.mode === "development"
+           ? `${returnTo}/`
+          : `${returnTo}:${port}/`;
+     }*/
 
-  
-    // let returnTo = req.protocol + "://" + req.hostname;
-    // const port = req.connection.localPort;
-  
-    // if (port !== undefined && port !== 8080 && port !== 443) {
-    //   returnTo =
-    //     process.env.mode === "production"
-    //       ? `${returnTo}/`
-    //       : `${returnTo}:${port}/`;
-    // }
-  
-    // const logoutURL = new URL(
-    //   util.format("https://%s/logout", process.env.AUTH0_DOMAIN)
-    // );
-    // const searchString = querystring.stringify({
-    //   client_id: process.env.AUTH0_CLIENT_ID,
-    //   returnTo: returnTo
-    // });
-    // logoutURL.search = searchString;
-    res.redirect(process.env.AUTH0_LOGOUT_URL);
+     const logoutURL = new URL(
+       util.format("https://%s/logout", process.env.AUTH0_DOMAIN)
+     );
+     const searchString = querystring.stringify({
+       client_id: process.env.AUTH0_CLIENT_ID,
+       returnTo: returnTo
+     });
+     logoutURL.search = searchString;
+     res.redirect(logoutURL);
 });
 /**
  * Module Exports
