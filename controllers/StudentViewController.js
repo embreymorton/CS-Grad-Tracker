@@ -36,11 +36,11 @@ notes
 */
 studentViewController.put = function (req, res) {
   var input = req.body;
-  var editableFields = ["firstName", "lastName", "alternativeName", "gender", "ethnicity", "notes", "residency"];
+  var editableFields = ["firstName", "lastName", "alternativeName", "gender", "ethnicity", "residency"];
   if (input.firstName != null && input.lastName != null && input._id != null) {
-    schema.Student.findOne({_id: input._id}, input).exec().then(function(result){
+    schema.Student.findOne({_id: input._id}).exec().then(function(result){
       if(result != null){
-        for(var i = 0; i < editableFields.length; i++){
+        for(var i = 0; i < editableFields.length; i++) {
           result[editableFields[i]] = input[editableFields[i]];
         }
         result.save(function(err, updated){
