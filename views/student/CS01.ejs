@@ -3,7 +3,7 @@
 
 <html>
 	<head>
-		<title>CS01 Background Preperation Worksheet</title>
+		<title>CS01 Background Preparation Worksheet</title>
 		<%- include("../partials/head.ejs") %>
 	</head>
 	
@@ -43,7 +43,7 @@
 
 					<h4><%=student.lastName%>, <%=student.firstName%></h4>
 
-					<h3>Background preperation worksheet</h3>
+					<h3>Background preparation worksheet</h3>
 					<h3>CS-01</h3>
 
 					<div align="left">
@@ -68,7 +68,7 @@
 								</div>
 								<div class="col-md-6">
 									<div>PID</div>
-									<input type="number" class="form-control student-pid" name="pid" value=<%=student.pid%> required />
+									<input type="number" class="form-control student-pid" name="pid" value="<%=student.pid%>" required />
 								</div>
 							</div>
 							<hr></hr>
@@ -145,11 +145,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control covered521" name="comp521Covered" value="<%=form.comp521Covered%>" required />
+									<input type="text" class="form-control covered521" name="comp521Covered" id="521a" value="<%=form.comp521Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control date521" name="comp521Date" value="<%=form.comp521Date%>" required />
+									<input type="text" class="form-control date521" name="comp521Date" id = "521b" value="<%=form.comp521Date%>" required />
 								</div>
 							</div>
 
@@ -161,11 +161,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control covered520" name="comp520Covered" value="<%=form.comp520Covered%>" required />
+									<input type="text" class="form-control covered520" name="comp520Covered" id="520a" value="<%=form.comp520Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control date520" name="comp520Date" value="<%=form.comp520Date%>" required />
+									<input type="text" class="form-control date520" name="comp520Date" id="520b" value="<%=form.comp520Date%>" required />
 								</div>
 							</div>
 
@@ -177,11 +177,11 @@
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
-									<input type="text" class="form-control covered530" name="comp530Covered" value="<%=form.comp530Covered%>" required />
+									<input type="text" class="form-control covered530" id="530a" name="comp530Covered" value="<%=form.comp530Covered%>" required />
 								</div>
 								<div class="col-md-4">
 									<div>Dates:</div>
-									<input type="text" class="form-control date530" name="comp530Date" value="<%=form.comp530Date%>" required />
+									<input type="text" class="form-control date530" id="530b" name="comp530Date" value="<%=form.comp530Date%>" required />
 								</div>
 							</div>
 
@@ -367,7 +367,7 @@
 
 							<% } %>
 
-							<button type="submit" class="btn btn-primary CS01-submit">Submit</button>
+							<button type="submit" class="btn btn-primary CS01-submit" onclick="refreshRequired()">Submit</button>
 						</form>
 						<% } else{%>
 						<div> You do not have access</div>
@@ -380,6 +380,25 @@
 		<%- include("../partials/bootstrapScripts.ejs") %>
 	</body>
 	<script type="text/javascript">
+		function refreshRequired(){
+			// only require two out of 3 of the following courses
+			const comp521Covered = document.getElementById("521a");
+			const comp521Date = document.getElementById("521b");
 
+			const comp520Covered = document.getElementById("520a");
+			const comp520Date = document.getElementById("520b");
+
+			const comp530Covered = document.getElementById("530a");
+			const comp530Date = document.getElementById("530b");
+
+			comp521Covered.required = !(comp520Covered.value.length != 0 && comp530Covered.value.length != 0);
+			comp521Date.required = !(comp520Covered.value.length != 0 && comp530Covered.value.length != 0);
+
+			comp520Covered.required = !(comp521Covered.value.length != 0 && comp530Covered.value.length != 0);
+			comp520Date.required = !(comp521Covered.value.length != 0 && comp530Covered.value.length != 0);
+
+			comp530Covered.required = !(comp521Covered.value.length != 0 && comp520Covered.value.length != 0);
+			comp530Date.required = !(comp521Covered.value.length != 0 && comp520Covered.value.length != 0);
+		}
 	</script>
 </html>
