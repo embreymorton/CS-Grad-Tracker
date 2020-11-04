@@ -6,14 +6,14 @@
 		<title>CS01 Background Preparation Worksheet</title>
 		<%- include("../partials/head.ejs") %>
 	</head>
-	
+
 	<body>
 		<div class="container-fluid h-100">
 			<div class="row h-100">
 				<div class="col-lg-2 sidebar text-center">
-					
+
 					<% if(!isStudent) {%>
-					
+
 					<%- include("../partials/admin-sidebar.ejs") %>
 
 					<%- include("./search-student.ejs") %>
@@ -48,13 +48,13 @@
 
 					<div align="left">
 						<p class="underline">Instructions:</p>
-						<div>The following UNC courses define the background preparation assumed in the M.S. and PhD programs.  This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.
-						</div>
-						<div>  For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question</div>
+						<p>The following UNC courses define the background preparation assumed in the M.S. and PhD programs.  This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.
+						</p>
+						<p>  For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question</p>
 
-						<strong>All fields required!</strong>
+						<p><strong>All fields required!</strong></p>
 						<hr></hr>
-						
+
 						<% if(hasAccess) { %>
 
 						<form action="<%=postMethod%>" method="post">
@@ -75,9 +75,11 @@
 
 							<h3>Background Course Information</h3>
 
+							<div class="verticalSpace"/>
+
 							<div class="row">
 								<div class="col-md-4">
-									<div><strong>COMP 283: Discrete Structures:</strong> Introduces discrete structures and the formal math used to establish their properties & those of algorithms that work with them.  Develops problem-solving skills through puzzles & applications central to CS. or <strong>MATH 381: Discrete Mathematics</strong> (see below)</div>
+									<p><strong>COMP 283: Discrete Structures:</strong> Introduces discrete structures and the formal math used to establish their properties & those of algorithms that work with them.  Develops problem-solving skills through puzzles & applications central to CS. or <strong>MATH 381: Discrete Mathematics</strong> (see below)</p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -93,7 +95,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP: 410:  Data Structures:</strong> The analysis of data structures and their associated algorithms.  Abstract data types, lists, stacks, queues, trees, and graphs.
+									<p><strong>COMP: 410:  Data Structures:</strong> The analysis of data structures and their associated algorithms.  Abstract data types, lists, stacks, queues, trees, and graphs.</p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -109,7 +111,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP 411: Computer Organization:</strong> Data respresentation, computer architecture and implementation, assembly language programming.
+									<p><strong>COMP 411: Computer Organization:</strong> Data respresentation, computer architecture and implementation, assembly language programming.</p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -125,7 +127,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP 455:  Models of Languages & Computation:</strong> Introduction to the theory of computation.  Boolean functions, finite automata, pushdown automata, & Turing machines.  Unsolvable problems.  The Chomsky hierarchy of formal languages & their acceptors.  Parsing. 
+									<p><strong>COMP 455:  Models of Languages & Computation:</strong> Introduction to the theory of computation.  Boolean functions, finite automata, pushdown automata, & Turing machines.  Unsolvable problems.  The Chomsky hierarchy of formal languages & their acceptors.  Parsing. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -141,7 +143,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>*COMP 521:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.
+									<p><strong>*COMP 521:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -157,7 +159,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>*COMP 520:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.
+									<p><strong>*COMP 520:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -173,7 +175,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>*COMP 530:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.
+									<p><strong>*COMP 530:  Files & Databases:</strong> Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -186,14 +188,14 @@
 							</div>
 
 							<div class="verticalSpace" />
-							
+
 							<div class="text-center">(*Any two of these three will suffice*)</div>
 
 							<hr></hr>
-							
+
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP: 524:  Programming Language Concepts Concepts:</strong> of high-level programming & their realization in specific languages.  Data types, scope, control structures, procedural abstraction, classes, concurrency.  Run-time implementation
+									<p><strong>COMP: 524:  Programming Language Concepts Concepts:</strong> of high-level programming & their realization in specific languages.  Data types, scope, control structures, procedural abstraction, classes, concurrency.  Run-time implementation </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -209,7 +211,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP 541:  Digital Logic & Computer Design:</strong> Digital logic, both combinational & sequential. State machines.  The structure & electronic design of modern processors.
+									<p><strong>COMP 541:  Digital Logic & Computer Design:</strong> Digital logic, both combinational & sequential. State machines.  The structure & electronic design of modern processors. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -225,7 +227,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>COMP 550:  Algorithms & Analysis:</strong> Formal specification and verification of programs.  Techniques of algorithm analysis.  Problem-Solving paradigms. 
+									<p><strong>COMP 550:  Algorithms & Analysis:</strong> Formal specification and verification of programs.  Techniques of algorithm analysis.  Problem-Solving paradigms. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -241,7 +243,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>MATH 233:  Calculus of Functions of Several Variables:</strong> Vector algebra, solid analytic geometry, partial derivatives, multiple integrals. 
+									<p><strong>MATH 233:  Calculus of Functions of Several Variables:</strong> Vector algebra, solid analytic geometry, partial derivatives, multiple integrals. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -257,7 +259,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>MATH 381:  Discrete Mathematics:</strong> Topics from the foundations of mathematics; logic, set theory, relations & functions, induction, permutations & combinations, recurrence. or <strong>COMP 283:  Discrete Structures</strong>
+									<p><strong>MATH 381:  Discrete Mathematics:</strong> Topics from the foundations of mathematics; logic, set theory, relations & functions, induction, permutations & combinations, recurrence. or <strong>COMP 283:  Discrete Structures</strong></p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -273,7 +275,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>MATH 547:  Linear Algebra for Applications:</strong> Algebra of matrices with applications; determinants; solution of linear systems by Gaussian elimination; Gram-Schmidt procedure; eigenvalues.  Math 116 may not be taken for credit after credit has been granted for Math 147.
+									<p><strong>MATH 547:  Linear Algebra for Applications:</strong> Algebra of matrices with applications; determinants; solution of linear systems by Gaussian elimination; Gram-Schmidt procedure; eigenvalues.  Math 116 may not be taken for credit after credit has been granted for Math 147. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -289,7 +291,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>MATH 661:  Introduction to Numerical Analysis:</strong> Error in computation; solution of nonlinear equations; interpolation; approximation of functions; Fourier methods; numerical integration & differentiation; introduction to numerical solution of ODE's; introductions to numerical linear algebra.
+									<p><strong>MATH 661:  Introduction to Numerical Analysis:</strong> Error in computation; solution of nonlinear equations; interpolation; approximation of functions; Fourier methods; numerical integration & differentiation; introduction to numerical solution of ODE's; introductions to numerical linear algebra. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -305,7 +307,7 @@
 
 							<div class="row">
 								<div class="col-md-4">
-									<strong>STAT 435:  Introduction to Probability (MATH 146):</strong> Introduction to mathematical theory of probability covering random variables, moments, binomial, Poisson, normal & related distributions, generating functions, sums & sequences of random variables, & statistical applications.
+									<p><strong>STAT 435:  Introduction to Probability (MATH 146):</strong> Introduction to mathematical theory of probability covering random variables, moments, binomial, Poisson, normal & related distributions, generating functions, sums & sequences of random variables, & statistical applications. </p>
 								</div>
 								<div class="col-md-4">
 									<div>Covered by:</div>
@@ -323,7 +325,7 @@
 
 							<hr></hr>
 
-							<div>Student Signature:</div>
+							<p>Student Signature:</p>
 							<div class="row">
 								<div class="col-md-5">
 									<i><%=signature%></i>
@@ -353,7 +355,7 @@
 							 <% } else { %>
 
 
-							
+
 							<div class="row">
 								<div class="col-md-5">
 									<div>Advisor Signature:</div>
@@ -366,6 +368,8 @@
 							</div>
 
 							<% } %>
+
+							<div class="verticalSpace"/>
 
 							<button type="submit" class="btn btn-primary CS01-submit" onclick="refreshRequired()">Submit</button>
 						</form>
