@@ -41,7 +41,7 @@ var studentSchema = mongoose.Schema({
   },
   ethnicity: {
     type: String,
-    enum: ["AIAN", "ASIAN", "BLACK", "HISPANIC", "PACIFIC", "WHITE", "OTHER"],
+    enum: ["ASIAN", "BLACK", "HISPANIC", "PACIFIC", "WHITE", "OTHER"],
     default: "OTHER"
   },
   residency: {
