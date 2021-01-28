@@ -147,7 +147,25 @@ var semesterReferenceSchema = mongoose.Schema({
  });
 
 var grantSchema = mongoose.Schema({
-  name: String
+  name: String,
+  pi_type:{
+    type: String,
+    enum: ["CS_PI", "OTHER_PI"],
+    default: "CS_PI"
+  },
+  cs_pi: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Faculty",
+    required: function(){
+      return this.pi_type === "CS_PI";
+    }
+  },
+  other_pi: {
+    type: String, 
+    required: function(){
+      return this.pi_type === "OTHER_PI";
+    }
+  }
 })
 
 var noteSchema = mongoose.Schema({
