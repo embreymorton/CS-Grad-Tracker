@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 
 //Load databaseString to connect to from .env
-require('dotenv').config();
+require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
 mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connection

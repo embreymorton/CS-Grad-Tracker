@@ -5,7 +5,7 @@ mongoose.Promise = require('bluebird')
 /*
 Load environmental variables: databaseString, port, and host
 */
-require('dotenv').config();
+require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
 var app = require('../app.js')
 
@@ -15,6 +15,7 @@ global.server = {}
 Once a connection with the database has been secured, start the app
 on host:port
 */
+console.log(process.env.mode);
 mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
