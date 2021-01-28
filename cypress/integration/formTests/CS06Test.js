@@ -15,7 +15,7 @@ let CS06 = {
     "concentration-course-info": ["YOU", "WERE" , "MY", "BROTHER"],
     "concentration-course-date":  ["YOU", "WERE" , "MY", "BROTHER"],
     "concentration-course-hours": ["6", "9" , "6", "9"],
-    "other-course-info":  ["I", "HATTTTEEE" , "YOUUUUU", "UUUUUU"],
+    "other-course-info":  ["III", "HATTTTEEE" , "YOUUUUU", "UUUUUU"],
     "other-course-hours":  ["6", "9" , "6", "9"],
     "note": "I HATTTTE YOUUUUU",
     "other-courses": "YOU WERE MY BROTHER",
@@ -70,12 +70,14 @@ describe('Test CS06 submissions', ()=>{
 
     it('Submit CS06 form from student side', ()=>{
         cy.visit('/changeUser/student');
-        cy.visit('/studentView/forms/CS06/false')
+        cy.visit('/studentView/forms/CS06/false');
 
         cy.get('.select-advisor4').click();
         cy.get('.select-chairman4').click();
 
-        cy.contains(CS06["director-signature"]);
+        cy.contains(CS06["director-signature"]).then(($selectedElement) => {
+            debugger
+        });
    
         delete CS06["director-signature"];
         delete CS06["student-name"];
