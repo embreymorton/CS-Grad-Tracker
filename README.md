@@ -74,6 +74,11 @@ Users:
 - `AUTH0_CALLBACK_URL=http://localhost:8080/callback`
 - `AUTH0_LOGOUT_URL=http://localhost:8080`
 
+## Using Inheritance for .env
+- .env.testing includes mode and databaseString for testing mode
+- .env.development includes mode and databaseString for development mode
+- in base .env file leave these two variables blank 
+
 ## Starting the app without Docker
 
 ### Running the database
