@@ -1,3 +1,2 @@
-name,pi_type, cs_pi, other_pi
-Grant for testing,other_pi,N/A,other
-GRANT 2 for testing,other_pi,N/A,other
+name,pi_type, cs_pi_name, other_pi_name
+Grant for testing,OTHER_PI,test,othertest

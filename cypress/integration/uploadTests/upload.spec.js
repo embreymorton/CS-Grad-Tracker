@@ -87,8 +87,7 @@ describe("Upload data", ()=>{
         
         cy.visit('/job/create')
 
-        cy.get('.input-funding-source > option').eq(1).should('have.text', data.uploadGrant.name2)
-        cy.get('.input-funding-source > option').eq(2).should('have.text', data.uploadGrant.name1)
+        cy.get('.input-funding-source > option').eq(1).should('have.text', data.uploadGrant.name)
     })
 
     it('Uploading courseInfo xlsx/csv should correctly store data in the database', ()=>{

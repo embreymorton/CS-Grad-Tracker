@@ -22,7 +22,7 @@ data.uploadStudent = {
     gender: "FEMALE",
     residency: "YES",
     intendedDegree: "MASTERS",
-    backgroundApproved: "2019-09-18",
+    backgroundApproved: "2019-09-17",
     semesterStarted: "FA 2019",
     advisor: "test, test"
 }
@@ -38,8 +38,10 @@ data.uploadCourse = {
 }
 
 data.uploadGrant = {
-    name1: "Grant for testing",
-    name2: "GRANT 2 for testing"
+    name: "Grant for testing",
+    pi_type: "OTHER_PI",
+    cs_pi_name: "test",
+    other_pi_name: "othertest"
 }
 
 module.exports = data;

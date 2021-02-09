@@ -153,19 +153,8 @@ var grantSchema = mongoose.Schema({
     enum: ["CS_PI", "OTHER_PI"],
     default: "CS_PI"
   },
-  cs_pi: {
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Faculty",
-    required: function(){
-      return this.pi_type === "CS_PI";
-    }
-  },
-  other_pi: {
-    type: String, 
-    required: function(){
-      return this.pi_type === "OTHER_PI";
-    }
-  }
+  cs_pi_name: {type: mongoose.Schema.Types.ObjectId, ref:"Faculty"},
+  other_pi_name: String
 })
 
 var noteSchema = mongoose.Schema({
