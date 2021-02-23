@@ -484,9 +484,9 @@ jobController.uploadGrant = function(req, res){
 		data.forEach(function(element){
 			
 			if(element.name != null){
-				schema.Grant.findOne({name:element.name}).exec().then(function(result){
-					if(result == null){
-					  var inputGrant = new schema.Grant(element);
+				schema.Grant.findOne({name:element.name, pi_type: element.pi_type, cs_pi_name: element.cs_pi_name, other_pi_name:element.other_pi_name}).exec().then(function(result){
+					if(result != null){
+            var inputGrant = new schema.Grant(element);
 					  inputGrant.save().then(function(result){
 				        count++;
 				        if(count == data.length){

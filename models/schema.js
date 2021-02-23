@@ -153,7 +153,7 @@ var grantSchema = mongoose.Schema({
     enum: ["CS_PI", "OTHER_PI"],
     default: "CS_PI"
   },
-  cs_pi_name: {type: mongoose.Schema.Types.ObjectId, ref:"Faculty"},
+  cs_pi_name: String,
   other_pi_name: String
 })
 
