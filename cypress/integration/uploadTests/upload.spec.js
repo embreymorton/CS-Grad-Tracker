@@ -98,9 +98,9 @@ describe("Upload data", ()=>{
             cy.get('.upload-course-info-input').upload({fileContent, fileName, mimeType: 'application/csv'})
         });
 
-        cy.get('.upload-course-info-submit').click()
+        cy.get('.upload-course-info-submit').click();
         
-        cy.visit('/course/create')
+        cy.visit('/course/create');
 
         var re = /[0-9]{3}, [a-z,A-Z, ,&]*, [0-9] hours/;
         cy.get('.input-course-info > option')

@@ -7,11 +7,11 @@ mongoose.connection
   .once('open', function () {
 
     const student = new db.Student ({
-        onyen: 'hmbodnar',
+        onyen: 'jasonjin',
           csid: '000000',
-          email: 'hannahbodnar.17+student@gmail.com',
-          firstName: 'hannah',
-          lastName: 'bodnar',
+          email: 'jjin1771@gmail.com',
+          firstName: 'jason',
+          lastName: 'jin',
     })
 
     student.save(function (err, student) {

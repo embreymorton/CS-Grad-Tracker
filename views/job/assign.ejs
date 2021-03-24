@@ -86,7 +86,7 @@
 							<label for="inputStudents" class="col-md-2 offset-md-3">Students</label>
 							<div class="col-md-4">
 								<select name="students" class="form-control assign-student-select" id="inputStudents" multiple required>
-									<option value=""></option>
+									
 									<% for(var i=0; i < students.length; i++){ %>
 										<option value=<%=students[i]._id%>><%=students[i].lastName%>, <%=students[i].firstName%></option>
 									<% } %>

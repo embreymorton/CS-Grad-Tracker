@@ -9,8 +9,8 @@ mongoose.connection
     const faculty = new db.Faculty ({
         onyen: "person",
         csid: "person",
-        email: "hannahbodnar.17+faculty@gmail.com",
-        firstName: "person",
+        email: "jjin1771+faculty@gmail.com",
+        firstName: "jasonfaculty",
         lastName: "person",
         pid: 000000000,
         sectionNumber: 001,

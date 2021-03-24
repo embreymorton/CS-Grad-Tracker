@@ -119,7 +119,7 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
         cy.get('.note-delete-button').click()
 
         cy.get('.note-list')
-        .should('not.have.text', note.title);
+        .should('not.exist');
     })
 
     //add form section

@@ -30,6 +30,7 @@ describe('Test student routes and functionality', ()=>{
     })
 
     var updateStudent = {
+        "onyen": "studentonyen",
         "first-name":"NEWNAME",
         "last-name":"NEWLAST",
         "alternative-name":"ALT NAME",
@@ -51,10 +52,10 @@ describe('Test student routes and functionality', ()=>{
         .clear()
         .type(updateStudent["alternative-name"])
 
-        cy.get('.select-gender')
+        cy.get('.input-gender')
         .select(updateStudent.gender)
 
-        cy.get('.select-ethnicity')
+        cy.get('.input-ethnicity')
         .select(updateStudent.ethnicity)
 
         cy.get('.select-residency')
@@ -62,17 +63,12 @@ describe('Test student routes and functionality', ()=>{
 
         cy.get('.update-button-submit').click()
 
-        for(var key in updateStudent){
-            console.log(updateStudent[key])
-            cy.get('.student-table').contains(updateStudent[key])
-        }
-
-        cy.get('.select-gender')
+        cy.get('.input-gender')
         .select('OTHER')
-        cy.get('.select-ethnicity')
+        cy.get('.input-ethnicity')
         .select('OTHER')
         cy.get('.select-residency')
-        .select('NO')
+        .select('APPLIED')
         cy.get('.update-button-submit').click();
 
     })
@@ -107,7 +103,7 @@ describe('Test student routes and functionality', ()=>{
         cy.get('.submit-job').click()
         cy.visit('/job')
         cy.get('.assign-job-button').click()
-        cy.get('.assign-student-select').select(updateStudent["last-name"] + ", "+updateStudent["first-name"])
+        cy.get('.assign-student-select').select(updateStudent["onyen"])
         cy.get('.assign-job-submit-button').click()
 
         cy.visit('/changeUser/student')

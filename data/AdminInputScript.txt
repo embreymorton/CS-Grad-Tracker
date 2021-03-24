@@ -9,7 +9,7 @@ mongoose.connection
     const admin = new db.Faculty ({
         onyen: "person",
         csid: "person",
-        email: "hannahbodnar.17@gmail.com",
+        email: "jjin1771admin@gmail.com",
         firstName: "person",
         lastName: "person",
         pid: 000000000,
