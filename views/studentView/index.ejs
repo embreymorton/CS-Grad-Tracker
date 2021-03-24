@@ -118,9 +118,9 @@
                                     <label for="inputResidency" class="col-md-4">Residency</label>
                                     <div class="col-md-8">
                                         <select name="residency" class="form-control select-residency" id="inputResidency">
-                                            <option value=<%=student.residency%> /><%=student.residency%></option>
-                                            <option value="NO">NO</option>
-                                            <option value="APPLIED">APPLIED</option>
+                                            <option value="NO" <%= student.residency == 'NO' ? 'selected' : ''%>>NO</option>
+                                            <option value="APPLIED" <%= student.residency == 'APPLIED' ? 'selected' : ''%>>APPLIED</option>
+                                            <option value="YES" <%= student.residency == 'YES' ? 'selected' : ''%>>YES</option>
                                         </select>
         
                                     </div>

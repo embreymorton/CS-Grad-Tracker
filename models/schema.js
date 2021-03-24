@@ -14,6 +14,7 @@ var facultySchema = mongoose.Schema({
   },
   email: {
     type: String,
+    required: [true, 'email is required!'],
     match: [/^\S+@\S+\.\S+$/, '{VALUE} is an invalid email address']
   },
   firstName: {
@@ -43,7 +44,11 @@ var studentSchema = mongoose.Schema({
     type: String,
     required: [true, 'csid is required!']
   },
-  email: String,
+  email: {
+    type: String,
+    required: [true, 'email is required!'],
+    match: [/^\S+@\S+\.\S+$/, '{VALUE} is an invalid email address']
+  },
   firstName: {
     type: String,
     required: [true, 'firstName is required!']

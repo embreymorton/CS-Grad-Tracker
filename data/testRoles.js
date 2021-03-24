@@ -5,7 +5,8 @@ var admin = {
     lastName: "admin",
     pid: 999999999,
     active: true,
-    admin: true
+    admin: true,
+    email: "admin@cs.unc.edu"
 }
 
 var faculty = {
@@ -15,7 +16,8 @@ var faculty = {
     lastName: "faculty",
     pid: 888888888,
     active: true,
-    admin: false
+    admin: false,
+    email: "faculty@cs.unc.edu"
 }
 
 var student = {
@@ -24,7 +26,8 @@ var student = {
     firstName: "student",
     lastName: "student",
     pid: 777777777,
-    active: true
+    active: true,
+    email: "student@cs.unc.edu"
 }
 
 module.exports = {
