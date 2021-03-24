@@ -328,8 +328,13 @@ courseController.upload = function(req, res){
     var workbook = XLSX.readFile(f.path);
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet);
-    
+
+    if (!util.validateHeaders(data, schema.Course)) {
+      return res.render("../views/error.ejs", {string: "Incorrect headers."});
+    }
+
     var count = 0;
+
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
       if(element.category == null){
@@ -340,58 +345,53 @@ courseController.upload = function(req, res){
       }
       //verify that all fields exist
       if(util.allFieldsExist(element, schema.Course)){
-        //get faculty lastname/firstname
-        var commaReg = /\s*,\s*/;
-        var facultyName = element.faculty.split(commaReg);
-        facultyName[0] = new RegExp(facultyName[0], "i");
-        facultyName[1] = new RegExp(facultyName[1], "i");
-        var spaceReg = /\s* \s*/;
-        var semester = element.semester.split(spaceReg);
-        semester[0] = semester[0].toLowerCase();
-        switch(semester[0]){
-          case "Spring":
-          case "spring":
-            semester[0] = "SP"
+
+        // validate format of data and get facultyName, semester, and year
+
+        element.category = element.category.toLowerCase();
+        switch(element.category){
+          case "t":
+          case "theory":
+            element.category = "Theory";
             break;
-          case "Fall":
-          case "fall":
-            semester[0] = "FA"
+          case "s":
+          case "systems":
+            element.category = "Systems";
             break;
-          case "Summer1":
-          case "summer1":
-            semester[0] = "S1"
-            break;
-          case "Summer2":
-          case "summer2":
-            semester[0] = "S2"
+          case "a":
+          case "applications":
+            element.category = "Appls";
             break;
           default:
-            
         }
+
+        var facultyName;
+        var commaReg = /\s*,\s*/;
+        var semester;
+        var spaceReg = /\s* \s*/;
+        var semReg = /(SP|FA|S1|S2) \d{4}/;
+
+        if (commaReg.test(element.faculty)) {
+          facultyName = element.faculty.split(commaReg);
+          facultyName[0] = new RegExp(facultyName[0], "i");
+          facultyName[1] = new RegExp(facultyName[1], "i");
+        } else {
+           return res.render("../views/error.ejs", {string: element.faculty+" is incorrect. Faculty must be in form LASTNAME, FIRSTNAME (case does not matter)."});
+        }
+
+        if (semReg.test(element.semester.toUpperCase())) {
+          semester = element.semester.split(spaceReg);
+        } else {
+          return res.render("../views/error.ejs", {string: element.semester+" is incorrect. Semester must be in form SS, YYYY."});
+        }
+
+        // find faculty and semester in database and populate those references
+
         schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
           if(result != null){
             element.faculty = result._id;
-            schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
-              if(result != null){
+            schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true}).exec().then(function(result){
                 element.semester = result._id;
-                element.category = element.category.toLowerCase();
-                switch(element.category){
-                  case "t":
-                  case "theory":
-                    element.category = "Theory";
-                    break;
-                  case "s":
-                  case "systems":
-                    element.category = "Systems";
-                    break;
-                  case "a":
-                  case "applications":
-                    element.category = "Appls";
-                    break;
-                  default:
-                    element.category = "NA";
-                    break;
-                }
 
                 //check if the course is already in the courseInfo schema
                 //if not, add it
@@ -413,6 +413,8 @@ courseController.upload = function(req, res){
                   }
                 });
 
+                element = util.validateModelData(element, schema.Course);
+
                 schema.Course.findOne({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}).exec().then(function (result) {
                   //if the course doesn't already exist, try to make it
                   if(result == null){
@@ -423,39 +425,30 @@ courseController.upload = function(req, res){
                         res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-
-                      res.render("../views/error.ejs", {string: element.name+" did not save because something is wrong with it. Error: "+err});
+                      res.render("../views/error.ejs", {string: err});
                     });
                   }
                   else{
-                    schema.Course.update({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}, element).exec().then(function(result){
+                    schema.Course.update({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}, element, {runValidators: true, context: 'query'}).exec().then(function(result){
                       count++;
                       if(count == data.length){
                         res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-                      res.render("../views/error.ejs", {string: element.name + " " + element.number+" did not update because something was wrong with it. Error: "+err});
+                      res.render("../views/error.ejs", {string: err});
                       return;
                     });
                   }
                 });
-              }
-              else{
-                //res.render("../views/error.ejs", {string: element.name+" did not save because the semester is incorrect."});
-                console.log(element.name+" did not save because the semester is incorrect.");
-
-              }
             });
           }
           else{
-           // res.render("../views/error.ejs", {string: element.name+" did not save because the faculty is incorrect."});
-            console.log(element.name+" did not save because the faculty is incorrect.");
+           res.render("../views/error.ejs", {string: element.name+" did not save because the faculty does not exist."});
           }
         });
       }
       else{
-       // res.render("../views/error.ejs", {string: element.name+" did not save because it is missing a field."});
-        console.log(element.name+" did not save because it is missing a field.");
+       res.render("../views/error.ejs", {string: element.name+" did not save because it is missing a field. All fields are required."});
       }
     });
   });
@@ -510,37 +503,34 @@ courseController.uploadInfo = function(req, res){
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files){
     var f = files[Object.keys(files)[0]];
-    var workbook = XLSX.readFile(f.path, {cellDates:true});
+    var workbook = XLSX.readFile(f.path);
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet);
     var count = 0;
 
-    var ogkeys = Object.keys(schema.CourseInfo.schema.obj);
-    var keys = data.length > 0 ? Object.keys(data[0]) : [];
-    if(ogkeys.join() == keys.join()){
-    //remember to check that headers from worksheet match
-      data.forEach(function(element){
-        //verify that all fields exist
-        if(util.allFieldsExist(element, schema.CourseInfo)){
-          var inputCourseInfo = new schema.CourseInfo(element);
-          inputCourseInfo.save().then(function(result){
-            count++;
-            if(count == data.length){
-              res.redirect("/course/uploadInfo/true");
-            }
-          }).catch((err)=>{
-            res.render("../views/error.ejs", {string: err})
-          });
-        }
-        else{
-          res.render("../views/error.ejs", {string: "A column is missing information."});
-        }
-      });
+    if (!util.validateHeaders(data, schema.CourseInfo)) {
+      res.render("../views/error.ejs", {string: "Incorrect headers"});
     }
-    else{
-      res.render("../views/error.ejs", {string: "One of the headers is wrong"});
-    }
-  });               
+
+    data.forEach(function (element) {
+      element = util.validateModelData(element, schema.CourseInfo);
+
+      //verify that all fields exist
+      if (util.allFieldsExist(element, schema.CourseInfo)) {
+        var inputCourseInfo = new schema.CourseInfo(element);
+        inputCourseInfo.save().then(function (result) {
+          count++;
+          if (count == data.length) {
+            res.redirect("/course/uploadInfo/true");
+          }
+        }).catch((err) => {
+          res.render("../views/error.ejs", {string: err})
+        });
+      } else {
+        res.render("../views/error.ejs", {string: element.name+" is missing a field: all fields are required."});
+      }
+    });
+  });
 }
 
 module.exports = courseController;

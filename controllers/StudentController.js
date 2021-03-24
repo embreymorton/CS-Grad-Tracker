@@ -557,32 +557,41 @@ studentController.upload = function(req, res){
     data.forEach(function(element){
       //verify that all fields exist
       if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null && element.advisor != null){
+        var facultyName;
         var commaReg = /\s*,\s*/;
-        var facultyName = [null, null];
-        //if(element.advisor != null){
+        var semester = [null, 0];
+        var spaceReg = /\s* \s*/;
+        var semReg = /(SP|FA|S1|S2) \d{4}/;
+
+        if (commaReg.test(element.advisor)) {
           facultyName = element.advisor.split(commaReg);
           facultyName[0] = new RegExp(facultyName[0], "i");
           facultyName[1] = new RegExp(facultyName[1], "i");
-        //}
-        var spaceReg = /\s* \s*/;
-        var semester = [null, 0];
-        if(element.semesterStarted != null){
-          semester = element.semesterStarted.split(spaceReg);
-          semester[0] = semester[0].toUpperCase();
-          semester[1] = parseInt(semester[1]);
+        } else {
+          return res.render("../views/error.ejs", {string: element.advisor+" is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)."});
         }
+
+        if (element.semesterStarted != null) {
+          if (semReg.test(element.semesterStarted.toUpperCase())) {
+            semester = element.semesterStarted.split(spaceReg);
+          } else {
+            return res.render("../views/error.ejs", {string: element.semesterStarted+" is incorrect. Semester must be in form SS YYYY."});
+          }
+        }
+
         schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
           if(result != null){
             element.advisor = result._id;
           } else {
             element.advisor = null;
           }
-          schema.Semester.findOne({season: semester[0], year: parseInt(semester[1])}).exec().then(function(result){
+          schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
             if(result != null){
               element.semesterStarted = result._id;
             } else {
               element.semesterStarted = null;
             }
+
             schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
               if(result == null){
                 var stud1;
@@ -600,21 +609,21 @@ studentController.upload = function(req, res){
                           res.redirect("/student/upload/true");
                         }
                       }).catch(function(err){
-                        res.render("../views/error.ejs", {string: element.lastName+" did not save because something was wrong with it."});
+                        res.render("../views/error.ejs", {string: err});
                         return;
                       });
                     }
                   });
                 });
               } else {
-                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student)).exec().then(function(result){
+                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
                   count++;
                   if(count == data.length){
                     res.redirect("/student/upload/true");
                   }
                 }).catch(
                   function(err){
-                    res.render("../views/error.ejs", {string: element.lastName+" did not update because something was wrong with it."});
+                    res.render("../views/error.ejs", {string: err});
                     return;
                   });
               }
@@ -622,7 +631,7 @@ studentController.upload = function(req, res){
           });
         });
       } else {
-        res.render("../views/error.ejs", {string: element.lastName+" did not save because it is missing a field"});
+        res.render("../views/error.ejs", {string: element.lastName+" did not save because it is missing a field. Onyen, csid, firstName, lastName, and pid are required."});
         return;
       }
     });

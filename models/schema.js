@@ -4,12 +4,30 @@ var schema = {};
 
 // Faculty
 var facultySchema = mongoose.Schema({
-  onyen: String,
-  csid: String,
-  email: String,
-  firstName: String,
-  lastName: String,
-  pid: Number,
+  onyen: {
+    type: String,
+    required: [true, '{PATH} is required!']
+  },
+  csid: {
+    type: String,
+    required: [true, 'csid is required!']
+  },
+  email: {
+    type: String,
+    match: [/^\S+@\S+\.\S+$/, '{VALUE} is an invalid email address']
+  },
+  firstName: {
+    type: String,
+    required: [true, 'firstName is required!']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'lastName is required!']
+  },
+  pid: {
+    type: Number,
+    required: [true, 'pid is required!']
+  },
   sectionNumber: Number,
   active: Boolean,
   admin: Boolean
@@ -17,17 +35,32 @@ var facultySchema = mongoose.Schema({
 
 // Students
 var studentSchema = mongoose.Schema({
-  onyen: String,
-  csid: String,
+  onyen: {
+    type: String,
+    required: [true, 'onyen is required!']
+  },
+  csid: {
+    type: String,
+    required: [true, 'csid is required!']
+  },
   email: String,
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String,
+    required: [true, 'firstName is required!']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'lastName is required!']
+  },
   pronouns: {
   	type: String,
   	enum: ["she, her", "he, him", "they, them", "ze, zie", "hir, hirs", "xe, xem", "pe, per", "e/ey, em", "(f)ae, (f)aer", "None"],
   	default: "None"
   },
-  pid: Number,
+  pid: {
+    type: Number,
+    required: [true, 'pid is required!']
+  },
   status: {
     type: String,
     enum: ["Active", "Inactive", "Leave", "Graduated", "Ineligible"],
@@ -65,20 +98,62 @@ var studentSchema = mongoose.Schema({
 	  default: "NOT GUARANTEED"
   },
   semestersOnLeave: Number,
-  backgroundApproved: String,
-  mastersAwarded: String,
-  prpPassed: String,
-  technicalWritingApproved: String,
-  backgroundPrepWorksheetApproved: String,
-  programOfStudyApproved: String,
-  researchPlanningMeeting: String,
-  programProductRequirement: String,
-  committeeCompApproved: String,
-  phdProposalApproved: String,
-  phdAwarded: String,
-  oralExamPassed: String,
-  dissertationDefencePassed: String,
-  dissertationSubmitted: String,
+  backgroundApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  mastersAwarded: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  prpPassed: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  technicalWritingApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  backgroundPrepWorksheetApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  programOfStudyApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  researchPlanningMeeting: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  programProductRequirement: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  committeeCompApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  phdProposalApproved: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  phdAwarded: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  oralExamPassed: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  dissertationDefencePassed: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
+  dissertationSubmitted: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
   jobHistory: [{type: mongoose.Schema.Types.ObjectId, ref: "Job"}],
   semesterStarted: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
   advisor: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" },
@@ -96,35 +171,83 @@ var semesterSchema = mongoose.Schema({
 
 // Courses
 var courseSchema = mongoose.Schema({
-  department: String,
-  number: String,
-  univNumber: Number,
-  name: String,
+  department: {
+    type: String,
+    required: [true, 'department is required!']
+  },
+  number: {
+    type: String,
+    required: [true, 'course number is required!']
+  },
+  univNumber: {
+    type: Number,
+    required: [true, 'univNumber is required!']
+  },
+  name: {
+    type: String,
+    required: [true, 'course name is required!']
+  },
   category: {
     type: String,
-    enum: ["NA", "Theory", "Systems", "Appls"]
+    enum: ["NA", "Theory", "Systems", "Appls"],
+    required: [true, 'category is required!']
   },
-  topic: String,
-  hours: Number,
-  section: String,
-  faculty: {type: mongoose.Schema.Types.ObjectId, ref: "Faculty"},
-  semester: {type: mongoose.Schema.Types.ObjectId, ref: "Semester"}
+  topic: {
+    type: String,
+    required: [true, 'topic is required!']
+  },
+  hours: {
+    type: Number,
+    required: [true, 'course hours is required!']
+  },
+  section: {
+    type: String,
+    required: [true, 'section is required!']
+  },
+  faculty: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Faculty",
+    required: [true, 'faculty is required!']
+  },
+  semester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Semester",
+    required: [true, 'semester is required!']
+  }
 });
 
 var courseInfoSchema = mongoose.Schema({
-  number: String,
-  name: String,
-  hours: Number
+  number: {
+    type: String,
+    required: [true, 'number is required!']
+  },
+  name: {
+    type: String,
+    required: [true, 'name is required!']
+  },
+  hours: {
+    type: Number,
+    required: [true, 'hours is required!']
+  }
 })
 
 // Jobs
 var jobSchema = mongoose.Schema({
   position: {
     type: String,
-    enum: ["RA", "TA", "OTHER"]
+    enum: ["RA", "TA", "OTHER"],
+    required: [true, "position is required!"]
   },
-  supervisor: {type: mongoose.Schema.Types.ObjectId, ref: "Faculty"},
-  semester: {type: mongoose.Schema.Types.ObjectId, ref: "Semester"},
+  supervisor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Faculty",
+    required: [true, 'supervisor is required!']
+  },
+  semester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Semester",
+    required: [true, 'semester is required!']
+  },
   course: {type: mongoose.Schema.Types.ObjectId, ref: "Course"},
   description: String,
   hours: Number,
@@ -147,15 +270,28 @@ var semesterReferenceSchema = mongoose.Schema({
  });
 
 var grantSchema = mongoose.Schema({
-  name: String,
-  pi_type:{
+  name: {
     type: String,
-    enum: ["CS_PI", "OTHER_PI"],
-    default: "CS_PI"
+    required: [true, 'name is required!']
   },
-  cs_pi_name: String,
-  other_pi_name: String
-})
+  cs_pi: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Faculty",
+  },
+  other_pi: String
+});
+
+// add row constraint to grant schema
+
+grantSchema.pre('save', function(next) {
+  if (this.cs_pi == null && this.other_pi == null) {
+    next(new Error ('PI is required (cs_pi OR other_pi)'));
+  } else if (this.cs_pi != null && this.other_pi != null) {
+    next(new Error ('Cannot specify both cs and other pi'));
+  } else {
+    next();
+  }
+});
 
 var noteSchema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
@@ -392,3 +528,4 @@ schema.CS12 = mongoose.model("CS12", CS12Schema);
 schema.CS13 = mongoose.model("CS13", CS13Schema);
 
 module.exports = schema;
+

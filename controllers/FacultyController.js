@@ -259,13 +259,20 @@ facultyController.upload = function(req, res){
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet)
     var count = 0;
+
+    // validate headers
+    if (!util.validateHeaders(data, schema.Faculty)) {
+      return res.render("../views/error.ejs", {string: "Incorrect headers"});
+    }
+
+
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){
-      element = util.validateModelData(element, schema.Faculty)
+      element = util.validateModelData(element, schema.Faculty);
       if(element.firstName != null && element.pid != null && element.onyen != null && element.csid != null){
-        
+
         //find one and update automatically inserts even if empty
-        schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true}).exec().then(function(result){
+        schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true, runValidators: true, context: 'query'}).exec().then(function(result){
           count++;
           if(count == data.length){
             res.redirect("/faculty/upload/true");
@@ -275,7 +282,7 @@ facultyController.upload = function(req, res){
         });
       }
       else{
-        res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field: Either firstName, pid, onyen, or csid are null"});
+        res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field: firstName, pid, onyen, and csid are required"});
       }
     });
   });

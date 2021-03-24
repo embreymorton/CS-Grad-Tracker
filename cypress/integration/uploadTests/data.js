@@ -2,7 +2,6 @@ var data = {}
 
 data.uploadFaculty = {
     onyen: "test",
-    csid: "test",
     email: "test@test.com",
     firstName: "test",
     lastName: "test",
@@ -39,9 +38,8 @@ data.uploadCourse = {
 
 data.uploadGrant = {
     name: "Grant for testing",
-    pi_type: "OTHER_PI",
-    cs_pi_name: "test",
-    other_pi_name: "othertest"
+    cs_pi: "test, test",
+    other_pi_name: null
 }
 
 module.exports = data;

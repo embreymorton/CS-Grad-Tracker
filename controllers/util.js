@@ -33,6 +33,14 @@ _.validateModelData = function (input, model) {
   return result;
 }
 
+_.validateHeaders = function (data, model) {
+    var ogkeys = Object.keys(model.schema.obj);
+    var keys = data.length > 0 ? Object.keys(data[0]) : [];
+    console.log("model: " + ogkeys);
+    console.log("data: " + keys);
+    return ogkeys.join() == keys.join();
+}
+
 /*
 verifies that all fields for a given
 document exist for the corresponding model
