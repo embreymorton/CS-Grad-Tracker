@@ -30,7 +30,6 @@ describe('Test student routes and functionality', ()=>{
     })
 
     var updateStudent = {
-        "onyen": "studentonyen",
         "first-name":"NEWNAME",
         "last-name":"NEWLAST",
         "alternative-name":"ALT NAME",
@@ -103,7 +102,7 @@ describe('Test student routes and functionality', ()=>{
         cy.get('.submit-job').click()
         cy.visit('/job')
         cy.get('.assign-job-button').click()
-        cy.get('.assign-student-select').select(updateStudent["onyen"])
+        cy.get('.assign-student-select').select(updateStudent["last-name"] + ", "+updateStudent["first-name"])
         cy.get('.assign-job-submit-button').click()
 
         cy.visit('/changeUser/student')
