@@ -15,7 +15,6 @@
     "concurrently": "^5.0.2",
     "core-util-is": "^1.0.2",
     "cross-env": "^5.2.1",
-    "cypress": "^6.7.1",
     "dotenv": "^8.2.0",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
@@ -38,6 +37,7 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
+    "cypress": "^6.7.1",
     "cypress-file-upload": "^3.3.3",
     "standard": "^9.0.1"
   },
