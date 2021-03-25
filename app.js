@@ -1,4 +1,5 @@
 var express = require("express")
+var helmet = require("helmet")
 var sessions = require("client-sessions")
 var path = require("path")
 var bodyParser = require("body-parser")
@@ -44,6 +45,19 @@ app
   .use((req, res, next)=>{
     next();
   })
+
+// mitigations to prevent click-jacking
+
+app.use(helmet.frameguard({action: 'SAMEORIGIN'}))
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ['self'],
+      frameAncestors: ['self']
+    }
+  })
+)
 
 
 //setup ejs view engine, pointing at the directory views
