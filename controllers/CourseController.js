@@ -382,7 +382,7 @@ courseController.upload = function(req, res){
         if (semReg.test(element.semester.toUpperCase())) {
           semester = element.semester.split(spaceReg);
         } else {
-          return res.render("../views/error.ejs", {string: element.semester+" is incorrect. Semester must be in form SS, YYYY."});
+          return res.render("../views/error.ejs", {string: element.semester+" is incorrect. Semester must be in form 'SS YYYY'."});
         }
 
         // find faculty and semester in database and populate those references
