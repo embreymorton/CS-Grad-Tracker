@@ -83,4 +83,4 @@ deployment:
   tags:
     - nodejs
   script:
-    - ssh root@csgrad.cs.unc.edu "cd ~ && cd ../CS-Grad-Tracking && git checkout master && git pull && npm install && pm2 stop \"npm start\" && pm2 start \"npm start\" "
+    - ssh root@csgrad.cs.unc.edu 'cd /CS-Grad-Tracking && git checkout master && git pull && npm install && pm2 restart all'
