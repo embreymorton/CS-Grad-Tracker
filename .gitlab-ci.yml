@@ -83,4 +83,4 @@ deployment:
   tags:
     - nodejs
   script:
-    - ssh root@csgrad.cs.unc.edu 'cd /CS-Grad-Tracking && git checkout master && git pull && npm install --production && pm2 restart all'
+    - ssh root@csgrad.cs.unc.edu 'cd /CS-Grad-Tracking && git checkout master && git fetch origin && git reset --hard origin/master && npm install --production && pm2 restart all'
