@@ -11,6 +11,7 @@ const { join } = require("path");
 const expressSession = require("express-session");
 const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
+const featurePolicy = require("feature-policy");
 
 require('dotenv').config();
 
@@ -74,6 +75,18 @@ app.use(helmet.referrerPolicy({
 app.use(helmet.xssFilter())
 app.use(helmet.contentSecurityPolicy())
 
+//add feature-policy header
+  app.use(
+    featurePolicy({
+      features: {
+        accelerometer: ["'none'"],    
+      ambientLightSensor: ["'none'"],    
+      autoplay: ["'none'"],    
+      camera: ["'none'"],
+      navigationOverride: ["'none'"],
+      },
+    })
+  );
 
 //setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
