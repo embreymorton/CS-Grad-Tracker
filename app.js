@@ -59,6 +59,21 @@ app.use(
   })
 )
 
+// remove X-Powered-By headers
+
+app.use(helmet.hidePoweredBy())
+
+// set Referrer-Policy header
+
+app.use(helmet.referrerPolicy({
+  policy: "no-referrer"
+}))
+
+// mitigate cross-site scripting attacks
+
+app.use(helmet.xssFilter())
+app.use(helmet.contentSecurityPolicy())
+
 
 //setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
