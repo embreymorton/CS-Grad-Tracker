@@ -297,7 +297,12 @@
                                 <div class="form-group row">
                                     <label for="inputAdvisor" class="col-md-4">Advisor *</label>
                                     <div class="col-md-8">
-                                        <%=student.advisor%>
+                                        <% for(var i=0; i<faculty.length; i++) {
+                                            if (student.advisor != null && student.advisor._id.equals(faculty[i]._id)) { %>
+                                                <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
+                                            <%}
+
+                                         } %>
                                     </div>
                                 </div>
 
