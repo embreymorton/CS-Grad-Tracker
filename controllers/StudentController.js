@@ -71,24 +71,32 @@ studentController.get = function (req, res) {
 studentController.put = function (req, res) {
   var input = req.body;
   input = verifyBoolean(input);
-
   if(input.phdAwarded != ""){
     input.status = "Graduated";
   }
-  
-  var input = util.validateModelData(input, schema.Student);
-  if (input.onyen != null && input.firstName != null && input.lastName != null && input.pid != null && input.pid != NaN) {
-    schema.Student.findOneAndUpdate({_id: input._id}, input).exec().then(function(result){
-      if(result != null){
-        res.redirect("/student/edit/"+result._id);
-      }
-      else res.render("../views/error.ejs", {string: "StudentNotFound"});
-    });
+
+  var input2 = util.validateModelData(input, schema.Student);
+  if (input2.onyen != null && input2.firstName != null && input2.lastName != null && input2.pid != null && input2.pid != NaN) {
+    const filter = {_id: input2._id}
+    schema.Student.findOne(filter).exec().then(student => {
+      const deletedFields = getDeletedFields(student, input);
+
+      deletedFields.map(f => input2[f] = '')
+      schema.Student.findOneAndUpdate(filter, input2).exec().then(function(result){
+        if(result != null){
+          res.redirect("/student/edit/"+result._id);
+        }
+        else res.render("../views/error.ejs", {string: "StudentNotFound"});
+      });
+    })
   }
   else{
     res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
 }
+
+const getDeletedFields = (student, updateMap) =>
+  Object.keys(updateMap).filter(key => student[key] !== undefined && typeof student[key] !== 'object' && updateMap[key] === '');
 
 studentController.delete = function (req, res) {
   var id = req.params._id;
