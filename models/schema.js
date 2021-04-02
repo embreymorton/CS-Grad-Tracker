@@ -162,6 +162,7 @@ var studentSchema = mongoose.Schema({
   jobHistory: [{type: mongoose.Schema.Types.ObjectId, ref: "Job"}],
   semesterStarted: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
   advisor: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" },
+  otherAdvisor: String,
   grades: [{type:mongoose.Schema.Types.ObjectId, ref: "Grade"}]
 });
 

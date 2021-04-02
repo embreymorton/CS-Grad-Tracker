@@ -23,7 +23,8 @@ data.uploadStudent = {
     intendedDegree: "MASTERS",
     backgroundApproved: "2019-09-18",
     semesterStarted: "FA 2019",
-    advisor: "test, test"
+    advisor: "test, test",
+    otherAdvisor: null
 }
 
 data.uploadCourse = {

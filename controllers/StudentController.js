@@ -556,13 +556,14 @@ studentController.upload = function(req, res){
     //for(let element of data){
     data.forEach(function(element){
       //verify that all fields exist
-      if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null && element.advisor != null){
+      if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null){
         var facultyName;
         var commaReg = /\s*,\s*/;
         var semester = [null, 0];
         var spaceReg = /\s* \s*/;
         var semReg = /(SP|FA|S1|S2) \d{4}/;
 
+        if(element.advisor != null && element.otherAdvisor == null){
         if (commaReg.test(element.advisor)) {
           facultyName = element.advisor.split(commaReg);
           facultyName[0] = new RegExp(facultyName[0], "i");
@@ -630,6 +631,54 @@ studentController.upload = function(req, res){
             });
           });
         });
+      } else if (element.advisor == null & element.otherAdvisor != null){
+        schema.Faculty.findOne({otherAdvisor: element.otherAdvisor}).exec().then(function(result){
+         schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
+            if(result != null){
+              element.semesterStarted = result._id;
+            } else {
+              element.semesterStarted = null;
+            }
+
+            schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
+              if(result == null){
+                var stud1;
+                schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
+                  stud1 = result;
+                  schema.Student.findOne({pid: element.pid}).exec().then(function(result){
+                    if(stud1 != null || result != null){
+                      res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
+                      return;
+                    } else {
+                      var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                      inputStudent.save().then(function(result){
+                        count++;
+                        if(count == data.length){
+                          res.redirect("/student/upload/true");
+                        }
+                      }).catch(function(err){
+                        res.render("../views/error.ejs", {string: err});
+                        return;
+                      });
+                    }
+                  });
+                });
+              } else {
+                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
+                  count++;
+                  if(count == data.length){
+                    res.redirect("/student/upload/true");
+                  }
+                }).catch(
+                  function(err){
+                    res.render("../views/error.ejs", {string: err});
+                    return;
+                  });
+              }
+            });
+          });
+        });
+      }
       } else {
         res.render("../views/error.ejs", {string: element.lastName+" did not save because it is missing a field. Onyen, csid, firstName, lastName, and pid are required."});
         return;
