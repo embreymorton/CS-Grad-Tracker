@@ -71,7 +71,8 @@ studentController.get = function (req, res) {
 studentController.put = function (req, res) {
   var input = req.body;
   input = verifyBoolean(input);
-  if(input.phdAwardedDate != ""){
+
+  if(input.phdAwarded != ""){
     input.status = "Graduated";
   }
   
@@ -127,18 +128,19 @@ studentController.edit = function(req, res){
   if(req.params._id){
     schema.Student.findOne({_id: req.params._id}).populate("semesterStarted").populate("advisor").exec().then(function(result){
       if(result != null){
-        var pronouns, genders, ethnicities, residencies, degrees, semesters, student;
+        var pronouns, genders, ethnicities, residencies, degrees, semesters, student, statuses;
         student = result;
         pronouns = schema.Student.schema.path("pronouns").enumValues;
         genders = schema.Student.schema.path("gender").enumValues;
         ethnicities = schema.Student.schema.path("ethnicity").enumValues;
         residencies = schema.Student.schema.path("residency").enumValues;
         degrees = schema.Student.schema.path("intendedDegree").enumValues;
+        statuses = schema.Student.schema.path("status").enumValues;
 		    eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
         schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
           semesters = result;
           schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-            res.render("../views/student/edit", {student: student, faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns});
+            res.render("../views/student/edit", {student: student, faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses});
           });
         });
       }

@@ -89,8 +89,8 @@
 									<label for="inputStatus" class="col-md-4">Status</label>
 									<div class="col-md-8">
 										<select name="status" class="form-control input-status" id="inputStatus">
-											<% for(var i=0; i<status.length; i++) { %>
-												<option value=<%= status[i]%> <% if(student.status === status[i]) { %> selected <% } %>><%=status[i]%></option>
+											<% for(var i=0; i<statuses.length; i++) { %>
+												<option value=<%= statuses[i]%> <% if(student.status === statuses[i]) { %> selected <% } %>><%=statuses[i]%></option>
 											<% } %>
 										</select>
 									</div>
@@ -165,7 +165,7 @@
 									<div class="col-md-8">
 										<select name="intendedDegree" class="form-control input-intended-degree" id="inputIntendedDegree">
 											<% for(var i=0; i<degrees.length; i++) { %>
-												<option value=<%= degrees[i]%> <% if(student.intenededDegree === degrees[i]) { %> selected <% } %>><%=degrees[i]%></option>
+												<option value=<%= degrees[i]%> <% if(student.intendedDegree === degrees[i]) { %> selected <% } %>><%=degrees[i]%></option>
 											<% } %>
 										</select>
 									</div>
@@ -379,7 +379,17 @@
 			}
 		}
 
+		// function resetDate(e) {
+		// 	console.log("date: " + e.target.value);
+		// 	if (e.target.value == "") {
+		// 		var blankDate = new Date();
+		// 		blankDate = null;
+		// 		e.target.value = blankDate;
+		// 	}
+		// }
+
 		document.getElementById("inputSemestersOnLeave").addEventListener("change", function(){ handleChange(); }, false);
 		document.getElementById("inputSemesterStarted").addEventListener("change", function(){ handleChange(); }, false);
+		// document.getElementById("inputPHDAwarded").addEventListener("change", resetDate, false);
 	</script>
 </html>
