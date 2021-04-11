@@ -12,6 +12,7 @@ mongoose.connection
           email: 'jjin1771@gmail.com',
           firstName: 'jason',
           lastName: 'jin',
+          pid: 123456789,
     })
 
     student.save(function (err, student) {
