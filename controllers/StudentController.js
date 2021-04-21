@@ -13,14 +13,14 @@ studentController.post = function (req, res) {
   var input = req.body;
   input = verifyBoolean(input);
   //verify that the required fields are not null
-  if(input.onyen != null && input.email != null && input.advisor != null){
+  if (input.onyen != null && input.email != null && input.advisor != null) {
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
-    schema.Student.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}]}).exec().then(function (result) {
-      if (result != null){
-        res.render("../views/error.ejs", {string: "That student already exists."});
+    schema.Student.findOne({ $or: [{ onyen: input.onyen }, { pid: input.pid }] }).exec().then(function (result) {
+      if (result != null) {
+        res.render("../views/error.ejs", { string: "That student already exists." });
       }
-      else if(input.pid.length != 9){
-        res.render("../views/error.ejs", {string: "PID needs to be of length 9"});
+      else if (input.pid.length != 9) {
+        res.render("../views/error.ejs", { string: "PID needs to be of length 9" });
       }
       else {
         input.onyen = input.onyen.toLowerCase();
@@ -30,16 +30,16 @@ studentController.post = function (req, res) {
         it is possible that the data does not save in time (or load in time if performing queries that return data
         that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
         reliant on database operations inside of the then function of those operations*/
-        inputStudent.save().then(function(result){
-          res.redirect("/student/edit/"+result._id);
+        inputStudent.save().then(function (result) {
+          res.redirect("/student/edit/" + result._id);
         });
       }
     }).catch(function (err) {
-      res.json({"error": err.message, "origin": "student.post"})
+      res.json({ "error": err.message, "origin": "student.post" })
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "Either onyen, firstName, lastName, pid, or advisor is null"});
+  else {
+    res.render("../views/error.ejs", { string: "Either onyen, firstName, lastName, pid, or advisor is null" });
   }
 }
 
@@ -49,21 +49,21 @@ studentController.get = function (req, res) {
   var search = util.listObjectToString(input);
   var temp = input.status;
   input = util.makeRegexp(input); //make all text fields regular expressions with ignore case
-  if(temp != "" && temp != null && temp != undefined){
-   input.status = temp;
+  if (temp != "" && temp != null && temp != undefined) {
+    input.status = temp;
   }
   var admin;
-  if(req.session.accessLevel == 3){
+  if (req.session.accessLevel == 3) {
     admin = true;
   } else {
     admin = false;
   }
 
-  schema.Faculty.findOne({pid: req.session.userPID}).exec().then(function(result){
-    schema.Student.find(input).sort({lastName:1, firstName:1}).exec().then(function (result) {
-      res.render("../views/student/index.ejs", {students: result, admin: admin, search: search});
+  schema.Faculty.findOne({ pid: req.session.userPID }).exec().then(function (result) {
+    schema.Student.find(input).sort({ lastName: 1, firstName: 1 }).exec().then(function (result) {
+      res.render("../views/student/index.ejs", { students: result, admin: admin, search: search });
     }).catch(function (err) {
-      res.json({"error": err.message, "origin": "student.get"})
+      res.json({ "error": err.message, "origin": "student.get" })
     });
   });
 }
@@ -71,27 +71,27 @@ studentController.get = function (req, res) {
 studentController.put = function (req, res) {
   var input = req.body;
   input = verifyBoolean(input);
-  if(input.phdAwarded != ""){
+  if (input.phdAwarded != "") {
     input.status = "Graduated";
   }
 
   var input2 = util.validateModelData(input, schema.Student);
   if (input2.onyen != null && input2.firstName != null && input2.lastName != null && input2.pid != null && input2.pid != NaN) {
-    const filter = {_id: input2._id}
+    const filter = { _id: input2._id }
     schema.Student.findOne(filter).exec().then(student => {
       const deletedFields = getDeletedFields(student, input);
 
       deletedFields.map(f => input2[f] = '')
-      schema.Student.findOneAndUpdate(filter, input2).exec().then(function(result){
-        if(result != null){
-          res.redirect("/student/edit/"+result._id);
+      schema.Student.findOneAndUpdate(filter, input2).exec().then(function (result) {
+        if (result != null) {
+          res.redirect("/student/edit/" + result._id);
         }
-        else res.render("../views/error.ejs", {string: "StudentNotFound"});
+        else res.render("../views/error.ejs", { string: "StudentNotFound" });
       });
     })
   }
-  else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+  else {
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound1" });
   }
 }
 
@@ -104,46 +104,46 @@ studentController.delete = function (req, res) {
     /*Documents reference students; since documents are
     personal student documents, just delete the documents. 
     */
-    schema.Student.findOneAndRemove({_id: id}).exec().then(function(result){
-      if(result){
+    schema.Student.findOneAndRemove({ _id: id }).exec().then(function (result) {
+      if (result) {
         res.redirect('/student');
       }
-      else{
-        res.render("../views/error.ejs", {string: "StudentNotFound"});
+      else {
+        res.render("../views/error.ejs", { string: "StudentNotFound" });
       }
     });
   }
 }
 
-studentController.create = function(req, res){
+studentController.create = function (req, res) {
   var pronouns, genders, ethnicities, residencies, degrees, semesters;
   pronouns = schema.Student.schema.path("pronouns").enumValues;
   genders = schema.Student.schema.path("gender").enumValues;
   ethnicities = schema.Student.schema.path("ethnicity").enumValues;
   residencies = schema.Student.schema.path("residency").enumValues;
-  degrees = schema.Student.schema.path("intendedDegree").enumValues;    
+  degrees = schema.Student.schema.path("intendedDegree").enumValues;
   eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
-  
-  schema.Semester.find().sort({year:1, season:1}).exec().then(function(result){
+
+  schema.Semester.find().sort({ year: 1, season: 1 }).exec().then(function (result) {
     semesters = result;
-    schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-      res.render("../views/student/create", {faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns});
+    schema.Faculty.find({}).sort({ lastName: 1, firstName: 1 }).exec().then(function (result) {
+      res.render("../views/student/create", { faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns });
     });
   });
 }
 
-studentController.edit = function(req, res){
-  if(req.params._id){
+studentController.edit = function (req, res) {
+  if (req.params._id) {
 
     var admin;
-    if(req.session.accessLevel == 3){
+    if (req.session.accessLevel == 3) {
       admin = true;
     } else {
       admin = false;
     }
 
-    schema.Student.findOne({_id: req.params._id}).populate("semesterStarted").populate("advisor").exec().then(function(result){
-      if(result != null){
+    schema.Student.findOne({ _id: req.params._id }).populate("semesterStarted").populate("advisor").exec().then(function (result) {
+      if (result != null) {
         var pronouns, genders, ethnicities, residencies, degrees, semesters, student, statuses;
         student = result;
         pronouns = schema.Student.schema.path("pronouns").enumValues;
@@ -152,253 +152,253 @@ studentController.edit = function(req, res){
         residencies = schema.Student.schema.path("residency").enumValues;
         degrees = schema.Student.schema.path("intendedDegree").enumValues;
         statuses = schema.Student.schema.path("status").enumValues;
-		    eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
-        schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
+        eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
+        schema.Semester.find({}).sort({ year: 1, season: 1 }).exec().then(function (result) {
           semesters = result;
-          schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-            res.render("../views/student/edit", {admin: admin, student: student, faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses});
+          schema.Faculty.find({}).sort({ lastName: 1, firstName: 1 }).exec().then(function (result) {
+            res.render("../views/student/edit", { admin: admin, student: student, faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses });
           });
         });
       }
-      else{
-        res.render("../views/error.ejs", {string: "Student not found"});
+      else {
+        res.render("../views/error.ejs", { string: "Student not found" });
       }
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+  else {
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound2" });
   }
 }
 
-studentController.jobs = function(req, res){
-  if(req.params._id){
+studentController.jobs = function (req, res) {
+  if (req.params._id) {
     var jobs;
 
-    schema.Job.find().populate("supervisor").populate("course").populate("semester").sort({position:1}).exec().then(function(result){
-      result.sort(function(a, b){
-        if(a.semester.year == b.semester.year){
-          if(a.semester.season < b.semester.season){
+    schema.Job.find().populate("supervisor").populate("course").populate("semester").sort({ position: 1 }).exec().then(function (result) {
+      result.sort(function (a, b) {
+        if (a.semester.year == b.semester.year) {
+          if (a.semester.season < b.semester.season) {
             return -1;
           }
-          if(a.semester.season > b.semester.season){
+          if (a.semester.season > b.semester.season) {
             return 1;
           }
           return 0;
         }
-        else{
+        else {
           return a.semester.year - b.semester.year;
         }
       });
       jobs = result;
 
-      schema.Student.findOne({_id: req.params._id}).populate("jobHistory").populate({path:"jobHistory", populate:{path:"supervisor"}})
-      .populate({path:"jobHistory", populate:{path:"semester"}}).populate({path:"jobHistory", populate:{path:"course"}}).exec().then(function(result){
-        result.jobHistory.sort(function(a, b){
-          if(a.semester.year == b.semester.year){
-            if(a.semester.season < b.semester.season){
-              return -1;
+      schema.Student.findOne({ _id: req.params._id }).populate("jobHistory").populate({ path: "jobHistory", populate: { path: "supervisor" } })
+        .populate({ path: "jobHistory", populate: { path: "semester" } }).populate({ path: "jobHistory", populate: { path: "course" } }).exec().then(function (result) {
+          result.jobHistory.sort(function (a, b) {
+            if (a.semester.year == b.semester.year) {
+              if (a.semester.season < b.semester.season) {
+                return -1;
+              }
+              if (a.semester.season > b.semester.season) {
+                return 1;
+              }
+              return 0;
             }
-            if(a.semester.season > b.semester.season){
-              return 1;
+            else {
+              return a.semester.year - b.semester.year;
             }
-            return 0;
-          }
-          else{
-            return a.semester.year - b.semester.year;
-          }
+          });
+          res.render("../views/student/jobs", { student: result, jobs: jobs });
         });
-        res.render("../views/student/jobs", {student: result, jobs: jobs});
-      });
     });
   }
-  else{
+  else {
     //this shouldn't happen if frontend done correctly
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound3" });
   }
 }
 
-studentController.deleteJob = function(req, res){
+studentController.deleteJob = function (req, res) {
   var input = req.body;
-  if(input.studentId != null && input.jobId != null){
-    schema.Student.update({_id:input.studentId}, {$pull:{jobHistory: input.jobId}}).exec().then(function(result){
-      res.redirect("/student/jobs/"+input.studentId);
-    }).catch(function(err){
-      res.render("../views/error.ejs", {string:"Student was not found."});
+  if (input.studentId != null && input.jobId != null) {
+    schema.Student.update({ _id: input.studentId }, { $pull: { jobHistory: input.jobId } }).exec().then(function (result) {
+      res.redirect("/student/jobs/" + input.studentId);
+    }).catch(function (err) {
+      res.render("../views/error.ejs", { string: "Student was not found." });
     });
-  } 
-  else{
-    res.render("../views/error.ejs", {string: "Either studentId or jobId is missing."});
+  }
+  else {
+    res.render("../views/error.ejs", { string: "Either studentId or jobId is missing." });
   }
 }
 
-studentController.addJobs = function(req, res){
+studentController.addJobs = function (req, res) {
   var input = req.body;
-  if(input.studentId != null){
-    schema.Student.findOne({_id: input.studentId}).exec().then(function(result){
-      if(result != null){
-        if(typeof(input.jobs) == "string"){
+  if (input.studentId != null) {
+    schema.Student.findOne({ _id: input.studentId }).exec().then(function (result) {
+      if (result != null) {
+        if (typeof (input.jobs) == "string") {
           input.jobs = [input.jobs];
         }
-        schema.Student.update({_id: input.studentId},{$addToSet: {jobHistory: {$each: input.jobs}}}).exec().then(function(result){
-          res.redirect("/student/jobs/"+input.studentId);
+        schema.Student.update({ _id: input.studentId }, { $addToSet: { jobHistory: { $each: input.jobs } } }).exec().then(function (result) {
+          res.redirect("/student/jobs/" + input.studentId);
         });
       }
-      else{
-        res.render("../views/error.ejs", {string: "Student not found"});
+      else {
+        res.render("../views/error.ejs", { string: "Student not found" });
       }
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "Student id missing"});
+  else {
+    res.render("../views/error.ejs", { string: "Student id missing" });
   }
 }
 
-studentController.formPage = function(req, res){
-  if(req.params._id != null){
-    schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
+studentController.formPage = function (req, res) {
+  if (req.params._id != null) {
+    schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
       var student = result;
-      res.render("../views/student/forms.ejs", {student: student});
+      res.render("../views/student/forms.ejs", { student: student });
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "StudentId incorrect"});
+  else {
+    res.render("../views/error.ejs", { string: "StudentId incorrect" });
   }
 }
 
-studentController.viewForm = function(req, res){
+studentController.viewForm = function (req, res) {
   var signature = "In place of your signature, please type your full legal name:";
-  if(req.params.title != null && req.params._id != null && req.params.uploadSuccess != null){
-    schema.Faculty.find({}).exec().then((result)=>{
+  if (req.params.title != null && req.params._id != null && req.params.uploadSuccess != null) {
+    schema.Faculty.find({}).exec().then((result) => {
       var faculty = result;
       var uploadSuccess = false;
-      if(req.params.uploadSuccess == "true"){
+      if (req.params.uploadSuccess == "true") {
         uploadSuccess = true;
       }
-      schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-        if(result != null){
+      schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
+        if (result != null) {
           var student = result;
-          schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
+          schema[req.params.title].findOne({ student: result._id }).exec().then(function (result) {
             var form = {};
-            if(result != null){
+            if (result != null) {
               form = result;
             }
             var isStudent = false;
-            util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function(result){
+            util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function (result) {
               var hasAccess;
-              if(result){hasAccess = true;}
-              else{hasAccess = false;}
-              var postMethod = "/student/forms/update/"+student._id+"/"+req.params.title;
-              res.render("../views/student/"+req.params.title, {student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess, faculty: faculty});
+              if (result) { hasAccess = true; }
+              else { hasAccess = false; }
+              var postMethod = "/student/forms/update/" + student._id + "/" + req.params.title;
+              res.render("../views/student/" + req.params.title, { student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess, faculty: faculty });
             });
-            
+
           });
         }
-        else{
-          res.render("..views/error.ejs", {string: "Student id not specified."});
+        else {
+          res.render("..views/error.ejs", { string: "Student id not specified." });
         }
       })
     })
   }
 }
 
-studentController.updateForm = function(req, res){
+studentController.updateForm = function (req, res) {
 
   var input = req.body;
-  if(req.params.title != null && req.params._id != null){
-    schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-      if(result != null){
+  if (req.params.title != null && req.params._id != null) {
+    schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
+      if (result != null) {
         var studentId = result._id;
 
-        
-        schema[req.params.title].findOneAndUpdate({student: studentId}, input).exec().then(function(result){
-          if(result != null){
-            res.redirect("/student/forms/viewForm/"+studentId+"/"+req.params.title+"/true");
+
+        schema[req.params.title].findOneAndUpdate({ student: studentId }, input).exec().then(function (result) {
+          if (result != null) {
+            res.redirect("/student/forms/viewForm/" + studentId + "/" + req.params.title + "/true");
           }
-          else{
+          else {
             var inputModel = new schema[req.params.title](input);
-            inputModel.save().then(function(result){
-              res.redirect("/student/forms/viewForm/"+studentId+"/"+req.params.title+"/true");
+            inputModel.save().then(function (result) {
+              res.redirect("/student/forms/viewForm/" + studentId + "/" + req.params.title + "/true");
             });
           }
         });
       }
-      else{
-        res.render("../views/error.ejs", {string: "Student not found"});
+      else {
+        res.render("../views/error.ejs", { string: "Student not found" });
       }
     })
   }
-  else{
-    res.render("../views/error.ejs", {string: "Did not include student ID or title of form"});
+  else {
+    res.render("../views/error.ejs", { string: "Did not include student ID or title of form" });
   }
 }
 
-studentController.courses = function(req, res){
-  if(req.params._id != null){
-    schema.Student.findOne({_id: req.params._id}).populate({
-      path:"grades",
-      populate:{path:"course", populate:{path:"semester"}}
+studentController.courses = function (req, res) {
+  if (req.params._id != null) {
+    schema.Student.findOne({ _id: req.params._id }).populate({
+      path: "grades",
+      populate: { path: "course", populate: { path: "semester" } }
     }).populate({
-      path:"grades",
-      populate:{path:"course", populate:{path:"faculty"}}
-    }).exec().then(function(result){
-      result.grades.sort(function(a, b){
-        if(a.course.semester.year == b.course.semester.year){
-          if(a.course.semester.season < b.course.semester.season){
+      path: "grades",
+      populate: { path: "course", populate: { path: "faculty" } }
+    }).exec().then(function (result) {
+      result.grades.sort(function (a, b) {
+        if (a.course.semester.year == b.course.semester.year) {
+          if (a.course.semester.season < b.course.semester.season) {
             return -1;
           }
-          if(a.course.semester.season > b.course.semester.season){
+          if (a.course.semester.season > b.course.semester.season) {
             return 1;
           }
           return 0;
         }
-        else{
+        else {
           return a.course.semester.year - b.course.semester.year;
         }
       });
-      res.render("../views/student/courses.ejs", {student: result});
+      res.render("../views/student/courses.ejs", { student: result });
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "Id missing."});
+  else {
+    res.render("../views/error.ejs", { string: "Id missing." });
   }
 }
 
-studentController.uploadCoursePage = function(req, res){
-  schema.Course.find().exec().then(function(result){
+studentController.uploadCoursePage = function (req, res) {
+  schema.Course.find().exec().then(function (result) {
     var courses = result;
     var uploadSuccess = false;
-    if(req.params.uploadSuccess == "true"){
-     uploadSuccess = true;
+    if (req.params.uploadSuccess == "true") {
+      uploadSuccess = true;
     }
-    res.render("../views/student/uploadCourses.ejs", {courses: courses ,uploadSuccess: uploadSuccess});
+    res.render("../views/student/uploadCourses.ejs", { courses: courses, uploadSuccess: uploadSuccess });
   });
 }
 
-studentController.downloadCourses = function(req, res){
-  if(req.params._id != null){
-    schema.Student.findOne({_id: req.params._id}).populate({
-      path:"grades",
-      populate:{path:"course", populate:{path:"semester"}}
+studentController.downloadCourses = function (req, res) {
+  if (req.params._id != null) {
+    schema.Student.findOne({ _id: req.params._id }).populate({
+      path: "grades",
+      populate: { path: "course", populate: { path: "semester" } }
     }).populate({
-      path:"grades",
-      populate:{path:"course", populate:{path:"faculty"}}
-    }).lean().exec().then(function(result){
-      result.grades.sort(function(a, b){
-        if(a.course.semester.year == b.course.semester.year){
-          if(a.course.semester.season < b.course.semester.season){
+      path: "grades",
+      populate: { path: "course", populate: { path: "faculty" } }
+    }).lean().exec().then(function (result) {
+      result.grades.sort(function (a, b) {
+        if (a.course.semester.year == b.course.semester.year) {
+          if (a.course.semester.season < b.course.semester.season) {
             return -1;
           }
-          if(a.course.semester.season > b.course.semester.season){
+          if (a.course.semester.season > b.course.semester.season) {
             return 1;
           }
           return 0;
         }
-        else{
+        else {
           return a.course.semester.year - b.course.semester.year;
         }
       });
       var output = [];
-      for(var i = 0; i < result.grades.length; i++){
+      for (var i = 0; i < result.grades.length; i++) {
         var grade = {};
         grade.onyen = result.onyen;
         grade.grade = result.grades[i].grade;
@@ -419,17 +419,17 @@ studentController.downloadCourses = function(req, res){
       fs.createReadStream(filePath).pipe(res);
     });
   }
-  else{
-    res.render("../views/error.ejs", {string:"Student id wrong or missing"});
+  else {
+    res.render("../views/error.ejs", { string: "Student id wrong or missing" });
   }
-  
+
 }
 
-studentController.uploadCourses = function(req, res){
+studentController.uploadCourses = function (req, res) {
   var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files){
+  form.parse(req, function (err, fields, files) {
     var f = files[Object.keys(files)[0]];
-    var workbook = XLSX.readFile(f.path, {cellDates:true});
+    var workbook = XLSX.readFile(f.path, { cellDates: true });
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var headers = {};
     var data = [];
@@ -440,30 +440,30 @@ studentController.uploadCourses = function(req, res){
     headers[String.fromCharCode(69)] = "section";
     headers[String.fromCharCode(70)] = "semester";
     headers[String.fromCharCode(71)] = "faculty";
-    for(z in worksheet) {
-        if(z[0] === '!') continue;
-        //parse out the column, row, and value
-        var tt = 0;
-        for(var i = 0; i < z.length; i++){
-          if(!isNaN(z[i])){
-            tt = i;
-            break;
-          }
+    for (z in worksheet) {
+      if (z[0] === '!') continue;
+      //parse out the column, row, and value
+      var tt = 0;
+      for (var i = 0; i < z.length; i++) {
+        if (!isNaN(z[i])) {
+          tt = i;
+          break;
         }
-        var col = z.substring(0,tt);
-        var row = parseInt(z.substring(tt));
-        var value = worksheet[z].v;
-        if(!data[row]) data[row]={};
-        data[row][headers[col]] = value;
+      }
+      var col = z.substring(0, tt);
+      var row = parseInt(z.substring(tt));
+      var value = worksheet[z].v;
+      if (!data[row]) data[row] = {};
+      data[row][headers[col]] = value;
     }
     //drop those first two rows which are empty
     data.shift();
     data.shift();
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
-    data.forEach(function(element){
+    data.forEach(function (element) {
       //verify that all fields exist
-      if(element.onyen != null && element.department != null && element.number != null && element.section != null && element.semester != null && element.faculty != null){
+      if (element.onyen != null && element.department != null && element.number != null && element.section != null && element.semester != null && element.faculty != null) {
         var spaceReg = /\s* \s*/;
         var commaReg = /\s*,\s*/;
         var semester = element.semester.split(spaceReg);
@@ -472,19 +472,19 @@ studentController.uploadCourses = function(req, res){
 
         var faculty = element.faculty.split(commaReg);
 
-        schema.Semester.findOne({season: semester[0], year: parseInt(semester[1])}).exec().then(function(result){
-          if(result != null){
+        schema.Semester.findOne({ season: semester[0], year: parseInt(semester[1]) }).exec().then(function (result) {
+          if (result != null) {
             element.semester = result._id;
           }
-          else{
-            res.render("../views/error.ejs", {string:"Semester not found."});
+          else {
+            res.render("../views/error.ejs", { string: "Semester not found." });
           }
-          schema.Faculty.findOne({lastName: faculty[0], firstName: faculty[1]}).exec().then(function(result){
-            if(result != null){
+          schema.Faculty.findOne({ lastName: faculty[0], firstName: faculty[1] }).exec().then(function (result) {
+            if (result != null) {
               element.faculty = result._id;
             }
-            else{
-              res.render("../views/error.ejs", {string:"Faculty not found."});
+            else {
+              res.render("../views/error.ejs", { string: "Faculty not found." });
             }
             schema.Course.findOne({
               department: element.department,
@@ -492,213 +492,376 @@ studentController.uploadCourses = function(req, res){
               section: element.section,
               faculty: element.faculty,
               semester: element.semester
-              }).exec().then(function(result){
-                if(result != null){
-                  var grade = {};
-                  if(element.grade != null){
-                    grade.grade = element.grade;
-                  }
-                  grade.course = result._id;
-                  schema.Grade.findOne(grade).exec().then(function(result){
-                    if(result == null){
-                      var inputGrade = new schema.Grade(util.validateModelData(grade, schema.Grade));
-                      inputGrade.save().then(function(result){
-                        pushStudentCourse(element.onyen, result._id).then(function(result){
-                          count++;
-                          if(count == data.length){
-                            res.redirect("/student/uploadCourses/true");
-                          }
-                        }).catch(function(err){
-                          res.render("../views/error.ejs", {string: "Did not push to student grades."});
-                        });
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: element.onyen+" "+element.department+" "+element.number+" did not save because something was wrong with it."});
-                      });
-                    }
-                    else{
-                      pushStudentCourse(element.onyen, result._id).then(function(result){
+            }).exec().then(function (result) {
+              if (result != null) {
+                var grade = {};
+                if (element.grade != null) {
+                  grade.grade = element.grade;
+                }
+                grade.course = result._id;
+                schema.Grade.findOne(grade).exec().then(function (result) {
+                  if (result == null) {
+                    var inputGrade = new schema.Grade(util.validateModelData(grade, schema.Grade));
+                    inputGrade.save().then(function (result) {
+                      pushStudentCourse(element.onyen, result._id).then(function (result) {
                         count++;
-                        if(count == data.length){
+                        if (count == data.length) {
                           res.redirect("/student/uploadCourses/true");
                         }
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: "Did not push to student grades."});
+                      }).catch(function (err) {
+                        res.render("../views/error.ejs", { string: "Did not push to student grades." });
                       });
-                    }
-                  });
-                }
-                else{
-                  res.render("../views/error.ejs", {string:"Course not found."});
-                }
-              });
+                    }).catch(function (err) {
+                      res.render("../views/error.ejs", { string: element.onyen + " " + element.department + " " + element.number + " did not save because something was wrong with it." });
+                    });
+                  }
+                  else {
+                    pushStudentCourse(element.onyen, result._id).then(function (result) {
+                      count++;
+                      if (count == data.length) {
+                        res.redirect("/student/uploadCourses/true");
+                      }
+                    }).catch(function (err) {
+                      res.render("../views/error.ejs", { string: "Did not push to student grades." });
+                    });
+                  }
+                });
+              }
+              else {
+                res.render("../views/error.ejs", { string: "Course not found." });
+              }
+            });
           });
         });
-        
+
       }
     });
   });
 }
 
-function pushStudentCourse(onyen, gradeId){
-  return new Promise((resolve, reject)=>{
-    schema.Student.findOne({onyen: input.onyen.toLowerCase()}).exec().then(function(result){
-      if(result != null){
-        schema.Student.update({onyen:onyen},{$addToSet: {grades: gradeId}}).exec();
+function pushStudentCourse(onyen, gradeId) {
+  return new Promise((resolve, reject) => {
+    schema.Student.findOne({ onyen: input.onyen.toLowerCase() }).exec().then(function (result) {
+      if (result != null) {
+        schema.Student.update({ onyen: onyen }, { $addToSet: { grades: gradeId } }).exec();
         resolve(result);
       }
-      else{
+      else {
         reject(result);
       }
     });
   });
 }
 
-studentController.uploadPage = function(req, res){
+studentController.uploadPage = function (req, res) {
   var uploadSuccess = false;
-  if(req.params.uploadSuccess == "true"){
+  if (req.params.uploadSuccess == "true") {
     uploadSuccess = true;
   }
-  res.render("../views/student/upload.ejs", {uploadSuccess: uploadSuccess});
+  res.render("../views/student/upload.ejs", { uploadSuccess: uploadSuccess });
 }
 
-studentController.upload = function(req, res){
+studentController.upload = function (req, res) {
   var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files){
+  form.parse(req, function (err, fields, files) {
     var f = files[Object.keys(files)[0]];
-    var workbook = XLSX.readFile(f.path, {cellDates:true, cellNF: false, cellText:false});
+    var workbook = XLSX.readFile(f.path, { cellDates: true, cellNF: false, cellText: false });
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    var data = XLSX.utils.sheet_to_json(worksheet, {dateNF:"YYYY-MM-DD"})
+    var data = XLSX.utils.sheet_to_json(worksheet, { dateNF: "YYYY-MM-DD" })
 
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
     //for(let element of data){
-    data.forEach(function(element){
+    data.forEach(function (element) {
       //verify that all fields exist
-      if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null){
+      if (element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null) {
         var facultyName;
+        var researchFacultyName;
         var commaReg = /\s*,\s*/;
         var semester = [null, 0];
         var spaceReg = /\s* \s*/;
         var semReg = /(SP|FA|S1|S2) \d{4}/;
 
-        if(element.advisor != null && element.otherAdvisor == null){
-        if (commaReg.test(element.advisor)) {
-          facultyName = element.advisor.split(commaReg);
-          facultyName[0] = new RegExp(facultyName[0], "i");
-          facultyName[1] = new RegExp(facultyName[1], "i");
-        } else {
-          return res.render("../views/error.ejs", {string: element.advisor+" is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)."});
-        }
-
-        if (element.semesterStarted != null) {
-          if (semReg.test(element.semesterStarted.toUpperCase())) {
-            semester = element.semesterStarted.split(spaceReg);
+        if (element.researchAdvisor != null && element.otherResearchAdvisor == null) {
+          if (commaReg.test(element.researchAdvisor)) {
+            researchFacultyName = element.researchAdvisor.split(commaReg);
+            researchFacultyName[0] = new RegExp(researchFacultyName[0], "i");
+            researchFacultyName[1] = new RegExp(researchFacultyName[1], "i");
           } else {
-            return res.render("../views/error.ejs", {string: element.semesterStarted+" is incorrect. Semester must be in form SS YYYY."});
+            return res.render("../views/error.ejs", { string: element.researchAdvisor + " is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)." });
           }
-        }
 
-        schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
-          if(result != null){
-            element.advisor = result._id;
-          } else {
-            element.advisor = null;
-          }
-          schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
-            if(result != null){
-              element.semesterStarted = result._id;
+          if (element.advisor != null && element.otherAdvisor == null) {
+
+            if (commaReg.test(element.advisor)) {
+              facultyName = element.advisor.split(commaReg);
+              facultyName[0] = new RegExp(facultyName[0], "i");
+              facultyName[1] = new RegExp(facultyName[1], "i");
             } else {
-              element.semesterStarted = null;
+              return res.render("../views/error.ejs", { string: element.advisor + " is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)." });
             }
 
-            schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
-              if(result == null){
-                var stud1;
-                schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
-                  stud1 = result;
-                  schema.Student.findOne({pid: element.pid}).exec().then(function(result){
-                    if(stud1 != null || result != null){
-                      res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
-                      return;
+            if (element.semesterStarted != null) {
+              if (semReg.test(element.semesterStarted.toUpperCase())) {
+                semester = element.semesterStarted.split(spaceReg);
+              } else {
+                return res.render("../views/error.ejs", { string: element.semesterStarted + " is incorrect. Semester must be in form SS YYYY." });
+              }
+            }
+
+            schema.Faculty.findOne({ lastName: researchFacultyName[0], firstName: researchFacultyName[1] }).exec().then(function (result) {
+              if (result != null) {
+                element.researchAdvisor = result._id;
+              } else {
+                element.researchAdvisor = null;
+              }
+              schema.Faculty.findOne({ lastName: facultyName[0], firstName: facultyName[1] }).exec().then(function (result) {
+                if (result != null) {
+                  element.advisor = result._id;
+                } else {
+                  element.advisor = null;
+                }
+                schema.Semester.findOne({ season: semester[0].toUpperCase(), year: parseInt(semester[1]) }).exec().then(function (result) {
+                  if (result != null) {
+                    element.semesterStarted = result._id;
+                  } else {
+                    element.semesterStarted = null;
+                  }
+
+                  schema.Student.findOne({ onyen: element.onyen, pid: element.pid }).exec().then(function (result) {
+                    if (result == null) {
+                      var stud1;
+                      schema.Student.findOne({ onyen: element.onyen }).exec().then(function (result) {
+                        stud1 = result;
+                        schema.Student.findOne({ pid: element.pid }).exec().then(function (result) {
+                          if (stud1 != null || result != null) {
+                            res.render("../views/error.ejs", { string: element.lastName + " contains an onyen or pid that already exists." });
+                            return;
+                          } else {
+                            var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                            inputStudent.save().then(function (result) {
+                              count++;
+                              if (count == data.length) {
+                                res.redirect("/student/upload/true");
+                              }
+                            }).catch(function (err) {
+                              res.render("../views/error.ejs", { string: err });
+                              return;
+                            });
+                          }
+                        });
+                      });
                     } else {
-                      var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
-                      inputStudent.save().then(function(result){
+                      schema.Student.update({ onyen: element.onyen, pid: element.pid }, util.validateModelData(element, schema.Student), { runValidators: true, context: 'query' }).exec().then(function (result) {
                         count++;
-                        if(count == data.length){
+                        if (count == data.length) {
                           res.redirect("/student/upload/true");
                         }
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: err});
-                        return;
-                      });
+                      }).catch(
+                        function (err) {
+                          res.render("../views/error.ejs", { string: err });
+                          return;
+                        });
                     }
                   });
                 });
-              } else {
-                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
-                  count++;
-                  if(count == data.length){
-                    res.redirect("/student/upload/true");
-                  }
-                }).catch(
-                  function(err){
-                    res.render("../views/error.ejs", {string: err});
-                    return;
-                  });
-              }
+              });
             });
-          });
-        });
-      } else if (element.advisor == null & element.otherAdvisor != null){
-        schema.Faculty.findOne({otherAdvisor: element.otherAdvisor}).exec().then(function(result){
-         schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
-            if(result != null){
-              element.semesterStarted = result._id;
-            } else {
-              element.semesterStarted = null;
-            }
+          } else if (element.advisor == null & element.otherAdvisor != null) {
+            schema.Faculty.findOne({ lastName: researchFacultyName[0], firstName: researchFacultyName[1] }).exec().then(function (result) {
+              if (result != null) {
+                element.researchAdvisor = result._id;
+              } else {
+                element.researchAdvisor = null;
+              }
+              schema.Faculty.findOne({ otherAdvisor: element.otherAdvisor }).exec().then(function (result) {
+                schema.Semester.findOne({ season: semester[0].toUpperCase(), year: parseInt(semester[1]) }).exec().then(function (result) {
+                  if (result != null) {
+                    element.semesterStarted = result._id;
+                  } else {
+                    element.semesterStarted = null;
+                  }
 
-            schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
-              if(result == null){
-                var stud1;
-                schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
-                  stud1 = result;
-                  schema.Student.findOne({pid: element.pid}).exec().then(function(result){
-                    if(stud1 != null || result != null){
-                      res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
-                      return;
+                  schema.Student.findOne({ onyen: element.onyen, pid: element.pid }).exec().then(function (result) {
+                    if (result == null) {
+                      var stud1;
+                      schema.Student.findOne({ onyen: element.onyen }).exec().then(function (result) {
+                        stud1 = result;
+                        schema.Student.findOne({ pid: element.pid }).exec().then(function (result) {
+                          if (stud1 != null || result != null) {
+                            res.render("../views/error.ejs", { string: element.lastName + " contains an onyen or pid that already exists." });
+                            return;
+                          } else {
+                            var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                            inputStudent.save().then(function (result) {
+                              count++;
+                              if (count == data.length) {
+                                res.redirect("/student/upload/true");
+                              }
+                            }).catch(function (err) {
+                              res.render("../views/error.ejs", { string: err });
+                              return;
+                            });
+                          }
+                        });
+                      });
                     } else {
-                      var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
-                      inputStudent.save().then(function(result){
+                      schema.Student.update({ onyen: element.onyen, pid: element.pid }, util.validateModelData(element, schema.Student), { runValidators: true, context: 'query' }).exec().then(function (result) {
                         count++;
-                        if(count == data.length){
+                        if (count == data.length) {
                           res.redirect("/student/upload/true");
                         }
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: err});
-                        return;
-                      });
+                      }).catch(
+                        function (err) {
+                          res.render("../views/error.ejs", { string: err });
+                          return;
+                        });
                     }
                   });
                 });
-              } else {
-                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
-                  count++;
-                  if(count == data.length){
-                    res.redirect("/student/upload/true");
-                  }
-                }).catch(
-                  function(err){
-                    res.render("../views/error.ejs", {string: err});
-                    return;
-                  });
-              }
+              });
             });
-          });
-        });
-      }
+          }
+        } else if (element.researchAdvisor == null && element.otherResearchAdvisor != null) {
+
+          if (element.advisor != null && element.otherAdvisor == null) {
+
+            if (commaReg.test(element.advisor)) {
+              facultyName = element.advisor.split(commaReg);
+              facultyName[0] = new RegExp(facultyName[0], "i");
+              facultyName[1] = new RegExp(facultyName[1], "i");
+            } else {
+              return res.render("../views/error.ejs", { string: element.advisor + " is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)." });
+            }
+
+            if (element.semesterStarted != null) {
+              if (semReg.test(element.semesterStarted.toUpperCase())) {
+                semester = element.semesterStarted.split(spaceReg);
+              } else {
+                return res.render("../views/error.ejs", { string: element.semesterStarted + " is incorrect. Semester must be in form SS YYYY." });
+              }
+            }
+
+            schema.Faculty.findOne({ otherResearchAdvisor: element.otherResearchAdvisor }).exec().then(function (result) {
+              schema.Faculty.findOne({ lastName: researchFacultyName[0], firstName: researchFacultyName[1] }).exec().then(function (result) {
+                if (result != null) {
+                  element.researchAdvisor = result._id;
+                } else {
+                  element.researchAdvisor = null;
+                }
+                schema.Faculty.findOne({ lastName: facultyName[0], firstName: facultyName[1] }).exec().then(function (result) {
+                  if (result != null) {
+                    element.advisor = result._id;
+                  } else {
+                    element.advisor = null;
+                  }
+                  schema.Semester.findOne({ season: semester[0].toUpperCase(), year: parseInt(semester[1]) }).exec().then(function (result) {
+                    if (result != null) {
+                      element.semesterStarted = result._id;
+                    } else {
+                      element.semesterStarted = null;
+                    }
+
+                    schema.Student.findOne({ onyen: element.onyen, pid: element.pid }).exec().then(function (result) {
+                      if (result == null) {
+                        var stud1;
+                        schema.Student.findOne({ onyen: element.onyen }).exec().then(function (result) {
+                          stud1 = result;
+                          schema.Student.findOne({ pid: element.pid }).exec().then(function (result) {
+                            if (stud1 != null || result != null) {
+                              res.render("../views/error.ejs", { string: element.lastName + " contains an onyen or pid that already exists." });
+                              return;
+                            } else {
+                              var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                              inputStudent.save().then(function (result) {
+                                count++;
+                                if (count == data.length) {
+                                  res.redirect("/student/upload/true");
+                                }
+                              }).catch(function (err) {
+                                res.render("../views/error.ejs", { string: err });
+                                return;
+                              });
+                            }
+                          });
+                        });
+                      } else {
+                        schema.Student.update({ onyen: element.onyen, pid: element.pid }, util.validateModelData(element, schema.Student), { runValidators: true, context: 'query' }).exec().then(function (result) {
+                          count++;
+                          if (count == data.length) {
+                            res.redirect("/student/upload/true");
+                          }
+                        }).catch(
+                          function (err) {
+                            res.render("../views/error.ejs", { string: err });
+                            return;
+                          });
+                      }
+                    });
+                  });
+                });
+              });
+            });
+          } else if (element.advisor == null & element.otherAdvisor != null) {
+            schema.Faculty.findOne({ otherResearchAdvisor: element.otherResearchAdvisor }).exec().then(function (result) {
+              schema.Faculty.findOne({ lastName: researchFacultyName[0], firstName: researchFacultyName[1] }).exec().then(function (result) {
+                if (result != null) {
+                  element.researchAdvisor = result._id;
+                } else {
+                  element.researchAdvisor = null;
+                }
+                schema.Faculty.findOne({ otherAdvisor: element.otherAdvisor }).exec().then(function (result) {
+                  schema.Semester.findOne({ season: semester[0].toUpperCase(), year: parseInt(semester[1]) }).exec().then(function (result) {
+                    if (result != null) {
+                      element.semesterStarted = result._id;
+                    } else {
+                      element.semesterStarted = null;
+                    }
+
+                    schema.Student.findOne({ onyen: element.onyen, pid: element.pid }).exec().then(function (result) {
+                      if (result == null) {
+                        var stud1;
+                        schema.Student.findOne({ onyen: element.onyen }).exec().then(function (result) {
+                          stud1 = result;
+                          schema.Student.findOne({ pid: element.pid }).exec().then(function (result) {
+                            if (stud1 != null || result != null) {
+                              res.render("../views/error.ejs", { string: element.lastName + " contains an onyen or pid that already exists." });
+                              return;
+                            } else {
+                              var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                              inputStudent.save().then(function (result) {
+                                count++;
+                                if (count == data.length) {
+                                  res.redirect("/student/upload/true");
+                                }
+                              }).catch(function (err) {
+                                res.render("../views/error.ejs", { string: err });
+                                return;
+                              });
+                            }
+                          });
+                        });
+                      } else {
+                        schema.Student.update({ onyen: element.onyen, pid: element.pid }, util.validateModelData(element, schema.Student), { runValidators: true, context: 'query' }).exec().then(function (result) {
+                          count++;
+                          if (count == data.length) {
+                            res.redirect("/student/upload/true");
+                          }
+                        }).catch(
+                          function (err) {
+                            res.render("../views/error.ejs", { string: err });
+                            return;
+                          });
+                      }
+                    });
+                  });
+                });
+              });
+            });
+          }
+        }
       } else {
-        res.render("../views/error.ejs", {string: element.lastName+" did not save because it is missing a field. Onyen, csid, firstName, lastName, and pid are required."});
+        res.render("../views/error.ejs", { string: element.lastName + " did not save because it is missing a field. Onyen, csid, firstName, lastName, and pid are required." });
         return;
       }
     });
@@ -706,26 +869,26 @@ studentController.upload = function(req, res){
 }
 
 
-studentController.download = function(req, res){
-  schema.Student.find({}, "-_id -__v").populate("advisor").populate("semesterStarted").sort({lastName:1, firstName:1}).lean().exec().then(function(result){
+studentController.download = function (req, res) {
+  schema.Student.find({}, "-_id -__v").populate("advisor").populate("semesterStarted").sort({ lastName: 1, firstName: 1 }).lean().exec().then(function (result) {
     var m = schema.Student.schema.obj;
     var template = {};
-    for(var key in m){
-      if (result[0][key] == undefined || result[0][key] == null || result[0][key] == NaN || result[0][key] == ""){
+    for (var key in m) {
+      if (result[0][key] == undefined || result[0][key] == null || result[0][key] == NaN || result[0][key] == "") {
         template[key] = null;
       }
-      else{
+      else {
         template[key] = result[0][key];
       }
     }
     result[0] = template;
-    for(var i = 0; i < result.length; i++){
+    for (var i = 0; i < result.length; i++) {
       result[i].jobHistory = null;
       result[i].courseHistory = null;
-      if(result[i].advisor != null){
+      if (result[i].advisor != null) {
         result[i].advisor = result[i].advisor.lastName + " " + result[i].advisor.firstName;
       }
-      if(result[i].semesterStarted != null){
+      if (result[i].semesterStarted != null) {
         result[i].semesterStarted = result[i].semesterStarted.season + " " + result[i].semesterStarted.year;
       }
     }
@@ -739,11 +902,11 @@ studentController.download = function(req, res){
   });
 }
 
-function verifyBoolean(input){
+function verifyBoolean(input) {
   var m = schema.Student.schema.paths
-  for(var key in m){
-    if(m[key].instance === "Boolean"){
-      if(input[key] == null){
+  for (var key in m) {
+    if (m[key].instance === "Boolean") {
+      if (input[key] == null) {
         input[key] = false;
       }
     }
@@ -751,20 +914,20 @@ function verifyBoolean(input){
   return input;
 }
 
-studentController.notesPage = function(req, res){
-  if(req.params._id) {
-    schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-      if(result != null) {
+studentController.notesPage = function (req, res) {
+  if (req.params._id) {
+    schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
+      if (result != null) {
         var student = result;
-        schema.Note.find({student: req.params._id}).exec().then(function(result){
-          res.render("../views/student/notes", {student: student, notes: result});
+        schema.Note.find({ student: req.params._id }).exec().then(function (result) {
+          res.render("../views/student/notes", { student: student, notes: result });
         });
       } else {
-        res.render("../views/error.ejs", {string: "Student not found"});
+        res.render("../views/error.ejs", { string: "Student not found" });
       }
     });
   } else {
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound4" });
   }
 }
 
@@ -772,67 +935,67 @@ studentController.updateNote = function (req, res) {
   var input = req.body;
   var _id = req.params.noteId;
   //verify that the required fields are not null
-  if(req.params._id != null){
+  if (req.params._id != null) {
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
 
-    schema.Student.findOne({_id: req.params._id}).exec().then(function (result) {
-      if (result != null){
+    schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
+      if (result != null) {
         input.student = req.params._id;
         util.allFieldsExist(input, schema.Note);
 
-        schema.Note.findOneAndUpdate({_id: _id}, input).exec().then(function(result){
-          if(result != null){
-            res.redirect("/student/notes/"+req.params._id);
+        schema.Note.findOneAndUpdate({ _id: _id }, input).exec().then(function (result) {
+          if (result != null) {
+            res.redirect("/student/notes/" + req.params._id);
           }
-          else{
+          else {
             var inputModel = new schema.Note(input);
-            inputModel.save().then(function(result){
-              res.redirect("/student/notes/"+req.params._id);
+            inputModel.save().then(function (result) {
+              res.redirect("/student/notes/" + req.params._id);
             })
           }
         });
       }
     }).catch(function (err) {
-      res.json({"error": err.message, "origin": "student.post"})
+      res.json({ "error": err.message, "origin": "student.post" })
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+  else {
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound5" });
   }
 }
 
 studentController.addNewNote = function (req, res) {
   var input = req.body;
   //verify that the required fields are not null
-  if(req.params._id != null){
+  if (req.params._id != null) {
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
 
-    schema.Student.findOne({_id: req.params._id}).exec().then(function (result) {
-      if (result != null){
+    schema.Student.findOne({ _id: req.params._id }).exec().then(function (result) {
+      if (result != null) {
         input.student = req.params._id;
         util.allFieldsExist(input, schema.Note);
 
 
         var inputModel = new schema.Note(input);
-        inputModel.save().then(function(result){
-          res.redirect("/student/notes/"+req.params._id);
+        inputModel.save().then(function (result) {
+          res.redirect("/student/notes/" + req.params._id);
         })
       }
     }).catch(function (err) {
-      res.json({"error": err.message, "origin": "student.post"})
+      res.json({ "error": err.message, "origin": "student.post" })
     });
   }
-  else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+  else {
+    res.render("../views/error.ejs", { string: "RequiredParamNotFound6" });
   }
 }
 
 
-studentController.deleteNotes = function(req, res){
+studentController.deleteNotes = function (req, res) {
   var noteID = req.body.noteID;
-  schema.Note.findOneAndRemove({_id: noteID}).exec().then(function(result){
-    res.redirect("/student/notes/"+req.params._id);
-  }).catch(function(error){
+  schema.Note.findOneAndRemove({ _id: noteID }).exec().then(function (result) {
+    res.redirect("/student/notes/" + req.params._id);
+  }).catch(function (error) {
     //handle error if note not delete
   });
 }
