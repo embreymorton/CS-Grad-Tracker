@@ -583,131 +583,110 @@ studentController.upload = function(req, res){
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     var count = 0;
     //for(let element of data){
-    data.forEach(function(element){
+    data.forEach(async function(element){
       //verify that all fields exist
       if(element.onyen != null && element.csid != null && element.firstName != null && element.lastName != null && element.pid != null){
-        var facultyName;
+        var advisorName;
+        var researchAdvisorName;
         var commaReg = /\s*,\s*/;
         var semester = [null, 0];
         var spaceReg = /\s* \s*/;
         var semReg = /(SP|FA|S1|S2) \d{4}/;
 
-        if(element.advisor != null && element.otherAdvisor == null){
-        if (commaReg.test(element.advisor)) {
-          facultyName = element.advisor.split(commaReg);
-          facultyName[0] = new RegExp(facultyName[0], "i");
-          facultyName[1] = new RegExp(facultyName[1], "i");
-        } else {
-          return res.render("../views/error.ejs", {string: element.advisor+" is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)."});
+        if (element.advisor != null && element.otherAdvisor != null) {
+          return res.render("../views/error.ejs", {string: element.onyen +" is incorrect. Must specify ONE advisor."});
+        }
+
+        if (element.researchAdvisor != null && element.otherResearchAdvisor != null) {
+          return res.render("../views/error.ejs", {string: element.onyen +" is incorrect. Must specify ONE research advisor."});
         }
 
         if (element.semesterStarted != null) {
           if (semReg.test(element.semesterStarted.toUpperCase())) {
             semester = element.semesterStarted.split(spaceReg);
+            const sem = await schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true}).exec();
+            element.semesterStarted = sem._id;
           } else {
             return res.render("../views/error.ejs", {string: element.semesterStarted+" is incorrect. Semester must be in form SS YYYY."});
           }
         }
 
-        schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
-          if(result != null){
-            element.advisor = result._id;
+        if (element.advisor) {
+          if (commaReg.test(element.advisor)) {
+            advisorName = element.advisor.split(commaReg);
+            advisorName[0] = new RegExp(advisorName[0], "i");
+            advisorName[1] = new RegExp(advisorName[1], "i");
           } else {
-            element.advisor = null;
+            return res.render("../views/error.ejs", {string: element.advisor+" is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter)."});
           }
-          schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
-            if(result != null){
-              element.semesterStarted = result._id;
-            } else {
-              element.semesterStarted = null;
-            }
 
-            schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
-              if(result == null){
-                var stud1;
-                schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
-                  stud1 = result;
-                  schema.Student.findOne({pid: element.pid}).exec().then(function(result){
-                    if(stud1 != null || result != null){
-                      res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
-                      return;
-                    } else {
-                      var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
-                      inputStudent.save().then(function(result){
-                        count++;
-                        if(count == data.length){
-                          res.redirect("/student/upload/true");
-                        }
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: err});
-                        return;
-                      });
+          const advisor = await schema.Faculty.findOne({lastName: advisorName[0], firstName: advisorName[1]}).exec();
+
+          if (advisor != null) {
+            element.advisor = advisor._id;
+          } else {
+            return res.render("../views/error.ejs", {string: element.advisor + " is incorrect. Advisor does not exist"});
+          }
+        }
+
+        if (element.researchAdvisor) {
+          if (commaReg.test(element.researchAdvisor)) {
+            researchAdvisorName = element.researchAdvisor.split(commaReg);
+            researchAdvisorName[0] = new RegExp(researchAdvisorName[0], "i");
+            researchAdvisorName[1] = new RegExp(researchAdvisorName[1], "i");
+          } else {
+            return res.render("../views/error.ejs", {string: element.researchAdvisor + " is incorrect. Research advisor must be in form LASTNAME, FIRSTNAME (case does not matter)."});
+          }
+
+          const researchAdvisor = await schema.Faculty.findOne({
+            lastName: researchAdvisorName[0],
+            firstName: researchAdvisorName[1]
+          }).exec();
+
+          if (researchAdvisor != null) {
+            element.researchAdvisor = researchAdvisor._id;
+          } else {
+            return res.render("../views/error.ejs", {string: element.researchAdvisor + " is incorrect. Research advisor does not exist"});
+          }
+        }
+
+        schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
+          if(result == null){
+            var stud1;
+            schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
+              stud1 = result;
+              schema.Student.findOne({pid: element.pid}).exec().then(function(result){
+                if(stud1 != null || result != null){
+                  res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
+                  return;
+                } else {
+                  var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
+                  inputStudent.save().then(function(result){
+                    count++;
+                    if(count == data.length){
+                      res.redirect("/student/upload/true");
                     }
-                  });
-                });
-              } else {
-                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
-                  count++;
-                  if(count == data.length){
-                    res.redirect("/student/upload/true");
-                  }
-                }).catch(
-                  function(err){
+                  }).catch(function(err){
                     res.render("../views/error.ejs", {string: err});
                     return;
                   });
-              }
+                }
+              });
             });
-          });
-        });
-      } else if (element.advisor == null & element.otherAdvisor != null){
-        schema.Faculty.findOne({otherAdvisor: element.otherAdvisor}).exec().then(function(result){
-         schema.Semester.findOne({season: semester[0].toUpperCase(), year: parseInt(semester[1])}).exec().then(function(result){
-            if(result != null){
-              element.semesterStarted = result._id;
-            } else {
-              element.semesterStarted = null;
-            }
-
-            schema.Student.findOne({onyen: element.onyen, pid: element.pid}).exec().then(function(result){
-              if(result == null){
-                var stud1;
-                schema.Student.findOne({onyen: element.onyen}).exec().then(function(result){
-                  stud1 = result;
-                  schema.Student.findOne({pid: element.pid}).exec().then(function(result){
-                    if(stud1 != null || result != null){
-                      res.render("../views/error.ejs", {string: element.lastName+" contains an onyen or pid that already exists."});
-                      return;
-                    } else {
-                      var inputStudent = new schema.Student(util.validateModelData(element, schema.Student));
-                      inputStudent.save().then(function(result){
-                        count++;
-                        if(count == data.length){
-                          res.redirect("/student/upload/true");
-                        }
-                      }).catch(function(err){
-                        res.render("../views/error.ejs", {string: err});
-                        return;
-                      });
-                    }
-                  });
+          } else {
+            schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
+              count++;
+              if(count == data.length){
+                res.redirect("/student/upload/true");
+              }
+            }).catch(
+                function(err){
+                  res.render("../views/error.ejs", {string: err});
+                  return;
                 });
-              } else {
-                schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then(function(result){
-                  count++;
-                  if(count == data.length){
-                    res.redirect("/student/upload/true");
-                  }
-                }).catch(
-                  function(err){
-                    res.render("../views/error.ejs", {string: err});
-                    return;
-                  });
-              }
-            });
-          });
+          }
         });
-      }
+
       } else {
         res.render("../views/error.ejs", {string: element.lastName+" did not save because it is missing a field. Onyen, csid, firstName, lastName, and pid are required."});
         return;
