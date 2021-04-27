@@ -119,6 +119,10 @@ var studentSchema = mongoose.Schema({
     type: String,
     match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
   },
+  proceedToPhdFormSubmitted: {
+    type: String,
+    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+  },
   backgroundPrepWorksheetApproved: {
     type: String,
     match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
