@@ -22,4 +22,6 @@ router.get("/progressReport", report.getProgressReport);
 
 router.get("/tuitionReport", report.getTuitionReport);
 
+router.get("/progressReport/download", report.downloadProgressReport);
+
 module.exports = router;

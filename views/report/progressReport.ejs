@@ -21,7 +21,7 @@
 					<h3 class="space">Progress Report</h3>
 
 					<% if(report.length>0) { %>
-						<table align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
+						<table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
 							<thead>
 								<tr>
 									<th scope="col" class="col-progress-report-last">Last name</th>
@@ -67,8 +67,6 @@
 										</td>
 
 										<td><%= report[i].otherResearchAdvisor%></td>
-										<% console.log(report[i].activeSemesters)%>
-										<% console.log(report[i].prpPassed)%>
                                         <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>><%= report[i].prpPassed%></td>
                                         <td><%= report[i].technicalWritingApproved%></td>
                                         <td><%= report[i].backgroundPrepWorksheetApproved%></td>
@@ -97,6 +95,7 @@
 								<% } %>
 							</tbody>
 						</table>
+							<p><a href="/report/progressReport/download" class="btn btn-primary download-progress-report-button">Download</a></p>
 					<% } else { %>
 						<div>No students found.</div>
 					<% } %>
