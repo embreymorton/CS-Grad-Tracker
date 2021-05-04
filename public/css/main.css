@@ -18,9 +18,9 @@ html, body {
 	padding:0 30px 0 30px;
 }
 
-/*table {*/
-/*	table-layout: fixed;*/
-/*}*/
+table {
+	table-layout: fixed;
+}
 
 /* faculty table column widths*/
 .col-facultyOnyen {
@@ -58,6 +58,8 @@ html, body {
 .col-jobPosition{
 	width:10%;
 }
+
+
 
 /*course table column widths */
 
@@ -175,4 +177,15 @@ This is for highlighting search text on index pages
 #departmentInput{
 	font-size:10px;
 	height:38px;
+}
+
+.progress-report-table {
+	display: block;
+	table-layout: fixed;
+	width: 100%;
+	overflow: auto;
+}
+
+.col-progress-report-notes {
+	min-width: 200px;
 }

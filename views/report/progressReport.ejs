@@ -19,7 +19,7 @@
 				<div align ="center" class="col-lg-10 panelbg text-center">
 
 					<h3 class="space">Progress Report</h3>
-					
+
 					<% if(report.length>0) { %>
 						<table align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
 							<thead>
@@ -27,26 +27,28 @@
 									<th scope="col" class="col-progress-report-last">Last name</th>
 									<th scope="col" class="col-progress-report-first">First Name</th>
 									<th scope="col" class="col-progress-report-advisor">Advisor</th>
-									<th scope="col" class="col-progress-report-advisor">Other Advisor (non-faculty)</th>
-									<th scope="col" class="col-progress-report-advisor">Research Advisor</th>
-									<th scope="col" class="col-progress-report-advisor">Other Research Advisor (non-faculty)</th>
+									<th scope="col" class="col-progress-report-otherAdvisor">Other Advisor (non-faculty)</th>
+									<th scope="col" class="col-progress-report-researchAdvisor">Research Advisor</th>
+									<th scope="col" class="col-progress-report-otherResearchAdvisor">Other Research Advisor (non-faculty)</th>
                                     <th scope="col" class="col-progress-report-prp">PRP Passed CS09</th>
-                                    <th scope="col" class="col-progress-report-notes">Technical writing approved CS08</th>
-                                    <th scope="col" class="col-progress-report-notes">Background Prep wksht approved</th>
-                                    <th scope="col" class="col-progress-report-notes">Research discussion 3 Faculty CS12</th>
-                                    <th scope="col" class="col-progress-report-notes">Prog prod Requirement CS13</th>
-                                    <th scope="col" class="col-progress-report-notes">Program of study approved CS06</th>
-                                    <th scope="col" class="col-progress-report-notes">Committee Comp Approved (COMM form)</th>
-                                    <th scope="col" class="col-progress-report-notes">PhD Proposal Approved (COMM form)</th>
-                                    <th scope="col" class="col-progress-report-notes">Oral Exam passed (DER form)</th>
-                                    <th scope="col" class="col-progress-report-notes">Dis defense passed (DER form)</th>
-                                    <th scope="col" class="col-progress-report-notes">Dissertation submitted</th>
+                                    <th scope="col" class="col-progress-report-technical">Technical writing approved CS08</th>
+                                    <th scope="col" class="col-progress-report-background">Background Prep wksht approved</th>
+                                    <th scope="col" class="col-progress-report-research">Research discussion 3 Faculty CS12</th>
+                                    <th scope="col" class="col-progress-report-prog">Prog prod Requirement CS13</th>
+                                    <th scope="col" class="col-progress-report-program">Program of study approved CS06</th>
+                                    <th scope="col" class="col-progress-report-committee">Committee Comp Approved (COMM form)</th>
+                                    <th scope="col" class="col-progress-report-phd">PhD Proposal Approved (COMM form)</th>
+                                    <th scope="col" class="col-progress-report-oral">Oral Exam passed (DER form)</th>
+                                    <th scope="col" class="col-progress-report-defense">Dis defense passed (DER form)</th>
+                                    <th scope="col" class="col-progress-report-dissertation">Dissertation submitted</th>
                                     <th scope="col" class="col-progress-report-notes">Notes</th>
 								</tr>
 							</thead>
 							<tbody>
 
-								<style> .red {   background:red; } </style>
+								<style>
+									.red {background:red;}
+								</style>
 
 								<% for(var i=0; i<report.length; i++) { %>
 									<tr>
@@ -78,11 +80,19 @@
                                         <td><%= report[i].oralExamPassed%></td>
                                         <td><%= report[i].dissertationDefencePassed%></td>
                                         <td><%= report[i].dissertationSubmitted%></td>
-                                        <td>
-                                        <% for(var j=0; j< report[i].notes.length; j++) { %>
-                                        <%= report[i].notes[j].note%> <br/>
-                                        <% } %>
-                                        </td>
+
+										<td>
+											<% for(var j=0; j< report[i].notes.length; j++) { %>
+												<p>
+													<strong>Note #<%= j+1%>:</strong> (<%= report[i].notes[j].date%>)
+													<br>
+													<%= report[i].notes[j].note%>
+												</p>
+											<% } %>
+
+										</td>
+
+
 									</tr>
 								<% } %>
 							</tbody>
