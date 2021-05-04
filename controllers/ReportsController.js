@@ -9,7 +9,7 @@ var reportController = {};
 
 let aggregateData = (progressReport)=>{
   return new Promise((resolve, reject)=>{
-    schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').populate('semesterStarted').lean().exec().then(function(result){
+    schema.Student.find().sort({lastName: 1, firstName: 1}).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec().then(function(result){
       progressReport = result;
       let students = result;
       if(students.length == 0){

@@ -27,6 +27,9 @@
 									<th scope="col" class="col-progress-report-last">Last name</th>
 									<th scope="col" class="col-progress-report-first">First Name</th>
 									<th scope="col" class="col-progress-report-advisor">Advisor</th>
+									<th scope="col" class="col-progress-report-advisor">Other Advisor (non-faculty)</th>
+									<th scope="col" class="col-progress-report-advisor">Research Advisor</th>
+									<th scope="col" class="col-progress-report-advisor">Other Research Advisor (non-faculty)</th>
                                     <th scope="col" class="col-progress-report-prp">PRP Passed CS09</th>
                                     <th scope="col" class="col-progress-report-notes">Technical writing approved CS08</th>
                                     <th scope="col" class="col-progress-report-notes">Background Prep wksht approved</th>
@@ -50,12 +53,21 @@
 										<td><%= report[i].lastName%></td>
 										<td><%= report[i].firstName%></td>
 										<td>
-										<% if(report[i].advisor != null){ %>
-										<%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
-										<% } %>
+											<% if(report[i].advisor != null){ %>
+											<%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
+											<% } %>
+											</td>
+										<td><%= report[i].otherAdvisor%></td>
+										<td>
+											<% if(report[i].researchAdvisor != null){ %>
+												<%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
+											<% } %>
 										</td>
-										<% console.log(report[i].activeSemesters + " "+ report[i].prpPassed) %>
-                                        <td <% if(report[i].activeSemesters > 8 && report[i].prpPassed == undefined) { %> class="red" <% } %> ><%= report[i].prpPassed%></td>
+
+										<td><%= report[i].otherResearchAdvisor%></td>
+										<% console.log(report[i].activeSemesters)%>
+										<% console.log(report[i].prpPassed)%>
+                                        <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>><%= report[i].prpPassed%></td>
                                         <td><%= report[i].technicalWritingApproved%></td>
                                         <td><%= report[i].backgroundPrepWorksheetApproved%></td>
                                         <td><%= report[i].researchPlanningMeeting%></td>
