@@ -697,7 +697,7 @@ studentController.upload = function(req, res){
 
 
 studentController.download = function(req, res){
-  schema.Student.find({}, "-_id -__v").populate("advisor").populate("semesterStarted").sort({lastName:1, firstName:1}).lean().exec().then(function(result){
+  schema.Student.find({}, "-_id -__v").populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({lastName:1, firstName:1}).lean().exec().then(function(result){
     var m = schema.Student.schema.obj;
     var template = {};
     for(var key in m){
@@ -713,7 +713,10 @@ studentController.download = function(req, res){
       result[i].jobHistory = null;
       result[i].courseHistory = null;
       if(result[i].advisor != null){
-        result[i].advisor = result[i].advisor.lastName + " " + result[i].advisor.firstName;
+        result[i].advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+      }
+      if(result[i].researchAdvisor != null){
+        result[i].researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
       }
       if(result[i].semesterStarted != null){
         result[i].semesterStarted = result[i].semesterStarted.season + " " + result[i].semesterStarted.year;
