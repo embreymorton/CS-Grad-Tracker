@@ -35,7 +35,7 @@ describe('Test student routes and functionality', ()=>{
         "alternative-name":"ALT NAME",
         "gender":"MALE",
         "ethnicity":"ASIAN",
-        "StateResidency": "APPLIED",
+        "stateResidency": "APPLIED",
         "USResidency": "APPLIED"
     }
 
@@ -58,7 +58,7 @@ describe('Test student routes and functionality', ()=>{
         cy.get('.input-ethnicity')
         .select(updateStudent.ethnicity)
 
-        cy.get('.select-state-residency')
+        cy.get('.input-stateResidency')
         .select(updateStudent.stateResidency)
 
         cy.get('.update-button-submit').click()
@@ -67,7 +67,7 @@ describe('Test student routes and functionality', ()=>{
         .select('OTHER')
         cy.get('.input-ethnicity')
         .select('OTHER')
-        cy.get('.select-state-residency')
+        cy.get('.input-stateResidency')
         .select('APPLIED')
         cy.get('.update-button-submit').click();
 
