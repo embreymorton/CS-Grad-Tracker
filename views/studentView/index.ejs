@@ -115,12 +115,24 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="inputResidency" class="col-md-4">Residency</label>
+                                    <label for="inputStateResidency" class="col-md-4">State Residency</label>
                                     <div class="col-md-8">
-                                        <select name="residency" class="form-control select-residency" id="inputResidency">
-                                            <option value="NO" <%= student.residency == 'NO' ? 'selected' : ''%>>NO</option>
-                                            <option value="APPLIED" <%= student.residency == 'APPLIED' ? 'selected' : ''%>>APPLIED</option>
-                                            <option value="YES" <%= student.residency == 'YES' ? 'selected' : ''%>>YES</option>
+                                        <select name="stateResidency" class="form-control select-state-residency" id="inputStateResidency">
+                                            <option value="NO" <%= student.stateResidency == 'NO' ? 'selected' : ''%>>NO</option>
+                                            <option value="APPLIED" <%= student.stateResidency == 'APPLIED' ? 'selected' : ''%>>APPLIED</option>
+                                            <option value="YES" <%= student.stateResidency == 'YES' ? 'selected' : ''%>>YES</option>
+                                        </select>
+        
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputUSResidency" class="col-md-4">US Residency</label>
+                                    <div class="col-md-8">
+                                        <select name="USResidency" class="form-control select-US-residency" id="inputUSResidency">
+                                            <option value="NO" <%= student.USResidency == 'NO' ? 'selected' : ''%>>NO</option>
+                                            <option value="APPLIED" <%= student.USResidency == 'APPLIED' ? 'selected' : ''%>>APPLIED</option>
+                                            <option value="YES" <%= student.USResidency == 'YES' ? 'selected' : ''%>>YES</option>
                                         </select>
         
                                     </div>

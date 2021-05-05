@@ -82,7 +82,12 @@ var studentSchema = mongoose.Schema({
     enum: ["ASIAN", "BLACK", "HISPANIC", "PACIFIC", "WHITE", "OTHER"],
     default: "OTHER"
   },
-  residency: {
+  stateResidency: {
+    type: String,
+    enum: ["YES", "NO", "APPLIED"],
+    default: "NO"
+  },
+  USResidency: {
     type: String,
     enum: ["YES", "NO", "APPLIED"],
     default: "NO"

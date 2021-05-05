@@ -116,18 +116,19 @@ studentController.delete = function (req, res) {
 }
 
 studentController.create = function(req, res){
-  var pronouns, genders, ethnicities, residencies, degrees, semesters;
+  var pronouns, genders, ethnicities, stateResidencies, USResidencies, degrees, semesters;
   pronouns = schema.Student.schema.path("pronouns").enumValues;
   genders = schema.Student.schema.path("gender").enumValues;
   ethnicities = schema.Student.schema.path("ethnicity").enumValues;
-  residencies = schema.Student.schema.path("residency").enumValues;
+  stateResidencies = schema.Student.schema.path("stateResidency").enumValues;
+  USResidencies = schema.Student.schema.path("USResidency").enumValues;
   degrees = schema.Student.schema.path("intendedDegree").enumValues;    
   eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
   
   schema.Semester.find().sort({year:1, season:1}).exec().then(function(result){
     semesters = result;
     schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-      res.render("../views/student/create", {faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns});
+      res.render("../views/student/create", {faculty: result, semesters: semesters, degrees: degrees, stateResidencies: stateResidencies, USResidencies: USResidencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns});
     });
   });
 }
@@ -144,19 +145,20 @@ studentController.edit = function(req, res){
 
     schema.Student.findOne({_id: req.params._id}).populate("semesterStarted").populate("advisor").exec().then(function(result){
       if(result != null){
-        var pronouns, genders, ethnicities, residencies, degrees, semesters, student, statuses;
+        var pronouns, genders, ethnicities, stateResidencies, USResidencies, degrees, semesters, student, statuses;
         student = result;
         pronouns = schema.Student.schema.path("pronouns").enumValues;
         genders = schema.Student.schema.path("gender").enumValues;
         ethnicities = schema.Student.schema.path("ethnicity").enumValues;
-        residencies = schema.Student.schema.path("residency").enumValues;
+        stateResidencies = schema.Student.schema.path("stateResidency").enumValues;
+        USResidencies = schema.Student.schema.path("USResidency").enumValues;
         degrees = schema.Student.schema.path("intendedDegree").enumValues;
         statuses = schema.Student.schema.path("status").enumValues;
 		    eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
         schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
           semesters = result;
           schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-            res.render("../views/student/edit", {admin: admin, student: student, faculty: result, semesters: semesters, degrees: degrees, residencies: residencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses});
+            res.render("../views/student/edit", {admin: admin, student: student, faculty: result, semesters: semesters, degrees: degrees, stateResidencies: stateResidencies, USResidencies: USResidencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses});
           });
         });
       }

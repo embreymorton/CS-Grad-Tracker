@@ -126,11 +126,22 @@
 								</div>
 
 								<div class="form-group row">
-									<label for="inputResidency" class="col-md-4">Residency</label>
+									<label for="inputStateResidency" class="col-md-4">State Residency</label>
 									<div class="col-md-8">
-										<select name="residency" class="form-control input-residency" id="inputResidency">
-											<% for(var i=0; i<residencies.length; i++) { %>
-												<option value=<%= residencies[i]%> <% if(student.residency === residencies[i]) { %> selected <% } %>><%=residencies[i]%></option>
+										<select name="StateResidency" class="form-control input-stateResidency" id="inputStateResidency">
+											<% for(var i=0; i<stateResidencies.length; i++) { %>
+												<option value=<%= stateResidencies[i]%> <% if(student.stateResidency === stateResidencies[i]) { %> selected <% } %>><%=stateResidencies[i]%></option>
+											<% } %>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label for="inputUSResidency" class="col-md-4">US Residency</label>
+									<div class="col-md-8">
+										<select name="USResidency" class="form-control input-USResidency" id="inputUSResidency">
+											<% for(var i=0; i<USResidencies.length; i++) { %>
+												<option value=<%= USResidencies[i]%> <% if(student.USResidency === USResidencies[i]) { %> selected <% } %>><%=USResidencies[i]%></option>
 											<% } %>
 										</select>
 									</div>

@@ -20,7 +20,6 @@ data.studentTextFields = {
     'masters-awarded': pastDate,
     'prp-passed': currentDate,
     'technical-writing-approved': currentDate,
-    'proceed-to-phd-form-submitted': currentDate,
     'background-prep-worksheet-approved': currentDate,
     'program-of-study-approved': currentDate,
     'research-planning-meeting': currentDate,
@@ -46,7 +45,8 @@ data.studentDropdownFields = {
     status: 'Active',
     gender: 'FEMALE',
     ethnicity: 'OTHER',
-    residency: 'YES',
+    stateResidency: 'YES',
+    USResidency: 'YES',
     'intended-degree': 'MASTERS',
     'funding-eligibility': 'GUARANTEED',
 }
