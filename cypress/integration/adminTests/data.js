@@ -20,6 +20,7 @@ data.studentTextFields = {
     'masters-awarded': pastDate,
     'prp-passed': currentDate,
     'technical-writing-approved': currentDate,
+    'proceed-to-phd-form-submitted': currentDate,
     'background-prep-worksheet-approved': currentDate,
     'program-of-study-approved': currentDate,
     'research-planning-meeting': currentDate,

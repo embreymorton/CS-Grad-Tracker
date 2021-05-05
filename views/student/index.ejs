@@ -38,16 +38,18 @@
 
 								<% for(var i=0; i<students.length; i++) { %>
 									<tr>
-										<td><%= students[i].onyen%></td>
+										<td >
+											<div>
+												<a href="/student/edit/<%=students[i]._id%>" class="editTag"><%= students[i].onyen%></a>
+											</div>
+										</td>
+
 										<td><%= students[i].firstName%></td>
 										<td><%= students[i].lastName%></td>
 										<td><%= students[i].pid%></td>
 										<td><%= students[i].status%></td>
 										<td>
 											<div class="editRow">
-												<div class="editColumn">
-													<a href="/student/edit/<%=students[i]._id%>" class="editTag"><i class="fas fa-edit editColor edit-student-button"></i></a>
-												</div>
 
 												<% if(admin) { %>
 												<div class="editColumn">
