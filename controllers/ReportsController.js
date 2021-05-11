@@ -132,7 +132,7 @@ reportController.downloadProgressReportXLSX = function (req, res) {
             const studentNotes = await schema.Note.find({student: result[i]._id});
             var notes = "";
             for (var j = studentNotes.length - 1; j >= 0; j--) {
-                notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r' + studentNotes[j].note + '\r';
+                notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r' + studentNotes[j].note + '\r' + '\r';
             }
             report.notes = notes;
             output[i] = report;
@@ -180,9 +180,9 @@ reportController.downloadProgressReportCSV = function (req, res) {
             report.dissertationSubmitted = result[i].dissertationSubmitted;
 
             const studentNotes = await schema.Note.find({student: result[i]._id});
-            var notes = "";
+            var notes = "\r\n";
             for (var j = studentNotes.length - 1; j >= 0; j--) {
-                notes += '\n' + "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\n' + studentNotes[j].note + '\n';
+                notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r\n' + studentNotes[j].note + '\r\n' + '\r\n';
             }
             report.notes = notes;
             output[i] = report;
@@ -191,7 +191,6 @@ reportController.downloadProgressReportCSV = function (req, res) {
         var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.json_to_sheet(output);
         XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
-        var csv = XLSX.utils.sheet_to_csv(ws);
         var filePath = path.join(__dirname, "../data/progressReportTemp.csv");
         XLSX.writeFile(wb, filePath);
         res.setHeader("Content-Disposition", "filename=" + "ProgressReport.csv");
