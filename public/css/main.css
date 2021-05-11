@@ -179,7 +179,7 @@ This is for highlighting search text on index pages
 	height:38px;
 }
 
-.progress-report-table {
+.progress-report-table, tuition-report-table {
 	display: block;
 	table-layout: fixed;
 	width: 100%;
@@ -187,5 +187,9 @@ This is for highlighting search text on index pages
 }
 
 .col-progress-report-notes {
-	min-width: 200px;
+	min-width: 300px;
+}
+
+.download-progress-csv-button {
+	margin-right: 10px;
 }

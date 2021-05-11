@@ -19,6 +19,10 @@
 				<div align ="center" class="col-lg-10 panelbg text-center">
 
 					<h3 class="space">Progress Report</h3>
+					<span>
+						<p style="float:right"><a href="/report/progressReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
+						<p style="float:right"><a href="/report/progressReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
+					</span>
 
 					<% if(report.length>0) { %>
 						<table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
@@ -80,14 +84,15 @@
                                         <td><%= report[i].dissertationSubmitted%></td>
 
 										<td>
-											<% for(var j=0; j< report[i].notes.length; j++) { %>
-												<p>
-													<strong>Note #<%= j+1%>:</strong> (<%= report[i].notes[j].date%>)
-													<br>
-													<%= report[i].notes[j].note%>
-												</p>
+											<%if (report[i].notes) { %>
+												<% for(var j=report[i].notes.length - 1; j>=0; j--) { %>
+													<p>
+														<strong>Note #<%= j+1%>:</strong> <%= report[i].notes[j].title%> (<%= report[i].notes[j].date%>)
+														<br>
+														<%= report[i].notes[j].note%>
+													</p>
+												<% } %>
 											<% } %>
-
 										</td>
 
 
@@ -95,7 +100,6 @@
 								<% } %>
 							</tbody>
 						</table>
-							<p><a href="/report/progressReport/download" class="btn btn-primary download-progress-report-button">Download</a></p>
 					<% } else { %>
 						<div>No students found.</div>
 					<% } %>

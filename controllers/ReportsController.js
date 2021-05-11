@@ -99,8 +99,8 @@ reportController.getProgressReport = (req, res) => {
     })
 }
 
-reportController.downloadProgressReport = function (req, res) {
-    schema.Student.find({}, "-_id -__v").populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+reportController.downloadProgressReportXLSX = function (req, res) {
+    schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
         lastName: 1,
         firstName: 1
     }).lean().exec().then(async function (result) {
@@ -128,6 +128,13 @@ reportController.downloadProgressReport = function (req, res) {
             report.oralExamPassed = result[i].oralExamPassed;
             report.dissertationDefencePassed = result[i].dissertationDefencePassed;
             report.dissertationSubmitted = result[i].dissertationSubmitted;
+
+            const studentNotes = await schema.Note.find({student: result[i]._id});
+            var notes = "";
+            for (var j = studentNotes.length - 1; j >= 0; j--) {
+                notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r' + studentNotes[j].note + '\r';
+            }
+            report.notes = notes;
             output[i] = report;
         }
 
@@ -137,6 +144,57 @@ reportController.downloadProgressReport = function (req, res) {
         var filePath = path.join(__dirname, "../data/progressReportTemp.xlsx");
         XLSX.writeFile(wb, filePath);
         res.setHeader("Content-Disposition", "filename=" + "ProgressReport.xlsx");
+        res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        fs.createReadStream(filePath).pipe(res);
+    });
+}
+
+reportController.downloadProgressReportCSV = function (req, res) {
+    schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+        lastName: 1,
+        firstName: 1
+    }).lean().exec().then(async function (result) {
+        var output = [];
+        for (var i = 0; i < result.length; i++) {
+            var report = {};
+            report.lastName = result[i].lastName;
+            report.firstName = result[i].firstName;
+            if (result[i].advisor != null) {
+                report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            }
+            report.otherAdvisor = result[i].otherAdvisor;
+            if (result[i].researchAdvisor != null) {
+                report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            }
+            report.otherResearchAdvisor = result[i].otherResearchAdvisor;
+            report.prpPassed = result[i].prpPassed;
+            report.technicalWritingApproved = result[i].technicalWritingApproved;
+            report.backgroundPrepWorksheetApproved = result[i].backgroundPrepWorksheetApproved;
+            report.researchPlanningMeeting = result[i].researchPlanningMeeting;
+            report.programProductRequirement = result[i].programProductRequirement;
+            report.programOfStudyApproved = result[i].programOfStudyApproved;
+            report.committeeCompApproved = result[i].committeeCompApproved;
+            report.phdProposalApproved = result[i].phdProposalApproved;
+            report.oralExamPassed = result[i].oralExamPassed;
+            report.dissertationDefencePassed = result[i].dissertationDefencePassed;
+            report.dissertationSubmitted = result[i].dissertationSubmitted;
+
+            const studentNotes = await schema.Note.find({student: result[i]._id});
+            var notes = "";
+            for (var j = studentNotes.length - 1; j >= 0; j--) {
+                notes += '\n' + "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\n' + studentNotes[j].note + '\n';
+            }
+            report.notes = notes;
+            output[i] = report;
+        }
+
+        var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.json_to_sheet(output);
+        XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
+        var csv = XLSX.utils.sheet_to_csv(ws);
+        var filePath = path.join(__dirname, "../data/progressReportTemp.csv");
+        XLSX.writeFile(wb, filePath);
+        res.setHeader("Content-Disposition", "filename=" + "ProgressReport.csv");
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         fs.createReadStream(filePath).pipe(res);
     });
