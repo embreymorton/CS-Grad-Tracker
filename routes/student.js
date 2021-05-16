@@ -61,7 +61,7 @@ router.get('/create', authorizeAdmin, student.create);
 
 router.get('/edit/:_id', authorizeFaculty, student.edit);
 
-router.get("/jobs/:_id", authorizeAdvisor, student.jobs);  
+router.get("/jobs/:_id", authorizeAdvisor, student.jobs);
 
 router.get("/notes/:_id", authorizeAdvisor, student.notesPage);
 

@@ -210,7 +210,7 @@ jobController.delete = function (req, res) {
 
 /*
  * @url {get} /job/create
- * 
+ *
  * @description renders /job/create.ejs
  *
  */

@@ -102,7 +102,7 @@ studentController.delete = function (req, res) {
   var id = req.params._id;
   if (id != null) {
     /*Documents reference students; since documents are
-    personal student documents, just delete the documents. 
+    personal student documents, just delete the documents.
     */
     schema.Student.findOneAndRemove({_id: id}).exec().then(function(result){
       if(result){
@@ -122,9 +122,9 @@ studentController.create = function(req, res){
   ethnicities = schema.Student.schema.path("ethnicity").enumValues;
   stateResidencies = schema.Student.schema.path("stateResidency").enumValues;
   USResidencies = schema.Student.schema.path("USResidency").enumValues;
-  degrees = schema.Student.schema.path("intendedDegree").enumValues;    
+  degrees = schema.Student.schema.path("intendedDegree").enumValues;
   eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
-  
+
   schema.Semester.find().sort({year:1, season:1}).exec().then(function(result){
     semesters = result;
     schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
@@ -227,7 +227,7 @@ studentController.deleteJob = function(req, res){
     }).catch(function(err){
       res.render("../views/error.ejs", {string:"Student was not found."});
     });
-  } 
+  }
   else{
     res.render("../views/error.ejs", {string: "Either studentId or jobId is missing."});
   }
@@ -292,7 +292,6 @@ studentController.viewForm = function(req, res){
               var postMethod = "/student/forms/update/"+student._id+"/"+req.params.title;
               res.render("../views/student/"+req.params.title, {student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess, faculty: faculty});
             });
-            
           });
         }
         else{
@@ -311,7 +310,6 @@ studentController.updateForm = function(req, res){
       if(result != null){
         var studentId = result._id;
 
-        
         schema[req.params.title].findOneAndUpdate({student: studentId}, input).exec().then(function(result){
           if(result != null){
             res.redirect("/student/forms/viewForm/"+studentId+"/"+req.params.title+"/true");
@@ -424,7 +422,6 @@ studentController.downloadCourses = function(req, res){
   else{
     res.render("../views/error.ejs", {string:"Student id wrong or missing"});
   }
-  
 }
 
 studentController.uploadCourses = function(req, res){
@@ -546,7 +543,6 @@ studentController.uploadCourses = function(req, res){
             }
           });
         });
-        
       }
     });
   });

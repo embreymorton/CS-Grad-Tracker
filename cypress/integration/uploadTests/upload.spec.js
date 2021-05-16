@@ -2,11 +2,11 @@ var data = require('./data.js')
 
 describe("Upload data", ()=>{
     const filePath = '../../data/InOrderUploadTests/'
-    
+
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Uploading Admin should correctly store data in database', ()=>{
 
         cy.visit('/changeUser/admin')
@@ -21,7 +21,6 @@ describe("Upload data", ()=>{
         cy.get('.upload-faculty-submit-button').click()
 
         cy.visit('/faculty')
-        
         cy.contains(data.uploadFaculty.firstName)
         cy.contains(data.uploadFaculty.lastName)
         cy.contains(data.uploadFaculty.pid)
@@ -29,7 +28,6 @@ describe("Upload data", ()=>{
 
     it('Uploading student should correctly store data in database', ()=>{
         cy.visit('/student/upload/false')
-        
         const fileName = filePath + '2studentUpload.csv'
         cy.fixture(fileName).then(fileContent => {
             cy.get('.student-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
@@ -57,14 +55,12 @@ describe("Upload data", ()=>{
 
     it('Uploading course should correctly store data in database', ()=>{
         cy.visit('/course/upload/false')
-        
         const fileName = filePath + '3courseUpload.csv'
         cy.fixture(fileName).then(fileContent => {
             cy.get('.course-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
         });
 
         cy.get('.course-upload-submit-button').click()
-        
         cy.visit('/course')
 
         cy.contains(data.uploadCourse.number)
@@ -85,7 +81,6 @@ describe("Upload data", ()=>{
         });
 
         cy.get('.grant-upload-submit-button').click()
-        
         cy.visit('/job/create')
 
         cy.get('.input-funding-source > option').eq(1).should('have.text', data.uploadGrant.name)
@@ -100,7 +95,6 @@ describe("Upload data", ()=>{
         });
 
         cy.get('.upload-course-info-submit').click();
-        
         cy.visit('/course/create');
 
         var re = /[0-9]{3}, [a-z,A-Z, ,&]*, [0-9] hours/;

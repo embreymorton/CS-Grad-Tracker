@@ -45,13 +45,10 @@ describe('Test CS01 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
-    it('Submit CS01 form from administrator side', ()=>{
-        
 
+    it('Submit CS01 form from administrator side', ()=>{
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS01').click();
@@ -60,7 +57,6 @@ describe('Test CS01 submissions', ()=>{
         cy.get('.student-pid').should('have.value', student.pid.toString())
 
         util.fillCleanFormAsAdmin(CS01);
-        
         cy.get('.CS01-submit').click();
 
         util.checkFormAsAdmin(CS01);

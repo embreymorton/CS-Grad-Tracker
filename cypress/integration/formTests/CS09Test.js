@@ -43,16 +43,14 @@ describe('Test CS09 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS09 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS09').click();
-        
         util.fillCleanFormAsAdmin(CS09);
 
         for(let element in CS09Sliders){
@@ -86,7 +84,7 @@ describe('Test CS09 submissions', ()=>{
         }
         delete CS09["committee-date-signed"];
         delete CS09["committee-signature"];
-       
+
         // for(let key in CS09Sliders){
         //     cy.get('.' + key).should('have.value', CS09Sliders[key]);
         // }

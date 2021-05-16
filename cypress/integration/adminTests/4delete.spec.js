@@ -13,12 +13,11 @@ describe("Delete data", ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
 
     it('Searching for a job should return the single job and you should be able to delete it', ()=>{
 
         cy.visit('/changeUser/admin');
-        
+
         cy.visit('/job');
 
         data.searchJobHelper();
@@ -39,15 +38,13 @@ describe("Delete data", ()=>{
         cy.contains('No jobs found.');
     })
 
-    
-
     it('Searching for a course should return the single course and you should be able to delete it', ()=>{
         cy.visit('/course');
 
         /*
         Right now, I can't think of a good solution for getting the name/course number
-        to search for the course that was created earlier, because that data 
-        was uploaded in a separate csv and is not defined in this file. 
+        to search for the course that was created earlier, because that data
+        was uploaded in a separate csv and is not defined in this file.
         */
         searchCourseHelper();
 

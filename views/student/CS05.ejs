@@ -6,14 +6,14 @@
 		<title>CS05 Request for Appointment of M.S. Committee</title>
 		<%- include("../partials/head.ejs") %>
 	</head>
-	
+
 	<body>
 		<div class="container-fluid h-100">
 			<div class="row h-100">
 				<div class="col-lg-2 sidebar text-center">
 
 					<% if(!isStudent) {%>
-					
+
 					<%- include("../partials/admin-sidebar.ejs") %>
 
 					<%- include("./search-student.ejs") %>
@@ -51,7 +51,7 @@
 
 
 						<% if(hasAccess) { %>
-						
+
 						<form action="<%=postMethod%>" method="post">
 
 							<input type="hidden" class="form-control" name="student" value=<%=student._id%> />
@@ -103,8 +103,6 @@
 
 							<hr></hr>
 
-							
-
 							<div class="row">
 								<div class="col-md-4">
 									<strong>Nominee name</strong>
@@ -124,7 +122,7 @@
 									<strong>Chairman</strong>
 								</div>
 							</div>
-							
+
 							<div class="row">
 								<div class="col-md-4">
 
@@ -170,7 +168,7 @@
 									<% for(var i = 1; i < 6; i++) { %>
 										<div class="form-group row">
 											<div class="col-md-12">
-												<button type="button" class="btn btn-outline-primary select-advisor<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off" 
+												<button type="button" class="btn btn-outline-primary select-advisor<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off"
 												id="advisor<%=i%>" onclick=selectadvisor(<%=i%>)>A</button>
 											</div>
 										</div>
@@ -180,7 +178,7 @@
 									<% for(var i = 1; i < 6; i++) { %>
 										<div class="form-group row">
 											<div class="col-md-12">
-												<button type="button" class="btn btn-outline-primary select-chairman<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off" 
+												<button type="button" class="btn btn-outline-primary select-chairman<%=i%>" data-toggle="button" aria-pressed="false" autocomplete="off"
 												id="committee<%=i%>" onclick=selectCommittee(<%=i%>)>C</button>
 											</div>
 										</div>
@@ -206,7 +204,7 @@
 							<div class="row">
 								<div class="col-md-1">
 									<div>Committee chairman:</div>
-									
+
 								</div>
 								<div class="col-md-3">
 									<input type="hidden" class="form-control committee-chairman" name="committeeChairman" value="<%=form.committeeChairman%>" id="committeeChairmanInput" required />

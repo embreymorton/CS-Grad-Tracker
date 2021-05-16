@@ -8,7 +8,6 @@ describe('Test student routes and functionality', ()=>{
 
     it('Make sure student can not access job, course, and student create routes', ()=>{
         cy.visit('/changeUser/student');
-        
         cy.visit('/student');
         cy.contains('Not faculty');
 
@@ -21,7 +20,7 @@ describe('Test student routes and functionality', ()=>{
         cy.visit('/faculty');
         cy.contains('Not admin');
     })
-    
+
     it('When logged in as student, get taken to studentView page', ()=>{
         cy.visit('/changeUser/student')
 
@@ -87,7 +86,6 @@ describe('Test student routes and functionality', ()=>{
     })
 
     it('Student should be able to see a job they are holding', ()=>{
-        
         cy.visit('/changeUser/admin')
         cy.visit('/job/create')
 
@@ -114,6 +112,5 @@ describe('Test student routes and functionality', ()=>{
         cy.contains(studJob.semester)
     })
 
-    
     //include form tests and other tests as issues come up
 })

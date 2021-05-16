@@ -406,7 +406,7 @@ var CS05Schema = mongoose.Schema({
   thesisadvisor: String,
   committeeChairman: String,
   directorSignature: String, directorDateSigned: String
-}) 
+})
 
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},

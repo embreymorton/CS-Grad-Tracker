@@ -60,13 +60,13 @@ _.allFieldsExist = function(input, model) {
       return false;
     }
   }
-  return true; 
+  return true;
 }
 
 /*
-  makeRegexp is used by the get function in the controllers to make it so that 
+  makeRegexp is used by the get function in the controllers to make it so that
   text fields can be searched using regexp rather than exactly (eg, searching abc
-  for username returns all entries in the database that contain abc rather than 
+  for username returns all entries in the database that contain abc rather than
   only returning entries that are exactly abc)
 
   @param input document
@@ -200,7 +200,6 @@ _.checkFormCompletion = (studentID) => {
                 }
             }
         })
-        
     });
 }
 

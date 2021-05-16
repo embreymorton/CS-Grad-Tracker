@@ -47,7 +47,7 @@ router.get("/logout", (req, res) => {
 
     const port = req.connection.localPort;
     let returnTo = req.protocol + "://" + req.hostname + ':' + port;
-  
+
     /*if (port !== undefined && port !== 80 && port !== 443) {
         console.log('hi');
         returnTo =
