@@ -2,27 +2,27 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<title>Error</title>
-		<%- include('./partials/head.ejs') %>
-	</head>
-	
-	<body>
-		<div class="container-fluid h-100">
-			<div class="row h-100">
+  <head>
+    <title>Error</title>
+    <%- include('./partials/head.ejs') %>
+  </head>
 
-				<div class='col-lg-3 sidebar text-center'>
+  <body>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
 
-					<%- include('./partials/logout.ejs') %>
+        <div class='col-lg-3 sidebar text-center'>
 
-				</div>
-				
-				<div class='col-lg-9 panelbg text-center'>
-					<div class="jumbotron">
-						<h1><%=string%></h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+          <%- include('./partials/logout.ejs') %>
+
+        </div>
+
+        <div class='col-lg-9 panelbg text-center'>
+          <div class="jumbotron">
+            <h1><%=string%></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

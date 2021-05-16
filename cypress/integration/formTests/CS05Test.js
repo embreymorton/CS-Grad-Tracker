@@ -24,23 +24,20 @@ describe('Test CS05 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS05 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS05').click();
-        
         util.fillCleanFormAsAdmin(CS05);
 
         util.selectDropdowns(CS05Dropdowns);
 
         cy.get('.select-advisor1').click();
         cy.get('.select-chairman3').click();
-        
         cy.get('.CS05-submit').click();
 
         cy.get('.thesis-advisor').should("have.value", CS05.nominees[0]);
@@ -60,7 +57,7 @@ describe('Test CS05 submissions', ()=>{
 
         cy.contains(CS05["director-signature"]);
         cy.contains(CS05["director-date-signed"]);
-   
+
         delete CS05["director-signature"];
         delete CS05["director-date-signed"];
         delete CS05["student-name"];
@@ -76,7 +73,6 @@ describe('Test CS05 submissions', ()=>{
         cy.get('.thesis-advisor').should("have.value", CS05.nominees[1]);
         cy.get('.committee-chairman').should("have.value",CS05.nominees[3]);
 
-        
     });
 
 })

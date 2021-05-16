@@ -27,16 +27,14 @@ describe('Test CS11 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS11 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS11').click();
-        
         util.fillCleanFormAsAdmin(CS11);
 
         util.selectDropdowns(CS11Dropdowns);

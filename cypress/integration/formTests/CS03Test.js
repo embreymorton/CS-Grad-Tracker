@@ -35,20 +35,17 @@ describe('Test CS03 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS03 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS03').click();
-        
         util.fillCleanFormAsAdmin(CS03);
 
         util.selectDropdowns(CS03Dropdowns);
-        
         cy.get('.CS03-submit').click();
 
         util.checkFormAsAdmin(CS03);
@@ -70,7 +67,7 @@ describe('Test CS03 submissions', ()=>{
         delete CS03.approved;
         delete CS03["approval-reason"];
         delete CS03["director-signature"];
-        delete CS03["director-date-signed"]; 
+        delete CS03["director-date-signed"];
         delete CS03["student-name"];
         delete CS03["student-pid"];
         //maybe don't autofill this on the html
@@ -82,8 +79,6 @@ describe('Test CS03 submissions', ()=>{
         cy.get('.CS03-submit').click();
 
         util.checkFormAsStudent(CS03);
-
-        
     });
 
 })

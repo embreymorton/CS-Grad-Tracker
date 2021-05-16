@@ -16,16 +16,14 @@ describe('Test CS07 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS07 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS07').click();
-        
         util.fillCleanFormAsAdmin(CS07);
 
         cy.get('.CS07-submit').click();

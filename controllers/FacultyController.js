@@ -11,12 +11,12 @@ var facultyController = {};
  * @url {post} /faculty/post
  *
  * @description Called when a faculty is to be created,
- * receives fields from an html form, all fields 
+ * receives fields from an html form, all fields
  * are required for a faculty to be created.
- * 
+ *
  * A form is submitted when faculty/post is called, and
  * the form data is stored in req.body
- * 
+ *
  * @req.body {String} onyen (Required)
  * @req.body {String} firstName (Required)
  * @req.body {String} lastName (Required)
@@ -25,7 +25,7 @@ var facultyController = {};
  *
  * @success redirects to /faculty/edit/:_id route (which uses facultyController.edit)
  * @failure renders error page with duplicate faculty message
- * 
+ *
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
 facultyController.post = function (req, res) {
@@ -49,8 +49,7 @@ facultyController.post = function (req, res) {
       else {
         input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
         input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
-        input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1); 
-   
+        input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
         var inputFaculty = new schema.Faculty(util.validateModelData(input, schema.Faculty))
         /*use the then function because save() is asynchronous. If you only have inputFaculty.save(); res.redirect...
         it is possible that the data does not save in time (or load in time if performing queries that return data
@@ -115,7 +114,7 @@ facultyController.get = function (req, res) {
  * @req.body {String} lastName (Required)
  * @req.body {Number} pid (Required)
  * @req.body {Boolean} active (Required)
- * 
+ *
  * @success redirects to /faculty/edit/:_id (facultyController.edit)
  * which displays the newly updated faculty data
  *
@@ -131,7 +130,7 @@ facultyController.put = function (req, res) {
     schema.Faculty.findOneAndUpdate({_id: input._id}, input).exec().then(function (result) {
       if (result != null){
         res.redirect("/faculty/edit/"+result._id);
-      } 
+      }
       else throw new Error("FacultyNotFound");
     });
   } else {
@@ -157,8 +156,8 @@ facultyController.delete = function (req, res) {
   var id = req.params._id;
   if (id != null) {
     /*courses, students, and jobs reference faculty, so have to check
-    if they reference this faculty. Doesn't seem to be any default mongo 
-    behavior for delete/remove that checks if any outside document is 
+    if they reference this faculty. Doesn't seem to be any default mongo
+    behavior for delete/remove that checks if any outside document is
     referencing the faculty*/
     schema.Course.find({faculty: id}).exec().then(function(result){
       if(result.length > 0){

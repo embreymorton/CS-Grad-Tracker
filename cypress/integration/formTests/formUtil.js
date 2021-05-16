@@ -90,7 +90,6 @@ util.checkDropdowns = (formData) => {
             cy.get('.' + key).should('have.value', formData[key]);
         }
 
-        
     }
 }
 

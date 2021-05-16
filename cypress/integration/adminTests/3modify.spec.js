@@ -19,15 +19,14 @@ const visitSingleStudent = ()=>{
 }
 
 describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
-    
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Should be able to assign a job to a student on the job assign page', ()=>{
 
         cy.visit('/changeUser/admin');
-        
+
         cy.visit('/job');
 
         data.searchJobHelper();
@@ -38,7 +37,7 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
 
         cy.get('.assign-student-select')
         .select(studentTextFields["last-name"]+", "+studentTextFields["first-name"]);
-        
+
         cy.get('.assign-job-submit-button').click();
 
         cy.wait(2000);
@@ -51,7 +50,7 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
 
         cy.contains('No students hold this job');
     });
-    
+
     it('Should be able to assign a job to a student from the student\'s page', ()=>{
         visitSingleStudent();
 

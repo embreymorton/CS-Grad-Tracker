@@ -1,21 +1,17 @@
 var data = require('./data');
 
 describe("Page visit and page javascript", ()=>{
-    
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Visiting the homepage as admin should route to /student', ()=>{
         cy.visit('/changeUser/admin');
-        
         cy.visit('/');
-
         cy.url().should('include', '/student');
     });
 
     it('Clicking on links in sidebar should route to correct pages', ()=>{
-        
         cy.visit('/student');
 
         const sidebarButtons = {
@@ -54,7 +50,6 @@ describe("Page visit and page javascript", ()=>{
         cy.get('.upload-faculty-button').click();
         cy.url().should('contain', '/faculty/upload');
 
-        
         cy.visit('/job');
 
         cy.get('.create-job-button').click();

@@ -12,8 +12,6 @@ let CS04 = {
     "student-date-signed": "AAA",
     "chairman-signature": "ASDF",
     "chairman-date-signed": "ASSDF",
-    
-
 }
 
 let CS04Dropdowns = {
@@ -26,20 +24,17 @@ describe('Test CS04 submissions', ()=>{
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Submit CS04 form from administrator side', ()=>{
 
         cy.visit('/changeUser/student');
         cy.visit('/changeUser/admin');
-        
         util.visitFormAsAdmin();
 
         cy.get('.CS04').click();
-        
         util.fillCleanFormAsAdmin(CS04);
 
         util.selectDropdowns(CS04Dropdowns);
-        
         cy.get('.CS04-submit').click();
 
         util.checkFormAsAdmin(CS04);
@@ -68,7 +63,6 @@ describe('Test CS04 submissions', ()=>{
 
         util.checkFormAsStudent(CS04);
 
-        
     });
 
 })

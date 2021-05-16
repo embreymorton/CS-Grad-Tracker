@@ -4,11 +4,10 @@ describe('Test the routes that a faculty should/should not be able to access', (
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('connect.sid')
     })
-    
+
     it('Make sure faculty can not access job, course, and student create routes', ()=>{
 
         cy.visit('/changeUser/faculty');
-        
         cy.visit('/student/create');
         cy.contains('Not admin');
 
@@ -24,7 +23,7 @@ describe('Test the routes that a faculty should/should not be able to access', (
         cy.visit('/job/create');
         cy.contains('Not admin');
     })
-    
+
     //for now we have faculty able to see all students but not edit any of them.
     it('Make sure faculty can see students, their jobs, their forms, and their courses,'+
     ' no matter if they are the student\'s advisor or not. Make sure they can add notes no matter if they are an advisor or not for now.', ()=>{
@@ -72,7 +71,7 @@ describe('Test the routes that a faculty should/should not be able to access', (
 
         cy.get('.student-navigation-notes-button').click();
         cy.contains(student["first-name"]);
-        
+
         const note = "I WROTE A NOTE";
         cy.get('.new-note-title-input')
         .type(note);

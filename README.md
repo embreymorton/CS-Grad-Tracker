@@ -77,7 +77,7 @@ Users:
 ## Using Inheritance for .env
 - .env.testing includes mode and databaseString for testing mode
 - .env.development includes mode and databaseString for development mode
-- in base .env file leave these two variables blank 
+- in base .env file leave these two variables blank
 
 ## Starting the app without Docker
 
@@ -279,7 +279,7 @@ should use should you ever hook up your own auth0 account.
   `http://csgrad.cs.unc.edu/callback`
 - Allowed web origins: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
 - Allowed logout urls: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
-- In connections, make sure Username-Password-Authentication and google-oauth2 
+- In connections, make sure Username-Password-Authentication and google-oauth2
   are enabled.
 
 When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this

@@ -13,7 +13,7 @@ var courseController = {};
  * @description Called when a course is to be created,
  * receives fields from an html form, all fields are
  * required for a course to be created.
- * 
+ *
  * A form will be submitted when course/post is called, and
  * form data is stored in req.body
  *
@@ -27,10 +27,10 @@ var courseController = {};
  *
  * @success redirects to /course/edit/:_id (courseController.edit)
  * @failure redirects to error page that displays appropriate message
- * 
+ *
  * @throws {Object} RequiredParamNotFound (should not occur if frontend done correctly)
  */
- 
+
 courseController.post = function (req, res) {
   var input = req.body;
   if(input.department != null && input.courseInfo != null &&
@@ -60,9 +60,7 @@ courseController.post = function (req, res) {
           else{
             res.render("../views/error.ejs", {string: "You were messing with the html :<"});
           }
-          
         });
-        
       }
     /*this is catching the error if the faculty or semester
     provided does not exist (shouldn't occur if frontend
@@ -74,7 +72,6 @@ courseController.post = function (req, res) {
   else{
     res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
-  
 }
 
 /**
@@ -82,7 +79,7 @@ courseController.post = function (req, res) {
  *
  * @description Called when the /course/index.ejs is to be rendered,
  * accepts search fields as an html query
- * 
+ *
  * The fields are in req.query when they are provided (searched for)
  *
  * @req.query {String} department
@@ -98,7 +95,6 @@ courseController.post = function (req, res) {
  * just indicates that none are found
  */
 courseController.get = function (req, res) {
-  
   var input = req.query;
   input = util.validateModelData(input, schema.Course); //remove fields that are empty/not part of course definition
   schema.Course.find(input).populate("faculty").populate("semester").sort({number:1}).exec().then(function(result){
@@ -132,7 +128,6 @@ courseController.get = function (req, res) {
         res.render("../views/course/index.ejs", {courses: courses, semesters: result, search: search});
       });
     });
-    
   }).catch(function(err){
     res.json({"error": err.message, "origin": "course.put"});
   });
@@ -269,7 +264,7 @@ courseController.create = function (req, res){
  *
  * @finish renders course/edit.ejs with the course
  * to be edited
- * 
+ *
  * @throws {Object} CourseNotFound (shouldn't occur if frontend done properly)
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
@@ -397,14 +392,13 @@ courseController.upload = function(req, res){
                 //if not, add it
                 // if(element.name == "Internet Services & Protocols"){
                 //   schema.CourseInfo.findOne({number: element.number, hours: element.hours, name: element.name}).exec().then(function(result){
-                //     
+                //
                 //   })
                 // }
 
                 schema.CourseInfo.findOne({number: element.number, hours: element.hours}).exec().then(function(result){
                   if(result == null){
                     var temp = util.validateModelData(element, schema.CourseInfo);
-                    
                     var inputCourseInfo = new schema.CourseInfo(temp);
                       inputCourseInfo.save().then(function(result){
                     }).catch(function(err){
@@ -494,7 +488,6 @@ courseController.uploadInfoPage = function(req, res){
   schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
     res.render("../views/course/uploadInfo.ejs", {semesters: result, uploadSuccess: uploadSuccess});
   });
-  
 }
 
 courseController.uploadInfo = function(req, res){

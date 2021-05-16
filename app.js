@@ -17,7 +17,7 @@ require('dotenv').config();
 
 var app = express()
 
-let auth0 = null; 
+let auth0 = null;
 /*Instead of auth0 permissions system use auth0 to login and use the
  given email to check against database to determine the user role
  asdasd
@@ -79,11 +79,11 @@ app.use(helmet.contentSecurityPolicy())
   app.use(
     featurePolicy({
       features: {
-        accelerometer: ["'none'"],    
-      ambientLightSensor: ["'none'"],    
-      autoplay: ["'none'"],    
-      camera: ["'none'"],
-      navigationOverride: ["'none'"],
+        accelerometer: ["'none'"],
+        ambientLightSensor: ["'none'"],
+        autoplay: ["'none'"],
+        camera: ["'none'"],
+        navigationOverride: ["'none'"],
       },
     })
   );
@@ -138,7 +138,6 @@ if(process.env.mode == "production" || process.env.mode == "development"){
 
   app.use((req, res, next) => {
     if(req.user != undefined){
-      
       var email = req.user._json.email;
       schema.Student.findOne({email: email}).exec().then((result) => {
         if(result != null){
@@ -173,7 +172,6 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       req.session.userPID = "INVALID";
       req.session.accessLevel = 0;
       next();
-      
     }
   });
 
@@ -198,7 +196,6 @@ if(process.env.mode == "production" || process.env.mode == "development"){
     else{
       res.render("./error.ejs", {string: "Please log in"});
     }
-    
   });
 }
 else{
@@ -208,10 +205,8 @@ else{
       }
     })
 
-    
     //add routes to allow user changes
     app.use("/changeUser", require("./routes/userChange"));
-   
     app.get("/", (req, res) => {
       if(req.session.accessLevel >= 2){
         res.redirect("/student");
@@ -222,7 +217,7 @@ else{
       else{
         res.render("./error.ejs", {string: "U are not logged in"});
       }
-    }) 
+    })
 }
 
 app.use((req, res, next) => {
@@ -237,7 +232,7 @@ app.use((req, res, next) => {
 
   This is then used with onyenldap (yes this is very bad
   because it is possible for people's csid's to be different
-  although it usually isnt. Need to figure out a way to get 
+  although it usually isnt. Need to figure out a way to get
   the pid without assuming the csid is the same as an onyen)
   to get a user's pid, which is then stored in process.env.userPID
   which is then used for logic in the rest of the app.
