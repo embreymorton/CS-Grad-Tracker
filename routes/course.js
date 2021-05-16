@@ -5,14 +5,14 @@ var util = require("../controllers/util");
 var course = require("../controllers/CourseController");
 
 router.use(function(req, res, next){
-	if(req.session.accessLevel == 3){
-		res.locals.admin = true;
-		next();
-	}
-	else{
-		res.locals.admin = false;
-		res.render("../views/error.ejs", {string: "Not admin"});
-	}
+  if(req.session.accessLevel == 3){
+    res.locals.admin = true;
+    next();
+  }
+  else{
+    res.locals.admin = false;
+    res.render("../views/error.ejs", {string: "Not admin"});
+  }
 });
 
 

@@ -154,7 +154,7 @@ studentController.edit = function(req, res){
         USResidencies = schema.Student.schema.path("USResidency").enumValues;
         degrees = schema.Student.schema.path("intendedDegree").enumValues;
         statuses = schema.Student.schema.path("status").enumValues;
-		    eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
+        eligibility = schema.Student.schema.path("fundingEligibility").enumValues;
         schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
           semesters = result;
           schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){

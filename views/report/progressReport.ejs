@@ -3,37 +3,37 @@
 
 
 <html>
-	<head>
-		<title>Reports</title>
-		<%- include("../partials/head.ejs") %>
-	</head>
-	
-	<body>
-		<div class="container-fluid h-100">
-			<div class="row h-100">
-				<div class="col-lg-2 sidebar text-center">
+  <head>
+    <title>Reports</title>
+    <%- include("../partials/head.ejs") %>
+  </head>
 
-					<%- include("../partials/admin-sidebar.ejs") %>
+  <body>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-lg-2 sidebar text-center">
 
-				</div>
-				<div align ="center" class="col-lg-10 panelbg text-center">
+          <%- include("../partials/admin-sidebar.ejs") %>
 
-					<h3 class="space">Progress Report</h3>
-					<span>
-						<p style="float:right"><a href="/report/progressReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
-						<p style="float:right"><a href="/report/progressReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
-					</span>
+        </div>
+        <div align ="center" class="col-lg-10 panelbg text-center">
 
-					<% if(report.length>0) { %>
-						<table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
-							<thead>
-								<tr>
-									<th scope="col" class="col-progress-report-last">Last name</th>
-									<th scope="col" class="col-progress-report-first">First Name</th>
-									<th scope="col" class="col-progress-report-advisor">Advisor</th>
-									<th scope="col" class="col-progress-report-otherAdvisor">Other Advisor (non-faculty)</th>
-									<th scope="col" class="col-progress-report-researchAdvisor">Research Advisor</th>
-									<th scope="col" class="col-progress-report-otherResearchAdvisor">Other Research Advisor (non-faculty)</th>
+          <h3 class="space">Progress Report</h3>
+          <span>
+            <p style="float:right"><a href="/report/progressReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
+            <p style="float:right"><a href="/report/progressReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
+          </span>
+
+          <% if(report.length>0) { %>
+            <table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-progress-report-last">Last name</th>
+                  <th scope="col" class="col-progress-report-first">First Name</th>
+                  <th scope="col" class="col-progress-report-advisor">Advisor</th>
+                  <th scope="col" class="col-progress-report-otherAdvisor">Other Advisor (non-faculty)</th>
+                  <th scope="col" class="col-progress-report-researchAdvisor">Research Advisor</th>
+                  <th scope="col" class="col-progress-report-otherResearchAdvisor">Other Research Advisor (non-faculty)</th>
                                     <th scope="col" class="col-progress-report-prp">PRP Passed CS09</th>
                                     <th scope="col" class="col-progress-report-technical">Technical writing approved CS08</th>
                                     <th scope="col" class="col-progress-report-background">Background Prep wksht approved</th>
@@ -46,31 +46,31 @@
                                     <th scope="col" class="col-progress-report-defense">Dis defense passed (DER form)</th>
                                     <th scope="col" class="col-progress-report-dissertation">Dissertation submitted</th>
                                     <th scope="col" class="col-progress-report-notes">Notes</th>
-								</tr>
-							</thead>
-							<tbody>
+                </tr>
+              </thead>
+              <tbody>
 
-								<style>
-									.red {background:red;}
-								</style>
+                <style>
+                  .red {background:red;}
+                </style>
 
-								<% for(var i=0; i<report.length; i++) { %>
-									<tr>
-										<td><%= report[i].lastName%></td>
-										<td><%= report[i].firstName%></td>
-										<td>
-											<% if(report[i].advisor != null){ %>
-											<%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
-											<% } %>
-											</td>
-										<td><%= report[i].otherAdvisor%></td>
-										<td>
-											<% if(report[i].researchAdvisor != null){ %>
-												<%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
-											<% } %>
-										</td>
+                <% for(var i=0; i<report.length; i++) { %>
+                  <tr>
+                    <td><%= report[i].lastName%></td>
+                    <td><%= report[i].firstName%></td>
+                    <td>
+                      <% if(report[i].advisor != null){ %>
+                      <%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
+                      <% } %>
+                      </td>
+                    <td><%= report[i].otherAdvisor%></td>
+                    <td>
+                      <% if(report[i].researchAdvisor != null){ %>
+                        <%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
+                      <% } %>
+                    </td>
 
-										<td><%= report[i].otherResearchAdvisor%></td>
+                    <td><%= report[i].otherResearchAdvisor%></td>
                                         <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>><%= report[i].prpPassed%></td>
                                         <td><%= report[i].technicalWritingApproved%></td>
                                         <td><%= report[i].backgroundPrepWorksheetApproved%></td>
@@ -83,33 +83,33 @@
                                         <td><%= report[i].dissertationDefencePassed%></td>
                                         <td><%= report[i].dissertationSubmitted%></td>
 
-										<td>
-											<%if (report[i].notes) { %>
-												<% for(var j=report[i].notes.length - 1; j>=0; j--) { %>
-													<p>
-														<strong>Note #<%= j+1%>:</strong> <%= report[i].notes[j].title%> (<%= report[i].notes[j].date%>)
-														<br>
-														<%= report[i].notes[j].note%>
-													</p>
-												<% } %>
-											<% } %>
-										</td>
+                    <td>
+                      <%if (report[i].notes) { %>
+                        <% for(var j=report[i].notes.length - 1; j>=0; j--) { %>
+                          <p>
+                            <strong>Note #<%= j+1%>:</strong> <%= report[i].notes[j].title%> (<%= report[i].notes[j].date%>)
+                            <br>
+                            <%= report[i].notes[j].note%>
+                          </p>
+                        <% } %>
+                      <% } %>
+                    </td>
 
 
-									</tr>
-								<% } %>
-							</tbody>
-						</table>
-					<% } else { %>
-						<div>No students found.</div>
-					<% } %>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <div>No students found.</div>
+          <% } %>
 
-				</div>
-			</div>
-		</div>
-		<%- include("../partials/bootstrapScripts.ejs") %>
-	</body>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/bootstrapScripts.ejs") %>
+  </body>
 
-	<script type="text/javascript"> </script>
-	
+  <script type="text/javascript"> </script>
+
 </html>

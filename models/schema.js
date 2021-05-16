@@ -58,9 +58,9 @@ var studentSchema = mongoose.Schema({
     required: [true, 'lastName is required!']
   },
   pronouns: {
-  	type: String,
-  	enum: ["she, her", "he, him", "they, them", "ze, zie", "hir, hirs", "xe, xem", "pe, per", "e/ey, em", "(f)ae, (f)aer", "None"],
-  	default: "None"
+    type: String,
+    enum: ["she, her", "he, him", "they, them", "ze, zie", "hir, hirs", "xe, xem", "pe, per", "e/ey, em", "(f)ae, (f)aer", "None"],
+    default: "None"
   },
   pid: {
     type: Number,
@@ -103,9 +103,9 @@ var studentSchema = mongoose.Schema({
   hoursCompleted: Number,
   citizenship: Boolean,
   fundingEligibility: {
-	  type: String,
-	  enum: ["NOT GUARANTEED", "GUARANTEED", "PROBATION"],
-	  default: "NOT GUARANTEED"
+    type: String,
+    enum: ["NOT GUARANTEED", "GUARANTEED", "PROBATION"],
+    default: "NOT GUARANTEED"
   },
   semestersOnLeave: Number,
   backgroundApproved: {
