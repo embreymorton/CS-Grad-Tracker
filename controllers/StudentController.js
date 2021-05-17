@@ -303,7 +303,6 @@ studentController.viewForm = function(req, res){
 }
 
 studentController.updateForm = function(req, res){
-
   var input = req.body;
   if(req.params.title != null && req.params._id != null){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){

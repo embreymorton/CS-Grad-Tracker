@@ -437,13 +437,6 @@ var CS06Schema = mongoose.Schema({
   directorSignature: String
 })
 
-var CS07Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
-  comments: String,
-  chairmanSignature: String, chairmanDateSigned: String
-});
-
 var CS08Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   name: String, pid: Number,
@@ -482,24 +475,6 @@ var CS09Schema = mongoose.Schema({
   feedback: String
 })
 
-var CS11Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
-  fullResponsibility: String,
-  partialResponsibility: String,
-  semester: String, year: Number,
-  supervisor: String, supervisorSignature: String, supervisorDateSigned: String,
-  other: String,
-  approved: String,
-  directorSignature: String, directorDateSigned: String
-})
-
-var CS12Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, email: String, dateMet: String,
-  committeeSignature: [String]
-});
-
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   name: String, pid: Number, email: String, dateMet: String,
@@ -537,11 +512,8 @@ schema.CS03 = mongoose.model("CS03", CS03Schema);
 schema.CS04 = mongoose.model("CS04", CS04Schema);
 schema.CS05 = mongoose.model("CS05", CS05Schema);
 schema.CS06 = mongoose.model("CS06", CS06Schema);
-schema.CS07 = mongoose.model("CS07", CS07Schema);
 schema.CS08 = mongoose.model("CS08", CS08Schema);
 schema.CS09 = mongoose.model("CS09", CS09Schema);
-schema.CS11 = mongoose.model("CS11", CS11Schema);
-schema.CS12 = mongoose.model("CS12", CS12Schema);
 schema.CS13 = mongoose.model("CS13", CS13Schema);
 
 module.exports = schema;
