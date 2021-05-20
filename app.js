@@ -51,15 +51,6 @@ app
 
 app.use(helmet.frameguard({action: 'SAMEORIGIN'}))
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ['self'],
-      frameAncestors: ['self']
-    }
-  })
-)
-
 // remove X-Powered-By headers
 
 app.use(helmet.hidePoweredBy())
@@ -67,7 +58,7 @@ app.use(helmet.hidePoweredBy())
 // set Referrer-Policy header
 
 app.use(helmet.referrerPolicy({
-  policy: "no-referrer"
+  policy: 'no-referrer'
 }))
 
 // mitigate cross-site scripting attacks
