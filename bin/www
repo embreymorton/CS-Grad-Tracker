@@ -2,10 +2,7 @@
 var mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 
-/*
-Load environmental variables: databaseString, port, and host
-*/
-require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
+require('../env').load()
 
 var app = require('../app.js')
 

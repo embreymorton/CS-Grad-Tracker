@@ -58,7 +58,7 @@ Users:
 - There is also gmailUser and gmailPass which are used for email notifications
   through nodemailer.
 - These are just credentials for a gmail account setup specifically for this app.
-- There are two general .env setups, you will need to tweek the variables
+- There are two general .env setups, you will need to tweak the variables
   listed below to get it to run in a certain setup
 
 ## Production mode .env tweeks
@@ -78,6 +78,8 @@ Users:
 - .env.testing includes mode and databaseString for testing mode
 - .env.development includes mode and databaseString for development mode
 - in base .env file leave these two variables blank
+- any values in .env will override values in other .env files, and you probably
+  don't want to override mode or databaseString for both development and testing
 
 ## Starting the app without Docker
 

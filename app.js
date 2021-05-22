@@ -13,8 +13,6 @@ const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
 const featurePolicy = require("feature-policy");
 
-require('dotenv').config();
-
 var app = express()
 
 let auth0 = null;
