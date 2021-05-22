@@ -14,16 +14,16 @@ _.validateModelData = function (input, model) {
   var result = {}
   var m = model.schema.paths
   for (var key in m) {
-    if (input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== "") {
-      if (m[key].instance === "Array") {
+    if (input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== '') {
+      if (m[key].instance === 'Array') {
         result[key] = input[key]
-      } else if (m[key].instance === "Boolean") {
+      } else if (m[key].instance === 'Boolean') {
         result[key] = (input[key].toString().toLowerCase() == 'true')
-      } else if (m[key].instance === "Number") {
+      } else if (m[key].instance === 'Number') {
         result[key] = parseInt(input[key])
-      } else if (m[key].instance === "ObjectID") {
-        result[key] = input[key] === "" ? null : input[key]
-      } else if (m[key].instance === "Date") {
+      } else if (m[key].instance === 'ObjectID') {
+        result[key] = input[key] === '' ? null : input[key]
+      } else if (m[key].instance === 'Date') {
         result[key] = new Date(input[key])
       } else {
         result[key] = input[key]
@@ -36,8 +36,8 @@ _.validateModelData = function (input, model) {
 _.validateHeaders = function (data, model) {
     var ogkeys = Object.keys(model.schema.obj)
     var keys = data.length > 0 ? Object.keys(data[0]) : []
-    console.log("model: " + ogkeys)
-    console.log("data: " + keys)
+    console.log('model: ' + ogkeys)
+    console.log('data: ' + keys)
     return ogkeys.join() == keys.join()
 }
 
@@ -54,7 +54,7 @@ document exist for the corresponding model
 _.allFieldsExist = function(input, model) {
   var m = model.schema.obj
   for (var key in m){
-    if(input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== ""){
+    if(input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== ''){
     }
     else{
       return false
@@ -77,16 +77,16 @@ _.allFieldsExist = function(input, model) {
 _.makeRegexp = function(input){
   for(var key in input){
     if(input[key].constructor == Array){
-      if(input[key][0] == "string"){
+      if(input[key][0] == 'string'){
         for(var i = 0; i < input[key].length; i++){
-          input[key][i] = new RegExp(input[key][i], "i")
+          input[key][i] = new RegExp(input[key][i], 'i')
         }
       }
     }
     else{
       //only create regexp if the field is text
-      if(typeof input[key] == "string"){
-        input[key] = new RegExp(input[key], "i")
+      if(typeof input[key] == 'string'){
+        input[key] = new RegExp(input[key], 'i')
       }
     }
   }
@@ -96,7 +96,7 @@ _.makeRegexp = function(input){
 //used just once to initialize all possible semesters
 _.initializeAllSemesters = function(){
   schema.Semester.find({}).deleteMany().exec()
-  var seasons = schema.Semester.schema.path("season").enumValues
+  var seasons = schema.Semester.schema.path('season').enumValues
   for(var i = 2018; i < 2040; i++){
     for(var j = 0; j < seasons.length; j++){
       var semester = new schema.Semester({year: i, season: seasons[j]})
@@ -171,19 +171,19 @@ _.checkFormCompletion = (studentID) => {
         let completedForms = []
         schema.CS01BSMS.findOne({ student: studentID }).exec().then((result) => {
             if (result != null && result.name != null) {
-                completedForms.push("CS01BSMS")
+                completedForms.push('CS01BSMS')
             }
             for (var i = 1; i <= 13; i++) {
-                let currentForm = ""
+                let currentForm = ''
                 if (i < 10) {
-                    currentForm = "0" + i
+                    currentForm = '0' + i
                 }
                 else {
                     currentForm = i
                 }
                 if (i != 10) {
                     checkOneForm(currentForm, completedForms, studentID).then((result) => {
-                        if ("13" == result) {
+                        if ('13' == result) {
                             resolve(completedForms)
                         }
                     }).catch((error) => {
@@ -197,10 +197,10 @@ _.checkFormCompletion = (studentID) => {
 
 checkOneForm = (currentForm, completedForms, studentID) => {
     return new Promise((resolve, reject) => {
-        console.log("CS" + currentForm)
-        schema["CS" + currentForm].findOne({ student: studentID }).exec().then((result) => {
+        console.log('CS' + currentForm)
+        schema['CS' + currentForm].findOne({ student: studentID }).exec().then((result) => {
             if (result != null && result.name != null) {
-                completedForms.push("CS" + currentForm)
+                completedForms.push('CS' + currentForm)
             }
             resolve(currentForm)
         }).catch((error) => {
