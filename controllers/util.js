@@ -34,9 +34,9 @@ _.validateModelData = function (input, model) {
 }
 
 _.validateHeaders = function (data, model) {
-    var ogkeys = Object.keys(model.schema.obj)
-    var keys = data.length > 0 ? Object.keys(data[0]) : []
-    return ogkeys.join() == keys.join()
+  var ogkeys = Object.keys(model.schema.obj)
+  var keys = data.length > 0 ? Object.keys(data[0]) : []
+  return ogkeys.join() == keys.join()
 }
 
 /*
@@ -51,12 +51,9 @@ document exist for the corresponding model
 
 _.allFieldsExist = function(input, model) {
   var m = model.schema.obj
-  for (var key in m){
-    if(input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== ''){
-    }
-    else{
-      return false
-    }
+  for (var key in m) {
+    var v = input[key]
+    if (v === undefined || v === null || v === NaN || v === '') return false
   }
   return true
 }
@@ -98,7 +95,7 @@ _.initializeAllSemesters = function(){
   for(var i = 2018; i < 2040; i++){
     for(var j = 0; j < seasons.length; j++){
       var semester = new schema.Semester({year: i, season: seasons[j]})
-      semester.save().then(function(result){}).catch(function(err){})
+      semester.save().then(function(_){}).catch(function(_){})
     }
   }
 }
@@ -127,34 +124,14 @@ _.checkAdvisor = function(facultyID, studentID) {
   an admin, or if the user is an advisor of the passed in studentID, and
   resolves as false otherwise.
 */
-_.checkAdvisorAdmin = function(facultyID, studentID){
-  return new Promise((resolve, reject)=>{
-    schema.Faculty.findOne({pid: facultyID}).exec().then(function(result){
-      if(result.admin == true){
-        resolve(true)
-      }
-      else{
-        schema.Student.findOne({_id: studentID}).exec().then(function(result){
-          if(result != null){
-            if(result.advisor != null){
-              schema.Faculty.findOne({_id: result.advisor}).exec().then(function(result){
-                if(result.pid == facultyID){
-                  resolve(true)
-                } else {
-                  resolve(false)
-                }
-              })
-            } else {
-              resolve(false)
-            }
-          } else {
-            resolve(false)
-          }
-        })
-      }
-    })
-  })
-}
+_.checkAdvisorAdmin = (facultyID, studentID) =>
+  new Promise((resolve, reject) =>
+    schema.Faculty.findOne({pid: facultyID}).exec().then(faculty =>
+      faculty.admin == true ? resolve(true) :
+      schema.Student.findOne({_id: studentID}).exec().then(student =>
+        student == null || student.advisor == null ? resolve(false) :
+        schema.Faculty.findOne({_id: student.advisor}).exec().then(advisor =>
+          resolve(advisor.pid == facultyID)))))
 
 _.listObjectToString = function (input) {
   var result = 'Search: '
@@ -164,46 +141,17 @@ _.listObjectToString = function (input) {
   return result
 }
 
-_.checkFormCompletion = (studentID) => {
-    return new Promise((resolve, reject) => {
-        let completedForms = []
-        schema.CS01BSMS.findOne({ student: studentID }).exec().then((result) => {
-            if (result != null && result.name != null) {
-                completedForms.push('CS01BSMS')
-            }
-            for (var i = 1; i <= 13; i++) {
-                let currentForm = ''
-                if (i < 10) {
-                    currentForm = '0' + i
-                }
-                else {
-                    currentForm = i
-                }
-                if (i != 10) {
-                    checkOneForm(currentForm, completedForms, studentID).then((result) => {
-                        if ('13' == result) {
-                            resolve(completedForms)
-                        }
-                    }).catch((error) => {
-                        reject(error)
-                    })
-                }
-            }
-        })
-    })
-}
+_.checkFormCompletion = studentID =>
+  new Promise((resolve, reject) => {
+    const formNames =
+          ['01BSMS', '01', '02', '03', '04', '05', '06', '08', '09', '13']
+    const promises = formNames.map(checkOneForm(studentID))
+    Promise.all(promises).then(forms =>
+      resolve(forms.filter(form => form != null && form.name != null))
+    ).catch(reject)
+  })
 
-checkOneForm = (currentForm, completedForms, studentID) => {
-    return new Promise((resolve, reject) => {
-        schema['CS' + currentForm].findOne({ student: studentID }).exec().then((result) => {
-            if (result != null && result.name != null) {
-                completedForms.push('CS' + currentForm)
-            }
-            resolve(currentForm)
-        }).catch((error) => {
-            reject(error)
-        })
-    })
-}
+const checkOneForm = studentID => formName =>
+  schema[formName].findOne({student: studentID}).exec()
 
 module.exports = _
