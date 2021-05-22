@@ -750,26 +750,22 @@ function verifyBoolean(input){
   return input;
 }
 
-studentController.notesPage = function(req, res){
-  if(req.params._id) {
-    schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-      if(result != null) {
-        var student = result;
+studentController.notesPage = function(req, res) {
+  const studentId = req.params._id
+  if (!studentId) {
+    res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
+  } else {
+    schema.Student.findOne({_id: studentId}).exec().then(function(student) {
+      if (student == null) {
+        res.render('../views/error.ejs', {string: 'Student not found'})
+      } else {
         schema.Note
-          .find({student: req.params._id})
+          .find({student: studentId})
           .sort({date: 'desc'})
           .exec()
-          .then(function(result){
-            res.render("../views/student/notes", {student, notes: result});
-          });
-      } else {
-        res.render("../views/error.ejs", {string: "Student not found"});
-      }
-    });
-  } else {
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
-  }
-}
+          .then(function(notes) {
+            res.render('../views/student/notes', {student, notes})
+          })}})}}
 
 studentController.updateNote = function (req, res) {
   var input = req.body;
