@@ -30,7 +30,7 @@ const mongoOptions = {
   useUnifiedTopology: true,
 }
 
-const secret = 'ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW'
+const secret = process.env.sessionSecret
 const store = MongoStore.create({mongoUrl, mongoOptions})
 const session = {
   secret,

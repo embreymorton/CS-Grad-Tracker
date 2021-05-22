@@ -61,13 +61,13 @@ Users:
 - There are two general .env setups, you will need to tweak the variables
   listed below to get it to run in a certain setup
 
-## Production mode .env tweeks
+## Production mode .env tweaks
 - `mode=production`
 - `databaseString='mongodb://localhost/cs_grad_data-prod'`
 - `AUTH0_CALLBACK_URL=http://csgrad.cs.unc.edu/callback`
 - `AUTH0_LOGOUT_URL=http://csgrad.cs.unc.edu`
 
-## Development/testing mode .env tweeks
+## Development/testing mode .env tweaks
 - `mode=production` or `mode=development`
 - `databaseString='mongodb://localhost/cs_grad_data-prod'` or
   `databaseString='mongodb://localhost/cs_grad_data-dev'`
