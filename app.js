@@ -9,6 +9,7 @@ var schema = require('./models/schema.js')
 const { join } = require('path')
 
 const expressSession = require('express-session')
+const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const Auth0Strategy = require('passport-auth0')
 const featurePolicy = require('feature-policy')
@@ -23,11 +24,20 @@ let auth0 = null
 
 
 //session configuration
+const mongoUrl = process.env.databaseString
+const mongoOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}
+
+const secret = 'ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW'
+const store = MongoStore.create({mongoUrl, mongoOptions})
 const session = {
-  secret: 'ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW',
+  secret,
   cookie: {},
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store,
 }
 
 if (app.get('mode') === 'production') {

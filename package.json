@@ -13,6 +13,7 @@
     "client-sessions": "^0.8.0",
     "compression": "^1.7.3",
     "concurrently": "^5.0.2",
+    "connect-mongo": "^4.4.1",
     "core-util-is": "^1.0.2",
     "cross-env": "^5.2.1",
     "dotenv": "^8.2.0",
