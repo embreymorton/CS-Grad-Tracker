@@ -36,8 +36,6 @@ _.validateModelData = function (input, model) {
 _.validateHeaders = function (data, model) {
     var ogkeys = Object.keys(model.schema.obj)
     var keys = data.length > 0 ? Object.keys(data[0]) : []
-    console.log('model: ' + ogkeys)
-    console.log('data: ' + keys)
     return ogkeys.join() == keys.join()
 }
 
@@ -197,7 +195,6 @@ _.checkFormCompletion = (studentID) => {
 
 checkOneForm = (currentForm, completedForms, studentID) => {
     return new Promise((resolve, reject) => {
-        console.log('CS' + currentForm)
         schema['CS' + currentForm].findOne({ student: studentID }).exec().then((result) => {
             if (result != null && result.name != null) {
                 completedForms.push('CS' + currentForm)

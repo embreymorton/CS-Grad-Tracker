@@ -405,7 +405,6 @@
         let currentMonth = today.getMonth()+1;
         let currentYear = today.getFullYear();
         let activeSemesters = 0;
-        console.log(currentMonth + " "+ currentYear+ " "+ semesterStarted)
         if(currentMonth < 8){
           //its currently spring
           activeSemesters = (currentYear - semesterStarted[1])*2 - semestersOnLeave;
@@ -426,17 +425,7 @@
       }
     }
 
-    // function resetDate(e) {
-    //   console.log("date: " + e.target.value);
-    //   if (e.target.value == "") {
-    //     var blankDate = new Date();
-    //     blankDate = null;
-    //     e.target.value = blankDate;
-    //   }
-    // }
-
     document.getElementById("inputSemestersOnLeave").addEventListener("change", function(){ handleChange(); }, false);
     document.getElementById("inputSemesterStarted").addEventListener("change", function(){ handleChange(); }, false);
-    // document.getElementById("inputPHDAwarded").addEventListener("change", resetDate, false);
   </script>
 </html>

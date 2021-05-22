@@ -4,7 +4,6 @@ var formidable = require("formidable")
 var fs = require("fs")
 var path = require("path")
 var XLSX = require("xlsx")
-var formidable = require("formidable")
 var mongoose = require("mongoose")
 var studentController = {}
 
@@ -25,7 +24,6 @@ studentController.post = function (req, res) {
       else {
         input.onyen = input.onyen.toLowerCase()
         var inputStudent = new schema.Student(util.validateModelData(input, schema.Student))
-        console.log(inputStudent)
         /*use the then function because save() is asynchronous. If you only have inputStudent.save(); res.redirect...
         it is possible that the data does not save in time (or load in time if performing queries that return data
         that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is

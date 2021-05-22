@@ -66,7 +66,6 @@ let calculateActiveSemesters = (studentList, report) => {
         if (semestersOnLeave != null && semesterStarted != null) {
             let currentMonth = today.getMonth() + 1;
             let currentYear = today.getFullYear();
-            console.log(currentMonth + " " + currentYear + " " + semesterStarted)
             if (currentMonth < 8) {
                 //its currently spring
                 activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave;
@@ -81,7 +80,6 @@ let calculateActiveSemesters = (studentList, report) => {
                 }
             }
         }
-        console.log(activeSemesters);
         report[i].activeSemesters = activeSemesters;
     }
 }
