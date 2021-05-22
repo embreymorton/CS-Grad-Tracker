@@ -4,7 +4,6 @@ var formidable = require("formidable");
 var fs = require("fs");
 var path = require("path");
 var XLSX = require("xlsx");
-var formidable = require("formidable");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
 
@@ -138,17 +137,19 @@ studentViewController.viewForm = function (req, res) {
 
 studentViewController.updateForm = function (req, res) {
   var input = req.body;
-  if (req.params.title != null) {
-    schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").exec().then(function (result) {
-      if (result != null) {
-        var studentId = result._id;
-        var studentInfo = result;
+  if (req.params.title == null) {
+    res.render("../views/error.ejs", { string: "Did not include student ID or title of form" });
+  } else {
+    schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").exec().then(function (studentInfo) {
+      if (studentInfo == null) {
+        res.render("../views/error.ejs", { string: "Student not found" });
+      } else {
+        var studentId = studentInfo._id;
 
-        schema[req.params.title].findOneAndUpdate({ student: studentId }, input).exec().then(function (result) {
-          if (result != null) {
+        schema[req.params.title].findOneAndUpdate({ student: studentId }, input).exec().then(function (form) {
+          if (form != null) {
             res.redirect("/studentView/forms" + "/" + req.params.title + "/true");
-          }
-          else {
+          } else {
             var inputModel = new schema[req.params.title](input);
             inputModel.save().then(function (result) {
               res.redirect("/studentView/forms/" + req.params.title + "/true");
@@ -156,30 +157,27 @@ studentViewController.updateForm = function (req, res) {
           }
           util.checkFormCompletion(studentId).then((result) => {
             //ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
-            mailOptions.to = studentInfo.advisor.email + "";
+            mailOptions.to = ['advisor', 'researchAdvisor']
+              .map(key => studentInfo[key])
+              .filter(advisor => advisor && advisor.email)
+              .map(advisor => advisor.email)
             mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
             mailOptions.text = "The student has completed the following forms as of now: " + result;
-            transport.sendMail(mailOptions, function (error, response) {
-              if (error) {
-                console.error(error);
-              } else {
-                console.log("Message sent");
-              }
-              // if you don't want to use this transport object anymore, uncomment following line
-              transport.close(); // shut down the connection pool, no more messages
-            });
-          }).catch(console.error)
-
-
+            if (process.env.mode != 'testing') {
+              transport.sendMail(mailOptions, function (error, response) {
+                if (error) {
+                  console.error(error);
+                } else {
+                  console.log("Message sent");
+                }
+                // if you don't want to use this transport object anymore, uncomment following line
+                transport.close(); // shut down the connection pool, no more messages
+              });
+            }
+          })
         });
       }
-      else {
-        res.render("../views/error.ejs", { string: "Student not found" });
-      }
     })
-  }
-  else {
-    res.render("../views/error.ejs", { string: "Did not include student ID or title of form" });
   }
 }
 
