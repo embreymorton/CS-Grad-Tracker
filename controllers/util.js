@@ -109,27 +109,20 @@ _.initializeAllSemesters = function(){
   checkAdvisor is a promise that resolves as true if the user is an
   advisor of the passed in student, and resolves false otherwise.
 */
-_.checkAdvisor = function(facultyID, studentID){
-  return new Promise((resolve, reject)=>{
-    schema.Student.findOne({_id: studentID}).exec().then(function(result){
-      if(result != null){
-        if(result.advisor != null){
-          schema.Faculty.findOne({_id: result.advisor}).exec().then(function(result){
-            if(result.pid == facultyID){
-              resolve(true);
-            } else {
-              resolve(false);
-            }
-          });
-        } else {
-          resolve(false);
-        }
+_.checkAdvisor = function(facultyID, studentID) {
+  return new Promise((resolve, reject) => {
+    schema.Student.findOne({_id: studentID}).exec().then(function(student) {
+      if (student == null) {
+        resolve(false)
+      } else if (student.advisor == null && student.researchAdvisor == null) {
+        resolve(false)
       } else {
-        resolve(false);
-      }
-    });
-  });
-}
+        const query =
+              student.researchAdvisor == null ? {_id: student.advisor} :
+              student.advisor == null ? {_id: student.researchAdvisor} :
+              {$or: [{_id: student.advisor}, {_id: student.researchAdvisor}]}
+        schema.Faculty.findOne(query).exec().then(function(faculty) {
+          resolve(faculty.pid == facultyID)})}})})}
 
 /*
   checkAdvisorAdmin is a promise that resolves as true if the user is
