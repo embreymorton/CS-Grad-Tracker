@@ -1,17 +1,17 @@
-var express = require("express")
-var helmet = require("helmet")
-var sessions = require("client-sessions")
-var path = require("path")
-var bodyParser = require("body-parser")
-var compress = require("compression")
-var https = require("https")
-var schema = require("./models/schema.js")
-const { join } = require("path")
+var express = require('express')
+var helmet = require('helmet')
+var sessions = require('client-sessions')
+var path = require('path')
+var bodyParser = require('body-parser')
+var compress = require('compression')
+var https = require('https')
+var schema = require('./models/schema.js')
+const { join } = require('path')
 
-const expressSession = require("express-session")
-const passport = require("passport")
-const Auth0Strategy = require("passport-auth0")
-const featurePolicy = require("feature-policy")
+const expressSession = require('express-session')
+const passport = require('passport')
+const Auth0Strategy = require('passport-auth0')
+const featurePolicy = require('feature-policy')
 
 var app = express()
 
@@ -24,13 +24,13 @@ let auth0 = null
 
 //session configuration
 const session = {
-  secret: "ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW",
+  secret: 'ugzEbQSRk7YM23PAJn1yOeG9GkTak1xah70dF0ePF3PmsEMxoWan4ihH0ZLVfhdYDpWF6egzAhPHztW7dGxzkY6jMzjBsr3kQzlW',
   cookie: {},
   resave: false,
   saveUninitialized: false
 }
 
-if (app.get("mode") === "production") {
+if (app.get('mode') === 'production') {
   // Serve secure cookies, requires HTTPS
   session.cookie.secure = true
 }
@@ -40,7 +40,7 @@ app
   .use(expressSession(session))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
-  .set("view cache", true)
+  .set('view cache', true)
   .use((req, res, next)=>{
     next()
   })
@@ -78,27 +78,27 @@ app.use(helmet.contentSecurityPolicy())
   )
 
 //setup ejs view engine, pointing at the directory views
-app.set("views", path.join(__dirname, "views"))
-app.set("view engine", "ejs")
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
 
 //bootstrap static resource
-app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")))
+app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist')))
 
 //node_modules statis resource
-app.use(express.static(path.join(__dirname, "node_modules")))
+app.use(express.static(path.join(__dirname, 'node_modules')))
 
 //public static resource
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, 'public')))
 
 
-if(process.env.mode == "production" || process.env.mode == "development"){
+if(process.env.mode == 'production' || process.env.mode == 'development'){
   const strategy = new Auth0Strategy(
     {
       domain: process.env.AUTH0_DOMAIN,
       clientID: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       callbackURL:
-        process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback"
+        process.env.AUTH0_CALLBACK_URL || 'http://localhost:8080/callback'
     },
     function(accessToken, refreshToken, extraParams, profile, done) {
       /**
@@ -149,7 +149,7 @@ if(process.env.mode == "production" || process.env.mode == "development"){
               next()
             }
             else{
-              req.session.userPID = "INVALID"
+              req.session.userPID = 'INVALID'
               req.session.accessLevel = 0
               next()
             }
@@ -158,13 +158,13 @@ if(process.env.mode == "production" || process.env.mode == "development"){
       })
     }
     else{
-      req.session.userPID = "INVALID"
+      req.session.userPID = 'INVALID'
       req.session.accessLevel = 0
       next()
     }
   })
 
-  app.get("/", (req, res) => {
+  app.get('/', (req, res) => {
     if(req.user != undefined){
       var email = req.user._json.email
       schema.Faculty.findOne({email: email}).exec().then(function(result){
@@ -174,16 +174,16 @@ if(process.env.mode == "production" || process.env.mode == "development"){
         else{
           schema.Student.findOne({email: email}).exec().then(function(result){
             if(result != null){ //student
-              res.redirect("/studentView")
+              res.redirect('/studentView')
             } else {
-              res.render("./error.ejs", {string: "Failed Authentication, you are not a user in the database"})
+              res.render('./error.ejs', {string: 'Failed Authentication, you are not a user in the database'})
             }
           })
         }
       })
     }
     else{
-      res.render("./error.ejs", {string: "Please log in"})
+      res.render('./error.ejs', {string: 'Please log in'})
     }
   })
 }
@@ -195,16 +195,16 @@ else{
     })
 
     //add routes to allow user changes
-    app.use("/changeUser", require("./routes/userChange"))
-    app.get("/", (req, res) => {
+    app.use('/changeUser', require('./routes/userChange'))
+    app.get('/', (req, res) => {
       if(req.session.accessLevel >= 2){
-        res.redirect("/student")
+        res.redirect('/student')
       }
       else if(req.session.accessLevel == 1){
-        res.redirect("/studentView")
+        res.redirect('/studentView')
       }
       else{
-        res.render("./error.ejs", {string: "U are not logged in"})
+        res.render('./error.ejs', {string: 'U are not logged in'})
       }
     })
 }
@@ -227,26 +227,19 @@ app.use((req, res, next) => {
   which is then used for logic in the rest of the app.
 */
 
-app.use("/course", require("./routes/course"))
-
-app.use("/faculty", require("./routes/faculty"))
-
-app.use("/job", require("./routes/job"))
-
-app.use("/student", require("./routes/student"))
-
-app.use("/studentView", require("./routes/studentView"))
-
-app.use("/report", require("./routes/report"))
-
-app.use("/", require("./routes/auth"))
+app.use('/course', require('./routes/course'))
+app.use('/faculty', require('./routes/faculty'))
+app.use('/job', require('./routes/job'))
+app.use('/student', require('./routes/student'))
+app.use('/studentView', require('./routes/studentView'))
+app.use('/report', require('./routes/report'))
+app.use('/', require('./routes/auth'))
 
 //need to look into error handling before modifying or removing the following 2 middleware functions
 
-
 // catch 404 and forward to error handler
 app.use(function (req, res) {
-  var err = new Error("Not Found")
+  var err = new Error('Not Found')
   err.status = 404
 })
 
@@ -254,7 +247,7 @@ app.use(function (req, res) {
 app.use(function (err, req, res) {
   console.log(err)
   res.status(err.status || 500)
-  res.json({ "error": err.message })
+  res.json({ error: err.message })
 })
 
 module.exports = app
