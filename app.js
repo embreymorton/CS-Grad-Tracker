@@ -4,18 +4,18 @@ var sessions = require("client-sessions")
 var path = require("path")
 var bodyParser = require("body-parser")
 var compress = require("compression")
-var https = require("https");
-var schema = require("./models/schema.js");
-const { join } = require("path");
+var https = require("https")
+var schema = require("./models/schema.js")
+const { join } = require("path")
 
-const expressSession = require("express-session");
-const passport = require("passport");
-const Auth0Strategy = require("passport-auth0");
-const featurePolicy = require("feature-policy");
+const expressSession = require("express-session")
+const passport = require("passport")
+const Auth0Strategy = require("passport-auth0")
+const featurePolicy = require("feature-policy")
 
 var app = express()
 
-let auth0 = null;
+let auth0 = null
 /*Instead of auth0 permissions system use auth0 to login and use the
  given email to check against database to determine the user role
  asdasd
@@ -28,11 +28,11 @@ const session = {
   cookie: {},
   resave: false,
   saveUninitialized: false
-};
+}
 
 if (app.get("mode") === "production") {
   // Serve secure cookies, requires HTTPS
-  session.cookie.secure = true;
+  session.cookie.secure = true
 }
 
 app
@@ -42,7 +42,7 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .set("view cache", true)
   .use((req, res, next)=>{
-    next();
+    next()
   })
 
 // mitigations to prevent click-jacking
@@ -75,7 +75,7 @@ app.use(helmet.contentSecurityPolicy())
         navigationOverride: ["'none'"],
       },
     })
-  );
+  )
 
 //setup ejs view engine, pointing at the directory views
 app.set("views", path.join(__dirname, "views"))
@@ -109,64 +109,64 @@ if(process.env.mode == "production" || process.env.mode == "development"){
        * extraParams.id_token has the JSON Web Token
        * profile has all the information from the user
        */
-      return done(null, profile);
+      return done(null, profile)
     }
-  );
+  )
 
-  passport.use(strategy);
-  app.use(passport.initialize());
-  app.use(passport.session());
+  passport.use(strategy)
+  app.use(passport.initialize())
+  app.use(passport.session())
 
   passport.serializeUser((user, done) => {
-    done(null, user);
-  });
+    done(null, user)
+  })
 
   passport.deserializeUser((user, done) => {
-    done(null, user);
-  });
+    done(null, user)
+  })
 
   app.use((req, res, next) => {
     if(req.user != undefined){
-      var email = req.user._json.email;
+      var email = req.user._json.email
       schema.Student.findOne({email: email}).exec().then((result) => {
         if(result != null){
-          req.session.userPID = result.pid;
-          req.session.accessLevel = 1;
-          res.locals.user = result.csid;
-          next();
+          req.session.userPID = result.pid
+          req.session.accessLevel = 1
+          res.locals.user = result.csid
+          next()
         }
         else{
           schema.Faculty.findOne({email: email}).exec().then((result) => {
             if(result != null){
-              req.session.userPID = result.pid;
-              res.locals.user = result.csid;
+              req.session.userPID = result.pid
+              res.locals.user = result.csid
               if(result.admin){
-                req.session.accessLevel = 3;
+                req.session.accessLevel = 3
               }
               else{
-                req.session.accessLevel = 2;
+                req.session.accessLevel = 2
               }
-              next();
+              next()
             }
             else{
-              req.session.userPID = "INVALID";
-              req.session.accessLevel = 0;
-              next();
+              req.session.userPID = "INVALID"
+              req.session.accessLevel = 0
+              next()
             }
           })
         }
-      });
+      })
     }
     else{
-      req.session.userPID = "INVALID";
-      req.session.accessLevel = 0;
-      next();
+      req.session.userPID = "INVALID"
+      req.session.accessLevel = 0
+      next()
     }
-  });
+  })
 
   app.get("/", (req, res) => {
     if(req.user != undefined){
-      var email = req.user._json.email;
+      var email = req.user._json.email
       schema.Faculty.findOne({email: email}).exec().then(function(result){
         if(result != null){
           res.redirect('/student')
@@ -174,45 +174,45 @@ if(process.env.mode == "production" || process.env.mode == "development"){
         else{
           schema.Student.findOne({email: email}).exec().then(function(result){
             if(result != null){ //student
-              res.redirect("/studentView");
+              res.redirect("/studentView")
             } else {
-              res.render("./error.ejs", {string: "Failed Authentication, you are not a user in the database"});
+              res.render("./error.ejs", {string: "Failed Authentication, you are not a user in the database"})
             }
-          });
+          })
         }
-      });
+      })
     }
     else{
-      res.render("./error.ejs", {string: "Please log in"});
+      res.render("./error.ejs", {string: "Please log in"})
     }
-  });
+  })
 }
 else{
     schema.Semester.find({}).exec().then((result)=>{
       if(result.length == 0){
-        require('./controllers/util.js').initializeAllSemesters();
+        require('./controllers/util.js').initializeAllSemesters()
       }
     })
 
     //add routes to allow user changes
-    app.use("/changeUser", require("./routes/userChange"));
+    app.use("/changeUser", require("./routes/userChange"))
     app.get("/", (req, res) => {
       if(req.session.accessLevel >= 2){
-        res.redirect("/student");
+        res.redirect("/student")
       }
       else if(req.session.accessLevel == 1){
         res.redirect("/studentView")
       }
       else{
-        res.render("./error.ejs", {string: "U are not logged in"});
+        res.render("./error.ejs", {string: "U are not logged in"})
       }
     })
 }
 
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  next();
-});
+  res.locals.isAuthenticated = req.isAuthenticated()
+  next()
+})
 
 
 /*
@@ -227,19 +227,19 @@ app.use((req, res, next) => {
   which is then used for logic in the rest of the app.
 */
 
-app.use("/course", require("./routes/course"));
+app.use("/course", require("./routes/course"))
 
-app.use("/faculty", require("./routes/faculty"));
+app.use("/faculty", require("./routes/faculty"))
 
-app.use("/job", require("./routes/job"));
+app.use("/job", require("./routes/job"))
 
-app.use("/student", require("./routes/student"));
+app.use("/student", require("./routes/student"))
 
-app.use("/studentView", require("./routes/studentView"));
+app.use("/studentView", require("./routes/studentView"))
 
-app.use("/report", require("./routes/report"));
+app.use("/report", require("./routes/report"))
 
-app.use("/", require("./routes/auth"));
+app.use("/", require("./routes/auth"))
 
 //need to look into error handling before modifying or removing the following 2 middleware functions
 
