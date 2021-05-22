@@ -21,6 +21,35 @@
           <h4><%=student.lastName%>, <%=student.firstName%></h4>
           <h1>Notes</h1>
 
+          <form action="/student/notes/upload/<%=student._id%>" method="post">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="row">
+                  <label class="col-md-1">Title</label>
+                  <div class="col-md-3">
+                    <input type="text" class="form-control new-note-title-input" name="title" required/>
+                  </div>
+                  <label class="col-md-1 offset-md-1">Date</label>
+                  <div class="col-md-3">
+                    <% var currDate = new Date(); %>
+                    <input type="Date" class="form-control" name="date" value="<%=currDate.toISOString().split('T')[0]%>" required/>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-md-1">Note</label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control new-note-text-input" name="note" required/>
+                  </div>
+                </div>
+
+                <div class="col-md-8 offset-md-2">
+                  <button type="submit" class="btn btn-success new-note-submit-button">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr/>
 
           <% for(var i = 0; i < notes.length; i++) { %>
 
@@ -63,34 +92,6 @@
           <hr/>
           <% } %>
 
-          <form action="/student/notes/upload/<%=student._id%>" method="post">
-            <div class="form-group row">
-              <div class="col-md-12">
-                <div class="row">
-                  <label class="col-md-1">Title</label>
-                  <div class="col-md-3">
-                    <input type="text" class="form-control new-note-title-input" name="title" required/>
-                  </div>
-                  <label class="col-md-1 offset-md-1">Date</label>
-                  <div class="col-md-3">
-                    <% var currDate = new Date(); %>
-                    <input type="Date" class="form-control" name="date" value="<%=currDate.toISOString().split('T')[0]%>" required/>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <label class="col-md-1">Note</label>
-                  <div class="col-md-9">
-                    <input type="text" class="form-control new-note-text-input" name="note" required/>
-                  </div>
-                </div>
-
-                <div class="col-md-8 offset-md-2">
-                  <button type="submit" class="btn btn-success new-note-submit-button">Submit</button>
-                </div>
-              </div>
-            </div>
-          </form>
         </div>
       </div>
     </div>

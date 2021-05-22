@@ -755,9 +755,13 @@ studentController.notesPage = function(req, res){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       if(result != null) {
         var student = result;
-        schema.Note.find({student: req.params._id}).exec().then(function(result){
-          res.render("../views/student/notes", {student: student, notes: result});
-        });
+        schema.Note
+          .find({student: req.params._id})
+          .sort({date: 'desc'})
+          .exec()
+          .then(function(result){
+            res.render("../views/student/notes", {student, notes: result});
+          });
       } else {
         res.render("../views/error.ejs", {string: "Student not found"});
       }
