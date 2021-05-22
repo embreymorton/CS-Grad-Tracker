@@ -161,14 +161,14 @@ studentViewController.updateForm = function (req, res) {
             mailOptions.text = "The student has completed the following forms as of now: " + result;
             transport.sendMail(mailOptions, function (error, response) {
               if (error) {
-                console.log(error);
+                console.error(error);
               } else {
                 console.log("Message sent");
               }
               // if you don't want to use this transport object anymore, uncomment following line
               transport.close(); // shut down the connection pool, no more messages
             });
-          })
+          }).catch(console.error)
 
 
         });
