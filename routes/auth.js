@@ -6,46 +6,39 @@ const querystring = require('querystring')
 
 router.get('/login',
   passport.authenticate('auth0', {scope: 'openid email profile'}),
-  (req, res) => res.redirect('/')
-)
+  (req, res) => res.redirect('/'))
 
-router.get('/callback', (req, res, next) => {
-  passport.authenticate('auth0', (err, user, info) => {
-    if (err) {
-      return next(err)
-    }
-    if (!user) {
-      return res.redirect('/login')
-    }
+router.get('/callback',
+  passport.authenticate('auth0', (err, user, info) =>
+    err   ? next(err) :
+    !user ? res.redirect('/login') :
     req.logIn(user, (err) => {
-      if (err) {
-        return next(err)
-      }
+      if (err) return next(err)
       const returnTo = req.session.returnTo
       delete req.session.returnTo
-      res.redirect(returnTo || '/')
-    })
-  })(req, res, next)
-})
+      return res.redirect(returnTo || '/')})))
 
 router.get('/logout', (req, res) => {
   req.logout()
-
-  const port = req.connection.localPort
-  const hostname = req.hostname
-  const returnTo =
-        process.env.mode === 'production' ? 'https://csgrad.cs.unc.edu'
-        : req.protocol === 'http' && port === 80 ? 'http://' + hostname
-        : req.protocol === 'https' && port === 443 ? 'https://' + hostname
-        : req.protocol + '://' + hostname + ':' + port
-
-  const logoutURL = new URL('https://' + process.env.AUTH0_DOMAIN + '/logout')
-  const searchString = querystring.stringify({
-    client_id: process.env.AUTH0_CLIENT_ID,
-    returnTo
-  })
-  logoutURL.search = searchString
+  const { AUTH0_DOMAIN, AUTH0_CLIENT_ID } = process.env
+  const logoutURL = new URL('https://' + AUTH0_DOMAIN + '/logout')
+  const client_id = AUTH0_CLIENT_ID
+  const returnTo = returnToURL(req)
+  logoutURL.search = querystring.stringify({client_id, returnTo})
   res.redirect(logoutURL)
 })
+
+const returnToURL = req => {
+  const { mode } = process.env
+  if (mode === 'production') return 'https://csgrad.cs.unc.edu'
+  const { hostname, protocol } = req
+  const port = req.connection.localPort
+  const portStr = isDefaultPort(protocol, port) ? '' : ':' + port
+  return protocol + '://' + hostname + portStr
+}
+
+const isDefaultPort = (protocol, port) =>
+      protocol === 'http'  && port === 80
+   || protocol === 'https' && port === 443
 
 module.exports = router
