@@ -1,7 +1,7 @@
-var schema = require('../models/schema.js');
+var schema = require('../models/schema.js')
 var _ = {}
 
-var regexSlashes = /\/*\//ig;
+var regexSlashes = /\/*\//ig
 
 // Removes variables not defined in models and other undefined/null variables
 /*
@@ -11,34 +11,34 @@ var regexSlashes = /\/*\//ig;
 @returns the document with undefined/null variables removed
 */
 _.validateModelData = function (input, model) {
-  var result = {};
-  var m = model.schema.paths;
+  var result = {}
+  var m = model.schema.paths
   for (var key in m) {
     if (input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== "") {
       if (m[key].instance === "Array") {
-        result[key] = input[key];
+        result[key] = input[key]
       } else if (m[key].instance === "Boolean") {
-        result[key] = (input[key].toString().toLowerCase() == 'true');
+        result[key] = (input[key].toString().toLowerCase() == 'true')
       } else if (m[key].instance === "Number") {
-        result[key] = parseInt(input[key]);
+        result[key] = parseInt(input[key])
       } else if (m[key].instance === "ObjectID") {
-        result[key] = input[key] === "" ? null : input[key];
+        result[key] = input[key] === "" ? null : input[key]
       } else if (m[key].instance === "Date") {
-        result[key] = new Date(input[key]);
+        result[key] = new Date(input[key])
       } else {
-        result[key] = input[key];
+        result[key] = input[key]
       }
     }
   }
-  return result;
+  return result
 }
 
 _.validateHeaders = function (data, model) {
-    var ogkeys = Object.keys(model.schema.obj);
-    var keys = data.length > 0 ? Object.keys(data[0]) : [];
-    console.log("model: " + ogkeys);
-    console.log("data: " + keys);
-    return ogkeys.join() == keys.join();
+    var ogkeys = Object.keys(model.schema.obj)
+    var keys = data.length > 0 ? Object.keys(data[0]) : []
+    console.log("model: " + ogkeys)
+    console.log("data: " + keys)
+    return ogkeys.join() == keys.join()
 }
 
 /*
@@ -52,15 +52,15 @@ document exist for the corresponding model
 */
 
 _.allFieldsExist = function(input, model) {
-  var m = model.schema.obj;
+  var m = model.schema.obj
   for (var key in m){
     if(input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== ""){
     }
     else{
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }
 
 /*
@@ -79,28 +79,28 @@ _.makeRegexp = function(input){
     if(input[key].constructor == Array){
       if(input[key][0] == "string"){
         for(var i = 0; i < input[key].length; i++){
-          input[key][i] = new RegExp(input[key][i], "i");
+          input[key][i] = new RegExp(input[key][i], "i")
         }
       }
     }
     else{
       //only create regexp if the field is text
       if(typeof input[key] == "string"){
-        input[key] = new RegExp(input[key], "i");
+        input[key] = new RegExp(input[key], "i")
       }
     }
   }
-  return input;
+  return input
 }
 
 //used just once to initialize all possible semesters
 _.initializeAllSemesters = function(){
-  schema.Semester.find({}).deleteMany().exec();
-  var seasons = schema.Semester.schema.path("season").enumValues;
+  schema.Semester.find({}).deleteMany().exec()
+  var seasons = schema.Semester.schema.path("season").enumValues
   for(var i = 2018; i < 2040; i++){
     for(var j = 0; j < seasons.length; j++){
-      var semester = new schema.Semester({year: i, season: seasons[j]});
-      semester.save().then(function(result){}).catch(function(err){});
+      var semester = new schema.Semester({year: i, season: seasons[j]})
+      semester.save().then(function(result){}).catch(function(err){})
     }
   }
 }
@@ -133,7 +133,7 @@ _.checkAdvisorAdmin = function(facultyID, studentID){
   return new Promise((resolve, reject)=>{
     schema.Faculty.findOne({pid: facultyID}).exec().then(function(result){
       if(result.admin == true){
-        resolve(true);
+        resolve(true)
       }
       else{
         schema.Student.findOne({_id: studentID}).exec().then(function(result){
@@ -141,21 +141,21 @@ _.checkAdvisorAdmin = function(facultyID, studentID){
             if(result.advisor != null){
               schema.Faculty.findOne({_id: result.advisor}).exec().then(function(result){
                 if(result.pid == facultyID){
-                  resolve(true);
+                  resolve(true)
                 } else {
-                  resolve(false);
+                  resolve(false)
                 }
-              });
+              })
             } else {
-              resolve(false);
+              resolve(false)
             }
           } else {
-            resolve(false);
+            resolve(false)
           }
-        });
+        })
       }
-    });
-  });
+    })
+  })
 }
 
 _.listObjectToString = function (input) {
@@ -168,45 +168,45 @@ _.listObjectToString = function (input) {
 
 _.checkFormCompletion = (studentID) => {
     return new Promise((resolve, reject) => {
-        let completedForms = [];
+        let completedForms = []
         schema.CS01BSMS.findOne({ student: studentID }).exec().then((result) => {
             if (result != null && result.name != null) {
-                completedForms.push("CS01BSMS");
+                completedForms.push("CS01BSMS")
             }
             for (var i = 1; i <= 13; i++) {
-                let currentForm = "";
+                let currentForm = ""
                 if (i < 10) {
-                    currentForm = "0" + i;
+                    currentForm = "0" + i
                 }
                 else {
-                    currentForm = i;
+                    currentForm = i
                 }
                 if (i != 10) {
                     checkOneForm(currentForm, completedForms, studentID).then((result) => {
                         if ("13" == result) {
-                            resolve(completedForms);
+                            resolve(completedForms)
                         }
                     }).catch((error) => {
-                        reject(error);
+                        reject(error)
                     })
                 }
             }
         })
-    });
+    })
 }
 
 checkOneForm = (currentForm, completedForms, studentID) => {
     return new Promise((resolve, reject) => {
-        console.log("CS" + currentForm);
+        console.log("CS" + currentForm)
         schema["CS" + currentForm].findOne({ student: studentID }).exec().then((result) => {
             if (result != null && result.name != null) {
-                completedForms.push("CS" + currentForm);
+                completedForms.push("CS" + currentForm)
             }
-            resolve(currentForm);
+            resolve(currentForm)
         }).catch((error) => {
-            reject(error);
+            reject(error)
         })
-    });
+    })
 }
 
-module.exports = _;
+module.exports = _
