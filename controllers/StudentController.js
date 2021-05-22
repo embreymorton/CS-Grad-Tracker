@@ -49,22 +49,31 @@ studentController.get = function (req, res) {
   var search = util.listObjectToString(input);
   var temp = input.status;
   input = util.makeRegexp(input); //make all text fields regular expressions with ignore case
-  if(temp != "" && temp != null && temp != undefined){
+  if (temp != '' && temp != null && temp != undefined) {
    input.status = temp;
   }
-  var admin;
-  if(req.session.accessLevel == 3){
-    admin = true;
+  var admin, query;
+  if (req.session.accessLevel == 3) {
+    admin = true
+    makeQuery = _ => input
   } else {
-    admin = false;
+    admin = false
+    makeQuery = facId => ({$and: [input, {$or: [
+      {advisor: facId},
+      {researchAdvisor: facId},
+    ]}]})
   }
 
-  schema.Faculty.findOne({pid: req.session.userPID}).exec().then(function(result){
-    schema.Student.find(input).sort({lastName:1, firstName:1}).exec().then(function (result) {
-      res.render("../views/student/index.ejs", {students: result, admin: admin, search: search});
-    }).catch(function (err) {
-      res.json({"error": err.message, "origin": "student.get"})
-    });
+  schema.Faculty.findOne({pid: req.session.userPID}).exec().then(function(fac) {
+    schema.Student
+      .find(makeQuery(fac._id))
+      .sort({lastName:1, firstName:1})
+      .exec()
+      .then(function (students) {
+        res.render('../views/student/index.ejs', {students, admin, search})
+      }).catch(function (err) {
+        res.json({error: err.message, origin: 'student.get'})
+      });
   });
 }
 

@@ -166,12 +166,11 @@ _.checkAdvisorAdmin = function(facultyID, studentID){
 }
 
 _.listObjectToString = function (input) {
-  var result = "Search: ";
+  var result = 'Search: '
   for (var key in input) {
-    result = result + key + " = ";
-    result = result + input[key] + "; ";
+    result += key + ' = ' + input[key] + '; '
   }
-  return result;
+  return result
 }
 
 _.checkFormCompletion = (studentID) => {
