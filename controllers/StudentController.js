@@ -139,42 +139,34 @@ studentController.create = function(req, res){
   })
 }
 
-studentController.edit = function(req, res){
-  if(req.params._id){
-
-    var admin
-    if(req.session.accessLevel == 3){
-      admin = true
-    } else {
-      admin = false
-    }
-
-    schema.Student.findOne({_id: req.params._id}).populate('semesterStarted').populate('advisor').exec().then(function(result){
-      if(result != null){
-        var pronouns, genders, ethnicities, stateResidencies, USResidencies, degrees, semesters, student, statuses
-        student = result
-        pronouns = schema.Student.schema.path('pronouns').enumValues
-        genders = schema.Student.schema.path('gender').enumValues
-        ethnicities = schema.Student.schema.path('ethnicity').enumValues
-        stateResidencies = schema.Student.schema.path('stateResidency').enumValues
-        USResidencies = schema.Student.schema.path('USResidency').enumValues
-        degrees = schema.Student.schema.path('intendedDegree').enumValues
-        statuses = schema.Student.schema.path('status').enumValues
-        eligibility = schema.Student.schema.path('fundingEligibility').enumValues
-        schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
-          semesters = result
-          schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-            res.render('../views/student/edit', {admin: admin, student: student, faculty: result, semesters: semesters, degrees: degrees, stateResidencies: stateResidencies, USResidencies: USResidencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns, statuses: statuses})
+studentController.edit = (req, res) => {
+  if (!req.params._id) {
+    res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
+  } else {
+    const admin = req.session.accessLevel == 3
+    schema.Student.findOne({_id: req.params._id}).populate('semesterStarted').populate('advisor').exec().then(student => {
+      if (student == null) {
+        res.render('../views/error.ejs', {string: 'Student not found'})
+      } else {
+        const vals = key => schema.Student.schema.path(key).enumValues
+        const pronouns = vals('pronouns')
+        const genders = vals('gender')
+        const ethnicities = vals('ethnicity')
+        const stateResidencies = vals('stateResidency')
+        const USResidencies = vals('USResidency')
+        const degrees = vals('intendedDegree')
+        const statuses = vals('status')
+        const eligibility = vals('fundingEligibility')
+        schema.Semester.find({}).sort({year:1, season:1}).exec().then(semesters => {
+          schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(faculty => {
+            const locals = {admin, student, faculty, semesters, degrees,
+                            stateResidencies, USResidencies, ethnicities,
+                            genders, eligibility, pronouns, statuses}
+            res.render('../views/student/edit', locals)
           })
         })
       }
-      else{
-        res.render('../views/error.ejs', {string: 'Student not found'})
-      }
     })
-  }
-  else{
-    res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
   }
 }
 
