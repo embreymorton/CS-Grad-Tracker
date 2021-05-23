@@ -50,7 +50,7 @@ app
   .use(expressSession(session))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
-  .set('view cache', true)
+  .set('view cache', process.env.mode === 'production')
   .use((req, res, next)=>{
     next()
   })
