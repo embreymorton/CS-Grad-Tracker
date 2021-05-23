@@ -24,18 +24,10 @@ var mailOptions = {
   text: "No reply", // plaintext body
 }
 
-/*
-Students only allowed to edit their:
-firstName
-lastName
-alternativeName
-gender
-ethnicity
-notes
-*/
+// Students only allowed to edit certain fields
 studentViewController.put = function (req, res) {
   var input = req.body;
-  var editableFields = ["firstName", "lastName", "alternativeName", "gender", "stateResidency", "USResidency"];
+  var editableFields = ["firstName", "lastName", "alternativeName", "gender"];
   if (input.firstName != null && input.lastName != null && input._id != null) {
     schema.Student.findOne({ _id: input._id }).exec().then(function (result) {
       if (result != null) {
