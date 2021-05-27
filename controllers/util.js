@@ -42,14 +42,12 @@ const sheet2Headers = worksheet => {
     .slice(2, txt.indexOf('\n'))
     .replace(/\x00/g, '')
     .split(/\t/)
+    .filter(x => x != '')
 }
 
 _.validateHeaders = function (worksheet, model) {
   var headers = sheet2Headers(worksheet)
   var expectedHeaders = Object.keys(model.schema.obj)
-  console.log(headers)
-  console.log(expectedHeaders)
-  console.log(expectedHeaders.join('|') == headers.join('|'))
   return expectedHeaders.join('|') == headers.join('|')
 }
 
