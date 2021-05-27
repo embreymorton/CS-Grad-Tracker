@@ -5,7 +5,7 @@ const job = data.job;
 const studentDropdownFields = data.studentDropdownFields;
 const course = data.course;
 
-describe("Upload and create data", ()=>{
+describe('Upload and create data', ()=>{
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })

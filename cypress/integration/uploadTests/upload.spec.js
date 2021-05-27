@@ -1,6 +1,6 @@
 var data = require('./data.js')
 
-describe("Upload data", ()=>{
+describe('Upload data', ()=>{
   const filePath = '../../data/InOrderUploadTests/'
 
   beforeEach(function () {
@@ -32,7 +32,7 @@ describe("Upload data", ()=>{
     cy.contains(data.uploadStudent.firstName)
     cy.contains(data.uploadStudent.pid)
     cy.contains(data.uploadStudent.status)
-    cy.get('.search-last-name').type("Fake")
+    cy.get('.search-last-name').type('Fake')
     cy.get('.search-student-submit').click()
     cy.get('.edit-student-button').click()
     cy.get('.input-background-approved').should('have.value', data.uploadStudent.backgroundApproved)

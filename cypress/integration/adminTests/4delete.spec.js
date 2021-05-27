@@ -5,7 +5,7 @@ const job = data.job;
 const studentDropdownFields = data.studentDropdownFields;
 const course = data.course;
 
-describe("Delete data", ()=>{
+describe('Delete data', ()=>{
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })

@@ -1,6 +1,6 @@
 var data = require('./data');
 
-describe("Page visit and page javascript", ()=>{
+describe('Page visit and page javascript', ()=>{
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -104,20 +104,20 @@ describe("Page visit and page javascript", ()=>{
       .should('be.visible');
 
     cy.get('.input-position')
-      .select("TA")
-      .should('have.value', "TA");
+      .select('TA')
+      .should('have.value', 'TA');
 
     cy.get('.input-semester-block')
       .should('not.be.visible');
 
     cy.get('.input-position')
-      .select("RA");
+      .select('RA');
 
     cy.get('.input-semester-block')
       .should('be.visible');
 
     cy.get('.input-position')
-      .select("OTHER")
+      .select('OTHER')
 
     cy.get('.input-semester-block')
       .should('be.visible');

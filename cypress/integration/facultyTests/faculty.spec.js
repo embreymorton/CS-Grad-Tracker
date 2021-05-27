@@ -50,14 +50,14 @@ describe('Test the routes that a faculty should/should not be able to access', (
        cy.get('.student-navigation-edit-button').click();
        cy.contains('Edit student');
        cy.get('.student-navigation-jobs-button').click();
-       cy.contains(student["first-name"]);
+       cy.contains(student['first-name']);
        cy.get('.student-navigation-forms-button').click();
-       cy.contains(student["first-name"]);
+       cy.contains(student['first-name']);
        cy.get('.student-navigation-courses-button').click();
-       cy.contains(student["first-name"]);
+       cy.contains(student['first-name']);
        cy.get('.student-navigation-notes-button').click();
-       cy.contains(student["first-name"]);
-       const note = "I WROTE A NOTE";
+       cy.contains(student['first-name']);
+       const note = 'I WROTE A NOTE';
        cy.get('.new-note-title-input')
          .type(note);
        cy.get('.new-note-text-input')

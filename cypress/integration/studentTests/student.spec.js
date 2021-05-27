@@ -24,23 +24,23 @@ describe('Test student routes and functionality', ()=>{
   })
 
   var updateStudent = {
-    "first-name":"NEWNAME",
-    "last-name":"NEWLAST",
-    "alternative-name":"ALT NAME",
-    "gender":"MALE",
-    "ethnicity":"ASIAN",
+    'first-name':'NEWNAME',
+    'last-name':'NEWLAST',
+    'alternative-name':'ALT NAME',
+    'gender':'MALE',
+    'ethnicity':'ASIAN',
   }
 
   it('Able to update some basic info on the student page', ()=>{
     cy.get('.input-first-name')
       .clear()
-      .type(updateStudent["first-name"])
+      .type(updateStudent['first-name'])
     cy.get('.input-last-name')
       .clear()
-      .type(updateStudent["last-name"])
+      .type(updateStudent['last-name'])
     cy.get('.input-alt-name')
       .clear()
-      .type(updateStudent["alternative-name"])
+      .type(updateStudent['alternative-name'])
     cy.get('.input-gender')
       .select(updateStudent.gender)
     cy.get('.input-ethnicity')
@@ -70,9 +70,9 @@ describe('Test student routes and functionality', ()=>{
     cy.visit('/job/create')
 
     const studJob = {
-      position: "RA",
-      supervisor: "admin, admin",
-      semester: "FA 2018"
+      position: 'RA',
+      supervisor: 'admin, admin',
+      semester: 'FA 2018'
     }
 
     cy.get('.input-position').select(studJob.position)
@@ -81,7 +81,7 @@ describe('Test student routes and functionality', ()=>{
     cy.get('.submit-job').click()
     cy.visit('/job')
     cy.get('.assign-job-button').click()
-    cy.get('.assign-student-select').select(updateStudent["last-name"] + ", "+updateStudent["first-name"])
+    cy.get('.assign-student-select').select(updateStudent['last-name'] + ', '+updateStudent['first-name'])
     cy.get('.assign-job-submit-button').click()
     cy.visit('/changeUser/student')
     cy.visit('/studentView/jobs')

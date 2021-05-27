@@ -12,7 +12,7 @@ const visitSingleStudent = ()=>{
   cy.get('.edit-student-button').click();
 }
 
-describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
+describe('Mongoose relation tests (assigning students to jobs, courses)', ()=>{
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -24,11 +24,11 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
     cy.get('.assign-job-button').click();
     cy.contains(job.position); cy.contains(job.supervisor); cy.contains(job.description);
     cy.get('.assign-student-select')
-      .select(studentTextFields["last-name"]+", "+studentTextFields["first-name"]);
+      .select(studentTextFields['last-name']+', '+studentTextFields['first-name']);
     cy.get('.assign-job-submit-button').click();
     cy.wait(2000);
     cy.get('.student-holding-job-table').find('tr').should('have.length', 2);
-    cy.get('.student-holding-job-table > tbody > tr > td').eq(0).contains(studentTextFields["last-name"]);
+    cy.get('.student-holding-job-table > tbody > tr > td').eq(0).contains(studentTextFields['last-name']);
     cy.get('.unassign-job-submit-button').click();
     cy.contains('No students hold this job');
   });
@@ -61,13 +61,12 @@ describe("Mongoose relation tests (assigning students to jobs, courses)", ()=>{
     cy.get('.new-note-text-input')
       .type(note.note);
     cy.get('.new-note-submit-button').click();
-
   })
 
   it('Should be able to update a note', ()=>{
     var tempNote = {
-      title: "ABC",
-      note: "EAT EVERYTHING"
+      title: 'ABC',
+      note: 'EAT EVERYTHING'
     }
     cy.get('.edit-note-title-input')
       .type(tempNote.title);

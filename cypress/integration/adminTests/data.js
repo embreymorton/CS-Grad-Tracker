@@ -1,7 +1,7 @@
 var data = {};
 
-const currentDate = "2019-09-19";
-const pastDate = "2019-02-02";
+const currentDate = '2019-09-19';
+const pastDate = '2019-02-02';
 
 data.studentTextFields = {
   onyen : 'fakeonyen',
@@ -34,10 +34,10 @@ data.studentTextFields = {
 }
 
 data.job = {
-  position: "TA",
-  supervisor: "admin, admin",
-  description: "A TA JOB",
-  hours: "4",
+  position: 'TA',
+  supervisor: 'admin, admin',
+  description: 'A TA JOB',
+  hours: '4',
 }
 
 data.studentDropdownFields = {
@@ -61,8 +61,8 @@ data.course = {
 
 data.searchStudentHelper = ()=>{
   cy.get('.search-last-name')
-    .type(data.studentTextFields["last-name"])
-    .should('have.value', data.studentTextFields["last-name"])
+    .type(data.studentTextFields['last-name'])
+    .should('have.value', data.studentTextFields['last-name'])
 
   cy.get('.search-pid')
     .type(data.studentTextFields.pid)
@@ -83,8 +83,8 @@ data.searchJobHelper = ()=>{
 }
 
 data.note = {
-  title: "Today",
-  note: "I had a dream."
+  title: 'Today',
+  note: 'I had a dream.'
 }
 
 module.exports = data;
