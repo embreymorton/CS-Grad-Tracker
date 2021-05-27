@@ -245,6 +245,16 @@ app.use('/studentView', require('./routes/studentView'))
 app.use('/report', require('./routes/report'))
 app.use('/', require('./routes/auth'))
 
+// Use hyperaxe for rending .js views
+app.engine('js', (filePath, options, callback) => {
+  try {
+    const view = require(filePath)
+    const output = '<!DOCTYPE html>\n' + view(options).outerHTML
+    return callback(null, output)
+  } catch (err) { return callback(err) }
+})
+app.set('view engine', 'js')
+
 //need to look into error handling before modifying or removing the following 2 middleware functions
 
 // catch 404 and forward to error handler
