@@ -260,10 +260,9 @@ facultyController.upload = function(req, res){
     var count = 0;
 
     // validate headers
-    if (!util.validateHeaders(data, schema.Faculty)) {
-      return res.render("../views/error.ejs", {string: "Incorrect headers"});
+    if (!util.validateHeaders(worksheet, schema.Faculty)) {
+      return util.invalidHeadersErrorPage(worksheet, schema.Faculty, res)
     }
-
 
     //have to use foreach because of asynchronous nature of mongoose stuff (the loop would increment i before it could save the appropriate i)
     data.forEach(function(element){

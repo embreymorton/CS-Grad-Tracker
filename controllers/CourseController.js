@@ -324,8 +324,8 @@ courseController.upload = function(req, res){
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
     var data = XLSX.utils.sheet_to_json(worksheet);
 
-    if (!util.validateHeaders(data, schema.Course)) {
-      return res.render("../views/error.ejs", {string: "Incorrect headers."});
+    if (!util.validateHeaders(worksheet, schema.Course)) {
+      return util.invalidHeadersErrorPage(worksheet, schema.Course, res)
     }
 
     var count = 0;
@@ -501,8 +501,8 @@ courseController.uploadInfo = function(req, res){
     var data = XLSX.utils.sheet_to_json(worksheet);
     var count = 0;
 
-    if (!util.validateHeaders(data, schema.CourseInfo)) {
-      res.render("../views/error.ejs", {string: "Incorrect headers"});
+    if (!util.validateHeaders(worksheet, schema.CourseInfo)) {
+      return util.invalidHeadersErrorPage(worksheet, schema.CourseInfo, res)
     }
 
     data.forEach(function (element) {

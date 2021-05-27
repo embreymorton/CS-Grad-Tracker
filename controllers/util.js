@@ -1,3 +1,4 @@
+var XLSX = require("xlsx");
 var schema = require('../models/schema.js')
 var _ = {}
 
@@ -33,10 +34,37 @@ _.validateModelData = function (input, model) {
   return result
 }
 
-_.validateHeaders = function (data, model) {
-  var ogkeys = Object.keys(model.schema.obj)
-  var keys = data.length > 0 ? Object.keys(data[0]) : []
-  return ogkeys.join() == keys.join()
+const sheet2Headers = worksheet => {
+  const txt = XLSX.utils.sheet_to_txt(worksheet)
+  // start at 2 to ignore the byte-order mark (BOM)
+  // also strip out all the \x00 characters
+  return txt
+    .slice(2, txt.indexOf('\n'))
+    .replace(/\x00/g, '')
+    .split(/\t/)
+}
+
+_.validateHeaders = function (worksheet, model) {
+  var headers = sheet2Headers(worksheet)
+  var expectedHeaders = Object.keys(model.schema.obj)
+  console.log(headers)
+  console.log(expectedHeaders)
+  console.log(expectedHeaders.join('|') == headers.join('|'))
+  return expectedHeaders.join('|') == headers.join('|')
+}
+
+_.invalidHeadersErrorPage = function (worksheet, model, res) {
+  var headers = sheet2Headers(worksheet)
+  var expectedHeaders = Object.keys(model.schema.obj)
+  if (headers.join('|') != expectedHeaders.join('|')) {
+    const arr2Str = arr => arr.map(x => `'${x}'`).join(', ')
+    const expected = arr2Str(expectedHeaders)
+    const actual = arr2Str(headers)
+    return res.render(
+      "../views/error.ejs",
+      {string: `Incorrect headers: expected "${expected}" but got "${actual}"`}
+    )
+  }
 }
 
 /*
