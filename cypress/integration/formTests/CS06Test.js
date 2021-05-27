@@ -64,10 +64,6 @@ describe('Test CS06 submissions', ()=>{
     cy.get('.select-advisor4').click();
     cy.get('.select-chairman4').click();
 
-    cy.contains(CS06["director-signature"]).then(($selectedElement) => {
-      debugger
-    });
-
     delete CS06["director-signature"];
     delete CS06["student-name"];
     delete CS06["student-pid"];

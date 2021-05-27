@@ -7,9 +7,6 @@ util.visitFormAsAdmin = ()=> {
   cy.get('.student-navigation-forms-button').click();
 }
 
-util.visitFormAsStudent = ()=> {
-}
-
 util.fillCleanFormAsAdmin = (formData)=>{
   for(let key in formData){
     if(Array.isArray(formData[key])){

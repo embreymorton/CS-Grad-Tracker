@@ -79,10 +79,6 @@ describe('Test CS09 submissions', ()=>{
     delete CS09["committee-date-signed"];
     delete CS09["committee-signature"];
 
-    // for(let key in CS09Sliders){
-    //     cy.get('.' + key).should('have.value', CS09Sliders[key]);
-    // }
-
     util.fillFormAsStudent(CS09);
     cy.get('.CS09-submit').click();
     util.checkFormAsStudent(CS09);
