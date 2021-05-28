@@ -1,37 +1,20 @@
-var admin = {
-    onyen: "admin",
-    csid: "admin",
-    firstName: "admin",
-    lastName: "admin",
-    pid: 999999999,
-    active: true,
-    admin: true,
-    email: "admin@cs.unc.edu"
-}
+const makeRole = (name, pid, active, admin) => ({
+  active,
+  pid,
+  ...(admin === null ? null : {admin}),
+  onyen: name,
+  csid: name,
+  firstName: name,
+  lastName: name,
+  email: `${name}@cs.unc.edu`,
+})
 
-var faculty = {
-    onyen: "faculty",
-    csid: "faculty",
-    firstName: "faculty",
-    lastName: "faculty",
-    pid: 888888888,
-    active: true,
-    admin: false,
-    email: "faculty@cs.unc.edu"
-}
-
-var student = {
-    onyen: "student",
-    csid: "student",
-    firstName: "student",
-    lastName: "student",
-    pid: 777777777,
-    active: true,
-    email: "student@cs.unc.edu"
-}
+const admin   = makeRole('admin',   999999999, true, true)
+const faculty = makeRole('faculty', 888888888, true, false)
+const student = makeRole('student', 777777777, true, null)
 
 module.exports = {
-    admin,
-    faculty,
-    student
+  admin,
+  faculty,
+  student,
 }

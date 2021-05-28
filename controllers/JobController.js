@@ -557,15 +557,6 @@ jobController.uploadGrant = function (req, res) {
         var count = 0;
         data.forEach(function (element) {
 
-            // if (element.name == null) {
-            //     res.render("../views/error.ejs", {string: "Grant name is required"});
-            // } else if (element.cs_pi == null && element.other_pi == null) {
-            //     res.render("../views/error.ejs", {string: "Either cs_pi or other_pi must be specified."});
-            // } else if (element.cs_pi != null && element.other_pi != null) {
-            //     res.render("")
-            // }
-
-
             if (element.name != null) {
 
                 var facultyName = [null, null];

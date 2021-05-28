@@ -6,7 +6,7 @@ const studentDropdownFields = data.studentDropdownFields;
 const course = data.course;
 
 describe('Upload and create data', ()=>{
-  beforeEach(function () {
+  beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
 
@@ -64,9 +64,11 @@ describe('Upload and create data', ()=>{
       .should('have.value', job.position);
     cy.get('.input-supervisor')
       .select(job.supervisor);
+    // TODO: check if this is necessary (it seems out of place and the field is hidden)
     cy.get('.input-course > option')
       .eq(1)
       .then((element) => cy.get('.input-course').select(element.val()));;
+    // TODO: missing semester selection...
     cy.get('.input-description')
       .type(job.description)
       .should('have.value', job.description);
@@ -90,33 +92,34 @@ describe('Upload and create data', ()=>{
 
     //fill in text field data to the student create form
     for(var key in studentTextFields){
-      cy.get('.input-'+key)
+      cy.get(`#createStudentForm input[name=${key}]`)
         .type(studentTextFields[key])
         .should('have.value', studentTextFields[key]);
     }
 
     //fill in dropdown data to the student create form
-    for(var key in studentDropdownFields){
-      cy.get('.input-'+key)
+    for(key in studentDropdownFields){
+      cy.get(`#createStudentForm select[name=${key}]`)
         .select(studentDropdownFields[key])
         .should('have.value', studentDropdownFields[key]);
     }
 
     //can't verify value on admin since its value is a database ID, the selector is the
     //actual name of the advisor for readability/usability
-    cy.get('.input-advisor')
-      .select('admin, admin');
-    cy.get('.create-student-submit').click();
-    cy.url().should('include', '/student/edit');
+    cy.get('#createStudentForm select[name=advisor]')
+      .select('admin, admin')
+    cy.get('#createStudentForm button[type=submit]')
+      .click()
+    cy.url().should('include', '/student/edit')
 
     //on the edit page, verify that all fields we submitted are indeed populated with data
-    for(var key in studentTextFields){
-      cy.get('.input-'+key)
+    for(key in studentTextFields){
+      cy.get(`#editStudentForm input[name=${key}]`)
         .should('have.value', studentTextFields[key]);
     }
 
-    for(var key in studentDropdownFields){
-      cy.get('.input-'+key)
+    for(key in studentDropdownFields){
+      cy.get(`#editStudentForm select[name=${key}]`)
         .should('have.value', studentDropdownFields[key]);
     }
   });

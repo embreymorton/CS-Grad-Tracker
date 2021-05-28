@@ -122,19 +122,22 @@ studentController.delete = function (req, res) {
 }
 
 studentController.create = function(req, res){
-  var pronouns, genders, ethnicities, stateResidencies, USResidencies, degrees, semesters
-  pronouns = schema.Student.schema.path('pronouns').enumValues
-  genders = schema.Student.schema.path('gender').enumValues
-  ethnicities = schema.Student.schema.path('ethnicity').enumValues
-  stateResidencies = schema.Student.schema.path('stateResidency').enumValues
-  USResidencies = schema.Student.schema.path('USResidency').enumValues
-  degrees = schema.Student.schema.path('intendedDegree').enumValues
-  eligibility = schema.Student.schema.path('fundingEligibility').enumValues
-
-  schema.Semester.find().sort({year:1, season:1}).exec().then(function(result){
-    semesters = result
-    schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(result){
-      res.render('../views/student/create', {faculty: result, semesters: semesters, degrees: degrees, stateResidencies: stateResidencies, USResidencies: USResidencies, ethnicities: ethnicities, genders: genders, eligibility: eligibility, pronouns: pronouns})
+  const vals = key => schema.Student.schema.path(key).enumValues
+  const pronouns = vals('pronouns')
+  const genders = vals('gender')
+  const ethnicities = vals('ethnicity')
+  const stateResidencies = vals('stateResidency')
+  const USResidencies = vals('USResidency')
+  const degrees = vals('intendedDegree')
+  const statuses = vals('status')
+  const eligibility = vals('fundingEligibility')
+  schema.Semester.find().sort({year:1, season:1}).exec().then(function(semesters){
+    schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(faculty){
+      const locals = {faculty, semesters, degrees, stateResidencies,
+                      USResidencies, ethnicities, genders, eligibility,
+                      pronouns, statuses}
+      const output = require('../views/student/create')(locals).outerHTML
+      res.render('../views/student/create', locals)
     })
   })
 }
@@ -207,7 +210,7 @@ studentController.jobs = function(req, res){
             return a.semester.year - b.semester.year
           }
         })
-        res.render('../views/student/jobs', {student: result, jobs: jobs})
+        res.render('../views/student/jobs.ejs', {student: result, jobs: jobs})
       })
     })
   }
@@ -288,7 +291,7 @@ studentController.viewForm = function(req, res){
               if(result){hasAccess = true;}
               else{hasAccess = false;}
               var postMethod = '/student/forms/update/' + student._id + '/' + req.params.title
-              res.render('../views/student/' + req.params.title, {student, form, signature, uploadSuccess, isStudent, postMethod, hasAccess, faculty})
+              res.render('../views/student/' + req.params.title + '.ejs', {student, form, signature, uploadSuccess, isStudent, postMethod, hasAccess, faculty})
             })
           })
         }
@@ -758,7 +761,7 @@ studentController.notesPage = function(req, res) {
           .sort({date: 'desc'})
           .exec()
           .then(function(notes) {
-            res.render('../views/student/notes', {student, notes})
+            res.render('../views/student/notes.ejs', {student, notes})
           })}})}}
 
 studentController.updateNote = function (req, res) {

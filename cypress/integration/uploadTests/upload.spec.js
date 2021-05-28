@@ -35,7 +35,7 @@ describe('Upload data', ()=>{
     cy.get('.search-last-name').type('Fake')
     cy.get('.search-student-submit').click()
     cy.get('.edit-student-button').click()
-    cy.get('.input-background-approved').should('have.value', data.uploadStudent.backgroundApproved)
+    cy.get('input[name=backgroundApproved]').should('have.value', data.uploadStudent.backgroundApproved)
     cy.contains(data.uploadStudent.gender)
     cy.contains(data.uploadStudent.intendedDegree)
     cy.contains(data.uploadStudent.pronouns)

@@ -55,7 +55,7 @@ studentViewController.get = function (req, res) {
       genders = schema.Student.schema.path("gender").enumValues;
       ethnicities = schema.Student.schema.path("ethnicity").enumValues;
       schema.Faculty.find({}).sort({ lastName: 1, firstName: 1 }).exec().then(function (result) {
-        res.render("../views/studentView/index", { student: student, faculty: result, ethnicities: ethnicities, genders: genders });
+        res.render("../views/studentView/index.ejs", { student: student, faculty: result, ethnicities: ethnicities, genders: genders });
       });
     }
     else {
@@ -82,7 +82,7 @@ studentViewController.jobs = function (req, res) {
           return a.semester.year - b.semester.year;
         }
       });
-      res.render("../views/studentView/jobs", { student: result });
+      res.render("../views/studentView/jobs.ejs", { student: result });
     });
 }
 
@@ -117,7 +117,7 @@ studentViewController.viewForm = function (req, res) {
           form version depending on whether it is an administrator/faculty
           or student viewing the form.
           */
-          res.render("../views/student/" + req.params.title, { student: student, form: form, signature: signature, uploadSuccess: uploadSuccess, isStudent: isStudent, postMethod: postMethod, hasAccess: hasAccess });
+          res.render('../views/student/' + req.params.title + '.ejs', {student, form, signature, uploadSuccess, isStudent, postMethod, hasAccess});
         });
       }
       else {

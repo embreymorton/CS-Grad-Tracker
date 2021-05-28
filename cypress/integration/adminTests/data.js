@@ -7,30 +7,29 @@ data.studentTextFields = {
   onyen : 'fakeonyen',
   csid : 'fakecsid',
   email : 'fakeEmail@fake.com',
-  'first-name' : 'fake',
-  'last-name' : 'fake',
+  firstName : 'fake',
+  lastName : 'fake',
   pid : '949949949',
-  'alternative-name': 'fake',
-  'entering-status': 'help',
-  'research-area': 'Systems',
-  'leave-extension': 'NO',
-  'hours-completed': '20',
-  'semesters-on-leave': '99',
-  'background-approved': currentDate,
-  'masters-awarded': pastDate,
-  'prp-passed': currentDate,
-  'technical-writing-approved': currentDate,
-  'background-prep-worksheet-approved': currentDate,
-  'program-of-study-approved': currentDate,
-  'research-planning-meeting': currentDate,
-  'program-product-requirement': currentDate,
-  'committee-comp-approved': currentDate,
-  'phd-proposal-approved': currentDate,
-  'phd-awarded': pastDate,
-  'oral-exam-passed': currentDate,
-  'dissertation-defence-passed': currentDate,
-  'oral-exam-passed': currentDate,
-  'dissertation-submitted': currentDate,
+  alternativeName: 'fake',
+  enteringStatus: 'help',
+  researchArea: 'Systems',
+  leaveExtension: 'NO',
+  hoursCompleted: '20',
+  semestersOnLeave: '99',
+  backgroundApproved: currentDate,
+  mastersAwarded: pastDate,
+  prpPassed: currentDate,
+  technicalWritingApproved: currentDate,
+  backgroundPrepWorksheetApproved: currentDate,
+  programOfStudyApproved: currentDate,
+  researchPlanningMeeting: currentDate,
+  programProductRequirement: currentDate,
+  committeeCompApproved: currentDate,
+  phdProposalApproved: currentDate,
+  oralExamPassed: currentDate,
+  dissertationDefencePassed: currentDate,
+  dissertationSubmitted: currentDate,
+  phdAwarded: pastDate,
 }
 
 data.job = {
@@ -47,8 +46,8 @@ data.studentDropdownFields = {
   ethnicity: 'OTHER',
   stateResidency: 'YES',
   USResidency: 'YES',
-  'intended-degree': 'MASTERS',
-  'funding-eligibility': 'GUARANTEED',
+  intendedDegree: 'MASTERS',
+  fundingEligibility: 'GUARANTEED',
 }
 data.course = {
   univNumber: '1234',
@@ -61,8 +60,8 @@ data.course = {
 
 data.searchStudentHelper = ()=>{
   cy.get('.search-last-name')
-    .type(data.studentTextFields['last-name'])
-    .should('have.value', data.studentTextFields['last-name'])
+    .type(data.studentTextFields.lastName)
+    .should('have.value', data.studentTextFields.lastName)
 
   cy.get('.search-pid')
     .type(data.studentTextFields.pid)

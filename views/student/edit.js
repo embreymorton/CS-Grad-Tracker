@@ -28,7 +28,7 @@ const Body = opts => body(
         profile(opts),
         x('.space')(),
         opts.admin ? [
-          form({action: '/student/delete/' + opts.student._id,
+          form({action: '/student/delete/' + opts.student._id.toString(),
                 method: 'post'},
                x('button.btn.btn-danger')(
                  {type: 'submit',
@@ -37,8 +37,7 @@ const Body = opts => body(
         ] : null,
       )
     )
-  ),
-  pageScript(),
+  )
 )
 
 const adminSidebar = ({user, isAuthenticated, admin}) => [
@@ -62,7 +61,7 @@ const navLinkC = (href, label, klass) =>
   p(x(navLinkSel + '.' + klass)({href}, label))
 
 const searchStudent = opts => {
-  if (opts.admin) return null
+  if (!opts.admin) return null
   const row = x('.form-group.row')
   const labl = (id, text) =>
         x('label.col-md-4 autoHyphen')({lang: 'en', for: id}, text)
@@ -117,7 +116,7 @@ const searchStudent = opts => {
 const navItemLi = x('li.nav-item')
 const navItem = (opts, segment, label) => navItemLi(
   x(`a.nav-link.student-navigation-${segment}-button`)(
-    {href: `/student/${segment}/${opts.student._id}`},
+    {href: `/student/${segment}/${opts.student._id.toString()}`},
     label
   )
 )
@@ -131,8 +130,8 @@ const studentBarPartial = opts => x('ul.nav.nav-tabs.whiteBg.space')(
 )
 
 const profile = opts => form(
-  {action: '/student/put', method: 'post'},
-  input({'type': 'hidden', 'name': '_id', 'value': opts.student._id}),
+  {id: 'editStudentForm', action: '/student/put', method: 'post'},
+  input({'type': 'hidden', 'name': '_id', 'value': opts.student._id.toString()}),
   profileFields(opts),
   x('.col-md-8.offset-md-2')(
     opts.admin ? x('button.btn.btn-success')({type: 'submit'}, 'Update') : null
@@ -159,7 +158,7 @@ const profileColumn1 =
   inputField('Alternative name', 'text', 'alternativeName', student),
   selectField('Gender', 'gender', student, genders),
   selectField('Ethnicity', 'ethnicity', student, ethnicities),
-  selectField('State Residency', 'StateResidency', student, stateResidencies),
+  selectField('State Residency', 'stateResidency', student, stateResidencies),
   selectField('US Residency', 'USResidency', student, USResidencies),
   inputField('Entering status', 'text', 'enteringStatus', student),
   inputField('Research area', 'text', 'researchArea', student),
@@ -176,7 +175,7 @@ const profileColumn2 = ({student, degrees, eligibility}) => x('.col-md-4')(
   inputField('Masters awarded', 'date', 'mastersAwarded', student),
   inputField('PRP passed', 'date', 'prpPassed', student),
   inputField('Technical writing approved', 'date', 'technicalWritingApproved', student),
-  inputField('Proceed to phD Form submitted', 'date', 'proceedToPhdFormSubmitted', student),
+  inputField('Proceed to PhD Form submitted', 'date', 'proceedToPhdFormSubmitted', student),
   inputField('Background prep worksheet approved', 'date', 'backgroundPrepWorksheetApproved', student),
   inputField('Program of study approved', 'date', 'programOfStudyApproved', student),
 )
@@ -190,7 +189,7 @@ const profileColumn3 = ({student, semesters, faculty}) => x('.col-md-4')(
   inputField('Dissertation defence passed', 'date', 'dissertationDefencePassed', student),
   inputField('Dissertation submitted', 'date', 'dissertationSubmitted', student),
   inputField('PhD. Awarded', 'date', 'phdAwarded', student),
-  selectField('Semester started', 'semesterStarted', student, semesters),
+  semestersField('Semester started', 'semesterStarted', student, semesters),
   facAdvisorField('Advisor', 'advisor', student, faculty),
   inputField('Other Advisor (If not faculty member)', 'text', 'otherAdvisor', student),
   facAdvisorField('Research Advisor', 'researchAdvisor', student, faculty),
@@ -213,18 +212,37 @@ const selectField = (label, name, student, values) => fieldDiv(
   Select(name, student, values)
 )
 
+const semestersField = (label, name, {semesterStarted}, semesters) => fieldDiv(
+  label,
+  select(
+    {name},
+    option({value: ''}),
+    semesters.map(({_id, season, year}) =>
+      option(
+        {
+          value: _id.toString(),
+          selected: semesterStarted != null && semesterStarted._id.equals(_id),
+        },
+        season,
+        ' ',
+        year,
+      )
+    )
+  )
+)
+
 const facAdvisorField = (label, name, student, faculty) => fieldDiv(
   label,
   select(
     {name},
     option({value: ''}),
-    faculty.map(fmember =>
+    faculty.map(({_id, lastName, firstName}) =>
       option(
-        {value: fmember._id,
-         selected: student[name] != null && student[name]._id.equals(fmember._id) ? true : null},
-        fmember.lastName,
+        {value: _id.toString(),
+         selected: student[name] != null && student[name]._id.equals(_id) ? true : null},
+        lastName,
         ', ',
-        fmember.firstName
+        firstName
       )
     )
   )
@@ -235,9 +253,9 @@ const fieldDiv = (labelText, ...args) => x('.form-group.row')(
   x('.col-md-8')(...args)
 )
 
-const Input = (type, name, value, required) => {
+const Input = (type, name, value, required, checked) => {
   const input = x('input.form-control')
-  const attrs = {type, name, value, required: required ? true : null}
+  const attrs = {type, name, value, checked, required: required ? true : null}
   return input(attrs)
 }
 
@@ -251,38 +269,5 @@ const Select = (name, student, values) => select(
     )
   )
 )
-
-const pageScript = () => script({type: 'text/javascript'}, `
-  let handleChange = () => {
-    let today = new Date();
-    let semestersOnLeave = document.getElementById('inputSemestersOnLeave').value;
-    let semesterTemp = document.getElementById('inputSemesterStarted');
-    let semesterStarted = semesterTemp.options[semesterTemp.selectedIndex].text;
-    semesterStarted = semesterStarted.split(' ');
-    if (semestersOnLeave != null && semesterStarted != null) {
-      let currentMonth = today.getMonth()+1;
-      let currentYear = today.getFullYear();
-      let activeSemesters = 0;
-      if (currentMonth < 8) {
-        //its currently spring
-        activeSemesters = (currentYear - semesterStarted[1])*2 - semestersOnLeave;
-        if (semesterStarted[0] == 'FA'){
-          activeSemesters--;
-        }
-      } else {
-        //its currently fall
-        activeSemesters = (currentYear - semesterStarted[1])*2 - semestersOnLeave;
-        if (semesterStarted[0] == 'SP') {
-          activeSemesters++;
-        }
-      }
-      if (activeSemesters > 10) {
-        document.getElementById('inputFundingEligibility').value = 'NOT GUARANTEED';
-      }
-    }
-  }
-  document.getElementById('inputSemestersOnLeave').addEventListener('change', handleChange, false);
-  document.getElementById('inputSemesterStarted').addEventListener('change', handleChange, false);
-`)
 
 module.exports = page

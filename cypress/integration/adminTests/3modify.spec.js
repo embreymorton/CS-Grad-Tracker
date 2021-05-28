@@ -24,16 +24,16 @@ describe('Mongoose relation tests (assigning students to jobs, courses)', ()=>{
     cy.get('.assign-job-button').click();
     cy.contains(job.position); cy.contains(job.supervisor); cy.contains(job.description);
     cy.get('.assign-student-select')
-      .select(studentTextFields['last-name']+', '+studentTextFields['first-name']);
+      .select(studentTextFields.lastName+', '+studentTextFields.firstName);
     cy.get('.assign-job-submit-button').click();
     cy.wait(2000);
     cy.get('.student-holding-job-table').find('tr').should('have.length', 2);
-    cy.get('.student-holding-job-table > tbody > tr > td').eq(0).contains(studentTextFields['last-name']);
+    cy.get('.student-holding-job-table > tbody > tr > td').eq(0).contains(studentTextFields.lastName);
     cy.get('.unassign-job-submit-button').click();
     cy.contains('No students hold this job');
   });
 
-  it('Should be able to assign a job to a student from the student\'s page', ()=>{
+  it("Should be able to assign a job to a student from the student's page", ()=>{
     visitSingleStudent();
     cy.get('.student-navigation-jobs-button').click();
 

@@ -28,21 +28,21 @@ describe('Test the routes that a faculty should/should not be able to access', (
          onyen : 'abc',
          csid : 'abc',
          email : 'abc@fake.com',
-         'first-name' : 'abc',
-         'last-name' : 'abc',
+         firstName : 'abc',
+         lastName : 'abc',
          pid : '232232232',
        }
 
        for(var key in student){
-         cy.get('.input-'+key)
+         cy.get(`#createStudentForm [name=${key}]`)
            .type(student[key])
            .should('have.value', student[key]);
        }
 
        //faculty, faculty defined in changeUser route
-       cy.get('.input-advisor')
+       cy.get('#createStudentForm [name=advisor]')
          .select('faculty, faculty');
-       cy.get('.create-student-submit').click();
+       cy.get('#createStudentForm [type=submit]').click();
        cy.visit('/changeUser/faculty');
        cy.visit('/student');
        cy.get('.edit-student-button').click();
@@ -50,13 +50,13 @@ describe('Test the routes that a faculty should/should not be able to access', (
        cy.get('.student-navigation-edit-button').click();
        cy.contains('Edit student');
        cy.get('.student-navigation-jobs-button').click();
-       cy.contains(student['first-name']);
+       cy.contains(student.firstName);
        cy.get('.student-navigation-forms-button').click();
-       cy.contains(student['first-name']);
+       cy.contains(student.firstName);
        cy.get('.student-navigation-courses-button').click();
-       cy.contains(student['first-name']);
+       cy.contains(student.firstName);
        cy.get('.student-navigation-notes-button').click();
-       cy.contains(student['first-name']);
+       cy.contains(student.firstName);
        const note = 'I WROTE A NOTE';
        cy.get('.new-note-title-input')
          .type(note);
