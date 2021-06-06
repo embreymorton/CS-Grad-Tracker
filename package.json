@@ -65,6 +65,17 @@
     "cs",
     "grad"
   ],
-  "author": "",
+  "author": "various",
+  "contributors": [
+    "Vignesh Balasubramaniam",
+    "Shane Flannigan",
+    "Takoda Ren",
+    "Sebastian Crowell",
+    "Hannah Bodnar",
+    "Jason Jin",
+    "Varun Tanna",
+    "Riyad Sarsour",
+    "Jeff Terrell"
+  ],
   "license": "ISC"
 }
