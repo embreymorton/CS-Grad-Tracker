@@ -214,7 +214,7 @@ studentController.jobs = function(req, res){
             return a.semester.year - b.semester.year
           }
         })
-        res.render('../views/student/jobs.ejs', {student: result, jobs: jobs})
+        res.render('../views/student/jobs', {student: result, jobs: jobs})
       })
     })
   }
