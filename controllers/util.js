@@ -13,13 +13,14 @@ var regexSlashes = /\/*\//ig
 */
 _.validateModelData = function (input, model) {
   var result = {}
-  var m = model.schema.paths
+  const m = model.schema.paths
+  const isTruthy = (val) => val == 'true' || val == 'on'
   for (var key in m) {
     if (input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== '') {
       if (m[key].instance === 'Array') {
         result[key] = input[key]
       } else if (m[key].instance === 'Boolean') {
-        result[key] = (input[key].toString().toLowerCase() == 'true')
+        result[key] = isTruthy(input[key].toString().toLowerCase())
       } else if (m[key].instance === 'Number') {
         result[key] = parseInt(input[key])
       } else if (m[key].instance === 'ObjectID') {

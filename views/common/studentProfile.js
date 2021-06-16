@@ -5,12 +5,18 @@ const fieldDiv = require('./fieldDiv')
 const profileFields = (opts) => {
   const { student, pronouns, statuses, genders, ethnicities } = opts
   const { stateResidencies, USResidencies, degrees, eligibility } = opts
-  const { semesters, faculty } = opts
+  const { semesters, faculty, admin } = opts
   const { citizenship } = student || {}
-  const input = (name, attrs) => inputField({ name, student, ...attrs })
-  const createOnlyField = student
+  const input_ = (name, attrs) => inputField({ name, student, ...attrs })
+  const createOnlyField_ = student
         ? (name) => uneditableTextFieldWithHiddenInput(name, student[name])
         : (name) => input(name, { required: true })
+  const displayField = (name) => nameValueDisplay(name, student[name])
+  const createOnlyField = admin ? createOnlyField_ : displayField
+  const input = admin ? input_ : displayField
+  const selectField_ = admin ? selectField : displayField
+  const semestersField_ = admin ? semestersField : displayField
+  const facAdvisorField_ = admin ? facAdvisorField : displayFacAdvisor
 
   return (
     x('.row')(
@@ -20,24 +26,24 @@ const profileFields = (opts) => {
         input('email', { required: true }),
         input('firstName', { required: true }),
         input('lastName', { required: true }),
-        selectField('pronouns', pronouns, student),
+        selectField_('pronouns', pronouns, student),
         createOnlyField('pid'),
-        selectField('status', statuses, student),
+        selectField_('status', statuses, student),
         input('alternativeName'),
-        selectField('gender', genders, student),
-        selectField('ethnicity', ethnicities, student),
-        selectField('stateResidency', stateResidencies, student),
-        selectField('USResidency', USResidencies, student),
+        selectField_('gender', genders, student),
+        selectField_('ethnicity', ethnicities, student),
+        selectField_('stateResidency', stateResidencies, student),
+        selectField_('USResidency', USResidencies, student),
         input('enteringStatus'),
         input('researchArea'),
       ),
 
       x('.col-md-4')(
         input('leaveExtension'),
-        selectField('intendedDegree', degrees, student),
+        selectField_('intendedDegree', degrees, student),
         input('hoursCompleted'),
         input('citizenship', { checked: citizenship === true ? true : null }),
-        selectField('fundingEligibility', eligibility, student),
+        selectField_('fundingEligibility', eligibility, student),
         input('semestersOnLeave'),
         input('backgroundApproved'),
         input('mastersAwarded'),
@@ -57,10 +63,10 @@ const profileFields = (opts) => {
         input('dissertationDefencePassed'),
         input('dissertationSubmitted'),
         input('phdAwarded'),
-        semestersField('semesterStarted', semesters, student),
-        facAdvisorField('advisor', faculty, student),
+        semestersField_('semesterStarted', semesters, student),
+        facAdvisorField_('advisor', faculty, student),
         input('otherAdvisor'),
-        facAdvisorField('researchAdvisor', faculty, student),
+        facAdvisorField_('researchAdvisor', faculty, student),
         input('otherResearchAdvisor'),
       ),
     )
@@ -141,6 +147,28 @@ const type = {
   technicalWritingApproved: 'date',
 }
 
+const nameValueDisplay = (name, value) => {
+  const valStr = value === true ? 'yes' : value === false ? 'no' : value
+  return fieldDiv(
+    label[name],
+    valStr,
+  )
+}
+
+const displayFacAdvisor = (name, faculty, student) => (
+  fieldDiv(
+    label[name],
+    facultyName(faculty, student[name] && student[name]._id)
+  )
+)
+
+const facultyName = (faculty, id) => {
+  const name = ({ lastName, firstName}) => `${lastName}, ${firstName}`
+  const sameFaculty = ({ _id }) => _id.equals(id)
+  const fac = faculty.filter(sameFaculty)[0]
+  return fac ? name(fac) : '(unassigned)'
+}
+
 const uneditableTextFieldWithHiddenInput = (name, value) => fieldDiv(
   label[name],
   value,
@@ -194,6 +222,7 @@ const facAdvisorField = (name, faculty, student) => {
 const Input = (type, name, value, required, checked) => {
   const input = x('input.form-control')
   const attrs = {type, name, value, checked, required: required ? true : null}
+  if (type == 'checkbox') delete attrs.value
   return input(attrs)
 }
 

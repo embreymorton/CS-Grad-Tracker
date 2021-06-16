@@ -75,30 +75,34 @@ studentController.get = function (req, res) {
 }
 
 studentController.put = function (req, res) {
-  var input = req.body
-  input = verifyBoolean(input)
-  if(input.phdAwarded != ''){
-    input.status = 'Graduated'
+  if (req.session.accessLevel !== 3) {
+    res.render('../views/error.ejs', {string: 'Only admins can edit student data'})
+    return
   }
 
-  var input2 = util.validateModelData(input, schema.Student)
-  if (input2.onyen != null && input2.firstName != null && input2.lastName != null && input2.pid != null && input2.pid != NaN) {
-    const filter = {_id: input2._id}
-    schema.Student.findOne(filter).exec().then(student => {
-      const deletedFields = getDeletedFields(student, input)
+  const input = verifyBoolean(req.body)
+  if (input.phdAwarded != '') input.status = 'Graduated'
+  const input2 = util.validateModelData(input, schema.Student)
+  const { onyen, firstName, lastName, pid, _id } = input2
+  const pidOK = pid != null && !isNaN(pid)
 
-      deletedFields.map(f => input2[f] = '')
-      schema.Student.findOneAndUpdate(filter, input2).exec().then(function(result){
-        if(result != null){
-          res.redirect('/student/edit/' + result._id)
-        }
-        else res.render('../views/error.ejs', {string: 'StudentNotFound'})
-      })
-    })
-  }
-  else{
+  if (onyen == null || firstName == null || lastName == null || !pidOK) {
     res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
+    return
   }
+
+  const filter = { _id }
+  schema.Student.findOne(filter).exec().then((student) => {
+    const deletedFields = getDeletedFields(student, input)
+    deletedFields.map((f) => input2[f] = '')
+    schema.Student.findOneAndUpdate(filter, input2).exec().then((student) => {
+      if (student == null) {
+        res.render('../views/error.ejs', {string: 'StudentNotFound'})
+      } else {
+        res.redirect('/student/edit/' + student._id)
+      }
+    })
+  })
 }
 
 const getDeletedFields = (student, updateMap) =>
@@ -133,10 +137,10 @@ studentController.create = function(req, res){
   const eligibility = vals('fundingEligibility')
   schema.Semester.find().sort({year:1, season:1}).exec().then(function(semesters){
     schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(function(faculty){
-      const locals = {faculty, semesters, degrees, stateResidencies,
-                      USResidencies, ethnicities, genders, eligibility,
-                      pronouns, statuses}
-      const output = require('../views/student/create')(locals).outerHTML
+      const locals = {
+        pronouns, genders, ethnicities, stateResidencies, USResidencies,
+        degrees, statuses, eligibility, semesters, faculty,
+      }
       res.render('../views/student/create', locals)
     })
   })

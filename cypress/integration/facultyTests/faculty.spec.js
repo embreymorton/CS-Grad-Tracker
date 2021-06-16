@@ -46,9 +46,9 @@ describe('Test the routes that a faculty should/should not be able to access', (
        cy.visit('/changeUser/faculty');
        cy.visit('/student');
        cy.get('.edit-student-button').click();
-       cy.contains('Edit student');
+       cy.contains('View student');
        cy.get('.student-navigation-edit-button').click();
-       cy.contains('Edit student');
+       cy.contains('View student');
        cy.get('.student-navigation-jobs-button').click();
        cy.contains(student.firstName);
        cy.get('.student-navigation-forms-button').click();

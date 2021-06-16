@@ -4,14 +4,16 @@ const profileFields = require('../common/studentProfile')
 
 const main = (opts) => {
   const { form, h4, h1 } = x
+  const { admin } = opts
+  const title = admin ? 'Edit student' : 'View student'
   return page(
-    { ...opts, title: 'Edit student' },
+    { ...opts, title },
     studentBarPartial(opts),
     h4(opts.student.lastName, ', ', opts.student.firstName),
-    h1('Edit student'),
+    h1(title),
     profile(opts),
     x('.space')(),
-    opts.admin ? [
+    admin ? [
       form({action: '/student/delete/' + opts.student._id.toString(),
             method: 'post'},
            x('button.btn.btn-danger')(
@@ -40,6 +42,8 @@ const studentBarPartial = opts => x('ul.nav.nav-tabs.whiteBg.space')(
 
 const profile = opts => {
   const { form, input } = x
+  const fields = profileFields(opts)
+  if (!opts.admin) return fields
   return form(
     {id: 'editStudentForm', action: '/student/put', method: 'post'},
     input({'type': 'hidden', 'name': '_id', 'value': opts.student._id.toString()}),
