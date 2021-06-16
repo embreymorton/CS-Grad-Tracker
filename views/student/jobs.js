@@ -13,19 +13,19 @@ const main = (opts) => {
     h4(lastName, ', ', firstName),
     h1(title),
     jobHistory(opts),
-    addJobForm(opts),
+    admin ? addJobForm(opts) : null,
   )
 }
 
 const jobHistory = (opts) => {
-  const { student } = opts
+  const { admin, student } = opts
   const jobs = student.jobHistory
   if (jobs.length == 0) return x('div')('No jobs found.')
   const th = (label) => x('th')({ scope: 'col' }, label)
-  const labels = [
+  const labels_ = [
     'Position', 'Supervisor', 'Course', 'Semester', 'Hours', 'Description',
-    'Delete job'
   ]
+  const labels = admin ? [ ...labels_, 'Delete Job' ] : labels_
   return (
     x('table.table.display-table.table-striped.table-bordered.job-history-table')(
       { align: 'center', border: 1 },
@@ -35,13 +35,13 @@ const jobHistory = (opts) => {
         ),
       ),
       x('tbody')(
-        jobs.map(jobRow(student))
+        jobs.map(jobRow(opts))
       ),
     )
   )
 }
 
-const jobRow = (student) => (job) => {
+const jobRow = ({ admin, student }) => (job) => {
   const { position, supervisor, course, semester, hours, description } = job
   const { tr, td, form, input } = x
   return (
@@ -52,15 +52,20 @@ const jobRow = (student) => (job) => {
       td(`${semester.season} ${semester.year}`),
       td(hours),
       td(description),
-      td(
-        form(
-          { action: '/student/deleteJob', method: 'post' },
-          input({ type: 'hidden', name: 'studentId', value: student._id.toString() }),
-          input({ type: 'hidden', name: 'jobId', value: job._id.toString() }),
-          x('button.btn.btn-danger.job-delete-button')({ type: 'submit', }, 'Delete'),
-        )
-      )
+      admin ? td(
+        deleteJobForm(student._id.toString(), job._id.toString()),
+      ) : null,
     )
+  )
+}
+
+const deleteJobForm = (studentId, jobId) => {
+  const { form, input } = x
+  return form(
+    { action: '/student/deleteJob', method: 'post' },
+    input({ type: 'hidden', name: 'studentId', value: studentId }),
+    input({ type: 'hidden', name: 'jobId', value: jobId }),
+    x('button.btn.btn-danger.job-delete-button')({ type: 'submit', }, 'Delete'),
   )
 }
 

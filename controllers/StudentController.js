@@ -166,9 +166,11 @@ studentController.edit = (req, res) => {
         const eligibility = vals('fundingEligibility')
         schema.Semester.find({}).sort({year:1, season:1}).exec().then(semesters => {
           schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(faculty => {
-            const locals = {admin, student, faculty, semesters, degrees,
-                            stateResidencies, USResidencies, ethnicities,
-                            genders, eligibility, pronouns, statuses}
+            const locals = {
+              admin, student, faculty, semesters, degrees, stateResidencies,
+              USResidencies, ethnicities, genders, eligibility, pronouns,
+              statuses
+            }
             res.render('../views/student/edit', locals)
           })
         })
@@ -199,8 +201,8 @@ studentController.jobs = function(req, res){
       jobs = result
 
       schema.Student.findOne({_id: req.params._id}).populate('jobHistory').populate({path:'jobHistory', populate:{path:'supervisor'}})
-      .populate({path:'jobHistory', populate:{path:'semester'}}).populate({path:'jobHistory', populate:{path:'course'}}).exec().then(function(result){
-        result.jobHistory.sort(function(a, b){
+      .populate({path:'jobHistory', populate:{path:'semester'}}).populate({path:'jobHistory', populate:{path:'course'}}).exec().then(function(student){
+        student.jobHistory.sort(function(a, b){
           if(a.semester.year == b.semester.year){
             if(a.semester.season < b.semester.season){
               return -1
@@ -214,7 +216,9 @@ studentController.jobs = function(req, res){
             return a.semester.year - b.semester.year
           }
         })
-        res.render('../views/student/jobs', {student: result, jobs: jobs})
+        const admin = req.session.accessLevel == 3
+        const locals = { admin, student, jobs }
+        res.render('../views/student/jobs', locals)
       })
     })
   }
