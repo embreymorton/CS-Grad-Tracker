@@ -57,7 +57,7 @@
           <p class="underline" align="center"><br><strong>Complete only the section that is most appropriate
               for your Program Product Requirement.</strong><br></p>
 
-          <form action="<%=postMethod%>" method="post" onsubmit="return validateAndSend()">
+          <form class="cs-form" action="<%=postMethod%>" method="post" onsubmit="return validateAndSend()">
 
             <input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
@@ -299,26 +299,6 @@
             </div>
             <div class="verticalSpace"> </div>
             <% } %>
-
-            <!--
-              <div class="row">
-                <div class="col-md-6">
-                  <div>Printed Name:</div>
-                </div>
-                <div class="col-md-6">
-                  <div>Printed Name:</div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <input type="text" class="form-control" name="altPrint1" value="<%=form.altPrint1%>" required/>
-                </div>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" name="altPrint2" value="<%=form.altPrint2%>" required/>
-                </div>
-              </div>
-
-              -->
 
             <div class="verticalSpace"> </div>
             <div class="verticalSpace"> </div>

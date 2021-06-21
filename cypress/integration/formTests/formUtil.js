@@ -1,5 +1,6 @@
 let util = {};
-util.visitFormAsAdmin = ()=> {
+
+util.visitFormAsAdmin = () => {
   cy.visit('/student');
   cy.get('.search-pid').type(777777777);
   cy.get('.search-student-submit').click();
@@ -7,82 +8,29 @@ util.visitFormAsAdmin = ()=> {
   cy.get('.student-navigation-forms-button').click();
 }
 
-util.fillCleanFormAsAdmin = (formData)=>{
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.' + key + i).clear().type(formData[key][i - 1]);
-      }
-    }
-    else{
-      cy.get('.' + key).clear().type(formData[key]);
-    }
-  }
-}
+const toArray = (x) => (
+  Array.isArray(x) ? x : [x]
+)
 
-util.checkFormAsAdmin = (formData)=>{
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.' + key + i).should('have.value', formData[key][i - 1]);
-      }
-    }
-    else{
-      cy.get('.' + key).should('have.value', formData[key]);
-    }
-  }
-}
+const makeFormDataHandler = (affectSelection) => (formData) => (
+  Object.entries(formData).forEach(([key, value]) => (
+    toArray(value).forEach((d, i) => (
+      affectSelection(cy.get(`.cs-form [name=${key}]`).eq(i), d)
+    ))
+  ))
+)
 
-util.fillFormAsStudent = (formData)=>{
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.' + key + i).should('have.value', formData[key][i - 1]).clear().type(formData[key][i - 1] + 1);;
-      }
-    }
-    else{
-      cy.get('.' + key).should('have.value', formData[key]).clear().type(formData[key] + 1);
-    }
-  }
-}
-
-util.checkFormAsStudent = (formData)=>{
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.' + key + i).should('have.value', formData[key][i - 1] + 1);
-      }
-    }
-    else{
-      cy.get('.' + key).should('have.value', formData[key] + 1);
-    }
-  }
-}
-
-util.selectDropdowns = (formData) => {
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.'+key+i).select(formData[key][i - 1]).should('have.value', formData[key][i - 1]);
-      }
-    }
-    else{
-      cy.get('.'+key).select(formData[key]).should('have.value', formData[key]);
-    }
-  }
-}
-
-util.checkDropdowns = (formData) => {
-  for(let key in formData){
-    if(Array.isArray(formData[key])){
-      for(var i = 1; i <= formData[key].length; i++){
-        cy.get('.'+key+i).should('have.value', formData[key][i - 1]);
-      }
-    }
-    else{
-      cy.get('.' + key).should('have.value', formData[key]);
-    }
-  }
-}
+util.fillCleanFormAsAdmin =
+  makeFormDataHandler((sel, d) => sel.clear().type(d))
+util.checkFormAsAdmin =
+  makeFormDataHandler((sel, d) => sel.should('have.value', d))
+util.fillFormAsStudent =
+  makeFormDataHandler((sel, d) => sel.should('have.value', d).clear().type(d + '1'))
+util.checkFormAsStudent =
+  makeFormDataHandler((sel, d) => sel.should('have.value', d + '1'))
+util.selectDropdowns =
+  makeFormDataHandler((sel, d) => sel.select(d).should('have.value', d))
+util.checkDropdowns =
+  makeFormDataHandler((sel, d) => sel.should('have.value', d))
 
 module.exports = util;

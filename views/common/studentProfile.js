@@ -1,5 +1,6 @@
 const x = require('hyperaxe')
 const select = require('../common/select')
+const input = require('../common/input')
 const fieldDiv = require('./fieldDiv')
 
 const profileFields = (opts) => {
@@ -178,7 +179,7 @@ const uneditableTextFieldWithHiddenInput = (name, value) => fieldDiv(
 const inputField = ({ name, student, required, checked }) => (
   fieldDiv(
     label[name],
-    Input(type[name], name, (student || {})[name], required, checked)
+    input(type[name], name, (student || {})[name], required, checked)
   )
 )
 
@@ -217,13 +218,6 @@ const facAdvisorField = (name, faculty, student) => {
     optionLabel: ({ lastName, firstName }) => `${lastName}, ${firstName}`,
     optionSelected,
   })
-}
-
-const Input = (type, name, value, required, checked) => {
-  const input = x('input.form-control')
-  const attrs = {type, name, value, checked, required: required ? true : null}
-  if (type == 'checkbox') delete attrs.value
-  return input(attrs)
 }
 
 module.exports = profileFields

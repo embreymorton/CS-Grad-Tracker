@@ -58,7 +58,7 @@
 
             <% if(hasAccess) { %>
 
-            <form action="<%=postMethod%>" method="post">
+            <form class="cs-form" action="<%=postMethod%>" method="post">
 
               <input type="hidden" class="form-control " name="student" value=<%=student._id%> />
 
@@ -185,7 +185,7 @@
               <div>Student Signature:</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control student-signed" name="studentSignature" value="<%=form.studentSignature%>" required />
                 </div>
                 <div class="col-md-2">
@@ -200,7 +200,7 @@
               <div>Advisor Signature:</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control advisor-signed" name="advisorSignature" value="<%=form.advisorSignature%>" required />
                 </div>
                 <div class="col-md-2">

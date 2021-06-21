@@ -94,8 +94,8 @@ studentViewController.forms = function (req, res) {
 }
 
 studentViewController.viewForm = function (req, res) {
-  var signature = "In place of your signature, please type your full legal name:";
-  if (req.params.title != null && req.params.uploadSuccess != null) {
+  const formName = req.params.title
+  if (formName != null && req.params.uploadSuccess != null) {
     var uploadSuccess = false;
     if (req.params.uploadSuccess == "true") {
       uploadSuccess = true;
@@ -103,21 +103,22 @@ studentViewController.viewForm = function (req, res) {
     schema.Student.findOne({ pid: req.session.userPID }).exec().then(function (result) {
       if (result != null) {
         var student = result;
-        schema[req.params.title].findOne({ student: result._id }).exec().then(function (result) {
+        schema[formName].findOne({ student: result._id }).exec().then(function (result) {
           var form = {};
           if (result != null) {
             form = result;
           }
           var isStudent = true;
           var hasAccess = true;
-          var postMethod = "/studentView/forms/update/" + req.params.title;
+          var postMethod = "/studentView/forms/update/" + formName;
           /*Need both an administrator view of form and a student view of form,
           with varying levels of ability to update data fields, and with minor html
           changes, so I use EJS and the above two variables to load the correct
           form version depending on whether it is an administrator/faculty
           or student viewing the form.
           */
-          res.render('../views/student/' + req.params.title + '.ejs', {student, form, signature, uploadSuccess, isStudent, postMethod, hasAccess});
+          const ext = formName === 'CS01' ? '' : '.ejs'
+          res.render(`../views/student/${formName}${ext}`, {student, form, uploadSuccess, isStudent, postMethod, hasAccess})
         });
       }
       else {

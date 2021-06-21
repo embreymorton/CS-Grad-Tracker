@@ -1,4 +1,5 @@
 const x = require('hyperaxe')
+const logout = require('./common/logout')
 
 const page = (opts, ...children) => (
   x('html')(head(opts.title), body(opts, ...children))
@@ -18,25 +19,26 @@ const head = (title) => {
   )
 }
 
-const body = (opts, ...children) => {
-  const { body, h4, h1, form } = x
-  return (
-    body(
-      x('.container-fluid.h-100')(
-        x('.row.h-100')(
-          x('.col-lg-2.sidebar.text-center')(
-            sidebar(opts),
-            searchStudent(opts),
-          ),
-          x('.col-lg-10.panelbg.text-center')(
-            {align: 'center'},
-            ...children,
-          )
+const body = (opts, ...children) => (
+  x('body')(
+    x('.container-fluid.h-100')(
+      x('.row.h-100')(
+        x('.col-lg-2.sidebar.text-center')(
+          opts.isStudent
+            ? logout(opts)
+            : [
+              sidebar(opts),
+              searchStudent(opts),
+            ]
+        ),
+        x('.col-lg-10.panelbg.text-center')(
+          {align: 'center'},
+          ...children,
         )
       )
     )
   )
-}
+)
 
 const navLink = (href, label, klass) => {
   const suffix = klass ? `.${klass}` : ''

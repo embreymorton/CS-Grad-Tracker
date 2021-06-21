@@ -49,7 +49,7 @@
 
       <div align="left">
 
-        <form action="<%=postMethod%>" method="post">
+        <form class="cs-form" action="<%=postMethod%>" method="post">
 
           <input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
@@ -385,7 +385,7 @@
 
           <div><strong>Committee advisor</strong>(or Chair if different from advisor)*</div>
           <div>By signing here, the chair indicates that all items above have been approved by the majority of the committee.</div>
-          <i><%=signature%></i>
+          <i>In place of your signature, please type your full legal name:</i>
           <div class="col-md-4">
             <input type="text" class="form-control chair-signature" name="chairSignature" value="<%=form.chairSignature%>" required />
           </div>
@@ -421,7 +421,7 @@
           <div class="row">
             <div class="col-md-4">
               <div>Director of Graduate Studies Signature:*</div>
-              <i><%=signature%></i>
+              <i>In place of your signature, please type your full legal name:</i>
               <input type="text" class="form-control director-signature" name="directorSignature" value="<%=form.directorSignature%>" required />
             </div>
           </div>

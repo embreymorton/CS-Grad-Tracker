@@ -4,19 +4,19 @@ import util from './formUtil';
 let student = data.student;
 
 let CS05 = {
-  'student-name': student.lastName + ', ' + student.firstName,
-  'student-pid': student.pid.toString(),
-  'date-submitted': 'Feb.2, 2020',
-  'nominees': ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
-  'nominee-departments': ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
-  'nominee-statuses': ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
-  'director-signature': 'ASDF',
-  'director-date-signed': 'ASSDF'
+  name: student.lastName + ', ' + student.firstName,
+  pid: student.pid.toString(),
+  dateSubmitted: 'Feb.2, 2020',
+  nominees: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
+  nomineeDepartments: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
+  nomineeStatuses: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
+  directorSignature: 'ASDF',
+  directorDateSigned: 'ASSDF'
 }
 
 let CS05Dropdowns = {
-  'oral-comprehensive-exam': 'false',
-  'thesis': 'false'
+  oralComprehensiveExam: 'false',
+  thesis: 'false'
 }
 
 describe('Test CS05 submissions', ()=>{
@@ -47,14 +47,14 @@ describe('Test CS05 submissions', ()=>{
     cy.get('.select-advisor2').click();
     cy.get('.select-chairman4').click();
 
-    cy.contains(CS05['director-signature']);
-    cy.contains(CS05['director-date-signed']);
+    cy.contains(CS05.directorSignature);
+    cy.contains(CS05.directorDateSigned);
 
-    delete CS05['director-signature'];
-    delete CS05['director-date-signed'];
-    delete CS05['student-name'];
-    delete CS05['student-pid'];
-    delete CS05['nominee-statuses'];
+    delete CS05.directorSignature;
+    delete CS05.directorDateSigned;
+    delete CS05.name;
+    delete CS05.pid;
+    delete CS05.nomineeStatuses;
 
     util.fillFormAsStudent(CS05);
     cy.get('.CS05-submit').click();

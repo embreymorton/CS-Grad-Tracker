@@ -4,26 +4,26 @@ import util from './formUtil';
 let student = data.student;
 
 let CS13 = {
-  'student-name': student.lastName + ', ' + student.firstName,
-  'student-pid': student.pid.toString(),
-  'email' : '@yahoo.com',
-  'date' : 'Here',
-  'comp523-signature' : 'asdas',
-  'comp523-name': 'dddd',
-  'job-info': 'ssss',
-  'advisor-name': 'asdasd',
-  'advisor-signature': 'NAme',
-  'product': 'WO',
-  'client': 'Tony',
-  'position': 'HEAD',
-  'alt-signature1': 'Aad',
-  'alt-signature2': 'Peep'
+  name: student.lastName + ', ' + student.firstName,
+  pid: student.pid.toString(),
+  email: '@yahoo.com',
+  dateMet: 'Here',
+  comp523Signature : 'asdas',
+  comp523Name: 'dddd',
+  jobInfo: 'ssss',
+  advisorName: 'asdasd',
+  advisorSignature: 'NAme',
+  product: 'WO',
+  client: 'Tony',
+  position: 'HEAD',
+  altSignature1: 'Aad',
+  altSignature2: 'Peep'
 }
 
 let CS13Dropdowns = {
-  'comp523': 'true',
-  'had-job': 'false',
-  'alternative': 'true'
+  comp523: 'true',
+  hadJob: 'false',
+  alternative: 'true'
 }
 
 describe('Test CS13 submissions', ()=>{
@@ -46,19 +46,19 @@ describe('Test CS13 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS13/false');
 
-    cy.contains(CS13['advisor-signature']);
-    cy.contains(CS13['alt-signature1']);
-    cy.contains(CS13['alt-signature2']);
-    cy.contains(CS13['comp523-signature']);
+    cy.contains(CS13.advisorSignature);
+    cy.contains(CS13.altSignature1);
+    cy.contains(CS13.altSignature2);
+    cy.contains(CS13.comp523Signature);
 
-    delete CS13['student-name'];
-    delete CS13['student-pid'];
-    delete CS13['advisor-name'];
-    delete CS13['advisor-signature'];
-    delete CS13['comp523-name'];
-    delete CS13['comp523-signature'];
-    delete CS13['alt-signature1'];
-    delete CS13['alt-signature2'];
+    delete CS13.name;
+    delete CS13.pid;
+    delete CS13.advisorName;
+    delete CS13.advisorSignature;
+    delete CS13.comp523Name;
+    delete CS13.comp523Signature;
+    delete CS13.altSignature1;
+    delete CS13.altSignature2;
 
     util.fillFormAsStudent(CS13);
     cy.get('.CS13-submit').click();

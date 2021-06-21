@@ -53,7 +53,7 @@
 
             <hr></hr>
 
-            <form action="<%=postMethod%>" method="post">
+            <form class="cs-form" action="<%=postMethod%>" method="post">
 
               <input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
@@ -127,7 +127,7 @@
               <div>Primary Reader signature</div>
               <div class="row">
                 <div class="col-md-6">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control primary-signature" name="primarySignature" value="<%=form.primarySignature%>" required/>
                 </div>
                 <div class="col-md-6">
@@ -139,7 +139,7 @@
               <div>Secondary Reader signature:</div>
               <div class="row">
                 <div class="col-md-6">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control secondary-signature" name="secondarySignature" value="<%=form.secondarySignature%>" required/>
                 </div>
                 <div class="col-md-6">

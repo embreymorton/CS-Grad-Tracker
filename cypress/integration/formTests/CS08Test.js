@@ -4,19 +4,19 @@ import util from './formUtil';
 let student = data.student;
 
 let CS08 = {
-  'student-name': student.lastName + ', ' + student.firstName,
-  'student-pid': student.pid.toString(),
-  'semester' : 'asdsadsa',
-  'year' : '1293',
-  'title' : 'a',
-  'primary-reader': '1asdasd',
-  'primary-date': '1asdasdqwc',
-  'secondary-reader': '2asdasd',
-  'secondary-date': '2asdasdqwc',
-  'primary-signature': '1asdasd',
-  'primary-signed-date': '1asdasdqwc',
-  'secondary-signature': '2asdasd',
-  'secondary-signed-date': '2asdasdqwc',
+  name: student.lastName + ', ' + student.firstName,
+  pid: student.pid.toString(),
+  semester : 'asdsadsa',
+  year : '1293',
+  title : 'a',
+  primaryReader: '1asdasd',
+  primaryDate: '1asdasdqwc',
+  secondaryReader: '2asdasd',
+  secondaryDate: '2asdasdqwc',
+  primarySignature: '1asdasd',
+  primarySignedDate: '1asdasdqwc',
+  secondarySignature: '2asdasd',
+  secondarySignedDate: '2asdasdqwc',
 }
 
 describe('Test CS08 submissions', ()=>{
@@ -38,25 +38,25 @@ describe('Test CS08 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS08/false');
 
-    cy.contains(CS08['primary-reader']);
-    cy.contains(CS08['primary-date']);
-    cy.contains(CS08['secondary-reader']);
-    cy.contains(CS08['secondary-date']);
-    cy.contains(CS08['primary-signature']);
-    cy.contains(CS08['secondary-signature']);
-    cy.contains(CS08['primary-signed-date']);
-    cy.contains(CS08['secondary-signed-date']);
+    cy.contains(CS08.primaryReader);
+    cy.contains(CS08.primaryDate);
+    cy.contains(CS08.secondaryReader);
+    cy.contains(CS08.secondaryDate);
+    cy.contains(CS08.primarySignature);
+    cy.contains(CS08.secondarySignature);
+    cy.contains(CS08.primarySignedDate);
+    cy.contains(CS08.secondarySignedDate);
 
-    delete CS08['primary-reader'];
-    delete CS08['primary-date'];
-    delete CS08['secondary-reader'];
-    delete CS08['secondary-date'];
-    delete CS08['primary-signature'];
-    delete CS08['secondary-signature'];
-    delete CS08['primary-signed-date'];
-    delete CS08['secondary-signed-date'];
-    delete CS08['student-name'];
-    delete CS08['student-pid'];
+    delete CS08.primaryReader;
+    delete CS08.primaryDate;
+    delete CS08.secondaryReader;
+    delete CS08.secondaryDate;
+    delete CS08.primarySignature;
+    delete CS08.secondarySignature;
+    delete CS08.primarySignedDate;
+    delete CS08.secondarySignedDate;
+    delete CS08.name;
+    delete CS08.pid;
 
     util.fillFormAsStudent(CS08);
     cy.get('.CS08-submit').click();

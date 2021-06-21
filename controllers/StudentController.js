@@ -276,9 +276,9 @@ studentController.formPage = function(req, res){
   }
 }
 
-studentController.viewForm = function(req, res){
-  var signature = 'In place of your signature, please type your full legal name:'
-  if(req.params.title != null && req.params._id != null && req.params.uploadSuccess != null){
+studentController.viewForm = function(req, res) {
+  const formName = req.params.title
+  if(formName != null && req.params._id != null && req.params.uploadSuccess != null){
     schema.Faculty.find({}).exec().then((result)=>{
       var faculty = result
       var uploadSuccess = false
@@ -288,7 +288,7 @@ studentController.viewForm = function(req, res){
       schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
         if(result != null){
           var student = result
-          schema[req.params.title].findOne({student: result._id}).exec().then(function(result){
+          schema[formName].findOne({student: result._id}).exec().then(function(result){
             var form = {}
             if(result != null){
               form = result
@@ -298,8 +298,9 @@ studentController.viewForm = function(req, res){
               var hasAccess
               if(result){hasAccess = true;}
               else{hasAccess = false;}
-              var postMethod = '/student/forms/update/' + student._id + '/' + req.params.title
-              res.render('../views/student/' + req.params.title + '.ejs', {student, form, signature, uploadSuccess, isStudent, postMethod, hasAccess, faculty})
+              var postMethod = '/student/forms/update/' + student._id + '/' + formName
+              const ext = formName === 'CS01' ? '' : '.ejs'
+              res.render(`../views/student/${formName}${ext}`, {student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty})
             })
           })
         }

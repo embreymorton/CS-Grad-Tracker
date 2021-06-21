@@ -54,7 +54,7 @@
 
             <hr></hr>
 
-            <form action="<%=postMethod%>" method="post">
+            <form class="cs-form" action="<%=postMethod%>" method="post">
 
               <input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
@@ -99,7 +99,7 @@
               <div>Advisor signature:</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required />
                 </div>
                 <div class="col-md-3">
@@ -113,7 +113,7 @@
               <div>Designated Instructor Signature:</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control instructor-signature" name="instructorSignature" value="<%=form.instructorSignature%>" required />
                 </div>
                 <div class="col-md-3">

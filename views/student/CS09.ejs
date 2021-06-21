@@ -51,7 +51,7 @@
 
             <hr></hr>
 
-            <form action="<%=postMethod%>" method="post">
+            <form class="cs-form" action="<%=postMethod%>" method="post">
 
               <input type="hidden" class="form-control" name="student" value=<%=student._id%> />
 
@@ -182,7 +182,7 @@
               <div>Research Advisor Signature*</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <input type="text" class="form-control advisor-signature" name="advisorSignature" value="<%=form.advisorSignature%>" required />
                 </div>
                 <div class="col-md-2">
@@ -201,7 +201,7 @@
               <div>Signature:*</div>
               <div class="row">
                 <div class="col-md-5">
-                  <i><%=signature%></i>
+                  <i>In place of your signature, please type your full legal name:</i>
                   <% for(let i = 0; i < 4; i++){ %>
                     <input type="text" class="form-control committee-signature<%=i+1%>" name="committeeSignature" <% if(form.committeeSignature != null) { %> value="<%=form.committeeSignature[i]%>" <% } %> required />
                   <% } %>
@@ -305,20 +305,6 @@
               </div>
 
               <div class="verticalSpace"/>
-
-              <!--<div class="row">
-                <div class="col-md-1">
-                  <div>Overall Score:</div>
-                </div>
-                <div class="col-md-3">
-                  <button type="button" class="btn btn-secondary"  onclick="average()">Calculate average</button>
-                </div>
-                <div class="col-md-2">
-                  <input type="hidden" class="form-control" name="overallScore" value="<%=form.overallScore%>" id="overallScore" required />
-                  <div id="displayScore"><%=form.overallScore%>
-                  </div>
-                </div>
-              </div> -->
 
               <div class="row" align ="center">
                 <div class="col-md-3">

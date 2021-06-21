@@ -4,36 +4,36 @@ import util from './formUtil';
 let student = data.student;
 
 let CS06 = {
-  'student-name': student.lastName + ', ' + student.firstName,
-  'student-pid': student.pid.toString(),
-  'date-submitted': 'Feb.2, 2020',
-  'date-entered': 'feb. 3, 2020',
-  'diss-title': 'THE HISTORY OF A JEDI TURNED SITH',
-  'breadth-course-info': ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  'breadth-course-date': ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  'breadth-course-grade': ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  'concentration-course-info': ['YOU', 'WERE' , 'MY', 'BROTHER'],
-  'concentration-course-date':  ['YOU', 'WERE' , 'MY', 'BROTHER'],
-  'concentration-course-hours': ['6', '9' , '6', '9'],
-  'other-course-info':  ['III', 'HATTTTEEE' , 'YOUUUUU', 'UUUUUU'],
-  'other-course-hours':  ['6', '9' , '6', '9'],
-  'note': 'I HATTTTE YOUUUUU',
-  'other-courses': 'YOU WERE MY BROTHER',
-  'minor': 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
-  'committee': ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  'chair-signature': 'AJ',
-  'reason-approved': 'Your left arm',
-  'director-signature': 'LIAAAAR'
+  name: student.lastName + ', ' + student.firstName,
+  pid: student.pid.toString(),
+  dateSubmitted: 'Feb.2, 2020',
+  dateEntered: 'feb. 3, 2020',
+  dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
+  breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
+  breadthCourseDate: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
+  breadthCourseGrade: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
+  concentrationCourseInfo: ['YOU', 'WERE' , 'MY', 'BROTHER'],
+  concentrationCourseDate:  ['YOU', 'WERE' , 'MY', 'BROTHER'],
+  concentrationCourseHours: ['6', '9' , '6', '9'],
+  otherCourseInfo:  ['III', 'HATTTTEEE' , 'YOUUUUU', 'UUUUUU'],
+  otherCourseHours:  ['6', '9' , '6', '9'],
+  note: 'I HATTTTE YOUUUUU',
+  otherCourses: 'YOU WERE MY BROTHER',
+  minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
+  committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
+  chairSignature: 'AJ',
+  reasonApproved: 'Your left arm',
+  directorSignature: 'LIAAAAR'
 }
 
 let CS06Dropdowns = {
-  'comp915': 'true',
-  'breadth-course-category': ['S', 'A' ,'O' , 'T', 'T', 'T'],
-  'background-prep-worksheet': 'false',
-  'program-product-requirement': 'false',
-  'phd-written-exam': 'false',
-  'phd-oral-exam': 'true',
-  'approved': 'Approved',
+  comp915: 'true',
+  breadthCourseCategory: ['S', 'A' ,'O' , 'T', 'T', 'T'],
+  backgroundPrepWorkSheet: 'false',
+  programProductRequirement: 'false',
+  PHDWrittenExam: 'false',
+  PHDOralExam: 'true',
+  approved: 'Approved',
 }
 
 describe('Test CS06 submissions', ()=>{
@@ -64,9 +64,9 @@ describe('Test CS06 submissions', ()=>{
     cy.get('.select-advisor4').click();
     cy.get('.select-chairman4').click();
 
-    delete CS06['director-signature'];
-    delete CS06['student-name'];
-    delete CS06['student-pid'];
+    delete CS06.directorSignature;
+    delete CS06.name;
+    delete CS06.pid;
 
     util.fillFormAsStudent(CS06);
     cy.get('.CS06-submit').click();
