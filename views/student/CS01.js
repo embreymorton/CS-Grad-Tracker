@@ -60,9 +60,10 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent } = opts
+  const { postMethod, student, form, isStudent, editAccess } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
+  const row_ = row(editAccess, form)
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
@@ -72,24 +73,24 @@ const cs01Form = (opts) => {
       h3('Background Course Information'),
       x('.verticalSpace')(),
 
-      row('comp283', form), hr(),
-      row('comp410', form), hr(),
-      row('comp411', form), hr(),
-      row('comp455', form), hr(),
+      row_('comp283'), hr(),
+      row_('comp410'), hr(),
+      row_('comp411'), hr(),
+      row_('comp455'), hr(),
 
-      row('comp521', form), x('.verticalSpace')(),
-      row('comp520', form), x('.verticalSpace')(),
-      row('comp530', form), x('.verticalSpace')(),
+      row_('comp521'), x('.verticalSpace')(),
+      row_('comp520'), x('.verticalSpace')(),
+      row_('comp530'), x('.verticalSpace')(),
       x('.text-center')('(*Any two of these three will suffice*)'), hr(),
 
-      row('comp524', form), hr(),
-      row('comp541', form), hr(),
-      row('comp550', form), hr(),
-      row('math233', form), hr(),
-      row('math381', form), hr(),
-      row('math547', form), hr(),
-      row('math661', form), hr(),
-      row('stat435', form), hr(),
+      row_('comp524'), hr(),
+      row_('comp541'), hr(),
+      row_('comp550'), hr(),
+      row_('math233'), hr(),
+      row_('math381'), hr(),
+      row_('math547'), hr(),
+      row_('math661'), hr(),
+      row_('stat435'), hr(),
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
@@ -98,19 +99,20 @@ const cs01Form = (opts) => {
       hr(),
 
       p('Student Signature:'),
-      signatureRow('student', form),
+      signatureRow(editAccess, 'student', form),
       x('.verticalSpace')(),
 
       p('Advisor Signature:'),
-      isStudent
+      isStudent || !editAccess
         ? advisorSignatureViewOnly(form)
-        : signatureRow('advisor', form),
+        : signatureRow(editAccess, 'advisor', form),
       x('.verticalSpace')(),
 
-      x('button.btn.btn-primary.CS01-submit')(
-        { type: 'submit', onclick: 'refreshRequired()' },
-        'Submit',
-      )
+      editAccess
+        ? x('button.btn.btn-primary.CS01-submit')(
+          { type: 'submit', onclick: 'refreshRequired()' },
+          'Submit')
+        : null,
     )
   )
 }
@@ -133,40 +135,46 @@ const namePidRow = (student) => {
   )
 }
 
-const row = (key, values) => {
+const row = (editAccess, values) => (key) => {
   const col4 = x('.col-md-4')
   const { div } = x
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
+  const roValue = (name) => x('div.pseudo-input')(values[name])
+  const rwValue = (name) => input('text', name, values[name], true)
+  const value = editAccess ? rwValue : roValue
   return (
     x('.row')(
       col4(descriptions[key]),
       col4(
         div('Covered by:'),
-        input('text', coveredFieldName, values[coveredFieldName], true)
+        value(coveredFieldName),
       ),
       col4(
         div('Dates:'),
-        input('text', dateFieldName, values[dateFieldName], true)
+        value(dateFieldName),
       ),
     )
   )
 }
 
-const signatureRow = (key, values) => {
+const signatureRow = (editAccess, key, values) => {
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
   const sigName = `${key}Signature`
   const dateName = `${key}DateSigned`
+  const roValue = (name) => x('div.pseudo-input')(values[name])
+  const rwValue = (name) => input('text', name, values[name], true)
+  const value = editAccess ? rwValue : roValue
   return (
     x('.row')(
       col(5)(
         em('In place of your signature, please type your full legal name:'),
-        input('text', sigName, values[sigName], true),
+        value(sigName),
       ),
       col(2)(
         div('Date signed'),
-        input('text', dateName, values[dateName], true)
+        value(dateName),
       ),
     )
   )
@@ -181,11 +189,11 @@ const advisorSignatureViewOnly = (values) => {
     x('.row')(
       col(5)(
         div('Advisor Signature:'),
-        input('text', sigName, values[sigName], true),
+        x('div.pseudo-input')(values[sigName]),
       ),
       col(2)(
         div('Date signed'),
-        input('text', dateName, values[dateName], true)
+        x('div.pseudo-input')(values[dateName]),
       ),
     )
   )

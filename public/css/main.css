@@ -193,3 +193,10 @@ This is for highlighting search text on index pages
 .download-progress-csv-button {
   margin-right: 10px;
 }
+
+.pseudo-input {
+  background-color: #eee;
+  border-radius: 2px;
+  font-family: Courier New, monospace;
+  padding: 5px 1rem;
+}

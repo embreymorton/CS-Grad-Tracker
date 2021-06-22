@@ -276,36 +276,27 @@ studentController.formPage = function(req, res){
   }
 }
 
-studentController.viewForm = function(req, res) {
-  const formName = req.params.title
-  if(formName != null && req.params._id != null && req.params.uploadSuccess != null){
-    schema.Faculty.find({}).exec().then((result)=>{
-      var faculty = result
-      var uploadSuccess = false
-      if(req.params.uploadSuccess == 'true'){
-        uploadSuccess = true
-      }
-      schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
-        if(result != null){
-          var student = result
-          schema[formName].findOne({student: result._id}).exec().then(function(result){
-            var form = {}
-            if(result != null){
-              form = result
-            }
-            var isStudent = false
-            util.checkAdvisorAdmin(req.session.userPID, req.params._id).then(function(result){
-              var hasAccess
-              if(result){hasAccess = true;}
-              else{hasAccess = false;}
-              var postMethod = '/student/forms/update/' + student._id + '/' + formName
-              const ext = formName === 'CS01' ? '' : '.ejs'
-              res.render(`../views/student/${formName}${ext}`, {student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty})
+studentController.viewForm = (req, res) => {
+  const { params } = req
+  const { title, _id } = params
+  if (title != null && _id != null && params.uploadSuccess != null) {
+    schema.Faculty.find({}).exec().then((faculty) => {
+      const uploadSuccess = params.uploadSuccess == 'true'
+      schema.Student.findOne({ _id }).exec().then((student) => {
+        if (student == null) {
+          res.render('..views/error.ejs', {string: 'Student id not specified.'})
+        } else {
+          schema[title].findOne({student: student._id}).exec().then((result) => {
+            const form = result || {}
+            const isStudent = false
+            const editAccess = req.session.accessLevel == 3
+            util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
+              const hasAccess = !!result || editAccess
+              const postMethod = `/student/forms/update/${student._id}/${title}`
+              const ext = title === 'CS01' ? '' : '.ejs'
+              res.render(`../views/student/${title}${ext}`, {student, form, uploadSuccess, isStudent, editAccess, postMethod, hasAccess, faculty})
             })
           })
-        }
-        else{
-          res.render('..views/error.ejs', {string: 'Student id not specified.'})
         }
       })
     })
