@@ -117,8 +117,15 @@ studentViewController.viewForm = function (req, res) {
           form version depending on whether it is an administrator/faculty
           or student viewing the form.
           */
-          const ext = formName === 'CS01' ? '' : '.ejs'
-          res.render(`../views/student/${formName}${ext}`, {student, form, uploadSuccess, isStudent, postMethod, hasAccess})
+          const jsViews = [ 'CS01', 'CS01BSMS' ]
+          const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
+          const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
+          const view = `../views/student/${viewFile}`
+          const locals = {
+            student, form, uploadSuccess, isStudent, postMethod, hasAccess,
+            formName,
+          }
+          res.render(view, locals)
         });
       }
       else {

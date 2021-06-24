@@ -6,15 +6,16 @@ const input = require('../common/input')
 const bootstrapScripts = require('../common/bootstrapScripts')
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
-  const title = 'CS01 Background Preparation Worksheet'
+  const { uploadSuccess, formName } = opts
+  const title = `${formName} Background Preparation Worksheet`
+  const cs01 = formName === 'CS01'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
     bootstrapScripts(),
-    refreshRequiredScript(),
+    cs01 ? refreshRequiredScript() : null,
   )
 }
 
@@ -40,43 +41,45 @@ const studentBar = (opts) => (
 )
 
 const mainContent = (opts) => {
-  const { student, hasAccess } = opts
+  const { student, hasAccess, formName } = opts
   const { lastName, firstName } = student
   const { h4, h3, div, p, strong, hr } = x
+  const form = !hasAccess
+        ? div('You do not have access')
+        : cs01Form(opts)
   return [
     h4(lastName, ', ', firstName),
     h3('Background preparation worksheet'),
-    h3('CS-01'),
+    h3(formName),
     div(
       { style: { 'text-align': 'left' }},
       x('p.underline')('Instructions:'),
       p('The following UNC courses define the background preparation assumed in the M.S. and PhD programs.  This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.'),
-      p('For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question'),
+      p('For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question.'),
       p(strong('All fields required!')),
       hr(),
-      hasAccess ? cs01Form(opts) : div('You do not have access')
+      form,
     )
   ]
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, editAccess } = opts
+  const { postMethod, student, form, isStudent, editAccess, formName } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row_ = row(editAccess, form)
+  const row_ = row(editAccess || isStudent, form)
+  const bsms = formName !== 'CS01'
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', _id.toString()),
-      namePidRow(student),
-      hr(),
-      h3('Background Course Information'),
-      x('.verticalSpace')(),
+      namePidRow(student), hr(),
+      h3('Background Course Information'), x('.verticalSpace')(),
 
-      row_('comp283'), hr(),
-      row_('comp410'), hr(),
-      row_('comp411'), hr(),
-      row_('comp455'), hr(),
+      bsms ? null : [ row_('comp283'), hr() ],
+      bsms ? null : [ row_('comp410'), hr() ],
+      bsms ? null : [ row_('comp411'), hr() ],
+      bsms ? null : [ row_('comp455'), hr() ],
 
       row_('comp521'), x('.verticalSpace')(),
       row_('comp520'), x('.verticalSpace')(),
@@ -85,12 +88,12 @@ const cs01Form = (opts) => {
 
       row_('comp524'), hr(),
       row_('comp541'), hr(),
-      row_('comp550'), hr(),
-      row_('math233'), hr(),
-      row_('math381'), hr(),
-      row_('math547'), hr(),
+      bsms ? null : [ row_('comp550'), hr() ],
+      bsms ? null : [ row_('math233'), hr() ],
+      bsms ? null : [ row_('math381'), hr() ],
+      bsms ? null : [ row_('math547'), hr() ],
       row_('math661'), hr(),
-      row_('stat435'), hr(),
+      bsms ? null : [ row_('stat435'), hr() ],
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
@@ -99,16 +102,14 @@ const cs01Form = (opts) => {
       hr(),
 
       p('Student Signature:'),
-      signatureRow(editAccess, 'student', form),
+      signatureRow(editAccess || isStudent, 'student', form),
       x('.verticalSpace')(),
 
       p('Advisor Signature:'),
-      isStudent || !editAccess
-        ? advisorSignatureViewOnly(form)
-        : signatureRow(editAccess, 'advisor', form),
+      signatureRow(editAccess, 'advisor', form),
       x('.verticalSpace')(),
 
-      editAccess
+      editAccess || isStudent
         ? x('button.btn.btn-primary.CS01-submit')(
           { type: 'submit', onclick: 'refreshRequired()' },
           'Submit')
@@ -180,25 +181,6 @@ const signatureRow = (editAccess, key, values) => {
   )
 }
 
-const advisorSignatureViewOnly = (values) => {
-  const col = (n) => (x(`div.col-md-${n}`))
-  const { div } = x
-  const sigName = `advisorSignature`
-  const dateName = `advisorDateSigned`
-  return (
-    x('.row')(
-      col(5)(
-        div('Advisor Signature:'),
-        x('div.pseudo-input')(values[sigName]),
-      ),
-      col(2)(
-        div('Date signed'),
-        x('div.pseudo-input')(values[dateName]),
-      ),
-    )
-  )
-}
-
 const refreshRequiredScript = () => {
   x('script')(
     {type: 'text/javascript'},
@@ -251,24 +233,24 @@ const descriptions = {
     ' Introduction to the theory of computation.  Boolean functions, finite automata, pushdown automata, & Turing machines.  Unsolvable problems.  The Chomsky hierarchy of formal languages & their acceptors.  Parsing.'
   ],
 
+  comp520: [
+    strong('*COMP 520: Compilers:'),
+    ' Design and construction of compilers. Theory and pragmatics of lexical, syntactic, and semantic analysis. Interpretation. Code generation for a modern architecture. Run-time environments. Includes a large compiler implementation project.'
+  ],
+
   comp521: [
     strong('*COMP 521:  Files & Databases:'),
-    ' Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.'
-  ],
-
-  comp520: [
-    strong('*COMP 520:  Files & Databases:'),
-    ' Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.'
-  ],
-
-  comp530: [
-    strong('*COMP 530:  Files & Databases:'),
     ' Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.'
   ],
 
   comp524: [
     strong('COMP: 524:  Programming Language Concepts:'),
     ' Concepts of high-level programming & their realization in specific languages.  Data types, scope, control structures, procedural abstraction, classes, concurrency.  Run-time implementation.'
+  ],
+
+  comp530: [
+    strong('*COMP 530: Operating Systems:'),
+    ' Types of operating systems. Concurrent programming. Management of storage, processes, devices. Scheduling, protection. Case study. Course includes a programming laboratory. Honors version available.'
   ],
 
   comp541: [

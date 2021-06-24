@@ -44,13 +44,14 @@ describe('Test CS01 submissions', ()=>{
   })
 
   const { lastName, firstName, pid } = data.student
+  const name = lastName + ', ' + firstName
 
   it('Submit CS01 form from administrator side', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/changeUser/admin');
     util.visitFormAsAdmin();
     cy.get('.CS01').click();
-    cy.get('.cs-form [name=name]').should('have.value', lastName + ', ' + firstName)
+    cy.get('.cs-form [name=name]').should('have.value', name)
     cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
     util.fillCleanFormAsAdmin(CS01);
     cy.get('.CS01-submit').click();
@@ -60,10 +61,10 @@ describe('Test CS01 submissions', ()=>{
   it('Submit CS01 form from student side, check to make sure values from admin submission are there', ()=>{
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS01/false')
-    cy.get('.cs-form [name=name]').should('have.value', lastName + ', ' + firstName)
+    cy.get('.cs-form [name=name]').should('have.value', name)
     cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
-    cy.get('.cs-form [name=advisorSignature]').should('have.value', CS01.advisorSignature)
-    cy.get('.cs-form [name=advisorDateSigned]').should('have.value', CS01.advisorDateSigned)
+    cy.contains(CS01.advisorSignature);
+    cy.contains(CS01.advisorDateSigned);
     delete CS01.advisorSignature;
     delete CS01.advisorDateSigned;
     util.fillFormAsStudent(CS01);
