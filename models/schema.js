@@ -355,7 +355,9 @@ var CS01BSMSSchema = mongoose.Schema({
 
 var CS02Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, dateSubmitted: String,
+  name: String,
+  pid: Number,
+  dateSubmitted: String,
   courseNumber: String,
   basisWaiver: String,
   advisorSignature: String, advisorDateSigned: String,
@@ -364,7 +366,9 @@ var CS02Schema = mongoose.Schema({
 
 var CS03Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, dateSubmitted: String,
+  name: String,
+  pid: Number,
+  dateSubmitted: String,
   DR: [String],
   university: [String],
   dept: [String],
@@ -387,7 +391,9 @@ var CS03Schema = mongoose.Schema({
 
 var CS04Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, dateSubmitted: String,
+  name: String,
+  pid: Number,
+  dateSubmitted: String,
   projectDescription: String,
   docProprietary: Boolean,
   studentSignature: String, studentDateSigned: String,
@@ -397,7 +403,9 @@ var CS04Schema = mongoose.Schema({
 
 var CS05Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, dateSubmitted: String,
+  name: String,
+  pid: Number,
+  dateSubmitted: String,
   oralComprehensiveExam: Boolean,
   thesis: Boolean,
   nominees: [String],
@@ -410,7 +418,9 @@ var CS05Schema = mongoose.Schema({
 
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, dateSubmitted: String, dateEntered: String,
+  name: String,
+  pid: Number,
+  dateSubmitted: String, dateEntered: String,
   dissTitle: String,
   comp915: Boolean,
   breadthCourseCategory: [String],

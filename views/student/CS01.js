@@ -1,9 +1,11 @@
 const x = require('hyperaxe')
 const page = require('../page')
-const studentBarPartial = require('../common/studentBarPartial')
-const studentViewNavPartial = require('../common/studentViewNavPartial')
-const input = require('../common/input')
+const uploadFeedback = require('../common/uploadFeedback')
+const studentBar = require('../common/studentBar')
 const bootstrapScripts = require('../common/bootstrapScripts')
+const input = require('../common/input')
+const { row, colMd } = require('../common/grid')
+const signatureRow = require('../common/signatureRow')
 
 const main = (opts) => {
   const { uploadSuccess, formName } = opts
@@ -18,27 +20,6 @@ const main = (opts) => {
     cs01 ? refreshRequiredScript() : null,
   )
 }
-
-const uploadFeedback = (uploadSuccess) => {
-  if (!uploadSuccess) return null
-  const { span, strong } = x
-  return (
-    x('.alert.alert-success.alert-dismissible.fade.show')(
-      { role: 'alert' },
-      x('button.close')(
-        { type: 'button', 'data-dismiss': 'alert', 'aria-label': 'Close' },
-        span({ 'aria-hidden': 'true' }, '×')
-      ),
-      strong('Submit success!'),
-    )
-  )
-}
-
-const studentBar = (opts) => (
-  opts.isStudent
-    ? studentViewNavPartial(opts)
-    : studentBarPartial(opts)
-)
 
 const mainContent = (opts) => {
   const { student, hasAccess, formName } = opts
@@ -67,7 +48,7 @@ const cs01Form = (opts) => {
   const { postMethod, student, form, isStudent, editAccess, formName } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row_ = row(editAccess || isStudent, form)
+  const row = formRow(editAccess || isStudent, form)
   const bsms = formName !== 'CS01'
   return (
     x('form.cs-form')(
@@ -76,24 +57,24 @@ const cs01Form = (opts) => {
       namePidRow(student), hr(),
       h3('Background Course Information'), x('.verticalSpace')(),
 
-      bsms ? null : [ row_('comp283'), hr() ],
-      bsms ? null : [ row_('comp410'), hr() ],
-      bsms ? null : [ row_('comp411'), hr() ],
-      bsms ? null : [ row_('comp455'), hr() ],
+      bsms ? null : [ row('comp283'), hr() ],
+      bsms ? null : [ row('comp410'), hr() ],
+      bsms ? null : [ row('comp411'), hr() ],
+      bsms ? null : [ row('comp455'), hr() ],
 
-      row_('comp521'), x('.verticalSpace')(),
-      row_('comp520'), x('.verticalSpace')(),
-      row_('comp530'), x('.verticalSpace')(),
+      row('comp521'), x('.verticalSpace')(),
+      row('comp520'), x('.verticalSpace')(),
+      row('comp530'), x('.verticalSpace')(),
       x('.text-center')('(*Any two of these three will suffice*)'), hr(),
 
-      row_('comp524'), hr(),
-      row_('comp541'), hr(),
-      bsms ? null : [ row_('comp550'), hr() ],
-      bsms ? null : [ row_('math233'), hr() ],
-      bsms ? null : [ row_('math381'), hr() ],
-      bsms ? null : [ row_('math547'), hr() ],
-      row_('math661'), hr(),
-      bsms ? null : [ row_('stat435'), hr() ],
+      row('comp524'), hr(),
+      row('comp541'), hr(),
+      bsms ? null : [ row('comp550'), hr() ],
+      bsms ? null : [ row('math233'), hr() ],
+      bsms ? null : [ row('math381'), hr() ],
+      bsms ? null : [ row('math547'), hr() ],
+      row('math661'), hr(),
+      bsms ? null : [ row('stat435'), hr() ],
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
@@ -123,12 +104,12 @@ const namePidRow = (student) => {
   const name = `${lastName}, ${firstName}`
   const { div } = x
   return (
-    x('.row')(
-      x('.col-md-6')(
+    row(
+      colMd(6)(
         div('Name'),
         input('text', 'name', name, true)
       ),
-      x('.col-md-6')(
+      colMd(6)(
         div('PID'),
         input('number', 'pid', pid, true)
       )
@@ -136,8 +117,7 @@ const namePidRow = (student) => {
   )
 }
 
-const row = (editAccess, values) => (key) => {
-  const col4 = x('.col-md-4')
+const formRow = (editAccess, values) => (key) => {
   const { div } = x
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
@@ -145,37 +125,15 @@ const row = (editAccess, values) => (key) => {
   const rwValue = (name) => input('text', name, values[name], true)
   const value = editAccess ? rwValue : roValue
   return (
-    x('.row')(
-      col4(descriptions[key]),
-      col4(
+    row(
+      colMd(4)(descriptions[key]),
+      colMd(4)(
         div('Covered by:'),
         value(coveredFieldName),
       ),
-      col4(
+      colMd(4)(
         div('Dates:'),
         value(dateFieldName),
-      ),
-    )
-  )
-}
-
-const signatureRow = (editAccess, key, values) => {
-  const col = (n) => (x(`div.col-md-${n}`))
-  const { em, div } = x
-  const sigName = `${key}Signature`
-  const dateName = `${key}DateSigned`
-  const roValue = (name) => x('div.pseudo-input')(values[name])
-  const rwValue = (name) => input('text', name, values[name], true)
-  const value = editAccess ? rwValue : roValue
-  return (
-    x('.row')(
-      col(5)(
-        em('In place of your signature, please type your full legal name:'),
-        value(sigName),
-      ),
-      col(2)(
-        div('Date signed'),
-        value(dateName),
       ),
     )
   )

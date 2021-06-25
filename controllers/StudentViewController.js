@@ -117,7 +117,7 @@ studentViewController.viewForm = function (req, res) {
           form version depending on whether it is an administrator/faculty
           or student viewing the form.
           */
-          const jsViews = [ 'CS01', 'CS01BSMS' ]
+          const jsViews = [ 'CS01', 'CS01BSMS', 'CS02' ]
           const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
           const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
           const view = `../views/student/${viewFile}`

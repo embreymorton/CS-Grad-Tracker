@@ -293,7 +293,7 @@ studentController.viewForm = (req, res) => {
             util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
               const hasAccess = !!result || editAccess
               const postMethod = `/student/forms/update/${student._id}/${title}`
-              const jsViews = [ 'CS01', 'CS01BSMS' ]
+              const jsViews = [ 'CS01', 'CS01BSMS', 'CS02' ]
               const ext = jsViews.indexOf(title) !== -1 ? '' : '.ejs'
               const viewFile = `${title === 'CS01BSMS' ? 'CS01' : title}${ext}`
               const view = `../views/student/${viewFile}`

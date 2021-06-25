@@ -1,9 +1,10 @@
-import data from '../../../data/testRoles';
-import util from './formUtil';
+import data from '../../../data/testRoles'
+import util from './formUtil'
 
-let student = data.student;
+const { lastName, firstName, pid } = data.student
+const name = `${lastName}, ${firstName}`
 
-let CS02 = {
+const CS02 = {
   dateSubmitted: 'Feb.2, 2020',
   courseNumber: 'COMP 560',
   basisWaiver: 'Taken',
@@ -13,42 +14,42 @@ let CS02 = {
   instructorDateSigned: 'time'
 }
 
-describe('Test CS02 submissions', ()=>{
-  beforeEach(function () {
+describe('Test CS02 submissions', () => {
+  beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
 
-  it('Submit CS02 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
-    cy.visit('/changeUser/admin');
-    util.visitFormAsAdmin();
-    cy.get('.CS02').click();
-    cy.get('.student-name').should('have.value', student.lastName + ', ' + student.firstName)
-    cy.get('.student-pid').should('have.value', student.pid.toString())
-    util.fillCleanFormAsAdmin(CS02);
-    cy.get('.CS02-submit').click();
-    util.fillFormAsStudent(CS02);
+  it('Submit CS02 form from administrator side', () => {
+    cy.visit('/changeUser/student')
+    cy.visit('/changeUser/admin')
+    util.visitFormAsAdmin()
+    cy.get('.CS02').click()
+    cy.get('.cs-form [name=name]').should('have.value', name)
+    cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
+    util.fillCleanFormAsAdmin(CS02)
+    cy.get('.CS02-submit').click()
+    util.fillFormAsStudent(CS02)
   })
 
-  it('Submit CS02 form from student side', ()=>{
-    cy.visit('/changeUser/student');
+  it('Submit CS02 form from student side', () => {
+    cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS02/false')
 
-    cy.get('.student-name').should('have.value', student.lastName + ', ' + student.firstName)
-    cy.get('.student-pid').should('have.value', student.pid.toString())
+    cy.get('.cs-form [name=name]').should('have.value', name)
+    cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
 
-    cy.contains(CS02.advisorSignature);
-    cy.contains(CS02.advisorDateSigned);
-    cy.contains(CS02.instructorSignature);
-    cy.contains(CS02.instructorDateSigned);
+    ;[
+      'advisorSignature',
+      'advisorDateSigned',
+      'instructorSignature',
+      'instructorDateSigned',
+    ].forEach((field) => {
+      cy.contains(CS02[field])
+      delete CS02[field]
+    })
 
-    delete CS02.advisorSignature;
-    delete CS02.advisorDateSigned;
-    delete CS02.instructorSignature;
-    delete CS02.instructorDateSigned;
-
-    util.fillFormAsStudent(CS02);
-    cy.get('.CS02-submit').click();
-    util.checkFormAsStudent(CS02);
-  });
+    util.fillFormAsStudent(CS02)
+    cy.get('.CS02-submit').click()
+    util.checkFormAsStudent(CS02)
+  })
 })
