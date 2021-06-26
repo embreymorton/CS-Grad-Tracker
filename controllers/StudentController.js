@@ -289,9 +289,9 @@ studentController.viewForm = (req, res) => {
           schema[title].findOne({student: student._id}).exec().then((result) => {
             const form = result || {}
             const isStudent = false
-            const editAccess = req.session.accessLevel == 3
+            const admin = req.session.accessLevel == 3
             util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
-              const hasAccess = !!result || editAccess
+              const hasAccess = !!result || admin
               const postMethod = `/student/forms/update/${student._id}/${title}`
               const jsViews = [ 'CS01', 'CS01BSMS', 'CS02' ]
               const ext = jsViews.indexOf(title) !== -1 ? '' : '.ejs'
@@ -299,7 +299,7 @@ studentController.viewForm = (req, res) => {
               const view = `../views/student/${viewFile}`
               const formName = title
               const locals = {
-                student, form, uploadSuccess, isStudent, editAccess, postMethod,
+                student, form, uploadSuccess, isStudent, admin, postMethod,
                 hasAccess, faculty, formName,
               }
               res.render(view, locals)

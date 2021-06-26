@@ -6,6 +6,7 @@ const bootstrapScripts = require('../common/bootstrapScripts')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
+const pseudoInput = require('../common/pseudoInput')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -41,60 +42,71 @@ const mainContent = (opts) => {
 }
 
 const cs02Form = (opts) => {
-  const { postMethod, student, form, editAccess } = opts
+  const { postMethod, student, form, admin, isStudent } = opts
+  const editAccess = admin || isStudent
+  const row = formRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
   const { div, hr } = x
   const vert = x('div.verticalSpace')()
+  const basisForWaiverLabel = [
+    div('Basis for Waiver'),
+    div('Options: Prior course work, More Advanced Course Here, Other'),
+  ]
+
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidDateRow(opts), hr(),
-      row(
-        colMd(4)(
-          div('Course Number:'),
-          input('text', 'courseNumber', courseNumber, true),
-        ),
-      ),
-      vert,
-      row(
-        colMd(6)(
-          div('Basis for Waiver'),
-          div('Options: Prior course work, More Advanced Course Here, Other'),
-          input('text', 'basisWaiver', basisWaiver, true)
-        )
-      ),
-      hr(),
+      namePidDateRow(opts, editAccess), hr(),
+      row(div('Course Number:'), 'courseNumber'), vert,
+      row(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
-      signatureRow(editAccess, 'advisor', form),
+      signatureRow(admin, 'advisor', form),
       vert,
       div('Designated Instructor Signature:'),
-      signatureRow(editAccess, 'instructor', form),
+      signatureRow(admin, 'instructor', form),
       x('button.btn.btn-primary.CS02-submit')('Submit'),
     )
   )
 }
 
-const namePidDateRow = (opts) => {
+const namePidDateRow = (opts, editAccess) => {
   const { student, form } = opts
   const { lastName, firstName, pid } = student
   const { dateSubmitted } = form
   const name = `${lastName}, ${firstName}`
   const { div } = x
+  const value = editAccess
+        ? (type, name, val) => (input(type, name, val, true))
+        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(4)(
         div('Name'),
-        input('text', 'name', name, true)
+        value('text', 'name', name)
       ),
       colMd(4)(
         div('PID'),
-        input('number', 'pid', pid, true)
+        value('number', 'pid', pid)
       ),
       colMd(4)(
         div('Date submitted'),
-        input('text', 'dateSubmitted', dateSubmitted, true)
+        value('text', 'dateSubmitted', dateSubmitted)
       ),
+    )
+  )
+}
+
+const formRow = (values, editAccess) => (label, name) => {
+  const value = editAccess
+        ? input('text', name, values[name], true)
+        : pseudoInput(values[name])
+  return (
+    row(
+      colMd(6)(
+        label,
+        value,
+      )
     )
   )
 }

@@ -6,6 +6,7 @@ const bootstrapScripts = require('../common/bootstrapScripts')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
+const pseudoInput = require('../common/pseudoInput')
 
 const main = (opts) => {
   const { uploadSuccess, formName } = opts
@@ -45,10 +46,10 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, editAccess, formName } = opts
+  const { postMethod, student, form, isStudent, admin, formName } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row = formRow(editAccess || isStudent, form)
+  const row = formRow(admin || isStudent, form)
   const bsms = formName !== 'CS01'
   return (
     x('form.cs-form')(
@@ -83,14 +84,14 @@ const cs01Form = (opts) => {
       hr(),
 
       p('Student Signature:'),
-      signatureRow(editAccess || isStudent, 'student', form),
+      signatureRow(admin || isStudent, 'student', form),
       x('.verticalSpace')(),
 
       p('Advisor Signature:'),
-      signatureRow(editAccess, 'advisor', form),
+      signatureRow(admin, 'advisor', form),
       x('.verticalSpace')(),
 
-      editAccess || isStudent
+      admin || isStudent
         ? x('button.btn.btn-primary.CS01-submit')(
           { type: 'submit', onclick: 'refreshRequired()' },
           'Submit')
@@ -117,13 +118,13 @@ const namePidRow = (student) => {
   )
 }
 
-const formRow = (editAccess, values) => (key) => {
+const formRow = (admin, values) => (key) => {
   const { div } = x
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
-  const roValue = (name) => x('div.pseudo-input')(values[name])
-  const rwValue = (name) => input('text', name, values[name], true)
-  const value = editAccess ? rwValue : roValue
+  const roValue = (name) => (pseudoInput(values[name]))
+  const rwValue = (name) => (input('text', name, values[name], true))
+  const value = admin ? rwValue : roValue
   return (
     row(
       colMd(4)(descriptions[key]),
