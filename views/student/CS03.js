@@ -56,7 +56,7 @@ const cs03Form = (opts) => {
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidDateRow(opts, editAccess), hr(),
+      namePidRow(opts, editAccess), hr(),
       div(
         'Instructions:  This form details an individual program of study for the MS Degree.  It should be filed with the Student Services Manager when the program is substantially planned ',
         strong('(typically after two semesters)'),
@@ -213,7 +213,7 @@ const cs03Form = (opts) => {
       strong('IV. Signatures'),
       div('Student signature:'),
       signatureRow(admin || isStudent, 'student', form), vert,
-      div('Advisor Signature:'),
+      div('Advisor signature:'),
       signatureRow(admin, 'advisor', form), hr(),
 
       div('Approved:'),
@@ -253,7 +253,7 @@ const cs03Form = (opts) => {
   )
 }
 
-const namePidDateRow = (opts, editAccess) => {
+const namePidRow = (opts, editAccess) => {
   const { student, form } = opts
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
@@ -271,20 +271,6 @@ const namePidDateRow = (opts, editAccess) => {
         div('PID'),
         value('number', 'pid', pid)
       ),
-    )
-  )
-}
-
-const formRow = (values, editAccess) => (label, name) => {
-  const value = editAccess
-        ? input('text', name, values[name], true)
-        : pseudoInput(values[name])
-  return (
-    row(
-      colMd(6)(
-        label,
-        value,
-      )
     )
   )
 }

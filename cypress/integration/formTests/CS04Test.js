@@ -6,7 +6,6 @@ let student = data.student;
 let CS04 = {
   name: student.lastName + ', ' + student.firstName,
   pid: student.pid.toString(),
-  dateSubmitted: 'Feb.2, 2020',
   projectDescription: 'ASDF',
   studentSignature: 'AA',
   studentDateSigned: 'AAA',
