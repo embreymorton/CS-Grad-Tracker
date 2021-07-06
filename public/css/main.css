@@ -200,3 +200,7 @@ form [name=dept] {
   font-family: Courier New, monospace;
   padding: 5px 1rem;
 }
+
+#errorMessage {
+  color: red;
+}

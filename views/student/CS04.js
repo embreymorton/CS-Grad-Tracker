@@ -26,7 +26,7 @@ const mainContent = (opts) => {
   const { h4, h3, div, strong, hr } = x
   const form = !hasAccess
         ? div('You do not have access')
-        : cs03Form(opts)
+        : cs04Form(opts)
   return [
     h4(lastName, ', ', firstName),
     h3('Outside Review Option'),
@@ -38,18 +38,13 @@ const mainContent = (opts) => {
   ]
 }
 
-const cs03Form = (opts) => {
+const cs04Form = (opts) => {
   const { postMethod, student, form, admin, isStudent } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
-  const basisForWaiverLabel = [
-    div('Basis for Waiver'),
-    div('Options: Prior course work, More Advanced Course Here, Other'),
-  ]
-  const range13 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   return [
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),

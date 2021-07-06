@@ -107,13 +107,14 @@ studentViewController.viewForm = function (req, res) {
           const isStudent = true
           const hasAccess = true
           const postMethod = '/studentView/forms/update/' + formName
-          const jsViews = [ 'CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04' ]
+          const jsViews = [ 'CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04', 'CS05' ]
           const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
           const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
           const view = `../views/student/${viewFile}`
+          const { cspNonce } = res.locals
           const locals = {
             student, form, uploadSuccess, isStudent, postMethod, hasAccess,
-            formName,
+            formName, cspNonce
           }
           res.render(view, locals)
         })

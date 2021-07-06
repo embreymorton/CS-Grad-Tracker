@@ -6,7 +6,6 @@ let student = data.student;
 let CS05 = {
   name: student.lastName + ', ' + student.firstName,
   pid: student.pid.toString(),
-  dateSubmitted: 'Feb.2, 2020',
   nominees: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
   nomineeDepartments: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
   nomineeStatuses: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
@@ -31,11 +30,11 @@ describe('Test CS05 submissions', ()=>{
     cy.get('.CS05').click();
     util.fillCleanFormAsAdmin(CS05);
     util.selectDropdowns(CS05Dropdowns);
-    cy.get('.select-advisor1').click();
-    cy.get('.select-chairman3').click();
+    cy.get('.advisor-buttons .row:nth-child(1) .btn').click()
+    cy.get('.chair-buttons .row:nth-child(3) .btn').click()
     cy.get('.CS05-submit').click();
-    cy.get('.thesis-advisor').should('have.value', CS05.nominees[0]);
-    cy.get('.committee-chairman').should('have.value', CS05.nominees[2]);
+    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[0]);
+    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[2]);
     util.checkFormAsAdmin(CS05);
     util.checkDropdowns(CS05Dropdowns);
   })
@@ -44,8 +43,8 @@ describe('Test CS05 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS05/false')
 
-    cy.get('.select-advisor2').click();
-    cy.get('.select-chairman4').click();
+    cy.get('.advisor-buttons .row:nth-child(2) .btn').click()
+    cy.get('.chair-buttons .row:nth-child(4) .btn').click()
 
     cy.contains(CS05.directorSignature);
     cy.contains(CS05.directorDateSigned);
@@ -59,7 +58,7 @@ describe('Test CS05 submissions', ()=>{
     util.fillFormAsStudent(CS05);
     cy.get('.CS05-submit').click();
     util.checkFormAsStudent(CS05);
-    cy.get('.thesis-advisor').should('have.value', CS05.nominees[1]);
-    cy.get('.committee-chairman').should('have.value',CS05.nominees[3]);
+    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[1] + '1');
+    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[3] + '1');
   });
 })

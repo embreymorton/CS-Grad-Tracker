@@ -403,7 +403,6 @@ var CS05Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   name: String,
   pid: Number,
-  dateSubmitted: String,
   oralComprehensiveExam: Boolean,
   thesis: Boolean,
   nominees: [String],

@@ -6,6 +6,7 @@ var bodyParser = require('body-parser')
 var compress = require('compression')
 var https = require('https')
 var schema = require('./models/schema.js')
+var crypto = require('crypto')
 const { join } = require('path')
 
 const expressSession = require('express-session')
@@ -56,36 +57,45 @@ app
   })
 
 // mitigations to prevent click-jacking
-
 app.use(helmet.frameguard({action: 'SAMEORIGIN'}))
 
 // remove X-Powered-By headers
-
 app.use(helmet.hidePoweredBy())
 
 // set Referrer-Policy header
-
 app.use(helmet.referrerPolicy({
   policy: 'no-referrer'
 }))
 
 // mitigate cross-site scripting attacks
-
 app.use(helmet.xssFilter())
-app.use(helmet.contentSecurityPolicy())
+
+app.use((req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString("hex");
+  next();
+})
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      defaultSrc: "'self'",
+      scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+    },
+  })
+);
 
 //add feature-policy header
-  app.use(
-    featurePolicy({
-      features: {
-        accelerometer: ["'none'"],
-        ambientLightSensor: ["'none'"],
-        autoplay: ["'none'"],
-        camera: ["'none'"],
-        navigationOverride: ["'none'"],
-      },
-    })
-  )
+app.use(
+  featurePolicy({
+    features: {
+      accelerometer: ["'none'"],
+      ambientLightSensor: ["'none'"],
+      autoplay: ["'none'"],
+      camera: ["'none'"],
+      navigationOverride: ["'none'"],
+    },
+  })
+)
 
 //setup ejs view engine, pointing at the directory views
 app.set('views', path.join(__dirname, 'views'))
