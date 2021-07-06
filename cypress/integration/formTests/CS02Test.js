@@ -20,7 +20,6 @@ describe('Test CS02 submissions', () => {
   })
 
   it('Submit CS02 form from administrator side', () => {
-    cy.visit('/changeUser/student')
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS02').click()

@@ -30,6 +30,7 @@ const makeOption = (opts) => {
 }
 
 const select = (options) => {
+  // TODO: support required attr on select tag
   const opts = { ...defaultOpts, ...options }
   const { label, name, values, data, blankLabel } = opts
   const { select, option } = x

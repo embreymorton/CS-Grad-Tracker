@@ -368,7 +368,6 @@ var CS03Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
   name: String,
   pid: Number,
-  dateSubmitted: String,
   DR: [String],
   university: [String],
   dept: [String],
@@ -382,8 +381,8 @@ var CS03Schema = mongoose.Schema({
   thesis: Boolean,
   outsideReview: Boolean,
   comprehensiveExam: String,
-  studentSignature: String,
-  advisorSignature: String,
+  studentSignature: String, studentDateSigned: String,
+  advisorSignature: String, advisorDateSigned: String,
   approved: String,
   approvalReason: String,
   directorSignature: String, directorDateSigned: String

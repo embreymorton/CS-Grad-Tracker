@@ -6,7 +6,6 @@ let student = data.student;
 let CS03 = {
   name: student.lastName + ', ' + student.firstName,
   pid: student.pid.toString(),
-  dateSubmitted: 'Feb.2, 2020',
   DR: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
   dept: ['COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP'],
   course: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
@@ -14,7 +13,9 @@ let CS03 = {
   semester: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   title: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   studentSignature: 'A',
-  advisorSignature: 'A',
+  studentDateSigned: 'AA',
+  advisorSignature: 'B',
+  advisorDateSigned: 'BB',
   approvalReason: 'ASDF',
   directorSignature: 'ASDF',
   directorDateSigned: 'YOYOYO'
@@ -36,7 +37,6 @@ describe('Test CS03 submissions', ()=>{
   })
 
   it('Submit CS03 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
     cy.visit('/changeUser/admin');
     util.visitFormAsAdmin();
     cy.get('.CS03').click();
@@ -58,6 +58,7 @@ describe('Test CS03 submissions', ()=>{
     cy.contains(CS03.directorDateSigned);
 
     delete CS03.advisorSignature;
+    delete CS03.advisorDateSigned;
     delete CS03.approved;
     delete CS03.approvalReason;
     delete CS03.directorSignature;

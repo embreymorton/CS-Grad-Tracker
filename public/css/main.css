@@ -174,7 +174,7 @@ This is for highlighting search text on index pages
   background-image:url("../../images/slider.png");
 }
 
-#departmentInput{
+form [name=dept] {
   font-size:10px;
   height:38px;
 }

@@ -278,26 +278,26 @@ studentController.formPage = function(req, res){
 
 studentController.viewForm = (req, res) => {
   const { params } = req
-  const { title, _id } = params
-  if (title != null && _id != null && params.uploadSuccess != null) {
+  const { _id } = params
+  const formName = params.title
+  if (formName != null && _id != null && params.uploadSuccess != null) {
     schema.Faculty.find({}).exec().then((faculty) => {
       const uploadSuccess = params.uploadSuccess == 'true'
       schema.Student.findOne({ _id }).exec().then((student) => {
         if (student == null) {
           res.render('..views/error.ejs', {string: 'Student id not specified.'})
         } else {
-          schema[title].findOne({student: student._id}).exec().then((result) => {
+          schema[formName].findOne({student: _id}).exec().then((result) => {
             const form = result || {}
             const isStudent = false
             const admin = req.session.accessLevel == 3
             util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
               const hasAccess = !!result || admin
-              const postMethod = `/student/forms/update/${student._id}/${title}`
-              const jsViews = [ 'CS01', 'CS01BSMS', 'CS02' ]
-              const ext = jsViews.indexOf(title) !== -1 ? '' : '.ejs'
-              const viewFile = `${title === 'CS01BSMS' ? 'CS01' : title}${ext}`
+              const postMethod = `/student/forms/update/${student._id}/${formName}`
+              const jsViews = [ 'CS01', 'CS01BSMS', 'CS02', 'CS03' ]
+              const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
+              const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
               const view = `../views/student/${viewFile}`
-              const formName = title
               const locals = {
                 student, form, uploadSuccess, isStudent, admin, postMethod,
                 hasAccess, faculty, formName,

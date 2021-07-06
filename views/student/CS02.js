@@ -65,7 +65,9 @@ const cs02Form = (opts) => {
       vert,
       div('Designated Instructor Signature:'),
       signatureRow(admin, 'instructor', form),
-      x('button.btn.btn-primary.CS02-submit')('Submit'),
+      editAccess
+        ? x('button.btn.btn-primary.CS02-submit')('Submit')
+        : null,
     )
   )
 }

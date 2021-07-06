@@ -94,30 +94,20 @@ studentViewController.forms = function (req, res) {
 }
 
 studentViewController.viewForm = function (req, res) {
-  const formName = req.params.title
-  if (formName != null && req.params.uploadSuccess != null) {
-    var uploadSuccess = false;
-    if (req.params.uploadSuccess == "true") {
-      uploadSuccess = true;
-    }
-    schema.Student.findOne({ pid: req.session.userPID }).exec().then(function (result) {
-      if (result != null) {
-        var student = result;
-        schema[formName].findOne({ student: result._id }).exec().then(function (result) {
-          var form = {};
-          if (result != null) {
-            form = result;
-          }
-          var isStudent = true;
-          var hasAccess = true;
-          var postMethod = "/studentView/forms/update/" + formName;
-          /*Need both an administrator view of form and a student view of form,
-          with varying levels of ability to update data fields, and with minor html
-          changes, so I use EJS and the above two variables to load the correct
-          form version depending on whether it is an administrator/faculty
-          or student viewing the form.
-          */
-          const jsViews = [ 'CS01', 'CS01BSMS', 'CS02' ]
+  const { params, session } = req
+  const formName = params.title
+  if (formName != null && params.uploadSuccess != null) {
+    const uploadSuccess = params.uploadSuccess == 'true'
+    schema.Student.findOne({ pid: session.userPID }).exec().then((student) => {
+      if (student == null) {
+        res.render('..views/error.ejs', { string: 'Student id not specified.' })
+      } else {
+        schema[formName].findOne({ student: student._id }).exec().then((result) => {
+          const form = result || {}
+          const isStudent = true
+          const hasAccess = true
+          const postMethod = '/studentView/forms/update/' + formName
+          const jsViews = [ 'CS01', 'CS01BSMS', 'CS02', 'CS03' ]
           const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
           const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
           const view = `../views/student/${viewFile}`
@@ -126,12 +116,9 @@ studentViewController.viewForm = function (req, res) {
             formName,
           }
           res.render(view, locals)
-        });
+        })
       }
-      else {
-        res.render("..views/error.ejs", { string: "Student id not specified." });
-      }
-    });
+    })
   }
 }
 
