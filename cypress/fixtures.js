@@ -1,6 +1,7 @@
 const schema = require('../models/schema')
 const testRoles = require('../data/testRoles')
 const mongoose = require('mongoose')
+require('./arrayFlat')
 
 const saveSemestersForYear = (seasons) => (year) => (
   seasons.map((season) => (
