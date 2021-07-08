@@ -216,6 +216,10 @@ else{
 
     //add routes to allow user changes
     app.use('/changeUser', require('./routes/userChange'))
+    app.use('/util/resetDatabaseToSnapshot', async (req, res) => {
+      const result = await require('./cypress/fixtures')()
+      res.status(200).json(result)
+    })
     app.get('/', (req, res) => {
       if(req.session.accessLevel >= 2){
         res.redirect('/student')

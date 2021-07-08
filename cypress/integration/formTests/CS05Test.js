@@ -1,7 +1,7 @@
-import data from '../../../data/testRoles';
-import util from './formUtil';
+import data from '../../../data/testRoles'
+import util from './formUtil'
 
-let student = data.student;
+let student = data.student
 
 let CS05 = {
   name: student.lastName + ', ' + student.firstName,
@@ -18,47 +18,49 @@ let CS05Dropdowns = {
   thesis: 'false'
 }
 
-describe('Test CS05 submissions', ()=>{
-  beforeEach(function () {
+describe('Test CS05 submissions', () => {
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
+  beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
 
-  it('Submit CS05 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
-    cy.visit('/changeUser/admin');
-    util.visitFormAsAdmin();
-    cy.get('.CS05').click();
-    util.fillCleanFormAsAdmin(CS05);
-    util.selectDropdowns(CS05Dropdowns);
+  it('Submit CS05 form from administrator side', () => {
+    cy.visit('/changeUser/admin')
+    util.visitFormAsAdmin()
+    cy.get('.CS05').click()
+    util.fillCleanFormAsAdmin(CS05)
+    util.selectDropdowns(CS05Dropdowns)
     cy.get('.advisor-buttons .row:nth-child(1) .btn').click()
     cy.get('.chair-buttons .row:nth-child(3) .btn').click()
-    cy.get('.CS05-submit').click();
-    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[0]);
-    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[2]);
-    util.checkFormAsAdmin(CS05);
-    util.checkDropdowns(CS05Dropdowns);
+    cy.get('.CS05-submit').click()
+    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[0])
+    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[2])
+    util.checkFormAsAdmin(CS05)
+    util.checkDropdowns(CS05Dropdowns)
   })
 
-  it('Submit CS05 form from student side', ()=>{
-    cy.visit('/changeUser/student');
+  it('Submit CS05 form from student side', () => {
+    cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS05/false')
 
-    cy.get('.advisor-buttons .row:nth-child(2) .btn').click()
-    cy.get('.chair-buttons .row:nth-child(4) .btn').click()
+    cy.contains(CS05.directorSignature)
+    cy.contains(CS05.directorDateSigned)
 
-    cy.contains(CS05.directorSignature);
-    cy.contains(CS05.directorDateSigned);
+    delete CS05.directorSignature
+    delete CS05.directorDateSigned
+    delete CS05.name
+    delete CS05.pid
+    delete CS05.nomineeStatuses
 
-    delete CS05.directorSignature;
-    delete CS05.directorDateSigned;
-    delete CS05.name;
-    delete CS05.pid;
-    delete CS05.nomineeStatuses;
-
-    util.fillFormAsStudent(CS05);
-    cy.get('.CS05-submit').click();
-    util.checkFormAsStudent(CS05);
-    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[1] + '1');
-    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[3] + '1');
-  });
+    util.fillFormAsStudent(CS05)
+    cy.get('.advisor-buttons .btn').eq(1).click()
+    cy.get('.chair-buttons .btn').eq(3).click()
+    cy.get('.CS05-submit').click()
+    util.checkFormAsStudent(CS05)
+    cy.get('[name=thesisadvisor]').should('have.value', CS05.nominees[1] + '1')
+    cy.get('[name=committeeChairman]').should('have.value', CS05.nominees[3] + '1')
+  })
 })

@@ -6,6 +6,10 @@ const studentDropdownFields = data.studentDropdownFields;
 const course = data.course;
 
 describe('Upload and create data', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -91,6 +95,9 @@ describe('Upload and create data', ()=>{
     cy.visit('/student/create');
 
     //fill in text field data to the student create form
+    studentTextFields.pid = '567567567'
+    studentTextFields.onyen = 'student2'
+    studentTextFields.email = 'student2@cs.unc.edu'
     for(var key in studentTextFields){
       cy.get(`#createStudentForm input[name=${key}]`)
         .type(studentTextFields[key])

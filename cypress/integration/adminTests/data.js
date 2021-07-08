@@ -4,12 +4,12 @@ const currentDate = '2019-09-19';
 const pastDate = '2019-02-02';
 
 data.studentTextFields = {
-  onyen : 'fakeonyen',
-  csid : 'fakecsid',
-  email : 'fakeEmail@fake.com',
-  firstName : 'fake',
-  lastName : 'fake',
-  pid : '949949949',
+  onyen : 'student',
+  csid : 'student',
+  email : 'student@cs.unc.edu',
+  firstName : 'student',
+  lastName : 'student',
+  pid : '777777777',
   alternativeName: 'fake',
   enteringStatus: 'help',
   researchArea: 'Systems',
@@ -34,7 +34,7 @@ data.studentTextFields = {
 
 data.job = {
   position: 'TA',
-  supervisor: 'admin, admin',
+  supervisor: 'faculty, faculty',
   description: 'A TA JOB',
   hours: '4',
 }

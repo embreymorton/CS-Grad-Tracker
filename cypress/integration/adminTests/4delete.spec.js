@@ -6,6 +6,10 @@ const studentDropdownFields = data.studentDropdownFields;
 const course = data.course;
 
 describe('Delete data', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -35,16 +39,15 @@ describe('Delete data', ()=>{
     searchCourseHelper();
 
     cy.get('.course-table').find('tr').should('have.length', 2);
-    cy.get('tbody > tr > td').eq(0).contains('065');
-    cy.get('tbody > tr > td').eq(3).contains('FYS');
+    cy.get('tbody > tr > td').eq(0).contains('523');
+    cy.get('tbody > tr > td').eq(3).contains('Software Engineering Laboratory');
     cy.get('.delete-course-button').click();
     searchCourseHelper();
     cy.contains('No courses found.');
   })
 
   function searchCourseHelper(){
-    cy.get('input[name=number]').type('065')
-    cy.get('input[name=name]').type('FYS')
+    cy.get('input[name=number]').type('523')
     cy.get('.search-course-button').click();
   }
 

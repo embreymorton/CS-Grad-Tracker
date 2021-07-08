@@ -1,6 +1,15 @@
 var student = require('../../../data/testRoles').student
 
 describe('Test student routes and functionality', ()=>{
+  let job, supervisor, semester
+  before(async () => {
+    const { body } = await cy.request('/util/resetDatabaseToSnapshot')
+    job = body.job
+    // FIXME: coupled to implementation details in fixtures namespace
+    supervisor = body.roles.faculty
+    semester = body.semesters[0]
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -67,28 +76,19 @@ describe('Test student routes and functionality', ()=>{
 
   it('Student should be able to see a job they are holding', ()=>{
     cy.visit('/changeUser/admin')
-    cy.visit('/job/create')
-
-    const studJob = {
-      position: 'RA',
-      supervisor: 'admin, admin',
-      semester: 'FA 2018'
-    }
-
-    cy.get('.input-position').select(studJob.position)
-    cy.get('.input-supervisor').select(studJob.supervisor)
-    cy.get('.input-semester').select(studJob.semester)
-    cy.get('.submit-job').click()
     cy.visit('/job')
     cy.get('.assign-job-button').click()
-    cy.get('.assign-student-select').select(updateStudent['last-name'] + ', '+updateStudent['first-name'])
+    const updatedName = updateStudent['last-name'] + ', ' + updateStudent['first-name']
+    cy.get('.assign-student-select').select(updatedName)
     cy.get('.assign-job-submit-button').click()
     cy.visit('/changeUser/student')
     cy.visit('/studentView/jobs')
     cy.get('.student-job-table').find('tr').should('have.length', 2);
-    cy.contains(studJob.position)
-    cy.contains(studJob.supervisor)
-    cy.contains(studJob.semester)
+    cy.contains(job.position)
+    const superName = `${supervisor.lastName}, ${supervisor.firstName}`
+    cy.contains(superName)
+    const semesterStr = `${semester.season} ${semester.year}`
+    cy.contains(semesterStr)
   })
 
   //include form tests and other tests as issues come up

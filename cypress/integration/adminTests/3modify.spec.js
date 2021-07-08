@@ -13,6 +13,10 @@ const visitSingleStudent = ()=>{
 }
 
 describe('Mongoose relation tests (assigning students to jobs, courses)', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
