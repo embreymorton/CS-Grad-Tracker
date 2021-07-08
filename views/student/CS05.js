@@ -271,10 +271,10 @@ const pageScriptText = (nominees, thesisadvisor, committeeChairman) => (`
 
   const updatePage = (key, index) => {
     const buttons = document.querySelectorAll('.btn.' + key)
-    const isActive = buttons[index].ariaPressed
+    const isActive = buttons[index].ariaPressed === 'true'
+    const name = isActive ? '' : document.querySelectorAll('[name=nominees]')[index].value
     unselectElements(buttons)
     if (!isActive) setButtonActiveState(buttons[index], true)
-    const name = isActive ? '' : document.querySelectorAll('[name=nominees]')[index].value
     updateValue(key, name)
   }
 
