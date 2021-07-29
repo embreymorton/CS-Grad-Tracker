@@ -32,7 +32,7 @@ const mainContent = (opts) => {
     h3('Outside Review Option'),
     h3('CS-04'),
     div(
-      { style: { 'text-align': 'left' }},
+      { class: 'text-left' },
       form,
     )
   ]

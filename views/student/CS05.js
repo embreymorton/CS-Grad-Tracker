@@ -33,7 +33,7 @@ const mainContent = (opts) => {
     h3('Request for Appointment of M.S. Committee'),
     h3('CS-05'),
     div(
-      { style: { 'text-align': 'left' }},
+      { class: 'text-left' },
       form,
     )
   ]

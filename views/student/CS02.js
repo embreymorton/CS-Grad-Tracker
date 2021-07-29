@@ -32,7 +32,7 @@ const mainContent = (opts) => {
     h3('Course Waiver'),
     h3('CS-02'),
     div(
-      { style: { 'text-align': 'left' }},
+      { class: 'text-left' },
       div('This student is exempt from the breadth requirement listed below.'),
       strong('All fields required!'),
       hr(),

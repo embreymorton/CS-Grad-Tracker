@@ -30,7 +30,7 @@ const mainContent = (opts) => {
     h3('PhD Program of Study'),
     h3('CS-06'),
     div(
-      { style: { 'text-align': 'left' }},
+      { class: 'text-left' },
       cs06Form(opts),
     )
   ]
