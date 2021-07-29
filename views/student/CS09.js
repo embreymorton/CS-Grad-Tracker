@@ -51,11 +51,7 @@ const cs09Form = (opts) => {
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
-  const buttonAttrs = {
-    type: 'button',
-    'aria-pressed': 'false',
-    autocomplete: 'off',
-  }
+  const disabled = editAccess ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
@@ -70,19 +66,27 @@ const cs09Form = (opts) => {
       strong('Part 1. Information about the PRP research'),
       row(
         colMd(2)('Title of PRP topic:*'),
-        colMd(6)(input('text', 'prpTitle', form.prpTitle, true))
+        colMd(6)(
+          editAccess
+            ? input('text', 'prpTitle', form.prpTitle, true)
+            : pseudoInput(form.prpTitle)
+        )
       ), vert,
 
       row(
         colMd(2)('Research Advisor:*'),
-        colMd(6)(input('text', 'researchAdvisor', form.researchAdvisor, true))
+        colMd(6)(
+          editAccess
+            ? input('text', 'researchAdvisor', form.researchAdvisor, true)
+            : pseudoInput(form.researchAdvisor)
+        )
       ), vert,
 
       row(
         colMd(6)('Has this PRP topic already been submitted to a peer-reviewed conference or journal? *'),
         colMd(2)(
           select(
-            { name: 'peerReviewed', required: true },
+            { name: 'peerReviewed', required: editAccess, ...disabled },
             option({ value: form.peerReviewed }, form.peerReviewed),
             option({ value: 'Yes' }, 'Yes'),
             option({ value: 'No' }, 'No'),
@@ -92,28 +96,36 @@ const cs09Form = (opts) => {
 
       row(
         colMd(2)('If yes, give the full author list:'),
-        colMd(6)(input('text', 'authors', form.authors))
+        colMd(6)(
+          editAccess
+            ? input('text', 'authors', form.authors)
+            : pseudoInput(form.authors)
+        )
       ), vert,
 
       row(
         colMd(2)('If yes, was the paper accepted:'),
         colMd(2)(
           select(
-            { name: 'paperAccepted' },
+            { name: 'paperAccepted', ...disabled },
             option({ value: form.paperAccepted }, form.paperAccepted),
             option({ value: 'Yes' }, 'Yes'),
             option({ value: 'No' }, 'No'),
           )
         ),
         colMd(2)('Notification Date:'),
-        colMd(2)(input('text', 'paperNotifyDate', form.paperNotifyDate))
+        colMd(2)(
+          editAccess
+            ? input('text', 'paperNotifyDate', form.paperNotifyDate)
+            : pseudoInput(form.paperNotifyDate)
+        )
       ), vert,
 
       row(
         colMd(6)('Are reviews currently available to your committee, or will they become available prior to the presentation?*'),
         colMd(2)(
           select(
-            { name: 'reviewsAvailable', required: true },
+            { name: 'reviewsAvailable', required: editAccess, ...disabled },
             option({ value: form.reviewsAvailable }, form.reviewsAvailable),
             option({ value: 'Yes' }, 'Yes'),
             option({ value: 'No' }, 'No'),
@@ -124,14 +136,18 @@ const cs09Form = (opts) => {
       div('What part of the research were you responsible for?*'),
       colMd(4)(
         x('textarea.form-control')(
-          { name: 'researchResponsible', rows: 6, required: true },
+          { name: 'researchResponsible', rows: 6, required: editAccess, ...disabled },
           form.researchResponsible
         )
       ), vert,
 
       row(
         colMd(6)('Will you present the entire project, or just your contribution?*'),
-        colMd(2)(input('text', 'present', form.present, true))
+        colMd(2)(
+          editAccess
+            ? input('text', 'present', form.present, true)
+            : pseudoInput(form.present)
+        )
       ), hr(),
 
       strong('Advisor Section:'),
@@ -143,23 +159,23 @@ const cs09Form = (opts) => {
       strong('Committee Members'),
       row(
         colMd(5)(
-          editAccess ? x('em')('In place of your signature, please type your full legal name:') : 'Signature*'
+          admin ? x('em')('In place of your signature, please type your full legal name:') : 'Signature*'
         ),
         colMd(2)('Date:*')
       ),
       row(
         colMd(5)(
           range4.map((i) => (
-            editAccess
+            admin
               ? input('text', 'committeeSignature', form.committeeSignature && form.committeeSignature[i], true)
-              : form.committeeSignature && form.committeeSignature[i] || '-'
+              : div(form.committeeSignature && form.committeeSignature[i] || '-')
           ))
         ),
         colMd(2)(
           range4.map((i) => (
-            editAccess
+            admin
               ? input('text', 'committeeDateSigned', form.committeeDateSigned && form.committeeDateSigned[i], true)
-              : form.committeeDateSigned && form.committeeDateSigned[i] || '-'
+              : div(form.committeeDateSigned && form.committeeDateSigned[i] || '-')
           ))
         )
       ), hr(),
@@ -175,22 +191,23 @@ const cs09Form = (opts) => {
       ), vert,
 
       x('div#sliders')(
-        sliderRow(form, editAccess, 'Integration of concepts*', 'conceptIntegration'),
-        sliderRow(form, editAccess, 'Creativity*', 'creativity'),
-        sliderRow(form, editAccess, 'Clarity*', 'clarity'),
-        sliderRow(form, editAccess, 'Abstraction and formality*', 'abstractionFormality'),
-        sliderRow(form, editAccess, 'Organization*', 'organization'),
-        sliderRow(form, editAccess, 'Writing*', 'writing'),
-        sliderRow(form, editAccess, 'Presentation*', 'presentation'),
-        sliderRow(form, editAccess, 'Answering questions*', 'answeringQuestion'), vert,
-        sliderRow(form, editAccess, 'Overall Score*', 'overallScore'),
+        sliderRow(form, admin, 'Integration of concepts*', 'conceptIntegration'),
+        sliderRow(form, admin, 'Creativity*', 'creativity'),
+        sliderRow(form, admin, 'Clarity*', 'clarity'),
+        sliderRow(form, admin, 'Abstraction and formality*', 'abstractionFormality'),
+        sliderRow(form, admin, 'Organization*', 'organization'),
+        sliderRow(form, admin, 'Writing*', 'writing'),
+        sliderRow(form, admin, 'Presentation*', 'presentation'),
+        sliderRow(form, admin, 'Answering questions*', 'answeringQuestion'), vert,
+        sliderRow(form, admin, 'Overall Score*', 'overallScore'),
       ),
 
       div(strong('Feedback on Research, Presentation, and Paper:')),
       colMd(4)(
-        editAccess
-          ? x('textarea.form-control')({ name: 'feedback', rows: 6 }, form.feedback)
-          : form.feedback
+        x('textarea.form-control')(
+          { name: 'feedback', rows: 6, ...disabled },
+          form.feedback
+        )
       ),
 
       editAccess

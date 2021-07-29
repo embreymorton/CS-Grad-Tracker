@@ -76,6 +76,13 @@ describe('Test CS09 submissions', ()=>{
       delete CS09[deletions[i]];
     }
 
+    for(let i = 0; i < CS09.committeeSignature.length; i++){
+      cy.contains(CS09.committeeSignature[i])
+      cy.contains(CS09.committeeDateSigned[i]);
+    }
+    delete CS09.committeeDateSigned;
+    delete CS09.committeeSignature;
+
     util.fillFormAsStudent(CS09);
     cy.get('.CS09-submit').click();
     util.checkFormAsStudent(CS09);
