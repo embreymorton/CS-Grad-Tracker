@@ -1,9 +1,8 @@
 const x = require('hyperaxe')
 
-const input = (type, name, value, required_, checked) => {
+const input = (type, name, value, required=null, checked=null, moreAttrs={}) => {
   const input = x('input.form-control')
-  const required = required_ ? true : null
-  const attrs = { type, name, value, checked, required }
+  const attrs = { type, name, value, checked, required, ...moreAttrs }
   if (type == 'checkbox') delete attrs.value
   return input(attrs)
 }

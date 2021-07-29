@@ -17,7 +17,7 @@ let CS09 = {
   committeeSignature: ['Omae', 'Wa', 'Mou', 'Shindeiru'],
   committeeDateSigned: ['NANI?????', '*Intense high pitched noise*', '*Explosion*', 'ARRRRRRGHHHH'],
   presentationDate: '*Weird whispy ghost* Who.... are you?',
-  feedback: "This is Alterra HQ. This may be our only communications window. We can't send a rescue ship all the way out there so Aurora, you're just going to have to meet us halfway. *Offmic* We're doing a sandwich run, are you in?"
+  feedback: "*Offmic* We're doing a sandwich run, are you in?"
 }
 
 let CS09Dropdowns = {
@@ -38,6 +38,10 @@ let CS09Sliders = {
 }
 
 describe('Test CS09 submissions', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -64,20 +68,13 @@ describe('Test CS09 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS09/false');
 
-    let deletions = ['advisorSignature', 'advisorDateSigned', 'presentationDate', 'feedback'];
+    let deletions = ['advisorSignature', 'advisorDateSigned', 'feedback'];
     delete CS09.name;
     delete CS09.pid;
     for(let i = 0; i < deletions.length; i++){
       cy.contains(CS09[deletions[i]]);
       delete CS09[deletions[i]];
     }
-
-    for(let i = 0; i < CS09.committeeSignature.length; i++){
-      cy.contains(CS09.committeeSignature[i])
-      cy.contains(CS09.committeeDateSigned[i]);
-    }
-    delete CS09.committeeDateSigned;
-    delete CS09.committeeSignature;
 
     util.fillFormAsStudent(CS09);
     cy.get('.CS09-submit').click();
