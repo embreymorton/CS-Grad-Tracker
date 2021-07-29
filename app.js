@@ -217,8 +217,12 @@ else{
     //add routes to allow user changes
     app.use('/changeUser', require('./routes/userChange'))
     app.use('/util/resetDatabaseToSnapshot', async (req, res) => {
-      const result = await require('./cypress/fixtures')()
-      res.status(200).json(result)
+      try {
+        const result = await require('./cypress/fixtures')()
+        res.status(200).json(result)
+      } catch (error) {
+        res.status(500).json({error})
+      }
     })
     app.get('/', (req, res) => {
       if(req.session.accessLevel >= 2){

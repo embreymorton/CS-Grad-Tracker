@@ -1,20 +1,15 @@
 var student = require('../../../data/testRoles').student
 
-describe('Test student routes and functionality', ()=>{
-  let job, supervisor, semester
-  before(async () => {
-    const { body } = await cy.request('/util/resetDatabaseToSnapshot')
-    job = body.job
-    // FIXME: coupled to implementation details in fixtures namespace
-    supervisor = body.roles.faculty
-    semester = body.semesters[0]
+describe('Test student routes and functionality', () => {
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
   })
 
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
 
-  it('Make sure student can not access job, course, and student create routes', ()=>{
+  it('Make sure student can not access job, course, and student create routes', () => {
     cy.visit('/changeUser/student');
     cy.visit('/student');
     cy.contains('Not faculty');
@@ -26,10 +21,10 @@ describe('Test student routes and functionality', ()=>{
     cy.contains('Not admin');
   })
 
-  it('When logged in as student, get taken to studentView page', ()=>{
+  it('When logged in as student, get taken to studentView page', () => {
     cy.visit('/changeUser/student')
     cy.visit('/')
-    cy.url().should('include','/studentView')
+    cy.url().should('include', '/studentView')
   })
 
   var updateStudent = {
@@ -40,7 +35,7 @@ describe('Test student routes and functionality', ()=>{
     'ethnicity':'ASIAN',
   }
 
-  it('Able to update some basic info on the student page', ()=>{
+  it('Able to update some basic info on the student page', () => {
     cy.get('.input-first-name')
       .clear()
       .type(updateStudent['first-name'])
@@ -62,7 +57,7 @@ describe('Test student routes and functionality', ()=>{
     cy.get('.update-button-submit').click();
   })
 
-  it('Should be able to click top navigation bar and be brought to correct pages', ()=>{
+  it('Should be able to click top navigation bar and be brought to correct pages', () => {
     cy.visit('/')
     cy.get('.student-jobs').click()
     cy.url().should('include', 'studentView/jobs')
@@ -74,7 +69,7 @@ describe('Test student routes and functionality', ()=>{
     cy.url().should('include', 'studentView/courses')
   })
 
-  it('Student should be able to see a job they are holding', ()=>{
+  it('Student should be able to see a job they are holding', () => {
     cy.visit('/changeUser/admin')
     cy.visit('/job')
     cy.get('.assign-job-button').click()
@@ -84,11 +79,11 @@ describe('Test student routes and functionality', ()=>{
     cy.visit('/changeUser/student')
     cy.visit('/studentView/jobs')
     cy.get('.student-job-table').find('tr').should('have.length', 2);
-    cy.contains(job.position)
-    const superName = `${supervisor.lastName}, ${supervisor.firstName}`
-    cy.contains(superName)
-    const semesterStr = `${semester.season} ${semester.year}`
-    cy.contains(semesterStr)
+    // FIXME: next 3 lines of code are invisibly coupled to fixtures data.
+    // (see this line's commit message for more info)
+    cy.contains('TA')
+    cy.contains(`faculty, faculty`)
+    cy.contains(`FA 2018`)
   })
 
   //include form tests and other tests as issues come up

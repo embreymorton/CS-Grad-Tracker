@@ -82,8 +82,10 @@ const resetDatabaseToSnapshot = async () => {
     const job = await saveJob(roles.faculty, course)
     return { semesters, roles, courseInfos, course, job }
   } catch (e) {
+    const e2 = e.cause || e
     console.error('Error resetting database to snapshot')
-    console.error(e.cause || e)
+    console.error(e2)
+    throw e2
   }
 }
 
