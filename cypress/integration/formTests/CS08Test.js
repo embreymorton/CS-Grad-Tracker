@@ -14,12 +14,16 @@ let CS08 = {
   secondaryReader: '2asdasd',
   secondaryDate: '2asdasdqwc',
   primarySignature: '1asdasd',
-  primarySignedDate: '1asdasdqwc',
+  primaryDateSigned: '1asdasdqwc',
   secondarySignature: '2asdasd',
-  secondarySignedDate: '2asdasdqwc',
+  secondaryDateSigned: '2asdasdqwc',
 }
 
 describe('Test CS08 submissions', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -44,8 +48,8 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(CS08.secondaryDate);
     cy.contains(CS08.primarySignature);
     cy.contains(CS08.secondarySignature);
-    cy.contains(CS08.primarySignedDate);
-    cy.contains(CS08.secondarySignedDate);
+    cy.contains(CS08.primaryDateSigned);
+    cy.contains(CS08.secondaryDateSigned);
 
     delete CS08.primaryReader;
     delete CS08.primaryDate;
@@ -53,8 +57,8 @@ describe('Test CS08 submissions', ()=>{
     delete CS08.secondaryDate;
     delete CS08.primarySignature;
     delete CS08.secondarySignature;
-    delete CS08.primarySignedDate;
-    delete CS08.secondarySignedDate;
+    delete CS08.primaryDateSigned;
+    delete CS08.secondaryDateSigned;
     delete CS08.name;
     delete CS08.pid;
 

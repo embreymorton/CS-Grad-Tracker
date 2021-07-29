@@ -451,8 +451,8 @@ var CS08Schema = mongoose.Schema({
   title: String,
   primaryReader: String, primaryDate: String,
   secondaryReader: String, secondaryDate: String,
-  primarySignature: String, primarySignedDate: String,
-  secondarySignature: String, secondarySignedDate: String
+  primarySignature: String, primaryDateSigned: String,
+  secondarySignature: String, secondaryDateSigned: String
 })
 
 var CS09Schema = mongoose.Schema({
