@@ -438,10 +438,10 @@ var CS06Schema = mongoose.Schema({
   PHDOralExam: Boolean,
   committee: [String],
   advisor: String, chairman: String,
-  chairSignature: String,
+  chairSignature: String, chairDateSigned: String,
   approved: String,
   reasonApproved: String,
-  directorSignature: String
+  directorSignature: String, directorDateSigned: String,
 })
 
 var CS08Schema = mongoose.Schema({
