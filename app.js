@@ -207,7 +207,7 @@ if(process.env.mode == 'production' || process.env.mode == 'development'){
     }
   })
 }
-else{
+else if (process.env.mode == 'testing') {
     schema.Semester.find({}).exec().then((result)=>{
       if(result.length == 0){
         require('./controllers/util.js').initializeAllSemesters()
