@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles';
+import { student } from '../../../data/testRoles';
 import util from './formUtil';
 
-let student = data.student;
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS08 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   semester : 'asdsadsa',
   year : '1293',
   title : 'a',
@@ -33,6 +32,8 @@ describe('Test CS08 submissions', ()=>{
     cy.visit('/changeUser/admin');
     util.visitFormAsAdmin();
     cy.get('.CS08').click();
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS08);
     cy.get('.CS08-submit').click();
     util.checkFormAsAdmin(CS08);
@@ -41,6 +42,8 @@ describe('Test CS08 submissions', ()=>{
   it('Submit CS08 form from student side', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS08/false');
+    cy.contains(name)
+    cy.contains(pid.toString())
 
     cy.contains(CS08.primaryReader);
     cy.contains(CS08.primaryDate);
@@ -59,8 +62,6 @@ describe('Test CS08 submissions', ()=>{
     delete CS08.secondarySignature;
     delete CS08.primaryDateSigned;
     delete CS08.secondaryDateSigned;
-    delete CS08.name;
-    delete CS08.pid;
 
     util.fillFormAsStudent(CS08);
     cy.get('.CS08-submit').click();

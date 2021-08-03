@@ -49,18 +49,19 @@ const cs08Form = (opts) => {
     'aria-pressed': 'false',
     autocomplete: 'off',
   }
+  const disabled = editAccess ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidRow(opts, editAccess),
+      namePidRow(student),
       semesterYearRow(opts, editAccess), hr(),
 
       strong('Title of Paper:'),
       colMd(4)(
         x('textarea.form-control')(
-          { rows: 6, name: 'title', required: true },
+          { rows: 6, name: 'title', required: true, ...disabled },
           form.title
         )
       ),
@@ -91,24 +92,20 @@ const cs08Form = (opts) => {
   )
 }
 
-const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(6)(
         div('Name'),
-        value('text', 'name', name)
+        pseudoInput(name),
       ),
       colMd(6)(
         div('PID'),
-        value('number', 'pid', pid)
-      ),
+        pseudoInput(pid),
+      )
     )
   )
 }

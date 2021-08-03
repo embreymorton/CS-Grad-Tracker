@@ -17,7 +17,7 @@ const main = (opts) => {
     studentBar(opts),
     mainContent(opts),
     bootstrapScripts(),
-    pageScript(opts.cspNonce, opts.form),
+    pageScript(opts),
   )
 }
 
@@ -56,6 +56,7 @@ const cs06Form = (opts) => {
     'aria-pressed': 'false',
     autocomplete: 'off',
   }
+  const disabled = editAccess ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
@@ -73,7 +74,11 @@ const cs06Form = (opts) => {
 
       row(
         colMd(2)('Title of Dissertation or Topic of Research Area*'),
-        colMd(6)(input('text', 'dissTitle', dissTitle, true))
+        colMd(6)(
+          editAccess
+            ? input('text', 'dissTitle', dissTitle, true)
+            : pseudoInput(dissTitle)
+        )
       ),
       hr(),
 
@@ -88,7 +93,7 @@ const cs06Form = (opts) => {
         ),
         colMd(2)(
           select(
-            { name: 'comp915' },
+            { name: 'comp915', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !comp915 || null }, 'false'),
             option({ value: 'true', selected: comp915 || null }, 'true'),
@@ -140,7 +145,7 @@ const cs06Form = (opts) => {
           div('Category*'),
           range6.map((i) => (
             select(
-              { name: 'breadthCourseCategory', required: true },
+              { name: 'breadthCourseCategory', required: true, ...disabled },
               option({ value: '' }, ''),
               option({ value: 'T', selected: breadthCourseCategory && breadthCourseCategory[i] == 'T' || null }, 'T'),
               option({ value: 'S', selected: breadthCourseCategory && breadthCourseCategory[i] == 'S' || null }, 'S'),
@@ -153,21 +158,27 @@ const cs06Form = (opts) => {
         colMd(6)(
           div('Course Number, Title, & Name of Univ.*'),
           range6.map((i) => (
-            input('text', 'breadthCourseInfo', breadthCourseInfo && breadthCourseInfo[i], true)
+            editAccess
+              ? input('text', 'breadthCourseInfo', breadthCourseInfo && breadthCourseInfo[i], true)
+              : pseudoInput(breadthCourseInfo && breadthCourseInfo[i])
           ))
         ),
 
         colMd(2)(
           div('Semester/Year*'),
           range6.map((i) => (
-            input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
+            editAccess
+              ? input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
+              : pseudoInput(breadthCourseDate && breadthCourseDate[i])
           ))
         ),
 
         colMd(2)(
           div('Grade*'),
           range6.map((i) => (
-            input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
+            editAccess
+              ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
+              : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
           ))
         ),
       ),
@@ -182,19 +193,25 @@ const cs06Form = (opts) => {
         colMd(6)(
           div('Course Number, Title, & Name of Univ*'),
           range4.map((i) => (
-            input('text', 'concentrationCourseInfo', concentrationCourseInfo && concentrationCourseInfo[i])
+            editAccess
+              ? input('text', 'concentrationCourseInfo', concentrationCourseInfo && concentrationCourseInfo[i])
+              : pseudoInput(concentrationCourseInfo && concentrationCourseInfo[i])
           ))
         ),
         colMd(3)(
           div('Semester/Year*'),
           range4.map((i) => (
-            input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
+            editAccess
+              ? input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
+              : pseudoInput(concentrationCourseDate && concentrationCourseDate[i])
           ))
         ),
         colMd(3)(
           div('Credit/Hours*'),
           range4.map((i) => (
-            input('number', 'concentrationCourseHours', concentrationCourseHours && concentrationCourseHours[i])
+            editAccess
+              ? input('number', 'concentrationCourseHours', concentrationCourseHours && concentrationCourseHours[i])
+              : pseudoInput(concentrationCourseHours && concentrationCourseHours[i])
           ))
         ),
       ),
@@ -206,13 +223,17 @@ const cs06Form = (opts) => {
         colMd(4)(
           div('Course Number & Title*'),
           range4.map((i) => (
-            input('text', 'otherCourseInfo', otherCourseInfo && otherCourseInfo[i])
+            editAccess
+              ? input('text', 'otherCourseInfo', otherCourseInfo && otherCourseInfo[i])
+              : pseudoInput(otherCourseInfo && otherCourseInfo[i])
           ))
         ),
         colMd(2)(
           div('Credit Hours*'),
           range4.map((i) => (
-            input('number', 'otherCourseHours', otherCourseHours && otherCourseHours[i])
+            editAccess
+              ? input('number', 'otherCourseHours', otherCourseHours && otherCourseHours[i])
+              : pseudoInput(otherCourseHours && otherCourseHours[i])
           ))
         ),
       ),
@@ -221,7 +242,7 @@ const cs06Form = (opts) => {
         colMd(4)(
           div('Note:'),
           x('textarea.form-control')(
-            { rows: 6, name: 'note' },
+            { rows: 6, name: 'note', ...disabled },
             note
           )
         )
@@ -232,7 +253,7 @@ const cs06Form = (opts) => {
         colMd(4)(
           div('List any other courses here that you believe are relevant to your program of study.'),
           x('textarea.form-control')(
-            { rows: 6, name: 'otherCourses' },
+            { rows: 6, name: 'otherCourses', ...disabled },
             otherCourses
           )
         )
@@ -247,7 +268,7 @@ const cs06Form = (opts) => {
             a({ href: 'https://handbook.unc.edu/phd.html' }, 'The Graduate School Handbook')
           ),
           x('textarea.form-control')(
-            { rows: 6, name: 'minor' },
+            { rows: 6, name: 'minor', ...disabled },
             minor
           )
         )
@@ -260,7 +281,7 @@ const cs06Form = (opts) => {
       div('A. Background Preparation worksheet*'),
       colMd(4)(
         select(
-          { name: 'backgroundPrepWorkSheet' },
+          { name: 'backgroundPrepWorkSheet', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !backgroundPrepWorkSheet || null }, 'false'),
           option({ value: 'true', selected: backgroundPrepWorkSheet || null }, 'true'),
@@ -270,7 +291,7 @@ const cs06Form = (opts) => {
       div('B. Program Product requirement*'),
       colMd(4)(
         select(
-          { name: 'programProductRequirement' },
+          { name: 'programProductRequirement', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !programProductRequirement || null }, 'false'),
           option({ value: 'true', selected: programProductRequirement || null }, 'true'),
@@ -280,7 +301,7 @@ const cs06Form = (opts) => {
       div('C. PhD. Written Exam (a.k.a. the writing requirement)*'),
       colMd(4)(
         select(
-          { name: 'PHDWrittenExam' },
+          { name: 'PHDWrittenExam', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !PHDWrittenExam || null }, 'false'),
           option({ value: 'true', selected: PHDWrittenExam || null }, 'true'),
@@ -290,7 +311,7 @@ const cs06Form = (opts) => {
       div('D. PhD Oral Comprehensive Exam*'),
       colMd(4)(
         select(
-          { name: 'PHDOralExam' },
+          { name: 'PHDOralExam', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !PHDOralExam || null }, 'false'),
           option({ value: 'true', selected: PHDOralExam || null }, 'true'),
@@ -315,7 +336,9 @@ const cs06Form = (opts) => {
             x('div.form-group.row')(
               x('label.col-md-2')(`${i+1}.* `),
               colMd(10)(
-                input('text', 'committee', committee && committee[i], true)
+                editAccess
+                  ? input('text', 'committee', committee && committee[i], true)
+                  : x('div.committee-name')(pseudoInput(committee && committee[i]))
               )
             )
           ))
@@ -377,7 +400,7 @@ const cs06Form = (opts) => {
 
       colMd(4)(
         select(
-          { name: 'approved' },
+          { name: 'approved', disabled: !admin || null },
           option({ value: '' }, ''),
           option({ value: 'Approved', selected: approved == 'Approved' || null }, 'Approved'),
           option({ value: 'Disapproved', selected: approved == 'Disapproved' || null }, 'Disapproved'),
@@ -389,7 +412,7 @@ const cs06Form = (opts) => {
         colMd(4)(
           div('Reason for Disapproved and Needed Adjustments Stated Here '),
           x('textarea.form-control')(
-            { rows: 6, name: 'reasonApproved' },
+            { rows: 6, name: 'reasonApproved', disabled: !admin || null },
             reasonApproved
           )
         )
@@ -427,12 +450,12 @@ const namePidRow = (opts, editAccess) => {
   return (
     row(
       colMd(4)(
-        div('Name*'),
-        value('text', 'name', name)
+        div('Name'),
+        pseudoInput(name)
       ),
       colMd(4)(
-        div('PID*'),
-        value('number', 'pid', pid)
+        div('PID'),
+        pseudoInput(pid)
       ),
       colMd(4)(
         div('Date entered program*'),
@@ -442,26 +465,29 @@ const namePidRow = (opts, editAccess) => {
   )
 }
 
-const pageScript = (nonce, form) => {
+const pageScript = (opts) => {
+  const { admin, isStudent, cspNonce, form } = opts
+  const editAccess = admin || isStudent
   const { committee, advisor, chairman } = form
   const el = x('script')({ type: 'text/javascript' })
   // must add text manually to bypass escaping of characters like > and &
-  el.innerHTML = pageScriptText(committee, advisor, chairman)
+  el.innerHTML = pageScriptText(committee, advisor, chairman, editAccess)
   // must add 'nonce' attribute manually because of a hyperscript limitation
-  el.setAttribute('nonce', nonce)
+  el.setAttribute('nonce', cspNonce)
   return el
 }
 
-const pageScriptText = (committee, advisor, chairman) => (`
+const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   document.addEventListener('DOMContentLoaded', () => {
     const committee = ${JSON.stringify(committee)}
     const advisor = '${advisor}'
     const chairman = '${chairman}'
-    setRadioishButtonClickHandlers()
+    const editAccess = ${editAccess}
+    if (editAccess) setRadioishButtonClickHandlers()
     if (committee) setRadioishButtonDefaults(committee, advisor, chairman)
-    setRadioishSelectionRequirement()
+    if (editAccess) setRadioishSelectionRequirement()
     setNoCourseOverlapRequirement()
-    setNameChangeListeners()
+    if (editAccess) setNameChangeListeners()
   })
 
   const setRadioishButtonClickHandlers = () => {
@@ -543,10 +569,17 @@ const pageScriptText = (committee, advisor, chairman) => (`
     el.addEventListener('click', () => { updatePage(key, index) })
   )
 
+  const getValue = (key, index) => {
+    const button = document.querySelectorAll('.btn.' + key)[index]
+    const names = document.querySelectorAll('[name=committee]')
+    if (names.length) return names[index].value
+    return document.querySelectorAll('.committee-name')[index].innerText
+  }
+
   const updatePage = (key, index) => {
     const buttons = document.querySelectorAll('.btn.' + key)
     const isActive = buttons[index].ariaPressed === 'true'
-    const name = isActive ? '' : document.querySelectorAll('[name=committee]')[index].value
+    const name = getValue(key, index)
     unselectElements(buttons)
     if (!isActive) setButtonActiveState(buttons[index], true)
     updateValue(key, name)
@@ -562,7 +595,8 @@ const pageScriptText = (committee, advisor, chairman) => (`
   }
 
   const updateValue = (name, value) => {
-    document.querySelector('[name=' + name + ']').value = value
+    const input = document.querySelector('[name=' + name + ']')
+    if (input) input.value = value
     document.querySelector('span.label.' + name).textContent = value
   }
 

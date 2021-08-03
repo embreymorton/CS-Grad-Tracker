@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles'
+import { student } from '../../../data/testRoles';
 import util from './formUtil'
 
-let student = data.student
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS05 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   nominees: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
   nomineeDepartments: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
   nomineeStatuses: ['asdas', 'ASDF' ,'asdjkn' , 'skda', 'sjakdl'],
@@ -31,6 +30,8 @@ describe('Test CS05 submissions', () => {
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS05').click()
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS05)
     util.selectDropdowns(CS05Dropdowns)
     cy.get('.advisor-buttons .row:nth-child(1) .btn').click()
@@ -46,13 +47,13 @@ describe('Test CS05 submissions', () => {
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS05/false')
 
+    cy.contains(name)
+    cy.contains(pid.toString())
     cy.contains(CS05.directorSignature)
     cy.contains(CS05.directorDateSigned)
 
     delete CS05.directorSignature
     delete CS05.directorDateSigned
-    delete CS05.name
-    delete CS05.pid
     delete CS05.nomineeStatuses
 
     util.fillFormAsStudent(CS05)

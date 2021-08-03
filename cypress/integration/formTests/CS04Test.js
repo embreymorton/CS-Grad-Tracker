@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles';
+import { student } from '../../../data/testRoles';
 import util from './formUtil';
 
-let student = data.student;
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS04 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   projectDescription: 'ASDF',
   studentSignature: 'AA',
   studentDateSigned: 'AAA',
@@ -19,6 +18,10 @@ let CS04Dropdowns = {
 }
 
 describe('Test CS04 submissions', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -28,6 +31,8 @@ describe('Test CS04 submissions', ()=>{
     cy.visit('/changeUser/admin');
     util.visitFormAsAdmin();
     cy.get('.CS04').click();
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS04);
     util.selectDropdowns(CS04Dropdowns);
     cy.get('.CS04-submit').click();
@@ -39,15 +44,13 @@ describe('Test CS04 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS04/false')
 
-    cy.contains(CS04Dropdowns.approved)
+    cy.contains(name)
+    cy.contains(pid.toString())
     cy.contains(CS04.chairmanSignature);
     cy.contains(CS04.chairmanDateSigned);
 
     delete CS04.chairmanSignature
-    delete CS04.approved;
     delete CS04.chairmanDateSigned;
-    delete CS04.name;
-    delete CS04.pid;
 
     util.fillFormAsStudent(CS04);
     cy.get('.CS04-submit').click();

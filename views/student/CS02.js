@@ -85,11 +85,11 @@ const namePidDateRow = (opts, editAccess) => {
     row(
       colMd(4)(
         div('Name'),
-        value('text', 'name', name)
+        pseudoInput(name)
       ),
       colMd(4)(
         div('PID'),
-        value('number', 'pid', pid)
+        pseudoInput(pid)
       ),
       colMd(4)(
         div('Date submitted'),

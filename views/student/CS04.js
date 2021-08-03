@@ -45,6 +45,7 @@ const cs04Form = (opts) => {
   const { div, hr, strong, option } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
+  const disabled = editAccess ? {} : { disabled: true }
 
   return [
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
@@ -53,13 +54,13 @@ const cs04Form = (opts) => {
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidRow(opts, editAccess), hr(),
+      namePidRow(student), hr(),
 
       row(
         colMd(6)(
           div(strong('Brief Description of project:')),
           x('textarea.form-control')(
-            { rows: 6, name: 'projectDescription', required: true },
+            { rows: 6, name: 'projectDescription', required: true, ...disabled },
             form.projectDescription
           )
         ),
@@ -70,7 +71,7 @@ const cs04Form = (opts) => {
         colMd(6)(
           div('Is the documentation proprietary?'),
           select(
-            { name: 'docProprietary' },
+            { name: 'docProprietary', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.docProprietary || null }, 'No. The documentation is attached.'),
             option({ value: 'true', selected: form.docProprietary || null }, 'Yes. A non-disclosure agreement is attached.'),
@@ -87,14 +88,12 @@ const cs04Form = (opts) => {
       row(
         colMd(4)(
           div('Approved:'),
-          isStudent
-            ? form.approved
-            : select(
-              { name: 'approved' },
-              option({ value: '' }, ''),
-              option({ value: 'false', selected: !form.approved || null }, 'Not approved'),
-              option({ value: 'true', selected: form.approved || null }, 'Approved'),
-            )
+          select(
+            { name: 'approved', disabled: !admin || null },
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.approved || null }, 'Not approved'),
+            option({ value: 'true', selected: form.approved || null }, 'Approved'),
+          )
         )
       ),
 
@@ -105,24 +104,20 @@ const cs04Form = (opts) => {
   ]
 }
 
-const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(6)(
         div('Name'),
-        value('text', 'name', name)
+        pseudoInput(name),
       ),
       colMd(6)(
         div('PID'),
-        value('number', 'pid', pid)
-      ),
+        pseudoInput(pid),
+      )
     )
   )
 }

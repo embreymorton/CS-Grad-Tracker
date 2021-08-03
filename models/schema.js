@@ -320,7 +320,6 @@ var noteSchema = mongoose.Schema({
 //form schemas
 var CS01Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
   comp283Covered: String, comp283Date: String,
   comp410Covered: String, comp410Date: String,
   comp411Covered: String, comp411Date: String,
@@ -342,7 +341,6 @@ var CS01Schema = mongoose.Schema({
 
 var CS01BSMSSchema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
   comp521Covered: String, comp521Date: String,
   comp520Covered: String, comp520Date: String,
   comp530Covered: String, comp530Date: String,
@@ -355,8 +353,6 @@ var CS01BSMSSchema = mongoose.Schema({
 
 var CS02Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String,
-  pid: Number,
   dateSubmitted: String,
   courseNumber: String,
   basisWaiver: String,
@@ -366,8 +362,6 @@ var CS02Schema = mongoose.Schema({
 
 var CS03Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String,
-  pid: Number,
   DR: [String],
   university: [String],
   dept: [String],
@@ -390,8 +384,6 @@ var CS03Schema = mongoose.Schema({
 
 var CS04Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String,
-  pid: Number,
   projectDescription: String,
   docProprietary: Boolean,
   studentSignature: String, studentDateSigned: String,
@@ -401,8 +393,6 @@ var CS04Schema = mongoose.Schema({
 
 var CS05Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String,
-  pid: Number,
   oralComprehensiveExam: Boolean,
   thesis: Boolean,
   nominees: [String],
@@ -415,8 +405,6 @@ var CS05Schema = mongoose.Schema({
 
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String,
-  pid: Number,
   dateSubmitted: String, dateEntered: String,
   dissTitle: String,
   comp915: Boolean,
@@ -446,7 +434,6 @@ var CS06Schema = mongoose.Schema({
 
 var CS08Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
   semester: String, year: Number,
   title: String,
   primaryReader: String, primaryDate: String,
@@ -457,7 +444,6 @@ var CS08Schema = mongoose.Schema({
 
 var CS09Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number,
   prpTitle: String,
   researchAdvisor: String,
   peerReviewed: String,
@@ -484,7 +470,7 @@ var CS09Schema = mongoose.Schema({
 
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
-  name: String, pid: Number, email: String, dateMet: String,
+  email: String, dateMet: String,
   comp523: Boolean,
   comp523Signature: String,
   comp523DateSigned: String,

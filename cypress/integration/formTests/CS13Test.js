@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles'
+import { student } from '../../../data/testRoles';
 import util from './formUtil'
 
-let student = data.student
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS13 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   comp523Signature : 'asdas',
   comp523DateSigned: 'dddd',
   jobInfo: 'ssss',
@@ -40,6 +39,8 @@ describe('Test CS13 submissions', ()=>{
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS13').click()
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS13)
     util.selectDropdowns(CS13Dropdowns)
     cy.get('.CS13-submit').click()
@@ -49,11 +50,8 @@ describe('Test CS13 submissions', ()=>{
   it('Submit CS13 form from student side', ()=>{
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS13/false')
-
-    cy.get('[name=name]').should('have.value', CS13.name)
-    cy.get('[name=pid]').should('have.value', CS13.pid)
-    delete CS13.name
-    delete CS13.pid
+    cy.contains(name)
+    cy.contains(pid.toString())
 
     ;[
       'comp523Signature',

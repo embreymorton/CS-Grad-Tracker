@@ -15,6 +15,10 @@ const CS02 = {
 }
 
 describe('Test CS02 submissions', () => {
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -23,8 +27,8 @@ describe('Test CS02 submissions', () => {
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS02').click()
-    cy.get('.cs-form [name=name]').should('have.value', name)
-    cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS02)
     cy.get('.CS02-submit').click()
     util.fillFormAsStudent(CS02)
@@ -33,9 +37,8 @@ describe('Test CS02 submissions', () => {
   it('Submit CS02 form from student side', () => {
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS02/false')
-
-    cy.get('.cs-form [name=name]').should('have.value', name)
-    cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
+    cy.contains(name)
+    cy.contains(pid.toString())
 
     ;[
       'advisorSignature',

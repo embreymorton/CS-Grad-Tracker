@@ -52,12 +52,13 @@ const cs03Form = (opts) => {
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
   const range13 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const disabled = editAccess ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidRow(opts, editAccess), hr(),
+      namePidRow(student), hr(),
       div(
         'Instructions:  This form details an individual program of study for the MS Degree.  It should be filed with the Student Services Manager when the program is substantially planned ',
         strong('(typically after two semesters)'),
@@ -75,50 +76,63 @@ const cs03Form = (opts) => {
         colMd(4)('A = Applications'),
         colMd(4)('S = Systems & Hardware'),
         colMd(4)('T = Theory & Formal Thinking'),
-      ),
-      hr(),
+      ), hr(),
 
       row(
         colMd(1)(
           div('Dist'),
           range13.map((i) => (
-            input('text', 'DR', form.DR && form.DR[i])
+            editAccess
+              ? input('text', 'DR', form.DR && form.DR[i])
+              : pseudoInput(form.DR && form.DR[i])
           ))
         ),
         colMd(2)(
           div('University'),
           range13.map((i) => (
-            input('text', 'university', 'UNC-CH')
+            editAccess
+              ? input('text', 'university', form.university && form.university[i])
+              : pseudoInput(form.university && form.university[i])
           ))
         ),
         colMd(1)(
           div('Department'),
           range13.map((i) => (
-            input('text', 'dept', 'COMP')
+            editAccess
+              ? input('text', 'dept', form.dept && form.dept[i])
+              : pseudoInput(form.dept && form.dept[i])
           ))
         ),
         colMd(2)(
           div('Course'),
           range13.map((i) => (
-            input('text', 'course', form.course && form.course[i])
+            editAccess
+              ? input('text', 'course', form.course && form.course[i])
+              : pseudoInput(form.course && form.course[i])
           ))
         ),
         colMd(1)(
           div('Hours'),
           range13.map((i) => (
-            input('number', 'hours', form.hours && form.hours[i])
+            editAccess
+              ? input('number', 'hours', form.hours && form.hours[i])
+              : pseudoInput(form.hours && form.hours[i])
           ))
         ),
         colMd(2)(
           div('Semester'),
           range13.map((i) => (
-            input('text', 'semester', form.semester && form.semester[i])
+            editAccess
+              ? input('text', 'semester', form.semester && form.semester[i])
+              : pseudoInput(form.semester && form.semester[i])
           ))
         ),
         colMd(3)(
           div('Brief Title'),
           range13.map((i) => (
-            input('text', 'title', form.title && form.title[i])
+            editAccess
+              ? input('text', 'title', form.title && form.title[i])
+              : pseudoInput(form.title && form.title[i])
           ))
         ),
       ),
@@ -129,7 +143,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'backgroundPrep', required: 'true' },
+            { name: 'backgroundPrep', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.backgroundPrep || null }, 'Did not file CS01'),
             option({ value: 'true', selected: form.backgroundPrep || null }, 'Filed CS01'),
@@ -145,7 +159,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'programProduct', required: 'true' },
+            { name: 'programProduct', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.programProduct || null }, 'Did not file CS13'),
             option({ value: 'true', selected: form.programProduct || null }, 'Filed CS13'),
@@ -160,7 +174,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'comprehensivePaper', required: 'true' },
+            { name: 'comprehensivePaper', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.comprehensivePaper || null }, 'false'),
             option({ value: 'true', selected: form.comprehensivePaper || null }, 'true'),
@@ -173,7 +187,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'thesis', required: 'true' },
+            { name: 'thesis', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.thesis || null }, 'false'),
             option({ value: 'true', selected: form.thesis || null }, 'true'),
@@ -186,7 +200,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'outsideReview', required: 'true' },
+            { name: 'outsideReview', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.outsideReview || null }, 'false'),
             option({ value: 'true', selected: form.outsideReview || null }, 'true'),
@@ -202,7 +216,7 @@ const cs03Form = (opts) => {
       row(
         colMd(3)(
           select(
-            { name: 'comprehensiveExam', required: 'true' },
+            { name: 'comprehensiveExam', required: 'true', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'Comprehensive Paper', selected: form.comprehensiveExam == 'Comprehensive Paper' || null }, 'Comprehensive Paper (CS-08)'),
             option({ value: 'MS Oral Comprehensive Exam', selected: form.comprehensiveExam == 'MS Oral Comprehensive Exam' || null }, 'MS Oral Comprehensive Exam'),
@@ -223,7 +237,7 @@ const cs03Form = (opts) => {
           isStudent
             ? form.approved
             : select(
-              { name: 'approved', required: 'true' },
+              { name: 'approved', required: 'true', ...disabled },
               option({ value: '' }, ''),
               option({ value: approvedGSCText, selected: form.approved == approvedGSCText || null }, approvedGSCText),
               option({ value: 'Disapproved', selected: form.approved == 'Disapproved' || null }, 'Disapproved'),
@@ -237,7 +251,7 @@ const cs03Form = (opts) => {
           isStudent
             ? form.approvalReason
             : x('textarea.form-control')(
-              { rows: 6, name: 'approvalReason' },
+              { rows: 6, name: 'approvalReason', ...disabled },
               form.approvalReason,
             )
         )
@@ -254,24 +268,20 @@ const cs03Form = (opts) => {
   )
 }
 
-const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(6)(
         div('Name'),
-        value('text', 'name', name)
+        pseudoInput(name),
       ),
       colMd(6)(
         div('PID'),
-        value('number', 'pid', pid)
-      ),
+        pseudoInput(pid),
+      )
     )
   )
 }

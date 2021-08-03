@@ -50,7 +50,7 @@ const cs09Form = (opts) => {
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidRow(opts, editAccess),
+      namePidRow(student),
 
       strong('Instructions:'),
       div('This  form  has  three  parts.  Part  1  must  be  completed  by the student and submitted to the Student Services Manager two weeks prior to their exam. The student must also email a scanned copy of the form to his/her PRP committee. Parts 2 and 3 should be completed by the committee on the exam day.'),
@@ -177,9 +177,9 @@ const cs09Form = (opts) => {
       row(
         colMd(4)('Preliminary research presentation date*:'),
         colMd(2)(
-          editAccess
+          admin
             ? input('text', 'presentationDate', form.presentationDate, true)
-            : form.presentationDate
+            : pseudoInput(form.presentationDate)
         )
       ), vert,
 
@@ -198,7 +198,7 @@ const cs09Form = (opts) => {
       div(strong('Feedback on Research, Presentation, and Paper:')),
       colMd(4)(
         x('textarea.form-control')(
-          { name: 'feedback', rows: 6, ...disabled },
+          { name: 'feedback', rows: 6, disabled: !admin || null },
           form.feedback
         )
       ),
@@ -213,24 +213,20 @@ const cs09Form = (opts) => {
   )
 }
 
-const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(6)(
-        div('Name*'),
-        value('text', 'name', name)
+        div('Name'),
+        pseudoInput(name),
       ),
       colMd(6)(
-        div('PID*'),
-        value('number', 'pid', pid)
-      ),
+        div('PID'),
+        pseudoInput(pid),
+      )
     )
   )
 }

@@ -196,9 +196,10 @@ form [name=dept] {
 
 .pseudo-input {
   background-color: #eee;
+  border: 1px solid #ced4da;
   border-radius: 2px;
   font-family: Courier New, monospace;
-  padding: 5px 1rem;
+  padding: 6px 1rem;
 }
 
 #errorMessage {

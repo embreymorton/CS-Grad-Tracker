@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles'
+import { student } from '../../../data/testRoles';
 import util from './formUtil'
 
-let student = data.student
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS06 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   dateEntered: 'feb. 3, 2020',
   dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
   breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
@@ -51,6 +50,8 @@ describe('Test CS06 submissions', () => {
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS06').click()
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS06)
     util.selectDropdowns(CS06Dropdowns)
     cy.get('.advisor-buttons .btn').eq(5).click()
@@ -65,6 +66,8 @@ describe('Test CS06 submissions', () => {
   it('Submit CS06 form from student side', ()=>{
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/CS06/false')
+    cy.contains(name)
+    cy.contains(pid.toString())
 
     cy.get('.advisor-buttons .btn').eq(3).click()
     cy.get('.chair-buttons .btn').eq(3).click()
@@ -73,8 +76,7 @@ describe('Test CS06 submissions', () => {
     delete CS06.chairDateSigned
     delete CS06.directorSignature
     delete CS06.directorDateSigned
-    delete CS06.name
-    delete CS06.pid
+    delete CS06.reasonApproved
 
     util.fillFormAsStudent(CS06)
     cy.get('.CS06-submit').click()

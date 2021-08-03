@@ -23,6 +23,10 @@ let CS01BSMS = {
 }
 
 describe('Test CS01MSBS submissions', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -36,8 +40,8 @@ describe('Test CS01MSBS submissions', ()=>{
     cy.visit('/student');
     util.visitFormAsAdmin();
     cy.get('.CS01BSMS').click();
-    cy.get('.cs-form [name=name]').should('have.value', name)
-    cy.get('.cs-form [name=pid]').should('have.value', pid.toString())
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS01BSMS);
     cy.get('.CS01-submit').click();
     util.checkFormAsAdmin(CS01BSMS);
@@ -46,8 +50,8 @@ describe('Test CS01MSBS submissions', ()=>{
   it('Submit CS01BSMS form from student side', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS01BSMS/false')
-    cy.get('.cs-form [name=name]').should('have.value', name)
-    cy.get('.cs-form [name=pid]').should('have.value', student.pid.toString())
+    cy.contains(name)
+    cy.contains(pid.toString())
     cy.contains(CS01BSMS.advisorSignature);
     cy.contains(CS01BSMS.advisorDateSigned);
     delete CS01BSMS.advisorSignature;

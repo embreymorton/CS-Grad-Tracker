@@ -108,11 +108,11 @@ const namePidRow = (student) => {
     row(
       colMd(6)(
         div('Name'),
-        input('text', 'name', name, true)
+        pseudoInput(name),
       ),
       colMd(6)(
         div('PID'),
-        input('number', 'pid', pid, true)
+        pseudoInput(pid),
       )
     )
   )

@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles';
+import { student } from '../../../data/testRoles';
 import util from './formUtil';
 
-let student = data.student;
+const { lastName, firstName, pid } = student
+const name = `${lastName}, ${firstName}`
 
 let CS09 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   prpTitle : 'I ate two socks',
   researchAdvisor : 'WITNESS!',
   authors: 'IMMORTAN JOE',
@@ -68,9 +67,7 @@ describe('Test CS09 submissions', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS09/false');
 
-    let deletions = ['advisorSignature', 'advisorDateSigned', 'feedback'];
-    delete CS09.name;
-    delete CS09.pid;
+    let deletions = ['advisorSignature', 'advisorDateSigned', 'feedback', 'presentationDate'];
     for(let i = 0; i < deletions.length; i++){
       cy.contains(CS09[deletions[i]]);
       delete CS09[deletions[i]];

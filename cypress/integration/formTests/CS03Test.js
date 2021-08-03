@@ -1,11 +1,10 @@
-import data from '../../../data/testRoles';
+import data from '../../../data/testRoles'
 import util from './formUtil';
 
-let student = data.student;
+const { lastName, firstName, pid } = data.student
+const name = `${lastName}, ${firstName}`
 
 let CS03 = {
-  name: student.lastName + ', ' + student.firstName,
-  pid: student.pid.toString(),
   DR: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
   dept: ['COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP'],
   course: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
@@ -32,6 +31,10 @@ let CS03Dropdowns = {
 }
 
 describe('Test CS03 submissions', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -40,6 +43,8 @@ describe('Test CS03 submissions', ()=>{
     cy.visit('/changeUser/admin');
     util.visitFormAsAdmin();
     cy.get('.CS03').click();
+    cy.contains(name)
+    cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS03);
     util.selectDropdowns(CS03Dropdowns);
     cy.get('.CS03-submit').click();
@@ -50,6 +55,8 @@ describe('Test CS03 submissions', ()=>{
   it('Submit CS03 form from student side', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS03/false')
+    cy.contains(name)
+    cy.contains(pid.toString())
 
     cy.contains(CS03Dropdowns.approved)
     cy.contains(CS03.advisorSignature);

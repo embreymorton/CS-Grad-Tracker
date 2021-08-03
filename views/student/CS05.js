@@ -17,7 +17,7 @@ const main = (opts) => {
     studentBar(opts),
     mainContent(opts),
     bootstrapScripts(),
-    pageScript(opts.cspNonce, opts.form),
+    pageScript(opts),
   )
 }
 
@@ -52,12 +52,13 @@ const cs05Form = (opts) => {
     'aria-pressed': 'false',
     autocomplete: 'off',
   }
+  const disabled = editAccess ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
-      namePidRow(opts, editAccess), hr(),
+      namePidRow(student), hr(),
 
       row(
         colMd(2)(
@@ -65,7 +66,7 @@ const cs05Form = (opts) => {
         ),
         colMd(2)(
           select(
-            { name: 'oralComprehensiveExam', required: true },
+            { name: 'oralComprehensiveExam', required: true, ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.oralComprehensiveExam || null }, 'false'),
             option({ value: 'true', selected: form.oralComprehensiveExam || null }, 'true'),
@@ -80,7 +81,7 @@ const cs05Form = (opts) => {
         ),
         colMd(2)(
           select(
-            { name: 'thesis', required: true },
+            { name: 'thesis', required: true, ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.thesis || null }, 'false'),
             option({ value: 'true', selected: form.thesis || null }, 'true'),
@@ -102,7 +103,9 @@ const cs05Form = (opts) => {
           range5.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
-                input('text', 'nominees', form.nominees && form.nominees[i])
+                editAccess
+                  ? input('text', 'nominees', form.nominees && form.nominees[i])
+                  : x('div.nominee-name')(pseudoInput(form.nominees && form.nominees[i]))
               )
             )
           ))
@@ -112,7 +115,9 @@ const cs05Form = (opts) => {
           range5.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
-                input('text', 'nomineeDepartments', form.nomineeDepartments && form.nomineeDepartments[i])
+                editAccess
+                  ? input('text', 'nomineeDepartments', form.nomineeDepartments && form.nomineeDepartments[i])
+                  : pseudoInput(form.nomineeDepartments && form.nomineeDepartments[i])
               )
             )
           ))
@@ -122,7 +127,9 @@ const cs05Form = (opts) => {
           range5.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
-                input('text', 'nomineeStatuses', form.nomineeStatuses && form.nomineeStatuses[i])
+                editAccess
+                  ? input('text', 'nomineeStatuses', form.nomineeStatuses && form.nomineeStatuses[i])
+                  : pseudoInput(form.nomineeStatuses && form.nomineeStatuses[i])
               )
             )
           ))
@@ -159,7 +166,7 @@ const cs05Form = (opts) => {
       row(
         colMd(1)(div('Thesis advisor:')),
         colMd(3)(
-          input('hidden', 'thesisadvisor', form.thesisadvisor, true),
+          editAccess ? input('hidden', 'thesisadvisor', form.thesisadvisor, true) : null,
           x('span.label.thesisadvisor')(form.thesisadvisor),
         )
       ),
@@ -168,7 +175,7 @@ const cs05Form = (opts) => {
       row(
         colMd(1)(div('Committee chair:')),
         colMd(3)(
-          input('hidden', 'committeeChairman', form.committeeChairman, true),
+          editAccess ? input('hidden', 'committeeChairman', form.committeeChairman, true) : null,
           x('span.label.committeeChairman')(form.committeeChairman),
         )
       ),
@@ -188,47 +195,46 @@ const cs05Form = (opts) => {
   )
 }
 
-const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       colMd(6)(
         div('Name'),
-        value('text', 'name', name)
+        pseudoInput(name),
       ),
       colMd(6)(
         div('PID'),
-        value('number', 'pid', pid)
-      ),
+        pseudoInput(pid),
+      )
     )
   )
 }
 
-const pageScript = (nonce, form) => {
+const pageScript = (opts) => {
+  const { admin, isStudent, cspNonce, form } = opts
+  const editAccess = admin || isStudent
   const { nominees, thesisadvisor, committeeChairman } = form
   const el = x('script')({ type: 'text/javascript' })
   // must add text manually to bypass escaping of characters like > and &
-  el.innerHTML = pageScriptText(nominees, thesisadvisor, committeeChairman)
+  el.innerHTML = pageScriptText(nominees, thesisadvisor, committeeChairman, editAccess)
   // must add 'nonce' attribute manually because of a hyperscript limitation
-  el.setAttribute('nonce', nonce)
+  el.setAttribute('nonce', cspNonce)
   return el
 }
 
-const pageScriptText = (nominees, thesisadvisor, committeeChairman) => (`
+const pageScriptText = (nominees, thesisadvisor, committeeChairman, editAccess) => (`
   document.addEventListener('DOMContentLoaded', () => {
     const nominees = ${JSON.stringify(nominees)}
     const thesisadvisor = '${thesisadvisor}'
     const committeeChairman = '${committeeChairman}'
-    setRadioishButtonClickHandlers()
+    const editAccess = ${editAccess}
+    if (editAccess) setRadioishButtonClickHandlers()
     if (nominees) setRadioishButtonDefaults(nominees, thesisadvisor, committeeChairman)
     setRadioishSelectionRequirement()
-    setNameChangeListeners()
+    if (editAccess) setNameChangeListeners()
   })
 
   const setRadioishButtonClickHandlers = () => {
@@ -269,10 +275,17 @@ const pageScriptText = (nominees, thesisadvisor, committeeChairman) => (`
     el.addEventListener('click', () => { updatePage(key, index) })
   )
 
+  const getValue = (key, index) => {
+    const button = document.querySelectorAll('.btn.' + key)[index]
+    const names = document.querySelectorAll('[name=nominees]')
+    if (names.length) return names[index].value
+    return document.querySelectorAll('.nominee-name')[index].innerText
+  }
+
   const updatePage = (key, index) => {
     const buttons = document.querySelectorAll('.btn.' + key)
     const isActive = buttons[index].ariaPressed === 'true'
-    const name = isActive ? '' : document.querySelectorAll('[name=nominees]')[index].value
+    const name = getValue(key, index)
     unselectElements(buttons)
     if (!isActive) setButtonActiveState(buttons[index], true)
     updateValue(key, name)
@@ -288,7 +301,8 @@ const pageScriptText = (nominees, thesisadvisor, committeeChairman) => (`
   }
 
   const updateValue = (name, value) => {
-    document.querySelector('[name=' + name + ']').value = value
+    const input = document.querySelector('[name=' + name + ']')
+    if (input) input.value = value
     document.querySelector('span.label.' + name).textContent = value
   }
 
