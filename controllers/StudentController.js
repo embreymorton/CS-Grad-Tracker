@@ -294,9 +294,7 @@ studentController.viewForm = (req, res) => {
             util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
               const hasAccess = !!result || admin
               const postMethod = `/student/forms/update/${student._id}/${formName}`
-              const jsViews = [ 'CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04', 'CS05', 'CS06', 'CS08', 'CS09' ]
-              const ext = jsViews.indexOf(formName) !== -1 ? '' : '.ejs'
-              const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}${ext}`
+              const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}`
               const view = `../views/student/${viewFile}`
               const { cspNonce } = res.locals
               const locals = {

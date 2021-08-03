@@ -487,19 +487,19 @@ var CS13Schema = mongoose.Schema({
   name: String, pid: Number, email: String, dateMet: String,
   comp523: Boolean,
   comp523Signature: String,
-  comp523Name: String,
+  comp523DateSigned: String,
   hadJob: Boolean,
   jobInfo: String,
-  advisorName: String,
   advisorSignature: String,
+  advisorDateSigned: String,
   alternative: Boolean,
   product: String,
   client: String,
   position: String,
-  altSignature1: String,
-  altSignature2: String,
-  altPrint1: String,
-  altPrint2: String
+  alt1Signature: String,
+  alt1DateSigned: String,
+  alt2Signature: String,
+  alt2DateSigned: String,
 });
 
 schema.Faculty = mongoose.model("Faculty", facultySchema);

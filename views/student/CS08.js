@@ -40,13 +40,6 @@ const mainContent = (opts) => {
 const cs08Form = (opts) => {
   const { postMethod, student, form, admin, isStudent } = opts
   const editAccess = admin || isStudent
-  const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
-          breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
-          concentrationCourseDate, concentrationCourseHours,
-          otherCourseInfo, otherCourseHours, note, otherCourses, minor,
-          backgroundPrepWorkSheet, programProductRequirement,
-          PHDWrittenExam, PHDOralExam, committee, advisor, chairman,
-          approved, reasonApproved } = form
   const { div, hr, strong, option, span, a } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
