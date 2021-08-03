@@ -43,7 +43,7 @@ const cs03Form = (opts) => {
   const { postMethod, student, form, admin, isStudent } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
-  const { div, hr, strong, option } = x
+  const { div, hr, strong, option, a } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
   const vert = x('div.verticalSpace')()
@@ -67,10 +67,14 @@ const cs03Form = (opts) => {
       strong('All fields except Reason of Disapproval required!'), vert,
 
       strong('I. Course Requirement'),
-      div('  - Minimum 30 hours total of courses conferring graduate credit, including courses transferred from UNC-CH Continuing Education or another institution.  Courses transferred in must be approved by and on file with the Graduate School.'),
-      div('  - Minimum 18 hours of COMP courses. '),
-      div('  - Minimum 3 hours of COMP 992 or COMP 993 (formal thesis) - maximum of 6 hours. '),
-      div('  - If a minor is elected, see Graduate School Handbook (http://handbook.unc.edu/preface.html)'),
+      div("Thirty (30) semester hours of courses numbered 400 or higher must be taken (excluding COMP 495, 496, 691H, 692H). Of these 30 hours, at least 18 hours must be in Computer Science (designated COMP in the catalog) numbered 400-890, and the remaining 12 hours must include COMP 993: Master's Thesis Research or COMP 992: MS Non-Thesis Option."),
+      div(
+        'If a minor is elected, see the ',
+        a(
+          { href: 'http://handbook.unc.edu/preface.html' },
+          'Graduate School Handbook'
+        ),
+        '.'),
       div('List the courses you expect to use to meet the MS requirements.  Include Section Number for COMP 790 and COMP 990-993 courses.  Do NOT list research team meeting seminars.  Indicate courses used to satisfy the distribution requirement with a mark in the Dist column.'),
       row(
         colMd(4)('A = Applications'),
