@@ -80,9 +80,9 @@ const cs09Form = (opts) => {
         colMd(2)(
           select(
             { name: 'peerReviewed', required: editAccess, ...disabled },
-            option({ value: form.peerReviewed }, form.peerReviewed),
-            option({ value: 'Yes' }, 'Yes'),
-            option({ value: 'No' }, 'No'),
+            option({ value: '' }, ''),
+            option({ value: 'Yes', selected: form.peerReviewed == 'Yes' || null }, 'Yes'),
+            option({ value: 'No', selected: form.peerReviewed == 'No' || null }, 'No'),
           )
         )
       ), vert,
@@ -101,9 +101,9 @@ const cs09Form = (opts) => {
         colMd(2)(
           select(
             { name: 'paperAccepted', ...disabled },
-            option({ value: form.paperAccepted }, form.paperAccepted),
-            option({ value: 'Yes' }, 'Yes'),
-            option({ value: 'No' }, 'No'),
+            option({ value: '' }, ''),
+            option({ value: 'Yes', selected: form.paperAccepted == 'Yes' || null }, 'Yes'),
+            option({ value: 'No', selected: form.paperAccepted == 'No' || null }, 'No'),
           )
         ),
         colMd(2)('Notification Date:'),
@@ -119,9 +119,9 @@ const cs09Form = (opts) => {
         colMd(2)(
           select(
             { name: 'reviewsAvailable', required: editAccess, ...disabled },
-            option({ value: form.reviewsAvailable }, form.reviewsAvailable),
-            option({ value: 'Yes' }, 'Yes'),
-            option({ value: 'No' }, 'No'),
+            option({ value: '' }, ''),
+            option({ value: 'Yes', selected: form.reviewsAvailable == 'Yes' || null }, 'Yes'),
+            option({ value: 'No', selected: form.reviewsAvailable == 'No' || null}, 'No'),
           )
         )
       ), vert,

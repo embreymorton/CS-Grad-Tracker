@@ -41,7 +41,6 @@ const cs08Form = (opts) => {
   const { postMethod, student, form, admin, isStudent } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a } = x
-  const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
   const range6 = [0, 1, 2, 3, 4, 5]

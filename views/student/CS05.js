@@ -66,9 +66,9 @@ const cs05Form = (opts) => {
         colMd(2)(
           select(
             { name: 'oralComprehensiveExam', required: true },
-            option({ value: form.oralComprehensiveExam }, form.oralComprehensiveExam),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True'),
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.oralComprehensiveExam || null }, 'false'),
+            option({ value: 'true', selected: form.oralComprehensiveExam || null }, 'true'),
           )
         )
       ),
@@ -81,9 +81,9 @@ const cs05Form = (opts) => {
         colMd(2)(
           select(
             { name: 'thesis', required: true },
-            option({ value: form.thesis }, form.thesis),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True'),
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.thesis || null }, 'false'),
+            option({ value: 'true', selected: form.thesis || null }, 'true'),
           )
         )
       ),

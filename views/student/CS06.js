@@ -89,9 +89,9 @@ const cs06Form = (opts) => {
         colMd(2)(
           select(
             { name: 'comp915' },
-            option({ value: comp915 }, comp915),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True'),
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !comp915 || null }, 'false'),
+            option({ value: 'true', selected: comp915 || null }, 'true'),
           )
         ),
       ),
@@ -141,13 +141,11 @@ const cs06Form = (opts) => {
           range6.map((i) => (
             select(
               { name: 'breadthCourseCategory', required: true },
-              breadthCourseCategory == null
-                ? null
-                : option({ value: breadthCourseCategory[i] }, breadthCourseCategory[i]),
-              option({ value: 'T' }, 'T'),
-              option({ value: 'S' }, 'S'),
-              option({ value: 'A' }, 'A'),
-              option({ value: 'O' }, 'O'),
+              option({ value: '' }, ''),
+              option({ value: 'T', selected: breadthCourseCategory && breadthCourseCategory[i] == 'T' || null }, 'T'),
+              option({ value: 'S', selected: breadthCourseCategory && breadthCourseCategory[i] == 'S' || null }, 'S'),
+              option({ value: 'A', selected: breadthCourseCategory && breadthCourseCategory[i] == 'A' || null }, 'A'),
+              option({ value: 'O', selected: breadthCourseCategory && breadthCourseCategory[i] == 'O' || null }, 'O'),
             )
           ))
         ),
@@ -263,9 +261,9 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'backgroundPrepWorkSheet' },
-          option({ value: backgroundPrepWorkSheet }, backgroundPrepWorkSheet),
-          option({ value: 'false' }, 'False'),
-          option({ value: 'true' }, 'True'),
+          option({ value: '' }, ''),
+          option({ value: 'false', selected: !backgroundPrepWorkSheet || null }, 'false'),
+          option({ value: 'true', selected: backgroundPrepWorkSheet || null }, 'true'),
         )
       ),
 
@@ -273,9 +271,9 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'programProductRequirement' },
-          option({ value: programProductRequirement }, programProductRequirement),
-          option({ value: 'false' }, 'False'),
-          option({ value: 'true' }, 'True'),
+          option({ value: '' }, ''),
+          option({ value: 'false', selected: !programProductRequirement || null }, 'false'),
+          option({ value: 'true', selected: programProductRequirement || null }, 'true'),
         )
       ),
 
@@ -283,9 +281,9 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'PHDWrittenExam' },
-          option({ value: PHDWrittenExam }, PHDWrittenExam),
-          option({ value: 'false' }, 'False'),
-          option({ value: 'true' }, 'True'),
+          option({ value: '' }, ''),
+          option({ value: 'false', selected: !PHDWrittenExam || null }, 'false'),
+          option({ value: 'true', selected: PHDWrittenExam || null }, 'true'),
         )
       ),
 
@@ -293,9 +291,9 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'PHDOralExam' },
-          option({ value: PHDOralExam }, PHDOralExam),
-          option({ value: 'false' }, 'False'),
-          option({ value: 'true' }, 'True'),
+          option({ value: '' }, ''),
+          option({ value: 'false', selected: !PHDOralExam || null }, 'false'),
+          option({ value: 'true', selected: PHDOralExam || null }, 'true'),
         )
       ),
       hr(),
@@ -380,9 +378,9 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'approved' },
-          option({ value: approved }, approved),
-          option({ value: 'Approved' }, 'Approved'),
-          option({ value: 'Disapproved' }, 'Disapproved'),
+          option({ value: '' }, ''),
+          option({ value: 'Approved', selected: approved == 'Approved' || null }, 'Approved'),
+          option({ value: 'Disapproved', selected: approved == 'Disapproved' || null }, 'Disapproved'),
         )
       ),
       hr(),

@@ -45,6 +45,7 @@ const cs03Form = (opts) => {
   const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option } = x
   const select = x('select.form-control')
+  const approvedGSCText = 'Approved by Graduate Studies Committee'
   const vert = x('div.verticalSpace')()
   const basisForWaiverLabel = [
     div('Basis for Waiver'),
@@ -129,9 +130,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'backgroundPrep', required: 'true' },
-            option({ value: form.backgroundPrep }, form.backgroundPrep),
-            option({ value: 'false' }, 'Did not file CS01'),
-            option({ value: 'true' }, 'Filed CS01'),
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.backgroundPrep || null }, 'Did not file CS01'),
+            option({ value: 'true', selected: form.backgroundPrep || null }, 'Filed CS01'),
           ),
         ),
         colMd(2)('File Form CS-01')
@@ -145,9 +146,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'programProduct', required: 'true' },
-            option({ value: form.programProduct }, form.programProduct),
-            option({ value: 'false' }, 'Did not file CS13'),
-            option({ value: 'true' }, 'Filed CS13')
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.programProduct || null }, 'Did not file CS13'),
+            option({ value: 'true', selected: form.programProduct || null }, 'Filed CS13'),
           ),
         ),
         colMd(2)(
@@ -160,9 +161,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'comprehensivePaper', required: 'true' },
-            option({ value: form.comprehensivePaper }, form.comprehensivePaper),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True')
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.comprehensivePaper || null }, 'false'),
+            option({ value: 'true', selected: form.comprehensivePaper || null }, 'true'),
           ),
         ),
         colMd(4)(
@@ -173,9 +174,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'thesis', required: 'true' },
-            option({ value: form.thesis }, form.thesis),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True')
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.thesis || null }, 'false'),
+            option({ value: 'true', selected: form.thesis || null }, 'true'),
           ),
         ),
         colMd(2)(
@@ -186,9 +187,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'outsideReview', required: 'true' },
-            option({ value: form.outsideReview }, form.outsideReview),
-            option({ value: 'false' }, 'False'),
-            option({ value: 'true' }, 'True')
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.outsideReview || null }, 'false'),
+            option({ value: 'true', selected: form.outsideReview || null }, 'true'),
           ),
         ),
         colMd(2)(
@@ -202,9 +203,9 @@ const cs03Form = (opts) => {
         colMd(3)(
           select(
             { name: 'comprehensiveExam', required: 'true' },
-            option({ value: form.comprehensiveExam }, form.comprehensiveExam),
-            option({ value: 'Comprehensive Paper' }, 'Comprehensive Paper (CS-08)'),
-            option({ value: 'MS Oral Comprehensive Exam' }, 'MS Oral Comprehensive Exam')
+            option({ value: '' }, ''),
+            option({ value: 'Comprehensive Paper', selected: form.comprehensiveExam == 'Comprehensive Paper' || null }, 'Comprehensive Paper (CS-08)'),
+            option({ value: 'MS Oral Comprehensive Exam', selected: form.comprehensiveExam == 'MS Oral Comprehensive Exam' || null }, 'MS Oral Comprehensive Exam'),
           )
         )
       ),
@@ -223,9 +224,9 @@ const cs03Form = (opts) => {
             ? form.approved
             : select(
               { name: 'approved', required: 'true' },
-              option({ value: form.approved }, form.approved),
-              option({ value: 'Approved by Graduate Studies Committee' }, 'Approved by Graduate Studies Committee'),
-              option({ value: 'Disapproved' }, 'Disapproved'),
+              option({ value: '' }, ''),
+              option({ value: approvedGSCText, selected: form.approved == approvedGSCText || null }, approvedGSCText),
+              option({ value: 'Disapproved', selected: form.approved == 'Disapproved' || null }, 'Disapproved'),
             )
         )
       ),

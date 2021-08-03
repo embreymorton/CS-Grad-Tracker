@@ -71,9 +71,9 @@ const cs04Form = (opts) => {
           div('Is the documentation proprietary?'),
           select(
             { name: 'docProprietary' },
-            option({ value: form.docProprietary }, form.docProprietary),
-            option({ value: 'false' }, 'No. The documentation is attached.'),
-            option({ value: 'true' }, 'Yes. A non-disclosure agreement is attached.'),
+            option({ value: '' }, ''),
+            option({ value: 'false', selected: !form.docProprietary || null }, 'No. The documentation is attached.'),
+            option({ value: 'true', selected: form.docProprietary || null }, 'Yes. A non-disclosure agreement is attached.'),
           )
         ),
       ),
@@ -91,9 +91,9 @@ const cs04Form = (opts) => {
             ? form.approved
             : select(
               { name: 'approved' },
-              option({ value: form.approved }, form.approved),
-              option({ value: 'false' }, 'Not approved'),
-              option({ value: 'true' }, 'Approved'),
+              option({ value: '' }, ''),
+              option({ value: 'false', selected: !form.approved || null }, 'Not approved'),
+              option({ value: 'true', selected: form.approved || null }, 'Approved'),
             )
         )
       ),
