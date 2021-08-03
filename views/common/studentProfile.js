@@ -51,7 +51,6 @@ const profileFields = (opts) => {
         input('prpPassed'),
         input('technicalWritingApproved'),
         input('proceedToPhdFormSubmitted'),
-        input('backgroundPrepWorksheetApproved'),
         input('programOfStudyApproved'),
       ),
 
@@ -78,7 +77,6 @@ const label = {
   advisor: 'Advisor',
   alternativeName: 'Alternative name',
   backgroundApproved: 'Background approved',
-  backgroundPrepWorksheetApproved: 'Background prep worksheet approved',
   citizenship: 'US Citizenship',
   committeeCompApproved: 'Committee comp approved',
   csid: 'CSID',
@@ -121,7 +119,6 @@ const label = {
 const type = {
   alternativeName: 'text',
   backgroundApproved: 'date',
-  backgroundPrepWorksheetApproved: 'date',
   citizenship: 'checkbox',
   committeeCompApproved: 'date',
   dissertationDefencePassed: 'date',

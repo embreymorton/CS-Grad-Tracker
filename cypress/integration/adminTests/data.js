@@ -20,7 +20,6 @@ data.studentTextFields = {
   mastersAwarded: pastDate,
   prpPassed: currentDate,
   technicalWritingApproved: currentDate,
-  backgroundPrepWorksheetApproved: currentDate,
   programOfStudyApproved: currentDate,
   researchPlanningMeeting: currentDate,
   programProductRequirement: currentDate,

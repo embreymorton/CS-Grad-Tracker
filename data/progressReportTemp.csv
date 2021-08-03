@@ -1,7 +1,7 @@
-﻿lastName,firstName,advisor,otherAdvisor,researchAdvisor,otherResearchAdvisor,prpPassed,technicalWritingApproved,backgroundPrepWorksheetApproved,researchPlanningMeeting,programProductRequirement,programOfStudyApproved,committeeCompApproved,phdProposalApproved,oralExamPassed,dissertationDefencePassed,dissertationSubmitted,notes
-Create,Test,"person, person",,"test, test",,,,,,,,,,,,,"
+﻿lastName,firstName,advisor,otherAdvisor,researchAdvisor,otherResearchAdvisor,prpPassed,technicalWritingApproved,backgroundApproved,researchPlanningMeeting,programProductRequirement,programOfStudyApproved,committeeCompApproved,phdProposalApproved,oralExamPassed,dissertationDefencePassed,dissertationSubmitted,notes
+Create,Test,"person, person",,"test, test",,,,,,,,,,,,"
 "
-bodnar,hannah,"person, person",,"test, test",,,,,,,,,,,,,"
+bodnar,hannah,"person, person",,"test, test",,,,,,,,,,,,"
 Note #3: Note 3 (2021-05-04)
 third note!
 
@@ -12,11 +12,11 @@ Note #1: Note 1 (2021-04-01)
 first note!
 
 "
-fake,fake,"test, test",,"test, test",,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
+fake,fake,"test, test",,"test, test",,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
 "
-report,progress,"test, test",,"test, test",,,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
+report,progress,"test, test",,"test, test",,,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
 "
-student,new,"test, test",,,"member, other",,,,,,,,,,,,"
+student,new,"test, test",,,"member, other",,,,,,,,,,,"
 "
-upload,test,,"test, test","Pozefsky, Diane",,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
+upload,test,,"test, test","Pozefsky, Diane",,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,2019-09-18,"
 "
