@@ -261,6 +261,7 @@ app.use('/job', require('./routes/job'))
 app.use('/student', require('./routes/student'))
 app.use('/studentView', require('./routes/studentView'))
 app.use('/report', require('./routes/report'))
+app.use('/semester', require('./routes/semester'))
 app.use('/', require('./routes/auth'))
 
 // Use hyperaxe for rending .js views

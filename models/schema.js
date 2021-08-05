@@ -1,6 +1,6 @@
 /* global reject */
-var mongoose = require("mongoose");
-var schema = {};
+var mongoose = require('mongoose')
+var schema = {}
 
 // Faculty
 var facultySchema = mongoose.Schema({
@@ -32,7 +32,7 @@ var facultySchema = mongoose.Schema({
   sectionNumber: Number,
   active: Boolean,
   admin: Boolean
-});
+})
 
 // Students
 var studentSchema = mongoose.Schema({
@@ -59,8 +59,8 @@ var studentSchema = mongoose.Schema({
   },
   pronouns: {
     type: String,
-    enum: ["she, her", "he, him", "they, them", "ze, zie", "hir, hirs", "xe, xem", "pe, per", "e/ey, em", "(f)ae, (f)aer", "None"],
-    default: "None"
+    enum: ['she, her', 'he, him', 'they, them', 'ze, zie', 'hir, hirs', 'xe, xem', 'pe, per', 'e/ey, em', '(f)ae, (f)aer', 'None'],
+    default: 'None'
   },
   pid: {
     type: Number,
@@ -68,44 +68,44 @@ var studentSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["Active", "Inactive", "Leave", "Graduated", "Ineligible"],
-    default: "Active"
+    enum: ['Active', 'Inactive', 'Leave', 'Graduated', 'Ineligible'],
+    default: 'Active'
   },
   alternativeName: String,
   gender: {
     type: String,
-    enum: ["MALE", "FEMALE", "OTHER"],
-    default: "OTHER"
+    enum: ['MALE', 'FEMALE', 'OTHER'],
+    default: 'OTHER'
   },
   ethnicity: {
     type: String,
-    enum: ["ASIAN", "BLACK", "HISPANIC", "PACIFIC", "WHITE", "OTHER"],
-    default: "OTHER"
+    enum: ['ASIAN', 'BLACK', 'HISPANIC', 'PACIFIC', 'WHITE', 'OTHER'],
+    default: 'OTHER'
   },
   stateResidency: {
     type: String,
-    enum: ["YES", "NO", "APPLIED"],
-    default: "NO"
+    enum: ['YES', 'NO', 'APPLIED'],
+    default: 'NO'
   },
   USResidency: {
     type: String,
-    enum: ["YES", "NO", "APPLIED"],
-    default: "NO"
+    enum: ['YES', 'NO', 'APPLIED'],
+    default: 'NO'
   },
   enteringStatus: String,
   researchArea: String,
   leaveExtension: String,
   intendedDegree: {
     type: String,
-    enum: ["MASTERS", "PHD", "BOTH"],
-    default: "MASTERS"
+    enum: ['MASTERS', 'PHD', 'BOTH'],
+    default: 'MASTERS'
   },
   hoursCompleted: Number,
   citizenship: Boolean,
   fundingEligibility: {
     type: String,
-    enum: ["NOT GUARANTEED", "GUARANTEED", "PROBATION"],
-    default: "NOT GUARANTEED"
+    enum: ['NOT GUARANTEED', 'GUARANTEED', 'PROBATION'],
+    default: 'NOT GUARANTEED'
   },
   semestersOnLeave: Number,
   backgroundApproved: {
@@ -168,23 +168,23 @@ var studentSchema = mongoose.Schema({
     type: String,
     match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
   },
-  jobHistory: [{type: mongoose.Schema.Types.ObjectId, ref: "Job"}],
-  semesterStarted: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
-  advisor: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" },
+  jobHistory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Job'}],
+  semesterStarted: { type: mongoose.Schema.Types.ObjectId, ref: 'Semester' },
+  advisor: { type: mongoose.Schema.Types.ObjectId, ref: 'Faculty' },
   otherAdvisor: String,
-  researchAdvisor: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" },
+  researchAdvisor: { type: mongoose.Schema.Types.ObjectId, ref: 'Faculty' },
   otherResearchAdvisor: String,
-  grades: [{type:mongoose.Schema.Types.ObjectId, ref: "Grade"}]
-});
+  grades: [{type:mongoose.Schema.Types.ObjectId, ref: 'Grade'}]
+})
 
 // Semesters
 var semesterSchema = mongoose.Schema({
   year: Number,
   season: {
     type: String,
-    enum: ["FA", "SP", "S1", "S2"]
+    enum: ['FA', 'SP', 'S1', 'S2']
   }
-});
+})
 
 // Courses
 var courseSchema = mongoose.Schema({
@@ -206,7 +206,7 @@ var courseSchema = mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["NA", "Theory", "Systems", "Appls"],
+    enum: ['NA', 'Theory', 'Systems', 'Appls'],
     required: [true, 'category is required!']
   },
   topic: {
@@ -223,15 +223,15 @@ var courseSchema = mongoose.Schema({
   },
   faculty: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Faculty",
+    ref: 'Faculty',
     required: [true, 'faculty is required!']
   },
   semester: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Semester",
+    ref: 'Semester',
     required: [true, 'semester is required!']
   }
-});
+})
 
 var courseInfoSchema = mongoose.Schema({
   number: {
@@ -252,39 +252,39 @@ var courseInfoSchema = mongoose.Schema({
 var jobSchema = mongoose.Schema({
   position: {
     type: String,
-    enum: ["RA", "TA", "OTHER"],
-    required: [true, "position is required!"]
+    enum: ['RA', 'TA', 'OTHER'],
+    required: [true, 'position is required!']
   },
   supervisor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Faculty",
+    ref: 'Faculty',
     required: [true, 'supervisor is required!']
   },
   semester: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Semester",
+    ref: 'Semester',
     required: [true, 'semester is required!']
   },
-  course: {type: mongoose.Schema.Types.ObjectId, ref: "Course"},
+  course: {type: mongoose.Schema.Types.ObjectId, ref: 'Course'},
   description: String,
   hours: Number,
-  fundingSource: {type: mongoose.Schema.Types.ObjectId, ref: "Grant"}
-});
+  fundingSource: {type: mongoose.Schema.Types.ObjectId, ref: 'Grant'}
+})
 
 // Grades
 var gradeSchema = mongoose.Schema({
   grade: {
     type: String,
-    enum: ["H+", "H", "H-", "P+", "P", "P-", "L+", "L", "L-", "NA"],
-    default: "NA"
+    enum: ['H+', 'H', 'H-', 'P+', 'P', 'P-', 'L+', 'L', 'L-', 'NA'],
+    default: 'NA'
   },
-  course: {type: mongoose.Schema.Types.ObjectId, ref: "Course"}
-});
+  course: {type: mongoose.Schema.Types.ObjectId, ref: 'Course'}
+})
 
 var semesterReferenceSchema = mongoose.Schema({
    name: String,
-   semester: {type: mongoose.Schema.Types.ObjectId, ref:"Semester"}
- });
+   semester: {type: mongoose.Schema.Types.ObjectId, ref:'Semester'}
+ })
 
 var grantSchema = mongoose.Schema({
   name: {
@@ -293,25 +293,25 @@ var grantSchema = mongoose.Schema({
   },
   cs_pi: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Faculty",
+    ref: 'Faculty',
   },
   other_pi: String
-});
+})
 
 // add row constraint to grant schema
 
 grantSchema.pre('save', function(next) {
   if (this.cs_pi == null && this.other_pi == null) {
-    next(new Error ('PI is required (cs_pi OR other_pi)'));
+    next(new Error ('PI is required (cs_pi OR other_pi)'))
   } else if (this.cs_pi != null && this.other_pi != null) {
-    next(new Error ('Cannot specify both cs and other pi'));
+    next(new Error ('Cannot specify both cs and other pi'))
   } else {
-    next();
+    next()
   }
-});
+})
 
 var noteSchema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   title: String,
   date: String,
   note: String
@@ -319,7 +319,7 @@ var noteSchema = mongoose.Schema({
 
 //form schemas
 var CS01Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   comp283Covered: String, comp283Date: String,
   comp410Covered: String, comp410Date: String,
   comp411Covered: String, comp411Date: String,
@@ -337,10 +337,10 @@ var CS01Schema = mongoose.Schema({
   stat435Covered: String, stat435Date: String,
   studentSignature: String, studentDateSigned: String,
   advisorSignature: String, advisorDateSigned: String
-});
+})
 
 var CS01BSMSSchema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   comp521Covered: String, comp521Date: String,
   comp520Covered: String, comp520Date: String,
   comp530Covered: String, comp530Date: String,
@@ -349,10 +349,10 @@ var CS01BSMSSchema = mongoose.Schema({
   math661Covered: String, math661Date: String,
   studentSignature: String, studentDateSigned: String,
   advisorSignature: String, advisorDateSigned: String
-});
+})
 
 var CS02Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   dateSubmitted: String,
   courseNumber: String,
   basisWaiver: String,
@@ -361,7 +361,7 @@ var CS02Schema = mongoose.Schema({
 })
 
 var CS03Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   DR: [String],
   university: [String],
   dept: [String],
@@ -383,7 +383,7 @@ var CS03Schema = mongoose.Schema({
 })
 
 var CS04Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   projectDescription: String,
   docProprietary: Boolean,
   studentSignature: String, studentDateSigned: String,
@@ -392,7 +392,7 @@ var CS04Schema = mongoose.Schema({
 })
 
 var CS05Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   oralComprehensiveExam: Boolean,
   thesis: Boolean,
   nominees: [String],
@@ -404,7 +404,7 @@ var CS05Schema = mongoose.Schema({
 })
 
 var CS06Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   dateSubmitted: String, dateEntered: String,
   dissTitle: String,
   comp915: Boolean,
@@ -433,7 +433,7 @@ var CS06Schema = mongoose.Schema({
 })
 
 var CS08Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   semester: String, year: Number,
   title: String,
   primaryReader: String, primaryDate: String,
@@ -443,7 +443,7 @@ var CS08Schema = mongoose.Schema({
 })
 
 var CS09Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   prpTitle: String,
   researchAdvisor: String,
   peerReviewed: String,
@@ -469,7 +469,7 @@ var CS09Schema = mongoose.Schema({
 })
 
 var CS13Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:"Student"},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   email: String, dateMet: String,
   comp523: Boolean,
   comp523Signature: String,
@@ -486,28 +486,28 @@ var CS13Schema = mongoose.Schema({
   alt1DateSigned: String,
   alt2Signature: String,
   alt2DateSigned: String,
-});
+})
 
-schema.Faculty = mongoose.model("Faculty", facultySchema);
-schema.Student = mongoose.model("Student", studentSchema);
-schema.Semester = mongoose.model("Semester", semesterSchema);
-schema.Course = mongoose.model("Course", courseSchema);
-schema.CourseInfo = mongoose.model("CourseInfo", courseInfoSchema);
-schema.Job = mongoose.model("Job", jobSchema);
-schema.Grade = mongoose.model("Grade", gradeSchema);
-schema.Grant = mongoose.model("Grant", grantSchema);
-schema.SemesterReference = mongoose.model("SemesterReference", semesterReferenceSchema);
-schema.Note = mongoose.model("Note", noteSchema);
-schema.CS01 = mongoose.model("CS01", CS01Schema);
-schema.CS01BSMS = mongoose.model("CS01BSMS", CS01BSMSSchema);
-schema.CS02 = mongoose.model("CS02", CS02Schema);
-schema.CS03 = mongoose.model("CS03", CS03Schema);
-schema.CS04 = mongoose.model("CS04", CS04Schema);
-schema.CS05 = mongoose.model("CS05", CS05Schema);
-schema.CS06 = mongoose.model("CS06", CS06Schema);
-schema.CS08 = mongoose.model("CS08", CS08Schema);
-schema.CS09 = mongoose.model("CS09", CS09Schema);
-schema.CS13 = mongoose.model("CS13", CS13Schema);
+schema.Faculty = mongoose.model('Faculty', facultySchema)
+schema.Student = mongoose.model('Student', studentSchema)
+schema.Semester = mongoose.model('Semester', semesterSchema)
+schema.Course = mongoose.model('Course', courseSchema)
+schema.CourseInfo = mongoose.model('CourseInfo', courseInfoSchema)
+schema.Job = mongoose.model('Job', jobSchema)
+schema.Grade = mongoose.model('Grade', gradeSchema)
+schema.Grant = mongoose.model('Grant', grantSchema)
+schema.SemesterReference = mongoose.model('SemesterReference', semesterReferenceSchema)
+schema.Note = mongoose.model('Note', noteSchema)
+schema.CS01 = mongoose.model('CS01', CS01Schema)
+schema.CS01BSMS = mongoose.model('CS01BSMS', CS01BSMSSchema)
+schema.CS02 = mongoose.model('CS02', CS02Schema)
+schema.CS03 = mongoose.model('CS03', CS03Schema)
+schema.CS04 = mongoose.model('CS04', CS04Schema)
+schema.CS05 = mongoose.model('CS05', CS05Schema)
+schema.CS06 = mongoose.model('CS06', CS06Schema)
+schema.CS08 = mongoose.model('CS08', CS08Schema)
+schema.CS09 = mongoose.model('CS09', CS09Schema)
+schema.CS13 = mongoose.model('CS13', CS13Schema)
 
-module.exports = schema;
+module.exports = schema
 

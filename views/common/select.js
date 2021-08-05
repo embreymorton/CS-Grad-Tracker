@@ -5,7 +5,7 @@ const defaultOpts = {
   label: 'Field',
   name: 'field',
   values: [],
-  data: null,
+  required: false,
   blankLabel: '', // use null here to skip blank option entirely
   optionValue: (value) => value,
   optionLabel: (value) => value,
@@ -30,11 +30,11 @@ const makeOption = (opts) => {
 }
 
 const select = (options) => {
-  // TODO: support required attr on select tag
   const opts = { ...defaultOpts, ...options }
-  const { label, name, values, data, blankLabel } = opts
+  const { label, name, values, blankLabel } = opts
+  const required = opts.required || null
   const { select, option } = x
-  const attrs = { name, class: 'form-control' }
+  const attrs = { class: 'form-control', name, required }
   const blankOption = option({ value: '' }, blankLabel || '')
   const blankOptionTag = blankLabel == null ? null : blankOption
   const optionTags = values.map(makeOption(opts))
