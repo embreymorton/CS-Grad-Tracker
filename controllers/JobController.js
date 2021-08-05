@@ -215,26 +215,17 @@ jobController.delete = function (req, res) {
  *
  */
 jobController.create = function (req, res) {
-    var grants, faculty, courses, jobTitles;
-    jobTitles = schema.Job.schema.path("position").enumValues;
-    getGrants().then(function (result) {
-        grants = result;
-        getFaculty().then(function (result) {
-            faculty = result;
-            getCourses().then(function (result) {
-                courses = result;
-                getSemesters().then(function (result) {
-                    res.render("../views/job/create.ejs", {
-                        faculty: faculty,
-                        courses: courses,
-                        grants: grants,
-                        jobTitles: jobTitles,
-                        semesters: result
-                    });
-                });
-            });
-        });
-    });
+  const jobTitles = schema.Job.schema.path('position').enumValues
+  getGrants().then(function (grants) {
+    getFaculty().then(function (faculty) {
+      getCourses().then(function (courses) {
+        getSemesters().then(function (semesters) {
+          const locals = { faculty, courses, grants, jobTitles, semesters }
+          res.render('../views/job/create.ejs', locals)
+        })
+      })
+    })
+  })
 }
 
 /**
@@ -774,11 +765,14 @@ jobController.download = function (req, res) {
 }
 
 function getFaculty() {
-    return new Promise((resolve, reject) => {
-        schema.Faculty.find().sort({onyen: 1}).exec().then(function (result) {
-            resolve(result);
-        });
-    });
+  return new Promise((resolve, reject) => {
+    const sort = {lastName: 1, firstName: 1}
+    try {
+      schema.Faculty.find({ active: true }).sort(sort).exec().then(resolve)
+    } catch (e) {
+      reject(e)
+    }
+  })
 }
 
 function getCourses() {
