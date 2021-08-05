@@ -1,12 +1,12 @@
 var data = {}
 
 data.uploadFaculty = {
-  onyen: 'test',
-  email: 'test@test.com',
-  firstName: 'test',
-  lastName: 'test',
-  pid: 111111111,
-  sectionNumber: 11,
+  onyen: 'jsterrel',
+  email: 'terrell@cs.unc.edu',
+  firstName: 'Jeff',
+  lastName: 'Terrell',
+  pid: 710985109,
+  sectionNumber: 145,
   active: true,
   admin: false
 }
@@ -25,9 +25,9 @@ data.uploadStudent = {
   proceedToPhdFormSubmitted:'2019-09-18',
   backgroundApproved: '2019-09-18',
   semesterStarted: 'FA 2019',
-  advisor: 'test, test',
+  advisor: 'Terrell, Jeff',
   otherAdvisor: null,
-  researchAdvisor: 'test, test',
+  researchAdvisor: 'Terrell, Jeff',
   otherResearchAdvisor: null
 }
 
@@ -37,13 +37,13 @@ data.uploadCourse = {
   category: 'Theory',
   topic: 'A TOPIC',
   hours: 3,
-  faculty: 'test, test',
+  faculty: 'Terrell, Jeff',
   semester: 'FA 2019'
 }
 
 data.uploadGrant = {
   name: 'Grant for testing',
-  cs_pi: 'test, test',
+  cs_pi: 'Terrell, Jeff',
   other_pi_name: null
 }
 
