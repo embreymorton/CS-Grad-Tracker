@@ -8,7 +8,6 @@ variables:
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
     CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
 
-
 before_script:
   ##
   ## Install ssh-agent if not already installed, it is required by Docker.
@@ -50,7 +49,6 @@ stages:
   - test
   - deploy
 
-
 cache:
   paths:
     - .npm
@@ -84,3 +82,5 @@ deployment:
     - nodejs
   script:
     - ssh root@csgrad.cs.unc.edu 'cd /CS-Grad-Tracking && git checkout master && git fetch origin && git reset --hard origin/master && npm install --production && pm2 restart all'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
