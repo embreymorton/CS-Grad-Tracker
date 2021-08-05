@@ -1,2 +1,58 @@
 onyen,csid,email,firstName,lastName,pid,sectionNumber,active,admin
-test,test,test@test.com,test,test,111111111,11,TRUE,FALSE
+ahalt,ahalt,ahalt@cs.unc.edu,Stanley,Ahalt,720046930,82,,FALSE
+jaikat,aikat,aikat@cs.unc.edu,Jay,Aikat,704273269,126,,FALSE
+ron,ron,ron@cs.unc.edu,Ron,Alterovitz,714730206,99,,FALSE
+jha,anderson,anderson@cs.unc.edu,Jim,Anderson,704290844,62,,FALSE
+mbansal1,mbansal,mbansal@cs.unc.edu,Mohit,Bansal,730139106,139,,FALSE
+aniket,ab,ab@cs.unc.edu,Aniket,Bera,720365853,146,,FALSE
+gb,gb,gb@cs.unc.edu,Gary,Bishop,701876731,39,,FALSE
+munsell,munsell,munsell@cs.unc.edu,Munsell,Brent,720451068,159,,FALSE
+jasoncl,carterjl,carterjl@cs.unc.edu,Jason,Carter,714338468,165,,FALSE
+samarjit,samarjit,samarjit@cs.unc.edu,Samarjit,Chakroborty,730291808,148,,FALSE
+dewan,dewan,dewan@cs.unc.edu,Prasun,Dewan,704279085,63,,FALSE
+psd,psd,psd@cs.unc.edu,Sridhar,Duggirala,730300195,144,,FALSE
+rjf,rjf,rjf@cs.unc.edu,Rob,Fowler,713281075,110,,FALSE
+frahm,jmf,jmf@cs.unc.edu,Jan-Michael,Frahm,711856002,97,,FALSE
+fuchs,fuchs,fuchs@cs.unc.edu,Henry,Fuchs,704288472,11,,FALSE
+smgomez,smgomez,smgomez@cs.unc.edu,Shawn,Gomez,711837205,102,,FALSE
+jeffay,jeffay,jeffay@cs.unc.edu,Kevin,Jeffay,704275348,40,,FALSE
+krisj,kris,kris@cs.unc.edu,Kris,Jordan,710453084,140,,FALSE
+jasleen,jasleen,jasleen@cs.unc.edu,Jasleen,Kaur Sahni,710233624,88,TRUE,TRUE
+Dkent,kenney,kenney@cs.unc.edu,Denise,Kenney,711758340,0,TRUE,TRUE
+ashokk,ashokk,ashokk@cs.unc.edu,Ashok,Krishnamurthy,720441075,137,,FALSE
+luebke,luebke,luebke@cs.unc.edu,David,Luebke,701534022,156,,FALSE
+jmajikes,jmajikes,jmajikes@cs.unc.edu,John,Majikes,720176068,147,,FALSE
+dm,dm,dm@cs.unc.edu,Dinesh,Manocha,704274598,58,,FALSE
+kmp,kmp,kmp@cs.unc.edu,Ketan,Mayer-Patel,707696375,80,,FALSE
+mcmillan,mcmillan,mcmillan@cs.unc.edu,Leonard,McMillan,703745132,87,,FALSE
+fmonrose,fabian,fabian@cs.unc.edu,Fabian,Monrose,714634900,91,,FALSE
+tjoseph,nicholas,nicholas@cs.unc.edu,Tessa Joseph,Nicholas,705472186,86,,FALSE
+mn,mn,mn@cs.unc.edu,Marc,Niethammer,714077170,98,,FALSE
+nirjon,nirjon,nirjon@cs.unc.edu,Shahriar,Nirjon,730064202,136,,FALSE
+ipek,ipek,ipek@cs.unc.edu,Ipek,Oguz,710990354,125,,FALSE
+joliva,joliva,joliva@cs.unc.edu,Junier,Oliva,730295982,142,,FALSE
+pizer,smp,smp@cs.unc.edu,Steve,Pizer,704208957,6,,FALSE
+dplaiste,plaisted,plaisted@cs.unc.edu,David,Plaisted,704213001,28,,FALSE
+pozefsky,pozefsky,pozefsky@cs.unc.edu,Diane,Pozefesky,701569707,93,,FALSE
+prins,prins,prins@cs.unc.edu,Jan,Prins,704216581,33,,FALSE
+craffel,craffel,craffel@cs.unc.edu,Colin,Raffel,730444721,101,,FALSE
+mreiter,reiter,reiter@cs.unc.edu,Michael,Reiter,702350621,95,,FALSE
+nrewkows,nrewkows,nrewkows@cs.unc.edu,Nicholas,Rewkowski,730047902,162,,FALSE
+kakiryan,kakiryan,kakiryan@cs.unc.edu,Kaki Anna,Ryan,730084053,168,,FALSE
+jsilva18,jsilva,jsilva@cs.unc.edu,Jorge,Silva,730139149,161,,FALSE
+montek,montek,montek@cs.unc.edu,Montek,Singh,709856816,84,,FALSE
+smithfd,smithfd,smithfd@cs.unc.edu,F. Don,Smith,701875776,42,,FALSE
+snoeyink,snoeyink,snoeyink@cs.unc.edu,Jack,Snoeyink,706390995,79,,FALSE
+ssriva,ssrivastava,ssrivastava@cs.unc.edu,Shashank,Srivastava,730374691,157,,FALSE
+Unknown,natalies,natalies@cs.unc.edu,Natalie,Stanley,720422374,166,,FALSE
+stotts,stotts,stotts@cs.unc.edu,David,Stotts,704225848,59,,FALSE
+csturton,csturton,csturton@cs.unc.edu,Cynthia,Sturton,713811780,132,,FALSE
+styner,styner,styner@cs.unc.edu,Martin,Styner,704313363,94,,FALSE
+rmtaylor,taylorr,taylorr@cs.unc.edu,Russell,Taylor,702502169,69,,FALSE
+jsterrel,terrell,terrell@cs.unc.edu,Jeff,Terrell,710985109,145,TRUE,TRUE
+wangwei,weiwang,weiwang@cs.unc.edu,Wei,Wang,710231503,90,,FALSE
+welchg,jwelch,jwelch@cs.unc.edu,Gregory,Welch,702025507,71,,FALSE
+whitebl,white whitebl,,Brian,White,705423928,800,,FALSE
+whitton,whitton,whitton@cs.unc.edu,Mary C.,Whitton,700599204,81,,FALSE
+Shaniek1,00000,shaniek1@cs.unc.edu,Shaniek,Wiltshier,730445086,0,TRUE,TRUE
+ptyap,ptyap,ptyap@cs.unc.edu,Pew-Thian,Yap,714750042,164,,FALSE
