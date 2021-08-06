@@ -1,6 +1,10 @@
 var data = require('./data');
 
 describe('Page visit and page javascript', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
@@ -95,6 +99,9 @@ describe('Page visit and page javascript', ()=>{
 
     cy.get('.student-navigation-notes-button').click();
     cy.url().should('contain', '/student/notes');
+
+    cy.get('.semester-button').click()
+    cy.url().should('contain', '/semester')
   });
 
   it('Javascript on job page should correctly hide elements', ()=>{

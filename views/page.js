@@ -51,11 +51,11 @@ const sidebar = ({ user, isAuthenticated, admin }) => {
         ? navLink('/logout', 'Logout')
         : navLink('/login', 'Login')
   const adminLinks = [
-    navLink('/report',   'Reports',   'report-button'),
-    navLink('/course',   'Course',    'course-button'),
-    navLink('/faculty',  'Faculty',   'faculty-button'),
-    navLink('/job',      'Job',       'job-button'),
-    navLink('/semester', 'Semesters', 'semester-button'),
+    navLink('/report',   'Reports',  'report-button'),
+    navLink('/course',   'Course',   'course-button'),
+    navLink('/faculty',  'Faculty',  'faculty-button'),
+    navLink('/job',      'Job',      'job-button'),
+    navLink('/semester', 'Semester', 'semester-button'),
   ]
   return [
     x('p')('Welcome ', user),
