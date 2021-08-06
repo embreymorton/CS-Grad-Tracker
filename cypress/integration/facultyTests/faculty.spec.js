@@ -1,4 +1,8 @@
 describe('Test the routes that a faculty should/should not be able to access', ()=>{
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })

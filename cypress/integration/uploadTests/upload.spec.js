@@ -3,6 +3,10 @@ var data = require('./data.js')
 describe('Upload data', ()=>{
   const filePath = '../../data/InOrderUploadTests/'
 
+  before(() => {
+    cy.request('/util/resetDatabaseToSnapshot')
+  })
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce('connect.sid')
   })
