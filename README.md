@@ -153,6 +153,13 @@ Install all the dependencies for the app by running `npm install`. It should cre
 ### Setup Auth0 and MongoDB
 Please read the sections on setting up an Auth0 instance (**Serena** can you update this when done?) and adding an admin account to your database.
 
+### Adding an Admin Account
+Open the `data/AdminInputScript.txt` file. Edit the email section to have your email. Then run `node data/AdminInputScript.txt`.
+
+Sign into your Auth0 instance with the same email address you used in `data/AdminInputScript.txt` so that the app will recognize you as an admin user.
+
+When you first start up the app, you may be prompted to create an account under your Auth0 instance. Do so with the email of your choice.
+
 ### Starting the App
 Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line: 
 
