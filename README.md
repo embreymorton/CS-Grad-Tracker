@@ -41,6 +41,7 @@ Users:
 
 *  [Environmental Variables](#environmental-variables)
 *  [Starting the app without docker](#starting-the-app-without-docker)
+*  [Starting the App with Windows](#starting-the-app-with-windows)
 *  [File organization](#file-organization)
 *  [Testing](#testing)
 *  [Deployment](#deployment)
@@ -123,6 +124,51 @@ and add it to a .env file in the root directory (CS-Grad-Tracking)
 Now to start the app run the command:
 
 `npm start`
+
+## Starting the App with Windows
+### Installing Prerequisite Programs
+
+Before starting, please ensure you have installed the following programs on your device:
+
+* [Git](https://git-scm.com/downloads)
+  * make sure you add to PATH
+* [Node and NPM](https://nodejs.org/en/download/)
+  * make sure you add to PATH
+* [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+  * follow all default settings
+
+To test out that you installed git and node correctly, try these commands in powershell:
+```ps
+git --version
+node --version
+npm --version
+```
+
+### Pulling Code and Installing Dependencies
+
+Once you are invited into the GitLab repository, click the blue "Clone" button and copy the link using your preference of SSH or HTTPS. Open powershell and cd into a folder of your choice for code. Run `git clone <copied-link>` and cd into the created folder. 
+
+Install all the dependencies for the app by running `npm install`. It should create a `node_modules` folder, but you don't really need to touch it.
+
+### Setup Auth0 and MongoDB
+Please read the sections on setting up an Auth0 instance (**Serena** can you update this when done?) and adding an admin account to your database.
+
+### Starting the App
+Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line: 
+
+```ps
+& "C:\Program Files\MongoDB\Server\<version>\bin\mongod.exe"
+```
+(replace version with the version of Mongo you installed; look in the Server folder if you don't recall)
+
+Open the `package.json` file and go down to the "scripts" section. Unfortunately our environment variables don't quite work yet on Windows so you need to manually execute the start script. To do this, run this in powershell:
+
+```ps
+$env:NODE_ENV='development'
+node bin/www
+```
+
+which, as you can see, looks just like the start script in `package.json`.
 
 ## File organization
 
