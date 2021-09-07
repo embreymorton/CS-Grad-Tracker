@@ -274,6 +274,12 @@ html.
 We are using Auth0, this is the process we used to configure it and is what you
 should use should you ever hook up your own auth0 account.
 
+Setting up Auth0 
+- Nagivate to `http://manage.auth0.com` and create an account
+- Find "Applications" on the sidebar, and click on pre-made default app
+- Under setting, add "http://localost:8081/callback" or "http://localost:8080/callback" under Allowed Callback URLs and "http://localhost:8081" or "http://localost:8080" under Allowed Logout URLS and click save changes on the bottom.
+
+
 - In .env, update `AUTH0_CLIENT_ID`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_SECRET` to
   your values (look at Auth0 docs for where to find these)
 - In the Auth0 settings page for your app, setup the appropriate URLS
