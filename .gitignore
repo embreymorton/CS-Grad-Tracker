@@ -4,3 +4,4 @@ cypress/videos/
 .env
 node_modules
 .vs
+.env.development
