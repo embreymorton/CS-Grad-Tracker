@@ -2,12 +2,9 @@
   background-color: lightblue;
 }
 
-.panelbg {
-  background-color: lightgrey;
-}
-
 html, body {
   height: 100%;
+  background-color: lightgrey;
 }
 
 .white-bg {
@@ -155,10 +152,6 @@ label.autoHyphen {
   hyphens: auto;
 }
 
-div.container-fluid > div > div.col-lg-10 {
-  overflow-y : scroll;
-}
-
 /*
 This is for highlighting search text on index pages
 */
@@ -183,7 +176,6 @@ form [name=dept] {
   display: block;
   table-layout: fixed;
   width: 100%;
-  overflow: auto;
 }
 
 .col-progress-report-notes {

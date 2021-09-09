@@ -31,7 +31,7 @@ const body = (opts, ...children) => (
               searchStudent(opts),
             ]
         ),
-        x('.col-lg-10.panelbg.text-center')(
+        x('.col-lg-10.text-center')(
           {align: 'center'},
           ...children,
         )
