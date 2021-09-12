@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- views/report/adminReport.ejs -->
+
+
+<html>
+  <head>
+    <title>Reports</title>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-lg-2 sidebar text-center">
+
+          <%- include("../partials/admin-sidebar.ejs") %>
+
+        </div>
+        <div align ="center" class="col-lg-10 panelbg text-center">
+
+          <h3 class="space">Admin Report</h3>
+          <span>
+            <p style="float:right"><a href="/report/adminReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
+            <p style="float:right"><a href="/report/adminReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
+          </span>
+
+          <% if(report.length>0) { %>
+            <table id="admin-report-table" align="center" border="1" class="table display-table table-striped table-bordered admin-report-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-admin-report-last">Last name</th>
+                  <th scope="col" class="col-admin-report-first">First Name</th>
+                  <th scope="col" class="col-admin-report-first">PID</th>
+                  <th scope="col" class="col-admin-report-first">Semester</th> <!-- computed from semester started and semesters on leave -->
+                  <th scope="col" class="col-admin-report-researchAdvisor">Research Advisor</th>
+                  <!-- <th scope="col" class="col-admin-report-otherResearchAdvisor">Other Research Advisor (non-faculty)</th> -->
+                  <th scope="col" class="col-admin-report-advisor">Advisor</th> 
+                  <!-- <th scope="col" class="col-admin-report-otherAdvisor">Other Advisor (non-faculty)</th> -->
+                </tr>
+              </thead>
+              <tbody>
+
+                <style>
+                  .red {background:red;}
+                </style>
+
+                <% for(var i=0; i<report.length; i++) { %>
+                  <tr>
+                    <td><%= report[i].lastName%></td>
+                    <td><%= report[i].firstName%></td>
+                    <td><%= report[i].pid%></td>
+                    <td><%= report[i].semesterStarted ? report[i].semesterStarted.season + ' ' + report[i].semesterStarted.year : ''  %></td>
+                    <td>
+                      <% if(report[i].researchAdvisor != null){ %>
+                        <%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if(report[i].advisor != null){ %>
+                      <%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <div>No students found.</div>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/bootstrapScripts.ejs") %>
+  </body>
+
+  <script type="text/javascript"> </script>
+
+</html>
