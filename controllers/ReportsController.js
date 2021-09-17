@@ -109,10 +109,14 @@ reportController.downloadProgressReportXLSX = function (req, res) {
             report.firstName = result[i].firstName;
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             report.otherAdvisor = result[i].otherAdvisor;
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             report.otherResearchAdvisor = result[i].otherResearchAdvisor;
             report.prpPassed = result[i].prpPassed;
@@ -160,10 +164,14 @@ reportController.downloadProgressReportCSV = function (req, res) {
             report.firstName = result[i].firstName;
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             report.otherAdvisor = result[i].otherAdvisor;
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             report.otherResearchAdvisor = result[i].otherResearchAdvisor;
             report.prpPassed = result[i].prpPassed;
@@ -231,9 +239,13 @@ reportController.downloadAdminReportXLSX = function (req, res) {
             report.semester = result[i].semesterStarted ? result[i].semesterStarted.season + ' ' + result[i].semesterStarted.year: '';
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             output[i] = report;
         }
@@ -263,9 +275,13 @@ reportController.downloadAdminReportCSV = function (req, res) {
             report.semester = result[i].semesterStarted ? result[i].semesterStarted.season + ' ' + result[i].semesterStarted.year: '';
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             output[i] = report;
         }
