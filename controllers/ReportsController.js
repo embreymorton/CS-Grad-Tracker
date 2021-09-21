@@ -109,10 +109,14 @@ reportController.downloadProgressReportXLSX = function (req, res) {
             report.firstName = result[i].firstName;
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             report.otherAdvisor = result[i].otherAdvisor;
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             report.otherResearchAdvisor = result[i].otherResearchAdvisor;
             report.prpPassed = result[i].prpPassed;
@@ -160,10 +164,14 @@ reportController.downloadProgressReportCSV = function (req, res) {
             report.firstName = result[i].firstName;
             if (result[i].advisor != null) {
                 report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
             }
             report.otherAdvisor = result[i].otherAdvisor;
             if (result[i].researchAdvisor != null) {
                 report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
             }
             report.otherResearchAdvisor = result[i].otherResearchAdvisor;
             report.prpPassed = result[i].prpPassed;
@@ -199,6 +207,15 @@ reportController.downloadProgressReportCSV = function (req, res) {
     });
 }
 
+reportController.getAdminReport = (req, res) => {
+    let adminReport = [];
+    aggregateData(adminReport).then((result) => {
+        res.render('../views/report/adminReport.ejs', {report: result});
+    }).catch((error) => {
+        res.render('../views/error.ejs', {string: error});
+    })
+}
+
 reportController.getTuitionReport = (req, res) => {
     let tutionReport = [];
     aggregateTuitionData(tutionReport).then((result) => {
@@ -206,6 +223,78 @@ reportController.getTuitionReport = (req, res) => {
     }).catch((error) => {
         res.render('../views/error.ejs', {string: error});
     })
+}
+
+reportController.downloadAdminReportXLSX = function (req, res) {
+    schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+        lastName: 1,
+        firstName: 1
+    }).lean().exec().then(async function (result) {
+        var output = [];
+        for (var i = 0; i < result.length; i++) {
+            var report = {};
+            report.lastName = result[i].lastName;
+            report.firstName = result[i].firstName;
+            report.pid = result[i].pid;
+            report.semester = result[i].semesterStarted ? result[i].semesterStarted.season + ' ' + result[i].semesterStarted.year: '';
+            if (result[i].researchAdvisor != null) {
+                report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
+            }
+            if (result[i].advisor != null) {
+                report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
+            }
+            output[i] = report;
+        }
+
+        var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.json_to_sheet(output);
+        XLSX.utils.book_append_sheet(wb, ws, "AdminReport");
+        var filePath = path.join(__dirname, "../data/adminReportTemp.xlsx");
+        XLSX.writeFile(wb, filePath);
+        res.setHeader("Content-Disposition", "filename=" + "AdminReport.xlsx");
+        res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        fs.createReadStream(filePath).pipe(res);
+    });
+}
+
+reportController.downloadAdminReportCSV = function (req, res) {
+    schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+        lastName: 1,
+        firstName: 1
+    }).lean().exec().then(async function (result) {
+        var output = [];
+        for (var i = 0; i < result.length; i++) {
+            var report = {};
+            report.lastName = result[i].lastName;
+            report.firstName = result[i].firstName;
+            report.pid = result[i].pid;
+            report.semester = result[i].semesterStarted ? result[i].semesterStarted.season + ' ' + result[i].semesterStarted.year: '';
+            if (result[i].researchAdvisor != null) {
+                report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+            } else {
+                report.researchAdvisor = "";
+            }
+            if (result[i].advisor != null) {
+                report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+            } else {
+                report.advisor = "";
+            }
+            output[i] = report;
+        }
+
+        var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.json_to_sheet(output);
+        XLSX.utils.book_append_sheet(wb, ws, "AdminReport");
+        var filePath = path.join(__dirname, "../data/adminReportTemp.csv");
+        XLSX.writeFile(wb, filePath);
+        res.setHeader("Content-Disposition", "filename=" + "AdminReport.csv");
+        res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        fs.createReadStream(filePath).pipe(res);
+    });
 }
 
 module.exports = reportController;

@@ -23,7 +23,18 @@ const profileFields = (opts) => {
     x('.row')(
       x('.col-md-4')(
         createOnlyField('onyen'),
-        createOnlyField('csid'),
+        !student && admin ?
+        x('.row')(
+          x('.col-md-4')('CSID *'),
+          x('.col-md-8')(
+            x('.row.form-group')(
+              x('input.form-control.col-md-4.left-15')({required: true, name: 'csid'}),
+              x('label.col-md-8')('@cs.unc.edu')
+            )
+          )
+        ) :
+        displayField('csid')
+        ,
         input('email', { required: true }),
         input('firstName', { required: true }),
         input('lastName', { required: true }),
@@ -80,7 +91,7 @@ const label = {
   backgroundApproved: 'Background approved',
   citizenship: 'US Citizenship',
   committeeCompApproved: 'Committee comp approved',
-  csid: 'CSID',
+  csid: 'CSID *',
   dissertationDefencePassed: 'Dissertation defence passed',
   dissertationSubmitted: 'Dissertation submitted',
   email: 'Email *',
@@ -94,13 +105,13 @@ const label = {
   lastName: 'Last name *',
   leaveExtension: 'Leave extension',
   mastersAwarded: 'Masters awarded',
-  onyen: 'Onyen',
+  onyen: 'Onyen *',
   oralExamPassed: 'Oral exam passed',
   otherAdvisor: 'Other Advisor (If not faculty member)',
   otherResearchAdvisor: 'Other Research Advisor (If not faculty member)',
   phdAwarded: 'PhD. Awarded',
   phdProposalApproved: 'PhD proposal approved',
-  pid: 'PID',
+  pid: 'PID *',
   proceedToPhdFormSubmitted: 'Proceed to PhD Form submitted',
   msProgramOfStudyApproved: 'M.S. Program of study approved',
   phdProgramOfStudyApproved: 'Ph.D. Program of study approved',
