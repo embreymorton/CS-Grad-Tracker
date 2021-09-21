@@ -23,7 +23,18 @@ const profileFields = (opts) => {
     x('.row')(
       x('.col-md-4')(
         createOnlyField('onyen'),
-        createOnlyField('csid'),
+        !student && admin ?
+        x('.row')(
+          x('.col-md-4')('CSID *'),
+          x('.col-md-8')(
+            x('.row.form-group')(
+              x('input.form-control.col-md-4.left-15')({required: true, name: 'csid'}),
+              x('label.col-md-8')('@cs.unc.edu')
+            )
+          )
+        ) :
+        displayField('csid')
+        ,
         input('email', { required: true }),
         input('firstName', { required: true }),
         input('lastName', { required: true }),
