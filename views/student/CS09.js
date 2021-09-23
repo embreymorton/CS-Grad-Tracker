@@ -2,7 +2,6 @@ const x = require('hyperaxe')
 const page = require('../page')
 const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
-const bootstrapScripts = require('../common/bootstrapScripts')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
@@ -16,7 +15,6 @@ const main = (opts) => {
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
-    bootstrapScripts(),
     pageScript(opts.cspNonce),
   )
 }
