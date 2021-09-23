@@ -197,3 +197,7 @@ form [name=dept] {
 #errorMessage {
   color: red;
 }
+
+.left-15 {
+  left: 15px;
+}
