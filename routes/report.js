@@ -22,8 +22,14 @@ router.get("/progressReport", report.getProgressReport);
 
 router.get("/tuitionReport", report.getTuitionReport);
 
+router.get("/advisorReport", report.getAdvisorReport);
+
 router.get("/progressReport/downloadXLSX", report.downloadProgressReportXLSX);
 
 router.get("/progressReport/downloadCSV", report.downloadProgressReportCSV);
+
+router.get("/advisorReport/downloadXLSX", report.downloadAdvisorReportXLSX);
+
+router.get("/advisorReport/downloadCSV", report.downloadAdvisorReportCSV);
 
 module.exports = router;
