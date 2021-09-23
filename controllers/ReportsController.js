@@ -207,10 +207,10 @@ reportController.downloadProgressReportCSV = function (req, res) {
     });
 }
 
-reportController.getAdminReport = (req, res) => {
-    let adminReport = [];
-    aggregateData(adminReport).then((result) => {
-        res.render('../views/report/adminReport.ejs', {report: result});
+reportController.getAdvisorReport = (req, res) => {
+    let advisorReport = [];
+    aggregateData(advisorReport).then((result) => {
+        res.render('../views/report/advisorReport.ejs', {report: result});
     }).catch((error) => {
         res.render('../views/error.ejs', {string: error});
     })
@@ -225,7 +225,7 @@ reportController.getTuitionReport = (req, res) => {
     })
 }
 
-reportController.downloadAdminReportXLSX = function (req, res) {
+reportController.downloadAdvisorReportXLSX = function (req, res) {
     schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
         lastName: 1,
         firstName: 1
@@ -252,16 +252,16 @@ reportController.downloadAdminReportXLSX = function (req, res) {
 
         var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.json_to_sheet(output);
-        XLSX.utils.book_append_sheet(wb, ws, "AdminReport");
-        var filePath = path.join(__dirname, "../data/adminReportTemp.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "AdvisorReport");
+        var filePath = path.join(__dirname, "../data/advisorReportTemp.xlsx");
         XLSX.writeFile(wb, filePath);
-        res.setHeader("Content-Disposition", "filename=" + "AdminReport.xlsx");
+        res.setHeader("Content-Disposition", "filename=" + "AdvisorReport.xlsx");
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         fs.createReadStream(filePath).pipe(res);
     });
 }
 
-reportController.downloadAdminReportCSV = function (req, res) {
+reportController.downloadAdvisorReportCSV = function (req, res) {
     schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
         lastName: 1,
         firstName: 1
@@ -288,10 +288,10 @@ reportController.downloadAdminReportCSV = function (req, res) {
 
         var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.json_to_sheet(output);
-        XLSX.utils.book_append_sheet(wb, ws, "AdminReport");
-        var filePath = path.join(__dirname, "../data/adminReportTemp.csv");
+        XLSX.utils.book_append_sheet(wb, ws, "AdvisorReport");
+        var filePath = path.join(__dirname, "../data/advisorReportTemp.csv");
         XLSX.writeFile(wb, filePath);
-        res.setHeader("Content-Disposition", "filename=" + "AdminReport.csv");
+        res.setHeader("Content-Disposition", "filename=" + "AdvisorReport.csv");
         res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         fs.createReadStream(filePath).pipe(res);
     });
