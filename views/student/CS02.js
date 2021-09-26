@@ -4,8 +4,9 @@ const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
-const signatureRow = require('../common/signatureRow')
+const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
+const signatureRow = require('../common/signatureRow')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -15,6 +16,7 @@ const main = (opts) => {
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
+    pageScript(opts)
   )
 }
 
@@ -59,7 +61,7 @@ const cs02Form = (opts) => {
       row(div('Course Number:'), 'courseNumber'), vert,
       row(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
-      signatureRow(admin, 'advisor', form),
+      approvalCheckbox(admin, 'advisor', form, opts.student),
       vert,
       div('Designated Instructor Signature:'),
       signatureRow(admin, 'instructor', form),
@@ -109,6 +111,40 @@ const formRow = (values, editAccess) => (label, name) => {
       )
     )
   )
+}
+
+const pageScript = (opts) => {
+  const el = x('script')({type: 'text/javascript'});
+  const advisor = opts.student.advisor;
+  const otherAdvisor = opts.student.otherAdvisor;
+  const isApproved = opts.form.advisorSignature;
+  const approvedDate = isApproved ? new Date(opts.form['advisorDateSigned']) : new Date();
+
+  const notApprovedYetLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approves:`;
+  const approvedLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}.`
+  el.innerHTML = 
+  `
+    const notApprovedYetLabel = "${notApprovedYetLabel}";
+    const approvedLabel = "${approvedLabel}";
+
+    const changeHandler = () => {
+      const label = document.getElementById('advisorSignatureLabel');
+      if (document.getElementById('advisorSignatureCheckbox').checked) {
+        label.innerText = approvedLabel;
+      } else {
+        label.innerText = notApprovedYetLabel;
+      }
+    }
+
+    const addCheckboxListeners = () => {
+      console.log('dom content loaded calls me');
+      document.getElementById('advisorSignatureCheckbox').addEventListener('change', changeHandler);
+    }
+
+    document.addEventListener('DOMContentLoaded', addCheckboxListeners)
+  `;
+  el.setAttribute('nonce', opts.cspNonce)
+  return el
 }
 
 module.exports = main

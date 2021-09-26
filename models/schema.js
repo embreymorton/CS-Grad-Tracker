@@ -356,7 +356,7 @@ var CS02Schema = mongoose.Schema({
   dateSubmitted: String,
   courseNumber: String,
   basisWaiver: String,
-  advisorSignature: String, advisorDateSigned: String,
+  advisorSignature: Boolean, advisorDateSigned: String,
   instructorSignature: String, instructorDateSigned: String
 })
 

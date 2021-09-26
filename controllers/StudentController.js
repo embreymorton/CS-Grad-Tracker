@@ -283,7 +283,7 @@ studentController.viewForm = (req, res) => {
   if (formName != null && _id != null && params.uploadSuccess != null) {
     schema.Faculty.find({}).exec().then((faculty) => {
       const uploadSuccess = params.uploadSuccess == 'true'
-      schema.Student.findOne({ _id }).exec().then((student) => {
+      schema.Student.findOne({ _id }).populate('advisor').populate('researchAdvisor').exec().then((student) => {
         if (student == null) {
           res.render('..views/error.ejs', {string: 'Student id not specified.'})
         } else {
