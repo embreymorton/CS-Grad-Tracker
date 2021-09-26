@@ -26,7 +26,7 @@ const approvalCheckbox = (editAccess, key, form, studentData) => {
     x('.row')(
       col(5)(
         em({id: `${sigName}Label`}, isApproved ? approvedLabel : notApprovedYetLabel),
-        x(`input#${sigName}Checkbox.form-control`)({type: "checkbox", name: sigName, required: true, checked: isApproved})
+        x(`input#${sigName}Checkbox.form-control`)({type: "checkbox", name: sigName, checked: isApproved, value: true})
       )
     )
   );
