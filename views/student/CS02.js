@@ -137,7 +137,6 @@ const pageScript = (opts) => {
     }
 
     const addCheckboxListeners = () => {
-      console.log('dom content loaded calls me');
       document.getElementById('advisorSignatureCheckbox').addEventListener('change', changeHandler);
     }
 

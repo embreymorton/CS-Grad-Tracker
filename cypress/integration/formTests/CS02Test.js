@@ -8,8 +8,6 @@ const CS02 = {
   dateSubmitted: 'Feb.2, 2020',
   courseNumber: 'COMP 560',
   basisWaiver: 'Taken',
-  advisorSignature: data.admin.lastName,
-  advisorDateSigned: 'YO yoyo',
   instructorSignature: 'jeffe',
   instructorDateSigned: 'time'
 }
@@ -29,7 +27,7 @@ describe('Test CS02 submissions', () => {
     cy.get('.CS02').click()
     cy.contains(name)
     cy.contains(pid.toString())
-    util.fillCleanFormAsAdmin(CS02)
+    util.fillCleanFormAsAdmin(CS02, 'text')
     cy.get('.CS02-submit').click()
     util.fillFormAsStudent(CS02)
   })
@@ -41,8 +39,6 @@ describe('Test CS02 submissions', () => {
     cy.contains(pid.toString())
 
     ;[
-      'advisorSignature',
-      'advisorDateSigned',
       'instructorSignature',
       'instructorDateSigned',
     ].forEach((field) => {
