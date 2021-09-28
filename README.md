@@ -14,7 +14,7 @@ project.
 In the past, Shane Flannigan worked on this project.
 
 # Contacts
-Takoda Ren ... takoda.ren@gmail.com
+Jeff Terrell <terrell@cs.unc.edu>
 
 # Context
 Current graduate student forms and progress data is all either in paper or in a
@@ -40,7 +40,7 @@ Users:
 # Documentation
 
 *  [Environmental Variables](#environmental-variables)
-*  [Starting the app without docker](#starting-the-app-without-docker)
+*  [Starting the app](#starting-the-app)
 *  [Starting the App with Windows](#starting-the-app-with-windows)
 *  [File organization](#file-organization)
 *  [Testing](#testing)
@@ -81,7 +81,7 @@ Users:
 - any values in .env will override values in other .env files, and you probably
   don't want to override mode or databaseString for both development and testing
 
-## Starting the app without Docker
+## Starting the app
 
 ### Running the database
 First, since we are connecting to a mongodb database, download mongodb at
