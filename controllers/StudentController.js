@@ -586,174 +586,156 @@ const requiredFieldsMissingError = (index, {onyen, csid, firstName, lastName, pi
       // I don't know why, but adding this useful information makes the response fail. The only thing that matters is the length of the string.
       // + ` If anything here is shown as 'undefined', check (1) that the row has a value for that column and (2) that the column name is spelled correctly, has the correct capitalization, and has no leading nor trailing spaces.`
 
+const findStudentByOnyenAndPid = async ({onyen, pid}) => {
+  await schema.Student.findOne({onyen, pid}).exec()
+}
+
+const findStudentByOnyen = async ({onyen}) => {
+  await schema.Student.findOne({onyen}).exec()
+}
+
+const findStudentByPid = async ({pid}) => {
+  await schema.Student.findOne({pid}).exec()
+}
+
+const updateStudent = async (student) => {
+  const {onyen, pid} = student
+  const validated = util.validateModelData(student, schema.Student)
+  const opts = {runValidators: true, context: 'query'}
+  await schema.Student
+    .update({onyen, pid}, validated, opts)
+    .exec()
+}
+
+const createStudent = async (student) => {
+  const validated = util.validateModelData(student, schema.Student)
+  const model = new schema.Student(validated)
+  return await model.save()
+}
+
+const upsertStudent = async (student) => {
+  const found = await findStudentByOnyenAndPid(student)
+  const upsert = found ? updateStudent : createStudent
+  await upsert(student)
+}
+
+const syncValidateStudent = (element, index) => {
+  var semReg = /(SP|FA|S1|S2) \d{4}/
+
+  if (requiredFieldMissing(element)) {
+    return requiredFieldsMissingError(index, element)
+  }
+
+  if (element.advisor != null && element.otherAdvisor != null) {
+    return `${element.onyen} is incorrect. Must specify ONE advisor.`
+  }
+
+  if (element.researchAdvisor != null && element.otherResearchAdvisor != null) {
+    return `${element.onyen} is incorrect. Must specify ONE research advisor.`
+  }
+
+  if (element.semesterStarted != null && !semReg.test(element.semesterStarted.toUpperCase())) {
+    return `${element.semesterStarted} is incorrect. Semester must be in form SS YYYY.`
+  }
+
+  if (element.advisor && !commaReg.test(element.advisor)) {
+    return `${element.advisor} is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter).`
+  }
+
+  if (element.researchAdvisor && !commaReg.test(element.researchAdvisor)) {
+    return `${element.researchAdvisor} is incorrect. Research advisor must be in form LASTNAME, FIRSTNAME (case does not matter).`
+  }
+
+  return null
+}
+
+const syncFirstErrorString = (data) =>
+      data.map(syncValidateStudent).filter(string => string !== null)[0]
+
+const lookupSemesterId = async (element) => {
+  const [season1, year1] = element.semesterStarted.split(/\s+/)
+  const season = season1.toUpperCase()
+  const year = parseInt(year1)
+  const data = {season, year}
+  const sem = await schema.Semester.findOneAndUpdate(data, data, {new: true, upsert: true}).exec()
+  element.semesterStarted = sem._id
+}
+
+const lookupAllSemesterIds = async (data) =>
+      (await Promise.all(
+        data
+          .filter((element) => element.semesterStarted != null)
+          .map(lookupSemesterId)
+      ))
+
+const validateAdvisor = async (field, noun, element) => {
+  var commaReg = /\s*,\s*/
+  let lastName, firstName
+  if (commaReg.test(element[field])) {
+    const [lastName1, firstName1] = element[field].split(commaReg)
+    lastName = new RegExp(lastName1, 'i')
+    firstName = new RegExp(firstName1, 'i')
+  }
+
+  const advisor = await schema.Faculty.findOne({lastName, firstName}).exec()
+
+  if (advisor != null) {
+    element[field] = advisor._id
+    return null
+  } else {
+    return `${element[field]} is incorrect. ${noun} does not exist`
+  }
+}
+
+const validateAdvisors = async (field, noun, data) =>
+      (await Promise.all(
+        data
+          .filter((element) => element.advisor)
+          .map(async (element) => {
+            validateAdvisor(field, noun, element)
+          })
+      )).filter((string) => string !== null)[0]
+
+const validateOnyenAndPid = async (student) => {
+  // should be either able to find somebody by BOTH onyen and pid or NEITHER,
+  // but not only one
+  const result = await findStudentByOnyenAndPid(student)
+  if (result != null) return null  // both
+  const stud1 = await findStudentByOnyen(student)
+  const stud2 = await findStudentByPid(student)
+  if (stud1 == null && stud2 == null) return null // neither
+  return `${element.lastName} contains an onyen or pid that already exists.`
+}
+
+const validateOnyensAndPids = async (data) =>
+      (await Promise.all(
+        data.map(validateOnyenAndPid)
+      )).filter(string => string !== null)[0]
+
+const validateUpload = async (data) => {
+  let firstErrorString = syncFirstErrorString(data)
+  if (firstErrorString) return firstErrorString
+  lookupAllSemesterIds(data) // a side effect, oh well...
+  firstErrorString = validateAdvisors('advisor', 'Advisor', data)
+  if (firstErrorString) return firstErrorString
+  firstErrorString = validateAdvisors('researchAdvisor', 'Research advisor', data)
+  if (firstErrorString) return firstErrorString
+  firstErrorString = validateOnyensAndPids(data)
+  if (firstErrorString) return firstErrorString
+  return null
+}
+
 studentController.upload = (req, res) => {
   (new formidable.IncomingForm()).parse(req, async (err, fields, files) => {
     var f = files[Object.keys(files)[0]]
     var workbook = XLSX.readFile(f.path, {cellDates:true, cellNF: false, cellText:false})
     var worksheet = workbook.Sheets[workbook.SheetNames[0]]
     var data = XLSX.utils.sheet_to_json(worksheet, {dateNF:'YYYY-MM-DD'})
-    var commaReg = /\s*,\s*/
-
-    //verify that all fields exist
-    let firstErrorString = data.map((element, index) => {
-      var semReg = /(SP|FA|S1|S2) \d{4}/
-
-      if (requiredFieldMissing(element)) {
-        return requiredFieldsMissingError(index, element)
-      }
-
-      if (element.advisor != null && element.otherAdvisor != null) {
-        return '${element.onyen} is incorrect. Must specify ONE advisor.'
-      }
-
-      if (element.researchAdvisor != null && element.otherResearchAdvisor != null) {
-        return '${element.onyen} is incorrect. Must specify ONE research advisor.'
-      }
-
-      if (element.semesterStarted != null && !semReg.test(element.semesterStarted.toUpperCase())) {
-        return '${element.semesterStarted} is incorrect. Semester must be in form SS YYYY.'
-      }
-
-      if (element.advisor && !commaReg.test(element.advisor)) {
-        return '${element.advisor} is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter).'
-      }
-
-      if (element.researchAdvisor && !commaReg.test(element.researchAdvisor)) {
-        return '${element.researchAdvisor} is incorrect. Research advisor must be in form LASTNAME, FIRSTNAME (case does not matter).'
-      }
-
-      return null
-    }).filter(string => string !== null)[0]
-
-    if (firstErrorString) {
-      return res.render('../views/error.ejs', {string: firstErrorString})
-    }
-
-    (await Promise.all(
-      data
-        .filter(element => element.semesterStarted != null)
-        .map(async element => {
-          const [season1, year1] = element.semesterStarted.split(/\s+/)
-          const season = season1.toUpperCase()
-          const year = parseInt(year1)
-          const data = {season, year}
-          const sem = await schema.Semester.findOneAndUpdate(data, data, {new: true, upsert: true}).exec()
-          element.semesterStarted = sem._id
-        })
-    ))
-
-    firstErrorString = (await Promise.all(
-      data
-        .filter(element => element.advisor)
-        .map(async element => {
-          let lastName, firstName
-          if (commaReg.test(element.advisor)) {
-            const [lastName1, firstName1] = element.advisor.split(commaReg)
-            lastName = new RegExp(lastName1, 'i')
-            firstName = new RegExp(firstName1, 'i')
-          }
-
-          const advisor = await schema.Faculty.findOne({lastName, firstName}).exec()
-
-          if (advisor != null) {
-            element.advisor = advisor._id
-            return null
-          } else {
-            return '${element.advisor} is incorrect. Advisor does not exist'
-          }
-        })
-    )).filter(string => string !== null)[0]
-
-    if (firstErrorString) {
-      return res.render('../views/error.ejs', {string: firstErrorString})
-    }
-
-    firstErrorString = (await Promise.all(
-      data
-        .filter(element => element.researchAdvisor)
-        .map(async element => {
-          let lastName, firstName
-          if (commaReg.test(element.researchAdvisor)) {
-            const [lastName1, firstName1] = element.researchAdvisor.split(commaReg)
-            lastName = new RegExp(lastName1, 'i')
-            firstName = new RegExp(firstName1, 'i')
-          }
-
-          const researchAdvisor = await schema.Faculty.findOne({lastName, firstName}).exec()
-
-          if (researchAdvisor != null) {
-            element.researchAdvisor = researchAdvisor._id
-            return null
-          } else {
-            return '${element.researchAdvisor} is incorrect. Research advisor does not exist'
-          }
-        })
-    )).filter(string => string !== null)[0]
-
-    if (firstErrorString) {
-      return res.render('../views/error.ejs', {string: firstErrorString})
-    }
-
-    const findStudentByOnyenAndPid = async ({onyen, pid}) => {
-      await schema.Student.findOne({onyen, pid}).exec()
-    }
-
-    const findStudentByOnyen = async ({onyen}) => {
-      await schema.Student.findOne({onyen}).exec()
-    }
-
-    const findStudentByPid = async ({pid}) => {
-      await schema.Student.findOne({pid}).exec()
-    }
-
-    firstErrorString = (await Promise.all(
-      data
-        .map(async (student) => {
-          const result = await findStudentByOnyenAndPid(student)
-          if (result != null) return null
-          const stud1 = await findStudentByOnyen(student)
-          const stud2 = await findStudentByPid(student)
-          if (stud1 != null || stud2 != null) {
-            return '${element.lastName} contains an onyen or pid that already exists.'
-          }
-          return null
-        })
-    )).filter(string => string !== null)[0]
-
-    if (firstErrorString) {
-      return res.render('../views/error.ejs', {string: firstErrorString})
-    }
-
-    var count = 0
-    return Promise.all(
-      data.forEach(async (element, index) => {
-        schema.Student.findOne({onyen, pid}).exec().then((result) => {
-          if (result == null) {
-            var inputStudent = new schema.Student(util.validateModelData(element, schema.Student))
-            inputStudent.save().then((result) => {
-              count++
-              if(count == data.length){
-                res.redirect('/student/upload/true')
-              }
-            }).catch((err) => {
-              res.render('../views/error.ejs', {string: err})
-              return
-            })
-          } else {
-            schema.Student.update({onyen: element.onyen, pid:element.pid}, util.validateModelData(element, schema.Student), {runValidators: true, context: 'query'}).exec().then((result) => {
-              count++
-              if(count == data.length){
-                res.redirect('/student/upload/true')
-              }
-            }).catch(
-              (err) => {
-                res.render('../views/error.ejs', {string: err})
-                return
-              })
-          }
-        })
-      })
-    )
+    const error = await validateUpload(data)
+    if (error) return res.render('../views/error.ejs', {string: error})
+    return Promise.all(data.forEach(upsertStudent))
+      .then(_ => res.redirect('/student/upload/true'))
+      .catch((string) => res.render('../views/error.ejs', {string}))
   })
 }
 
