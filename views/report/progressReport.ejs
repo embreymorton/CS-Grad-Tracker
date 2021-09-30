@@ -28,6 +28,7 @@
             <table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
               <thead>
                 <tr>
+                  <th scope="col" class="col-progress-report-last">Semesters Enrolled</th>
                   <th scope="col" class="col-progress-report-last">Last name</th>
                   <th scope="col" class="col-progress-report-first">First Name</th>
                   <th scope="col" class="col-progress-report-advisor">Advisor</th>
@@ -52,6 +53,7 @@
               <tbody>
                 <% for(var i=0; i<report.length; i++) { %>
                   <tr>
+                    <td><%= report[i].activeSemesters%></td>
                     <td><%= report[i].lastName%></td>
                     <td><%= report[i].firstName%></td>
                     <td>

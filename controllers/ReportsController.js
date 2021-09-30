@@ -19,6 +19,11 @@ let aggregateData = (progressReport) => {
                 resolve(progressReport);
             }
             calculateActiveSemesters(result, progressReport);
+            result.sort((a, b) => {
+              const x = a.activeSemesters
+              const y = b.activeSemesters
+              return x < y ? 1 : x > y ? -1 : 0
+            })
             for (let i = 0; i < students.length; i++) {
                 schema.Note.find({student: students[i]._id}).then((result) => {
                     progressReport[i].notes = result;
@@ -57,31 +62,24 @@ let aggregateTuitionData = (progressReport) => {
 };
 
 let calculateActiveSemesters = (studentList, report) => {
-    let today = new Date();
-    for (let i = 0; i < studentList.length; i++) {
-        let semestersOnLeave = studentList[i].semestersOnLeave;
-        let semesterStarted = studentList[i].semesterStarted;
-
-        let activeSemesters = 0;
-        if (semestersOnLeave != null && semesterStarted != null) {
-            let currentMonth = today.getMonth() + 1;
-            let currentYear = today.getFullYear();
-            if (currentMonth < 8) {
-                //its currently spring
-                activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave;
-                if (semesterStarted.season == "FA") {
-                    activeSemesters--;
-                }
-            } else {
-                //its currently fall
-                activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave;
-                if (semesterStarted.season == "SP") {
-                    activeSemesters++;
-                }
-            }
-        }
-        report[i].activeSemesters = activeSemesters;
+  const today = new Date()
+  for (let i = 0; i < studentList.length; i++) {
+    const semestersOnLeave = studentList[i].semestersOnLeave || 0
+    const semesterStarted = studentList[i].semesterStarted
+    const currentYear = today.getFullYear()
+    if (semesterStarted == null) {
+      report[i].activeSemesters = -1
+    } else {
+      let activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave
+      const currentMonth = today.getMonth() + 1
+      if (currentMonth < 8) { // its currently spring
+        if (semesterStarted.season == 'FA') activeSemesters--
+      } else {                // its currently fall
+        if (semesterStarted.season == 'SP') activeSemesters++
+      }
+      report[i].activeSemesters = activeSemesters
     }
+  }
 }
 
 reportController.get = function (req, res) {
