@@ -27,7 +27,7 @@ describe('Test CS02 submissions', () => {
     cy.get('.CS02').click()
     cy.contains(name)
     cy.contains(pid.toString())
-    util.fillCleanFormAsAdmin(CS02, 'text')
+    util.fillCleanFormAsAdmin(CS02)
     cy.get('.CS02-submit').click()
     util.fillFormAsStudent(CS02)
   })
@@ -49,5 +49,6 @@ describe('Test CS02 submissions', () => {
     util.fillFormAsStudent(CS02)
     cy.get('.CS02-submit').click()
     util.checkFormAsStudent(CS02)
+
   })
 })
