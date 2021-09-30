@@ -15,8 +15,7 @@ const main = (opts) => {
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
-    pageScript(opts)
+    mainContent(opts)
   )
 }
 
@@ -61,7 +60,7 @@ const cs02Form = (opts) => {
       row(div('Course Number:'), 'courseNumber'), vert,
       row(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
-      approvalCheckbox(admin, 'advisor', form, opts.student),
+      approvalCheckbox(admin, 'advisor', opts),
       vert,
       div('Designated Instructor Signature:'),
       signatureRow(admin, 'instructor', form),
@@ -113,37 +112,6 @@ const formRow = (values, editAccess) => (label, name) => {
   )
 }
 
-const pageScript = (opts) => {
-  const el = x('script')({type: 'text/javascript'});
-  const advisor = opts.student.advisor;
-  const otherAdvisor = opts.student.otherAdvisor;
-  const isApproved = opts.form.advisorSignature;
-  const approvedDate = isApproved ? new Date(opts.form['advisorDateSigned']) : new Date();
 
-  const notApprovedYetLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approves:`;
-  const approvedLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}.`
-  el.innerHTML = 
-  `
-    const notApprovedYetLabel = "${notApprovedYetLabel}";
-    const approvedLabel = "${approvedLabel}";
-
-    const changeHandler = () => {
-      const label = document.getElementById('advisorSignatureLabel');
-      if (document.getElementById('advisorSignatureCheckbox').checked) {
-        label.innerText = approvedLabel;
-      } else {
-        label.innerText = notApprovedYetLabel;
-      }
-    }
-
-    const addCheckboxListeners = () => {
-      document.getElementById('advisorSignatureCheckbox').addEventListener('change', changeHandler);
-    }
-
-    document.addEventListener('DOMContentLoaded', addCheckboxListeners)
-  `;
-  el.setAttribute('nonce', opts.cspNonce)
-  return el
-}
 
 module.exports = main
