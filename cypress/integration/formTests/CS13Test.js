@@ -8,8 +8,6 @@ let CS13 = {
   comp523Signature : 'asdas',
   comp523DateSigned: 'dddd',
   jobInfo: 'ssss',
-  advisorSignature: 'NAme',
-  advisorDateSigned: 'asdasd',
   product: 'WO',
   client: 'Tony',
   position: 'HEAD',
@@ -56,8 +54,6 @@ describe('Test CS13 submissions', ()=>{
     ;[
       'comp523Signature',
       'comp523DateSigned',
-      'advisorSignature',
-      'advisorDateSigned',
       'alt1Signature',
       'alt1DateSigned',
       'alt2Signature',

@@ -336,7 +336,7 @@ var CS01Schema = mongoose.Schema({
   math661Covered: String, math661Date: String,
   stat435Covered: String, stat435Date: String,
   studentSignature: String, studentDateSigned: String,
-  advisorSignature: String, advisorDateSigned: String
+  advisorSignature: Boolean, advisorDateSigned: String
 })
 
 var CS01BSMSSchema = mongoose.Schema({
@@ -348,7 +348,7 @@ var CS01BSMSSchema = mongoose.Schema({
   comp541Covered: String, comp541Date: String,
   math661Covered: String, math661Date: String,
   studentSignature: String, studentDateSigned: String,
-  advisorSignature: String, advisorDateSigned: String
+  advisorSignature: Boolean, advisorDateSigned: String
 })
 
 var CS02Schema = mongoose.Schema({
@@ -376,7 +376,7 @@ var CS03Schema = mongoose.Schema({
   outsideReview: Boolean,
   comprehensiveExam: String,
   studentSignature: String, studentDateSigned: String,
-  advisorSignature: String, advisorDateSigned: String,
+  advisorSignature: Boolean, advisorDateSigned: String,
   approved: String,
   approvalReason: String,
   directorSignature: String, directorDateSigned: String
@@ -476,7 +476,7 @@ var CS13Schema = mongoose.Schema({
   comp523DateSigned: String,
   hadJob: Boolean,
   jobInfo: String,
-  advisorSignature: String,
+  advisorSignature: Boolean,
   advisorDateSigned: String,
   alternative: Boolean,
   product: String,

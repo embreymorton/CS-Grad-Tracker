@@ -13,8 +13,6 @@ let CS03 = {
   title: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   studentSignature: 'A',
   studentDateSigned: 'AA',
-  advisorSignature: 'B',
-  advisorDateSigned: 'BB',
   approvalReason: 'ASDF',
   directorSignature: 'ASDF',
   directorDateSigned: 'YOYOYO'
@@ -59,13 +57,10 @@ describe('Test CS03 submissions', ()=>{
     cy.contains(pid.toString())
 
     cy.contains(CS03Dropdowns.approved)
-    cy.contains(CS03.advisorSignature);
     cy.contains(CS03.approvalReason);
     cy.contains(CS03.directorSignature);
     cy.contains(CS03.directorDateSigned);
 
-    delete CS03.advisorSignature;
-    delete CS03.advisorDateSigned;
     delete CS03.approved;
     delete CS03.approvalReason;
     delete CS03.directorSignature;
