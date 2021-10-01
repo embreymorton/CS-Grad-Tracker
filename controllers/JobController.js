@@ -220,7 +220,8 @@ jobController.create = function (req, res) {
     getFaculty().then(function (faculty) {
       getCourses().then(function (courses) {
         getSemesters().then(function (semesters) {
-          const locals = { faculty, courses, grants, jobTitles, semesters }
+          const { cspNonce } = res.locals
+          const locals = { faculty, courses, grants, jobTitles, semesters, cspNonce }
           res.render('../views/job/create.ejs', locals)
         })
       })
