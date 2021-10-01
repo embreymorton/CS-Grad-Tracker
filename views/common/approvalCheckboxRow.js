@@ -13,11 +13,11 @@ const approvalCheckbox = (editAccess, key, opts) => {
   const advisor = studentData.advisor
   const otherAdvisor = studentData.otherAdvisor;
 
-  const isApproved = opts.form.advisorSignature; 
+  const isApproved = opts.form.advisorSignature;
   const approvedDate =  isApproved ? new Date(opts.form['advisorDateSigned']) : new Date();
-  const notApprovedYetLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approves:`;
-  const approvedLabel = `Advisor ${advisor?.lastName ? `${advisor?.firstName} ${advisor?.lastName}` : otherAdvisor || '(unspecified)'} approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}.`
-  
+  const notApprovedYetLabel = `Advisor ${advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)'} approves:`;
+  const approvedLabel = `Advisor ${advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)'} approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}.`
+
   if (editAccess) {
     return (
       x('.row')(
@@ -47,13 +47,14 @@ function pageScript(opts, key) {
 
   const initialAdvisorApproval = opts.form.advisorSignature
   const initialAdvisorApprovalDate = new Date(opts.form.advisorDateSigned)
-  const advisorName = opts.student.advisor?.lastName ? `${opts.student.advisor?.firstName} ${opts.student.advisor?.lastName}` : opts.student.otherAdvisor || '(unspecified)';
+  const { advisor, otherAdvisor } = opts.student
+  const advisorName = advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)';
 
-  const initialLabel = initialAdvisorApproval 
+  const initialLabel = initialAdvisorApproval
   ? `Advisor ${advisorName} approved as of ${initialAdvisorApprovalDate.getMonth()+1}/${initialAdvisorApprovalDate.getDate()}/${initialAdvisorApprovalDate.getFullYear()}:`
   : `Advisor ${advisorName} approves:`;
 
-  el.innerHTML = 
+  el.innerHTML =
   `
     const label = document.getElementById('${key}SignatureLabel');
     const checkbox = document.getElementById('${key}SignatureCheckbox');
@@ -74,9 +75,9 @@ function pageScript(opts, key) {
 
     const onLoad = () => {
       checkbox.addEventListener('change', changeHandler);
-  
+
       label.innerText = "${initialLabel}";
-  
+
       if (${initialAdvisorApproval}) {
         checkbox.checked = true;
         approvalData.setAttribute("value", true);
