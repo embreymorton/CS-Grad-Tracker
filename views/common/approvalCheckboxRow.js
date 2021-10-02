@@ -1,65 +1,67 @@
 const x = require('hyperaxe');
 const pseudoCheckbox = require('./pseudoCheckbox')
-const { initialize } = require('passport');
 
-
-const approvalCheckbox = (editAccess, key, opts) => {
+/**
+ * A group of HTML elements that replace a signature box and a date box for
+ * a checkbox and includes automated timestamping based on the time the checkbox was approved.
+ * 
+ * For it to work with the database, the form's schema must have a Boolean "{signer}Signature" field
+ * and a String "{signer}DateSigned" field.
+ * @param {Number} editAccess should be passed in from app.js; 0 = student, no write access
+ * @param {String} signer position of person to sign the document - eg. 'advisor', 'chair', etc.
+ * @param {Object} opts must include `{ cspNonce, student }`. `student` is the Mongo query for the student and should have faculty populated.
+ */
+const approvalCheckbox = (editAccess, signer, opts) => {
   const col = (n) => (x(`div.col-md-${n}`))
-  const { em, div } = x
-  const sigName = `${key}Signature`
-  const dateName = `${key}DateSigned`
-  const studentData = opts.student
-
-  const advisor = studentData.advisor
-  const otherAdvisor = studentData.otherAdvisor;
+  const { advisor, otherAdvisor } = opts.student;
+  
+  const signerName = `${signer}Signature`;
+  const dateName = `${signer}DateSigned`;
+  const advisorName = advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)';
 
   const isApproved = opts.form.advisorSignature;
-  const approvedDate =  isApproved ? new Date(opts.form['advisorDateSigned']) : new Date();
-  const notApprovedYetLabel = `Advisor ${advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)'} approves:`;
-  const approvedLabel = `Advisor ${advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)'} approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}.`
+  const approvedDate =  isApproved ? new Date(opts.form.advisorDateSigned) : new Date();
+  const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
+  const approvalLabel = isApproved ? 
+    `Advisor ${advisorName} approved as of ${approvedDateMMDDYYYY}.` :
+    `Advisor ${advisorName} approves:`;
 
   if (editAccess) {
-    return (
+    return ( // advisor/faculty's view
       x('.row')(
         col(5)(
-          em({id: `${sigName}Label`}, isApproved ? approvedLabel : notApprovedYetLabel),           // advisorSignature Label
-          x(`input#${sigName}Checkbox.form-control`)({type: "checkbox"}),                          // physical checkbox
-          x(`input#${sigName}`)({type: "hidden", name: sigName}),                                  // hidden input for checkbox
-          x(`input#${dateName}`)({type: "hidden", name: dateName, value: approvedDate.toString()}) // hidden input for the date
+          x(`em#${signerName}Label`)(approvalLabel),
+          x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+          x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved}),
+          x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
         ),
-        pageScript(opts, key)
+        pageScript(opts, {signerName, dateName, advisorName})
       )
     );
   } else {
-    return (
+    return ( // student's view
       x('.row')(
         col(5)(
           pseudoCheckbox(isApproved),
-          em(isApproved ? `(Approved as of ${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()})` : '(Advisor has not yet approved)')
+          x('em')(isApproved ? 
+            `(Approved as of ${approvedDateMMDDYYYY})` :
+            '(Advisor has not yet approved)')
         )
       )
-    )
+    );
   }
 }
 
-function pageScript(opts, key) {
+function pageScript(opts, initialState) { 
+  const { signerName, dateName, advisorName } = initialState;
   const el = x('script')({type: 'text/javascript'});
-
-  const initialAdvisorApproval = opts.form.advisorSignature
-  const initialAdvisorApprovalDate = new Date(opts.form.advisorDateSigned)
-  const { advisor, otherAdvisor } = opts.student
-  const advisorName = advisor && advisor.lastName ? `${advisor && advisor.firstName} ${advisor && advisor.lastName}` : otherAdvisor || '(unspecified)';
-
-  const initialLabel = initialAdvisorApproval
-  ? `Advisor ${advisorName} approved as of ${initialAdvisorApprovalDate.getMonth()+1}/${initialAdvisorApprovalDate.getDate()}/${initialAdvisorApprovalDate.getFullYear()}:`
-  : `Advisor ${advisorName} approves:`;
 
   el.innerHTML =
   `
-    const label = document.getElementById('${key}SignatureLabel');
-    const checkbox = document.getElementById('${key}SignatureCheckbox');
-    const approvalData = document.getElementById('${key}Signature');
-    const dateData = document.getElementById('${key}DateSigned');
+    const label = document.getElementById('${signerName}Label');
+    const checkbox = document.getElementById('${signerName}Checkbox');
+    const approvalData = document.getElementById('${signerName}');
+    const dateData = document.getElementById('${dateName}');
     const changeHandler = () => {
       if (checkbox.checked) {
         const now = new Date();
@@ -75,18 +77,6 @@ function pageScript(opts, key) {
 
     const onLoad = () => {
       checkbox.addEventListener('change', changeHandler);
-
-      label.innerText = "${initialLabel}";
-
-      if (${initialAdvisorApproval}) {
-        checkbox.checked = true;
-        approvalData.setAttribute("value", true);
-        dateData.setAttribute("value", "${initialAdvisorApprovalDate}");
-      } else {
-        checkbox.checked = false;
-        approvalData.setAttribute("value", false);
-        dateData.setAttribute("value", "");
-      }
     }
 
     document.addEventListener('DOMContentLoaded', onLoad);
