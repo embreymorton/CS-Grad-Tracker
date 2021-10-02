@@ -9,7 +9,9 @@ const pseudoCheckbox = require('./pseudoCheckbox')
  * and a String "{signer}DateSigned" field.
  * @param {Number} editAccess should be passed in from app.js; 0 = student, no write access
  * @param {String} signer position of person to sign the document - eg. 'advisor', 'chair', etc.
- * @param {Object} opts must include `{ cspNonce, student }`. `student` is the Mongo query for the student and should have faculty populated.
+ * @param {Object} opts must include `{ cspNonce, form, student }`. 
+ * `form` is the Mongo query for the current form.
+ * `student` is the Mongo query for the student and should have faculty populated.
  */
 const approvalCheckbox = (editAccess, signer, opts) => {
   const col = (n) => (x(`div.col-md-${n}`))
@@ -27,12 +29,12 @@ const approvalCheckbox = (editAccess, signer, opts) => {
     `Advisor ${advisorName} approves:`;
 
   if (editAccess) {
-    return ( // advisor/faculty's view
+    return ( // advisor/faculty's view 
       x('.row')(
         col(5)(
           x(`em#${signerName}Label`)(approvalLabel),
           x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
-          x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved}),
+          x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.
           x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
         ),
         pageScript(opts, {signerName, dateName, advisorName})
