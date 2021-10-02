@@ -618,6 +618,7 @@ const upsertStudent = async (student) => {
 
 const syncValidateStudent = (element, index) => {
   var semReg = /(SP|FA|S1|S2) \d{4}/
+  var commaReg = /\s*,\s*/
 
   if (requiredFieldMissing(element)) {
     return requiredFieldsMissingError(index, element)
