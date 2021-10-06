@@ -606,14 +606,18 @@ const updateStudent = async (student) => {
 
 const createStudent = async (student) => {
   const validated = util.validateModelData(student, schema.Student)
-  const model = new schema.Student(validated)
+  if (mongoose.Types.ObjectId.isValid(schema.Student(validated))) {
+    const model = new schema.Student(validated)
+  }
   return await model.save()
 }
 
 const upsertStudent = async (student) => {
   const found = await findStudentByOnyenAndPid(student)
   const upsert = found ? updateStudent : createStudent
-  await upsert(student)
+  if (mongoose.Types.ObjectId.isValid(upsert(student))) {
+    await upsert(student)
+  }
 }
 
 const syncValidateStudent = (element, index) => {
