@@ -9,7 +9,7 @@ var reportController = {}
 
 const aggregateData = async () => {
   try {
-    const students = await schema.Student.find().sort({
+    const students = await schema.Student.find({status: 'Active'}).sort({
       lastName: 1,
       firstName: 1
     }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
