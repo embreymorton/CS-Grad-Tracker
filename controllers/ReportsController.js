@@ -7,7 +7,7 @@ var formidable = require("formidable")
 
 var reportController = {}
 
-const aggregateData = async () => {
+const aggregateData = async (opts) => {
   try {
     const students = await schema.Student.find({status: 'Active'}).sort({
       lastName: 1,
@@ -25,6 +25,10 @@ const aggregateData = async () => {
       student.notes = await schema.Note.find({student: student._id})
     }
     await Promise.all(students.map(populateNotes))
+    if ( opts.pid && !opts.admin ) {
+        const facultyStudents = students.filter((student) => student.advisor?.pid == opts.pid || student.researchAdvisor?.pid == opts.pid);
+        return [facultyStudents, null]
+    }
     return [students, null]
   } catch (error) {
     console.log(error)
@@ -72,7 +76,7 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = async (req, res) => {
-  const [ report, string ] = await aggregateData()
+  const [ report, string ] = await aggregateData({pid: req.session.userPID, admin: req.session.admin});
   if (report) res.render('../views/report/progressReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }
@@ -188,7 +192,7 @@ reportController.downloadProgressReportCSV = function (req, res) {
 }
 
 reportController.getAdvisorReport = async (req, res) => {
-  const [ report, string ] = await aggregateData()
+  const [ report, string ] = await aggregateData({pid: req.session.userPID, admin: req.session.admin})
   if (report) res.render('../views/report/advisorReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }

@@ -6,8 +6,9 @@ var util = require("../controllers/util");
 var report = require("../controllers/ReportsController.js");
 
 router.use(function(req, res, next){
-  if(req.session.accessLevel == 3){
-    res.locals.admin = true;
+  res.locals.loggedInPID = req.session.userPID;
+  if(req.session.accessLevel >= 2){                   // letting faculty see reports temporarily 
+    res.locals.admin = req.session.accessLevel === 3;
     next();
   }
   else{
