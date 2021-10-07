@@ -114,11 +114,11 @@ studentViewController.updateForm = async function (req, res) {
   var input = req.body;
 
   // nodemailer test 10/2
-  let testAccount = await nodemailer.createTestAccount();
+  // let testAccount = await nodemailer.createTestAccount();
+  const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"};
   let transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
-    secure: false,
     auth: {
       user: testAccount.user,
       pass: testAccount.pass
@@ -152,7 +152,7 @@ studentViewController.updateForm = async function (req, res) {
         .map(advisor => advisor.email)
       mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
       mailOptions.text = "The student has completed the following forms as of now: " + result;
-      if (process.env.mode != 'testing') {
+      if (process.env.mode == 'testing') {
         transport.sendMail(mailOptions, function (error, response) {
           if (error) {
             console.error(error);
@@ -167,10 +167,11 @@ studentViewController.updateForm = async function (req, res) {
         let info = await transporter.sendMail({
           from: '"Fred Foo 👻" <foo@example.com>',
           to: "bar@example.com, bax@example.com",
-          subject: "Hello Worlds.",
+          subject: "[UNC-CS] Approval needed: ${name} - ${formname}",
           text: "Hello worlds's'sss body!",
           html: "<b>This is html!</b>" 
         });
+        console.log(info);
         console.log(`Message sent was: ${info.messageId}`); // should be something like '<b658...>'
         console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(info)}`)
       }
