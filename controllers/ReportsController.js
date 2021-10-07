@@ -1,45 +1,35 @@
-var schema = require("../models/schema.js");
-var util = require("./util.js");
-var XLSX = require("xlsx");
-var fs = require("fs");
-var path = require("path");
-var formidable = require("formidable");
+var schema = require("../models/schema.js")
+var util = require("./util.js")
+var XLSX = require("xlsx")
+var fs = require("fs")
+var path = require("path")
+var formidable = require("formidable")
 
-var reportController = {};
+var reportController = {}
 
-let aggregateData = (progressReport) => {
-  return new Promise((resolve, reject) => {
-    schema.Student.find().sort({
+const aggregateData = async () => {
+  try {
+    const students = await schema.Student.find().sort({
       lastName: 1,
       firstName: 1
-    }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec().then(function (result) {
-      progressReport = result;
-      let students = result;
-      if (students.length == 0) {
-        resolve(progressReport);
-      }
-      calculateActiveSemesters(result, progressReport);
-      result.sort((a, b) => {
-        const x = a.activeSemesters
-        const y = b.activeSemesters
-        return x < y ? 1 : x > y ? -1 : 0
-      })
-      for (let i = 0; i < students.length; i++) {
-        schema.Note.find({student: students[i]._id}).then((result) => {
-          progressReport[i].notes = result;
-          if (i == students.length - 1) {
-            resolve(progressReport);
-          }
-        }).catch((error) => {
-          console.log(error)
-          reject(error);
-        });
-      }
-    }).catch((error) => {
-      console.log(error)
-      reject(error);
-    });
-  });
+    }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
+    if (students.length == 0) return []
+    students.forEach((student) => (
+      student.activeSemesters = calculateActiveSemesters(student)
+    ))
+    const descending = ({activeSemesters: x}, {activeSemesters: y}) => (
+      x < y ? 1 : x > y ? -1 : 0
+    )
+    students.sort(descending)
+    const populateNotes = async (student) => {
+      student.notes = await schema.Note.find({student: student._id})
+    }
+    await Promise.all(students.map(populateNotes))
+    return [students, null]
+  } catch (error) {
+    console.log(error)
+    return [null, error]
+  }
 }
 
 let aggregateTuitionData = (progressReport) => {
@@ -48,51 +38,43 @@ let aggregateTuitionData = (progressReport) => {
       lastName: 1,
       firstName: 1
     }).populate('advisor').populate('semesterStarted').lean().exec().then(function (result) {
-      tuitionReport = result;
-      calculateActiveSemesters(result, tuitionReport);
+      tuitionReport = result
+      result.forEach((student) => (
+        student.activeSemesters = calculateActiveSemesters(student)
+      ))
       tuitionReport.sort((a, b) => {
-        return a.activeSemesters - b.activeSemesters;
-      });
-      resolve(tuitionReport);
+        return a.activeSemesters - b.activeSemesters
+      })
+      resolve(tuitionReport)
     }).catch((error) => {
       console.log(error)
-      reject(error);
-    });
-  });
-};
+      reject(error)
+    })
+  })
+}
 
-let calculateActiveSemesters = (studentList, report) => {
+let calculateActiveSemesters = (student) => {
   const today = new Date()
-  for (let i = 0; i < studentList.length; i++) {
-    const semestersOnLeave = studentList[i].semestersOnLeave || 0
-    const semesterStarted = studentList[i].semesterStarted
-    const currentYear = today.getFullYear()
-    if (semesterStarted == null) {
-      report[i].activeSemesters = -1
-    } else {
-      let activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave
-      const currentMonth = today.getMonth() + 1
-      if (currentMonth < 8) { // its currently spring
-        if (semesterStarted.season == 'FA') activeSemesters--
-      } else {                // its currently fall
-        if (semesterStarted.season == 'SP') activeSemesters++
-      }
-      report[i].activeSemesters = activeSemesters
-    }
-  }
+  const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth() + 1
+  const isSpring = currentMonth < 8
+  let { semesterStarted, semestersOnLeave } = student
+  if (semesterStarted == null) return -1
+  semestersOnLeave = semestersOnLeave || 0
+  let activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave
+  if       (isSpring && semesterStarted.season == 'FA') activeSemesters--
+  else if (!isSpring && semesterStarted.season == 'SP') activeSemesters++
+  return activeSemesters
 }
 
 reportController.get = function (req, res) {
-  res.render("../views/report/index.ejs", {});
+  res.render("../views/report/index.ejs", {})
 }
 
-reportController.getProgressReport = (req, res) => {
-  let progressReport = [];
-  aggregateData(progressReport).then((result) => {
-    res.render('../views/report/progressReport.ejs', {report: result});
-  }).catch((error) => {
-    res.render('../views/error.ejs', {string: error});
-  })
+reportController.getProgressReport = async (req, res) => {
+  const [ report, string ] = await aggregateData()
+  if (report) res.render('../views/report/progressReport.ejs', { report })
+  else res.render('../views/error.ejs', { string })
 }
 
 reportController.downloadProgressReportXLSX = function (req, res) {
@@ -205,13 +187,10 @@ reportController.downloadProgressReportCSV = function (req, res) {
   });
 }
 
-reportController.getAdvisorReport = (req, res) => {
-  let advisorReport = [];
-  aggregateData(advisorReport).then((result) => {
-    res.render('../views/report/advisorReport.ejs', {report: result});
-  }).catch((error) => {
-    res.render('../views/error.ejs', {string: error});
-  })
+reportController.getAdvisorReport = async (req, res) => {
+  const [ report, string ] = await aggregateData()
+  if (report) res.render('../views/report/advisorReport.ejs', { report })
+  else res.render('../views/error.ejs', { string })
 }
 
 reportController.getTuitionReport = (req, res) => {
