@@ -26,7 +26,7 @@ const aggregateData = async (opts) => {
     }
     await Promise.all(students.map(populateNotes))
     if ( opts.pid && !opts.admin ) {
-        const facultyStudents = students.filter((student) => student.advisor?.pid == opts.pid || student.researchAdvisor?.pid == opts.pid);
+        const facultyStudents = students.filter((student) => student.advisor && student.advisor.pid == opts.pid || student.researchAdvisor && student.researchAdvisor.pid == opts.pid);
         return [facultyStudents, null]
     }
     return [students, null]
