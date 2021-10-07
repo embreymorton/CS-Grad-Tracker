@@ -28,6 +28,7 @@
             <table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
               <thead>
                 <tr>
+                  <th scope="col" class="col-progress-report-last">Semesters Enrolled</th>
                   <th scope="col" class="col-progress-report-last">Last name</th>
                   <th scope="col" class="col-progress-report-first">First Name</th>
                   <th scope="col" class="col-progress-report-advisor">Advisor</th>
@@ -52,6 +53,7 @@
               <tbody>
                 <% for(var i=0; i<report.length; i++) { %>
                   <tr>
+                    <td><%= report[i].activeSemesters%></td>
                     <td><%= report[i].lastName%></td>
                     <td><%= report[i].firstName%></td>
                     <td>
@@ -67,15 +69,13 @@
                     </td>
 
                     <td><%= report[i].otherResearchAdvisor%></td>
-                    <!-- <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>>
-                      <%= report[i].prpPassed%>
-                    </td> -->
-                    <!-- unsure if activeSemesters is a desired column, the header does not include it -->
+                    <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>>
+                         <%= report[i].prpPassed%>
+                         </td>
                     <td><%= report[i].technicalWritingApproved%></td>
                     <td><%= report[i].backgroundApproved%></td>
                     <td><%= report[i].researchPlanningMeeting%></td>
-                    <td><%= report[i].msProgramProductRequirement%></td>
-                    <td><%= report[i].phdProgramProductRequirement%></td>
+                    <td><%= report[i].programProductRequirement%></td>
                     <td><%= report[i].msProgramOfStudyApproved%></td>
                     <td><%= report[i].phdProgramOfStudyApproved%></td>
                     <td><%= report[i].committeeCompApproved%></td>

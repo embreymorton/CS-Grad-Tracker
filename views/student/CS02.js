@@ -4,8 +4,9 @@ const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
-const signatureRow = require('../common/signatureRow')
+const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
+const signatureRow = require('../common/signatureRow')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -14,7 +15,7 @@ const main = (opts) => {
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    mainContent(opts)
   )
 }
 
@@ -59,7 +60,7 @@ const cs02Form = (opts) => {
       row(div('Course Number:'), 'courseNumber'), vert,
       row(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
-      signatureRow(admin, 'advisor', form),
+      approvalCheckbox(admin, 'advisor', opts),
       vert,
       div('Designated Instructor Signature:'),
       signatureRow(admin, 'instructor', form),
@@ -110,5 +111,7 @@ const formRow = (values, editAccess) => (label, name) => {
     )
   )
 }
+
+
 
 module.exports = main

@@ -17,9 +17,7 @@ let CS01BSMS = {
   math661Covered: 'G',
   math661Date: 'G',
   studentSignature: student.lastName,
-  studentDateSigned: 'asd',
-  advisorSignature: data.admin.lastName,
-  advisorDateSigned: 'casc'
+  studentDateSigned: 'asd'
 }
 
 describe('Test CS01MSBS submissions', ()=>{
@@ -52,10 +50,6 @@ describe('Test CS01MSBS submissions', ()=>{
     cy.visit('/studentView/forms/CS01BSMS/false')
     cy.contains(name)
     cy.contains(pid.toString())
-    cy.contains(CS01BSMS.advisorSignature);
-    cy.contains(CS01BSMS.advisorDateSigned);
-    delete CS01BSMS.advisorSignature;
-    delete CS01BSMS.advisorDateSigned;
     util.fillFormAsStudent(CS01BSMS);
     cy.get('.CS01-submit').click();
     util.checkFormAsStudent(CS01BSMS);

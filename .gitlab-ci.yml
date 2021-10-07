@@ -68,7 +68,7 @@ install_dependencies:
       - node_modules/
 
 testing_testing:
-  image: cypress/base:10
+  image: cypress/base:12
   tags:
     - nodejs
   stage: test

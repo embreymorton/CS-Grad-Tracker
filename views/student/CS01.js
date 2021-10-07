@@ -5,6 +5,7 @@ const studentBar = require('../common/studentBar')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
+const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 
 const main = (opts) => {
@@ -86,7 +87,8 @@ const cs01Form = (opts) => {
       x('.verticalSpace')(),
 
       p('Advisor Signature:'),
-      signatureRow(admin, 'advisor', form),
+      // signatureRow(admin, 'advisor', form),
+      approvalCheckboxRow(admin, 'advisor', opts),
       x('.verticalSpace')(),
 
       admin || isStudent

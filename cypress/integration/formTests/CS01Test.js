@@ -34,8 +34,6 @@ let CS01 = {
   stat435Date: 'O',
   studentSignature: data.student.lastName,
   studentDateSigned: 'BRUH',
-  advisorSignature: data.admin.lastName,
-  advisorDateSigned: 'YO yoyo'
 }
 
 describe('Test CS01 submissions', ()=>{
@@ -67,10 +65,6 @@ describe('Test CS01 submissions', ()=>{
     cy.visit('/studentView/forms/CS01/false')
     cy.contains(name)
     cy.contains(pid.toString())
-    cy.contains(CS01.advisorSignature);
-    cy.contains(CS01.advisorDateSigned);
-    delete CS01.advisorSignature;
-    delete CS01.advisorDateSigned;
     util.fillFormAsStudent(CS01);
     cy.get('.CS01-submit').click();
     util.checkFormAsStudent(CS01);

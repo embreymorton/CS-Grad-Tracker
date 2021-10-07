@@ -276,37 +276,34 @@ studentController.formPage = function(req, res){
   }
 }
 
-studentController.viewForm = (req, res) => {
+studentController.viewForm = async (req, res) => {
   const { params } = req
   const { _id } = params
   const formName = params.title
   if (formName != null && _id != null && params.uploadSuccess != null) {
-    schema.Faculty.find({}).exec().then((faculty) => {
-      const uploadSuccess = params.uploadSuccess == 'true'
-      schema.Student.findOne({ _id }).exec().then((student) => {
-        if (student == null) {
-          res.render('..views/error.ejs', {string: 'Student id not specified.'})
-        } else {
-          schema[formName].findOne({student: _id}).exec().then((result) => {
-            const form = result || {}
-            const isStudent = false
-            const admin = req.session.accessLevel == 3
-            util.checkAdvisorAdmin(req.session.userPID, _id).then((result) => {
-              const hasAccess = !!result || admin
-              const postMethod = `/student/forms/update/${student._id}/${formName}`
-              const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}`
-              const view = `../views/student/${viewFile}`
-              const { cspNonce } = res.locals
-              const locals = {
-                student, form, uploadSuccess, isStudent, admin, postMethod,
-                hasAccess, faculty, formName, cspNonce
-              }
-              res.render(view, locals)
-            })
-          })
-        }
-      })
-    })
+    const faculty = await schema.Faculty.find({}).exec()
+    const uploadSuccess = params.uploadSuccess == 'true'
+    const student = await schema.Student.findOne({ _id }).populate('advisor').populate('researchAdvisor').exec()
+
+    if (student == null) {
+      return res.render('..views/error.ejs', {string: 'Student id not specified.'})
+    }
+
+    const result = await schema[formName].findOne({student: _id}).exec()
+    const form = result || {}
+    const isStudent = false
+    const admin = req.session.accessLevel == 3
+    const result2 = util.checkAdvisorAdmin(req.session.userPID, _id)
+    const hasAccess = !!result2 || admin
+    const postMethod = `/student/forms/update/${student._id}/${formName}`
+    const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}`
+    const view = `../views/student/${viewFile}`
+    const { cspNonce } = res.locals
+    const locals = {
+      student, form, uploadSuccess, isStudent, admin, postMethod,
+      hasAccess, faculty, formName, cspNonce
+    }
+    res.render(view, locals)
   }
 }
 
