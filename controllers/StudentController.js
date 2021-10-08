@@ -580,26 +580,25 @@ const requiredFieldMissing = ({onyen, csid, firstName, lastName, pid}) =>
 
 const requiredFieldsMissingError = (index, {onyen, csid, firstName, lastName, pid}) =>
       `Student #${index + 1} did not save because it is missing a field. onyen (${onyen}), csid (${csid}), firstName (${firstName}), lastName (${lastName}), and pid (${pid}) are all required.`
-      // I don't know why, but adding this useful information makes the response fail. The only thing that matters is the length of the string.
-      // + ` If anything here is shown as 'undefined', check (1) that the row has a value for that column and (2) that the column name is spelled correctly, has the correct capitalization, and has no leading nor trailing spaces.`
+      + ` If anything here is shown as 'undefined', check that the row has a value for that column.`
 
-const findStudentByOnyenAndPid = async ({onyen, pid}) => {
+const findStudentByOnyenAndPid = async ({onyen, pid}) => (
   await schema.Student.findOne({onyen, pid}).exec()
-}
+)
 
-const findStudentByOnyen = async ({onyen}) => {
+const findStudentByOnyen = async ({onyen}) => (
   await schema.Student.findOne({onyen}).exec()
-}
+)
 
-const findStudentByPid = async ({pid}) => {
+const findStudentByPid = async ({pid}) => (
   await schema.Student.findOne({pid}).exec()
-}
+)
 
 const updateStudent = async (student) => {
   const {onyen, pid} = student
   const validated = util.validateModelData(student, schema.Student)
   const opts = {runValidators: true, context: 'query'}
-  await schema.Student
+  return await schema.Student
     .update({onyen, pid}, validated, opts)
     .exec()
 }
@@ -616,7 +615,7 @@ const upsertStudent = async (student) => {
   const found = await findStudentByOnyenAndPid(student)
   const upsert = found ? updateStudent : createStudent
   if (mongoose.Types.ObjectId.isValid(upsert(student))) {
-    await upsert(student)
+    return await upsert(student)
   }
 }
 
@@ -651,8 +650,9 @@ const syncValidateStudent = (element, index) => {
   return null
 }
 
-const syncFirstErrorString = (data) =>
-      data.map(syncValidateStudent).filter(string => string !== null)[0]
+const syncFirstErrorString = (data) => (
+  data.map(syncValidateStudent).filter(string => string !== null)[0]
+)
 
 const lookupSemesterId = async (element) => {
   const [season1, year1] = element.semesterStarted.split(/\s+/)
@@ -715,6 +715,41 @@ const validateOnyensAndPids = async (data) =>
       )).filter(string => string !== null)[0]
 
 const validateUpload = async (data) => {
+  const expectedColumns = [
+    'onyen',
+    'csid',
+    'email',
+    'firstName',
+    'lastName',
+    'pronouns',
+    'pid',
+    'status',
+    'gender',
+    'ethnicity',
+    'stateResidency',
+    'USResidency',
+    'intendedDegree',
+    'citizenship',
+    'fundingEligibility',
+    'backgroundApproved',
+    'prpPassed',
+    'msProgramOfStudyApproved',
+    'phdProgramOfStudyApproved',
+    'committeeCompApproved',
+    'phdProposaApproved',
+    'oralExamPassed',
+    'advisor',
+    'researchAdvisor',
+  ]
+  const actualColumns = Object.keys(data[0])
+  for (let i = 0; i < expectedColumns.length; i++) {
+    if (expectedColumns[i] !== actualColumns[i]) {
+      return `Column header #${i+1} should be named '${expectedColumns[i]}' but was named '${actualColumns[i]}'.`
+    }
+  }
+  if (expectedColumns.length !== actualColumns.length) {
+    return `There should be ${expectedColumns.length} columns, but there were actually ${actualColumns.length}.`
+  }
   let firstErrorString = syncFirstErrorString(data)
   if (firstErrorString) return firstErrorString
   lookupAllSemesterIds(data) // a side effect, oh well...
