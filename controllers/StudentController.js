@@ -605,18 +605,14 @@ const updateStudent = async (student) => {
 
 const createStudent = async (student) => {
   const validated = util.validateModelData(student, schema.Student)
-  if (mongoose.Types.ObjectId.isValid(schema.Student(validated))) {
-    const model = new schema.Student(validated)
-    return await model.save()
-  }
+  const model = new schema.Student(validated)
+  return await model.save()
 }
 
 const upsertStudent = async (student) => {
   const found = await findStudentByOnyenAndPid(student)
   const upsert = found ? updateStudent : createStudent
-  if (mongoose.Types.ObjectId.isValid(upsert(student))) {
-    return await upsert(student)
-  }
+  return await upsert(student)
 }
 
 const syncValidateStudent = (element, index) => {
@@ -692,7 +688,7 @@ const validateAdvisor = async (field, noun, element) => {
 const validateAdvisors = async (field, noun, data) =>
       (await Promise.all(
         data
-          .filter((element) => element.advisor)
+          .filter((element) => element[field])
           .map(async (element) => {
             validateAdvisor(field, noun, element)
           })
@@ -753,9 +749,9 @@ const validateUpload = async (data) => {
   let firstErrorString = syncFirstErrorString(data)
   if (firstErrorString) return firstErrorString
   lookupAllSemesterIds(data) // a side effect, oh well...
-  firstErrorString = validateAdvisors('advisor', 'Advisor', data)
+  firstErrorString = await validateAdvisors('advisor', 'Advisor', data)
   if (firstErrorString) return firstErrorString
-  firstErrorString = validateAdvisors('researchAdvisor', 'Research advisor', data)
+  firstErrorString = await validateAdvisors('researchAdvisor', 'Research advisor', data)
   if (firstErrorString) return firstErrorString
   firstErrorString = validateOnyensAndPids(data)
   if (firstErrorString) return firstErrorString
