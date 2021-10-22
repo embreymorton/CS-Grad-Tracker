@@ -7,7 +7,7 @@ var formidable = require("formidable")
 
 var reportController = {}
 
-const aggregateData = async () => {
+const aggregateData = async ({pid, admin}) => {
   try {
     const students = await schema.Student.find({status: 'Active'}).sort({
       lastName: 1,
@@ -25,6 +25,10 @@ const aggregateData = async () => {
       student.notes = await schema.Note.find({student: student._id})
     }
     await Promise.all(students.map(populateNotes))
+    if ( pid && !admin ) { // 
+        const facultyStudents = students.filter((student) => student.advisor && student.advisor.pid == pid || student.researchAdvisor && student.researchAdvisor.pid == pid);
+        return [facultyStudents, null]
+    }
     return [students, null]
   } catch (error) {
     console.log(error)
@@ -72,7 +76,7 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = async (req, res) => {
-  const [ report, string ] = await aggregateData()
+  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin});
   if (report) res.render('../views/report/progressReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }
@@ -187,19 +191,25 @@ reportController.downloadProgressReportCSV = function (req, res) {
   });
 }
 
-reportController.getAdvisorReport = async (req, res) => {
-  const [ report, string ] = await aggregateData()
-  if (report) res.render('../views/report/advisorReport.ejs', { report })
-  else res.render('../views/error.ejs', { string })
-}
-
 reportController.getTuitionReport = (req, res) => {
+  if (!res.locals.admin) {
+    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view tuition reports."})
+  }
   let tutionReport = [];
   aggregateTuitionData(tutionReport).then((result) => {
     res.render('../views/report/tuitionReport.ejs', {report: result});
   }).catch((error) => {
     res.render('../views/error.ejs', {string: error});
   })
+}
+
+reportController.getAdvisorReport = async (req, res) => {
+  if (!res.locals.admin) {
+    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor reports."})
+  }
+  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin})
+  if (report) res.render('../views/report/advisorReport.ejs', { report })
+  else res.render('../views/error.ejs', { string })
 }
 
 reportController.downloadAdvisorReportXLSX = function (req, res) {
