@@ -16,7 +16,7 @@ describe('Upload data', ()=>{
     cy.visit('/faculty/upload/false')
     const fileName = filePath + '1facultyUpload.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.upload-faculty-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+      cy.get('.upload-faculty-input').attachFile({fileContent, fileName, mimeType: 'application/csv'})
     });
     cy.get('.upload-faculty-submit-button').click()
     cy.visit('/faculty')
@@ -29,7 +29,7 @@ describe('Upload data', ()=>{
     cy.visit('/student/upload/false')
     const fileName = filePath + '2studentUpload.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.student-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+      cy.get('.student-upload-input').attachFile({fileContent, fileName, mimeType: 'application/csv'})
     });
     cy.get('.student-upload-submit-button').click()
     cy.visit('/student')
@@ -53,7 +53,7 @@ describe('Upload data', ()=>{
     cy.visit('/course/upload/false')
     const fileName = filePath + '3courseUpload.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.course-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+      cy.get('.course-upload-input').attachFile({fileContent, fileName, mimeType: 'application/csv'})
     });
     cy.get('.course-upload-submit-button').click()
     cy.visit('/course')
@@ -70,7 +70,7 @@ describe('Upload data', ()=>{
     cy.visit('/job/uploadGrant/false')
     const fileName = filePath + '4grantUpload.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.grant-upload-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+      cy.get('.grant-upload-input').attachFile({fileContent, fileName, mimeType: 'application/csv'})
     });
     cy.get('.grant-upload-submit-button').click()
     cy.visit('/job/create')
@@ -81,7 +81,7 @@ describe('Upload data', ()=>{
     cy.visit('/course/uploadinfo/false')
     const fileName = filePath + '5courseinfoUpload.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.upload-course-info-input').upload({fileContent, fileName, mimeType: 'application/csv'})
+      cy.get('.upload-course-info-input').attachFile({fileContent, fileName, mimeType: 'application/csv'})
     });
     cy.get('.upload-course-info-submit').click();
     cy.visit('/course/create');
