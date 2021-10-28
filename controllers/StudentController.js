@@ -599,7 +599,7 @@ const updateStudent = async (student) => {
   const validated = util.validateModelData(student, schema.Student)
   const opts = {runValidators: true, context: 'query'}
   return await schema.Student
-    .update({onyen, pid}, validated, opts)
+    .updateOne({onyen, pid}, validated, opts)
     .exec()
 }
 
@@ -732,7 +732,7 @@ const validateUpload = async (data) => {
     'msProgramOfStudyApproved',
     'phdProgramOfStudyApproved',
     'committeeCompApproved',
-    'phdProposaApproved',
+    'phdProposalApproved',
     'oralExamPassed',
     'advisor',
     'researchAdvisor',
@@ -766,9 +766,9 @@ studentController.upload = (req, res) => {
     var data = XLSX.utils.sheet_to_json(worksheet, {dateNF:'YYYY-MM-DD'})
     const error = await validateUpload(data)
     if (error) return res.render('../views/error.ejs', {string: error})
-    return Promise.all(data.forEach(upsertStudent))
+    return Promise.all(data.map(upsertStudent))
       .then(_ => res.redirect('/student/upload/true'))
-      .catch((string) => res.render('../views/error.ejs', {string}))
+      .catch((string) => res.render('../views/error.ejs', {string: string + " PAJAMAS!!!"}))
   })
 }
 
