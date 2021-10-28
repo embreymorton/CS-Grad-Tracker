@@ -71,7 +71,7 @@ let calculateActiveSemesters = (student) => {
   return activeSemesters
 }
 
-const prepareProgressReport = async (students) => { // assigns spreadsheet's column names for each field in a list of students
+const prepareProgressReport = async (students, filetype) => { // assigns spreadsheet's column names for each field in a list of students
   var output = [];
   for (var i = 0; i < students.length; i++) {
     var report = {};
@@ -104,9 +104,10 @@ const prepareProgressReport = async (students) => { // assigns spreadsheet's col
     report.dissertationSubmitted = students[i].dissertationSubmitted;
 
     const studentNotes = await schema.Note.find({student: students[i]._id});
-    var notes = "";
+    var notes = filetype == 'xlsx' ? '' : '\r\n';
+    const newline = filetype == 'xlsx' ? '\r' : '\r\n'
     for (var j = studentNotes.length - 1; j >= 0; j--) {
-      notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r' + studentNotes[j].note + '\r' + '\r';
+      notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + newline + studentNotes[j].note + newline + newline;
     }
     report.notes = notes;
     output[i] = report;
@@ -126,7 +127,7 @@ reportController.getProgressReport = async (req, res) => {
 
 reportController.downloadProgressReportXLSX = async function (req, res) {
   const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
-  const output = await prepareProgressReport(result);
+  const output = await prepareProgressReport(result, 'xlsx');
 
   var wb = XLSX.utils.book_new();
   var ws = XLSX.utils.json_to_sheet(output);
@@ -140,7 +141,7 @@ reportController.downloadProgressReportXLSX = async function (req, res) {
 
 reportController.downloadProgressReportCSV = async function (req, res) {
   const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
-  const output = await prepareProgressReport(result);
+  const output = await prepareProgressReport(result, 'csv');
 
   var wb = XLSX.utils.book_new();
   var ws = XLSX.utils.json_to_sheet(output);
