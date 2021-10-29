@@ -43,7 +43,7 @@ facultyController.post = function (req, res) {
       if (result !== null){
         res.render("../views/error.ejs", {string: "That faculty already exists"});
       }
-      else if(input.pid.length != 9){
+      else if(!input.pid.match("\d{9}")){
         res.render("../views/error.ejs", {string: "PID needs to be of length 9"});
       }
       else {
