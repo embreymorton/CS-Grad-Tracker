@@ -430,6 +430,26 @@ var CS08Schema = mongoose.Schema({
   secondarySignature: String, secondaryDateSigned: String
 })
 
+var CS13Schema = mongoose.Schema({
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
+  email: String, dateMet: String,
+  comp523: Boolean,
+  comp523Signature: String,
+  comp523DateSigned: String,
+  hadJob: Boolean,
+  jobInfo: String,
+  advisorSignature: Boolean,
+  advisorDateSigned: String,
+  alternative: Boolean,
+  product: String,
+  client: String,
+  position: String,
+  alt1Signature: String,
+  alt1DateSigned: String,
+  alt2Signature: String,
+  alt2DateSigned: String,
+})
+
 schema.Faculty = mongoose.model('Faculty', facultySchema)
 schema.Student = mongoose.model('Student', studentSchema)
 schema.Semester = mongoose.model('Semester', semesterSchema)
