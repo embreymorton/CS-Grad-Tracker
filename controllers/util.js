@@ -171,7 +171,7 @@ _.listObjectToString = function (input) {
 _.checkFormCompletion = studentID =>
   new Promise((resolve, reject) => {
     const formNames =
-          ['01BSMS', '01', '02', '03', '04', '06', '08', '13']
+          ['01BSMS', '01', '02', '03', '04', '05', '06', '08', '09', '13']
           .map(id => 'CS' + id)
     const promises = formNames.map(checkOneForm(studentID))
     Promise.all(promises).then(forms =>

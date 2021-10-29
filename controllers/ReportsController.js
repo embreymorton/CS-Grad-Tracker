@@ -25,7 +25,7 @@ const aggregateData = async ({pid, admin}) => {
       student.notes = await schema.Note.find({student: student._id})
     }
     await Promise.all(students.map(populateNotes))
-    if ( pid && !admin ) { // filters students so only advisors can see
+    if ( pid && !admin ) { // 
         const facultyStudents = students.filter((student) => student.advisor && student.advisor.pid == pid || student.researchAdvisor && student.researchAdvisor.pid == pid);
         return [facultyStudents, null]
     }
@@ -71,50 +71,6 @@ let calculateActiveSemesters = (student) => {
   return activeSemesters
 }
 
-const prepareProgressReport = async (students, filetype) => { // assigns spreadsheet's column names for each field in a list of students
-  var output = [];
-  for (var i = 0; i < students.length; i++) {
-    var report = {};
-    report.semestersEnrolled = students[i].activeSemesters;
-    report.lastName = students[i].lastName;
-    report.firstName = students[i].firstName;
-    if (students[i].advisor != null) {
-      report.advisor = students[i].advisor.lastName + ", " + students[i].advisor.firstName;
-    } else {
-      report.advisor = "";
-    }
-    report.otherAdvisor = students[i].otherAdvisor;
-    if (students[i].researchAdvisor != null) {
-      report.researchAdvisor = students[i].researchAdvisor.lastName + ", " + students[i].researchAdvisor.firstName;
-    } else {
-      report.researchAdvisor = "";
-    }
-    report.otherResearchAdvisor = students[i].otherResearchAdvisor;
-    report.prpPassed = students[i].prpPassed;
-    report.technicalWritingApproved = students[i].technicalWritingApproved;
-    report.backgroundApproved = students[i].backgroundApproved;
-    report.researchPlanningMeeting = students[i].researchPlanningMeeting;
-    report.programProductRequirement = students[i].programProductRequirement;
-    report.msProgramOfStudyApproved = students[i].msProgramOfStudyApproved;
-    report.phdProgramOfStudyApproved = students[i].phdProgramOfStudyApproved;
-    report.committeeCompApproved = students[i].committeeCompApproved;
-    report.phdProposalApproved = students[i].phdProposalApproved;
-    report.oralExamPassed = students[i].oralExamPassed;
-    report.dissertationDefencePassed = students[i].dissertationDefencePassed;
-    report.dissertationSubmitted = students[i].dissertationSubmitted;
-
-    const studentNotes = await schema.Note.find({student: students[i]._id});
-    var notes = filetype == 'xlsx' ? '' : '\r\n';
-    const newline = filetype == 'xlsx' ? '\r' : '\r\n'
-    for (var j = studentNotes.length - 1; j >= 0; j--) {
-      notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + newline + studentNotes[j].note + newline + newline;
-    }
-    report.notes = notes;
-    output[i] = report;
-  }
-  return output;
-}
-
 reportController.get = function (req, res) {
   res.render("../views/report/index.ejs", {})
 }
@@ -125,32 +81,114 @@ reportController.getProgressReport = async (req, res) => {
   else res.render('../views/error.ejs', { string })
 }
 
-reportController.downloadProgressReportXLSX = async function (req, res) {
-  const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
-  const output = await prepareProgressReport(result, 'xlsx');
+reportController.downloadProgressReportXLSX = function (req, res) {
+  schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+    lastName: 1,
+    firstName: 1
+  }).lean().exec().then(async function (result) {
+    var output = [];
+    for (var i = 0; i < result.length; i++) {
+      var report = {};
+      report.lastName = result[i].lastName;
+      report.firstName = result[i].firstName;
+      if (result[i].advisor != null) {
+        report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+      } else {
+        report.advisor = "";
+      }
+      report.otherAdvisor = result[i].otherAdvisor;
+      if (result[i].researchAdvisor != null) {
+        report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+      } else {
+        report.researchAdvisor = "";
+      }
+      report.otherResearchAdvisor = result[i].otherResearchAdvisor;
+      report.prpPassed = result[i].prpPassed;
+      report.technicalWritingApproved = result[i].technicalWritingApproved;
+      report.backgroundApproved = result[i].backgroundApproved;
+      report.researchPlanningMeeting = result[i].researchPlanningMeeting;
+      report.programProductRequirement = result[i].programProductRequirement;
+      report.msProgramOfStudyApproved = result[i].msProgramOfStudyApproved;
+      report.phdProgramOfStudyApproved = result[i].phdProgramOfStudyApproved;
+      report.committeeCompApproved = result[i].committeeCompApproved;
+      report.phdProposalApproved = result[i].phdProposalApproved;
+      report.oralExamPassed = result[i].oralExamPassed;
+      report.dissertationDefencePassed = result[i].dissertationDefencePassed;
+      report.dissertationSubmitted = result[i].dissertationSubmitted;
 
-  var wb = XLSX.utils.book_new();
-  var ws = XLSX.utils.json_to_sheet(output);
-  XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
-  var filePath = path.join(__dirname, "../data/progressReportTemp.xlsx");
-  XLSX.writeFile(wb, filePath);
-  res.setHeader("Content-Disposition", "filename=" + "ProgressReport.xlsx");
-  res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-  fs.createReadStream(filePath).pipe(res);
+      const studentNotes = await schema.Note.find({student: result[i]._id});
+      var notes = "";
+      for (var j = studentNotes.length - 1; j >= 0; j--) {
+        notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r' + studentNotes[j].note + '\r' + '\r';
+      }
+      report.notes = notes;
+      output[i] = report;
+    }
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.json_to_sheet(output);
+    XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
+    var filePath = path.join(__dirname, "../data/progressReportTemp.xlsx");
+    XLSX.writeFile(wb, filePath);
+    res.setHeader("Content-Disposition", "filename=" + "ProgressReport.xlsx");
+    res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    fs.createReadStream(filePath).pipe(res);
+  });
 }
 
-reportController.downloadProgressReportCSV = async function (req, res) {
-  const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
-  const output = await prepareProgressReport(result, 'csv');
+reportController.downloadProgressReportCSV = function (req, res) {
+  schema.Student.find().populate("advisor").populate("semesterStarted").populate("researchAdvisor").sort({
+    lastName: 1,
+    firstName: 1
+  }).lean().exec().then(async function (result) {
+    var output = [];
+    for (var i = 0; i < result.length; i++) {
+      var report = {};
+      report.lastName = result[i].lastName;
+      report.firstName = result[i].firstName;
+      if (result[i].advisor != null) {
+        report.advisor = result[i].advisor.lastName + ", " + result[i].advisor.firstName;
+      } else {
+        report.advisor = "";
+      }
+      report.otherAdvisor = result[i].otherAdvisor;
+      if (result[i].researchAdvisor != null) {
+        report.researchAdvisor = result[i].researchAdvisor.lastName + ", " + result[i].researchAdvisor.firstName;
+      } else {
+        report.researchAdvisor = "";
+      }
+      report.otherResearchAdvisor = result[i].otherResearchAdvisor;
+      report.prpPassed = result[i].prpPassed;
+      report.technicalWritingApproved = result[i].technicalWritingApproved;
+      report.backgroundApproved = result[i].backgroundApproved;
+      report.researchPlanningMeeting = result[i].researchPlanningMeeting;
+      report.programProductRequirement = result[i].programProductRequirement;
+      report.msProgramOfStudyApproved = result[i].msProgramOfStudyApproved;
+      report.phdProgramOfStudyApproved = result[i].phdProgramOfStudyApproved;
+      report.committeeCompApproved = result[i].committeeCompApproved;
+      report.phdProposalApproved = result[i].phdProposalApproved;
+      report.oralExamPassed = result[i].oralExamPassed;
+      report.dissertationDefencePassed = result[i].dissertationDefencePassed;
+      report.dissertationSubmitted = result[i].dissertationSubmitted;
 
-  var wb = XLSX.utils.book_new();
-  var ws = XLSX.utils.json_to_sheet(output);
-  XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
-  var filePath = path.join(__dirname, "../data/progressReportTemp.csv");
-  XLSX.writeFile(wb, filePath);
-  res.setHeader("Content-Disposition", "filename=" + "ProgressReport.csv");
-  res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-  fs.createReadStream(filePath).pipe(res);
+      const studentNotes = await schema.Note.find({student: result[i]._id});
+      var notes = "\r\n";
+      for (var j = studentNotes.length - 1; j >= 0; j--) {
+        notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + '\r\n' + studentNotes[j].note + '\r\n' + '\r\n';
+      }
+      report.notes = notes;
+      output[i] = report;
+    }
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.json_to_sheet(output);
+    XLSX.utils.book_append_sheet(wb, ws, "ProgressReport");
+    var filePath = path.join(__dirname, "../data/progressReportTemp.csv");
+    XLSX.writeFile(wb, filePath);
+    res.setHeader("Content-Disposition", "filename=" + "ProgressReport.csv");
+    res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    fs.createReadStream(filePath).pipe(res);
+  });
 }
 
 reportController.getTuitionReport = (req, res) => {

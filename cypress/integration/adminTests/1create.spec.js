@@ -19,7 +19,7 @@ describe('Upload and create data', ()=>{
     cy.visit('/course/uploadInfo/false');
     const fileName = '../../data/courseInfo.csv'
     cy.fixture(fileName).then(fileContent => {
-      cy.get('.upload-course-info-input').attachFile({fileContent, fileName, mimeType: 'application/csv'});
+      cy.get('.upload-course-info-input').upload({fileContent, fileName, mimeType: 'application/csv'});
     });
     cy.get('.upload-course-info-submit').click();
     cy.visit('/course/create');

@@ -391,6 +391,18 @@ var CS04Schema = mongoose.Schema({
   approved: Boolean
 })
 
+var CS05Schema = mongoose.Schema({
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
+  oralComprehensiveExam: Boolean,
+  thesis: Boolean,
+  nominees: [String],
+  nomineeDepartments: [String],
+  nomineeStatuses: [String],
+  thesisadvisor: String,
+  committeeChairman: String,
+  directorSignature: String, directorDateSigned: String
+})
+
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   dateSubmitted: String, dateEntered: String,
@@ -430,6 +442,32 @@ var CS08Schema = mongoose.Schema({
   secondarySignature: String, secondaryDateSigned: String
 })
 
+var CS09Schema = mongoose.Schema({
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
+  prpTitle: String,
+  researchAdvisor: String,
+  peerReviewed: String,
+  authors: String,
+  paperAccepted: String, paperNotifyDate: String,
+  reviewsAvailable: String,
+  researchResponsible: String,
+  present: String,
+  advisorSignature: String, advisorDateSigned: String,
+  committeeSignature: [String],
+  committeeDateSigned: [String],
+  presentationDate: String,
+  conceptIntegration: Number,
+  creativity: Number,
+  clarity: Number,
+  abstractionFormality: Number,
+  organization: Number,
+  writing: Number,
+  presentation: Number,
+  answeringQuestion: Number,
+  overallScore: Number,
+  feedback: String
+})
+
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student'},
   email: String, dateMet: String,
@@ -465,8 +503,10 @@ schema.CS01BSMS = mongoose.model('CS01BSMS', CS01BSMSSchema)
 schema.CS02 = mongoose.model('CS02', CS02Schema)
 schema.CS03 = mongoose.model('CS03', CS03Schema)
 schema.CS04 = mongoose.model('CS04', CS04Schema)
+schema.CS05 = mongoose.model('CS05', CS05Schema)
 schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
+schema.CS09 = mongoose.model('CS09', CS09Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
 
 module.exports = schema

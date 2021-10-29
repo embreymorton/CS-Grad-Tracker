@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "cross-env": "^5.2.1",
-    "cypress": "^8.6.0",
-    "cypress-file-upload": "^5.0.8",
+    "cypress": "^6.7.1",
+    "cypress-file-upload": "^3.3.3",
     "standard": "^9.0.1",
     "start-server-and-test": "^1.12.0"
   },

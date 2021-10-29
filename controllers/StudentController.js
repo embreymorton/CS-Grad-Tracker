@@ -580,39 +580,44 @@ const requiredFieldMissing = ({onyen, csid, firstName, lastName, pid}) =>
 
 const requiredFieldsMissingError = (index, {onyen, csid, firstName, lastName, pid}) =>
       `Student #${index + 1} did not save because it is missing a field. onyen (${onyen}), csid (${csid}), firstName (${firstName}), lastName (${lastName}), and pid (${pid}) are all required.`
-      + ` If anything here is shown as 'undefined', check that the row has a value for that column.`
+      // I don't know why, but adding this useful information makes the response fail. The only thing that matters is the length of the string.
+      // + ` If anything here is shown as 'undefined', check (1) that the row has a value for that column and (2) that the column name is spelled correctly, has the correct capitalization, and has no leading nor trailing spaces.`
 
-const findStudentByOnyenAndPid = async ({onyen, pid}) => (
+const findStudentByOnyenAndPid = async ({onyen, pid}) => {
   await schema.Student.findOne({onyen, pid}).exec()
-)
+}
 
-const findStudentByOnyen = async ({onyen}) => (
+const findStudentByOnyen = async ({onyen}) => {
   await schema.Student.findOne({onyen}).exec()
-)
+}
 
-const findStudentByPid = async ({pid}) => (
+const findStudentByPid = async ({pid}) => {
   await schema.Student.findOne({pid}).exec()
-)
+}
 
 const updateStudent = async (student) => {
   const {onyen, pid} = student
   const validated = util.validateModelData(student, schema.Student)
   const opts = {runValidators: true, context: 'query'}
-  return await schema.Student
-    .updateOne({onyen, pid}, validated, opts)
+  await schema.Student
+    .update({onyen, pid}, validated, opts)
     .exec()
 }
 
 const createStudent = async (student) => {
   const validated = util.validateModelData(student, schema.Student)
-  const model = new schema.Student(validated)
-  return await model.save()
+  if (mongoose.Types.ObjectId.isValid(schema.Student(validated))) {
+    const model = new schema.Student(validated)
+    return await model.save()
+  }
 }
 
 const upsertStudent = async (student) => {
   const found = await findStudentByOnyenAndPid(student)
   const upsert = found ? updateStudent : createStudent
-  return await upsert(student)
+  if (mongoose.Types.ObjectId.isValid(upsert(student))) {
+    await upsert(student)
+  }
 }
 
 const syncValidateStudent = (element, index) => {
@@ -646,9 +651,8 @@ const syncValidateStudent = (element, index) => {
   return null
 }
 
-const syncFirstErrorString = (data) => (
-  data.map(syncValidateStudent).filter(string => string !== null)[0]
-)
+const syncFirstErrorString = (data) =>
+      data.map(syncValidateStudent).filter(string => string !== null)[0]
 
 const lookupSemesterId = async (element) => {
   const [season1, year1] = element.semesterStarted.split(/\s+/)
@@ -688,7 +692,7 @@ const validateAdvisor = async (field, noun, element) => {
 const validateAdvisors = async (field, noun, data) =>
       (await Promise.all(
         data
-          .filter((element) => element[field])
+          .filter((element) => element.advisor)
           .map(async (element) => {
             validateAdvisor(field, noun, element)
           })
@@ -711,47 +715,12 @@ const validateOnyensAndPids = async (data) =>
       )).filter(string => string !== null)[0]
 
 const validateUpload = async (data) => {
-  const expectedColumns = [
-    'onyen',
-    'csid',
-    'email',
-    'firstName',
-    'lastName',
-    'pronouns',
-    'pid',
-    'status',
-    'gender',
-    'ethnicity',
-    'stateResidency',
-    'USResidency',
-    'intendedDegree',
-    'citizenship',
-    'fundingEligibility',
-    'backgroundApproved',
-    'prpPassed',
-    'msProgramOfStudyApproved',
-    'phdProgramOfStudyApproved',
-    'committeeCompApproved',
-    'phdProposalApproved',
-    'oralExamPassed',
-    'advisor',
-    'researchAdvisor',
-  ]
-  const actualColumns = Object.keys(data[0])
-  for (let i = 0; i < expectedColumns.length; i++) {
-    if (expectedColumns[i] !== actualColumns[i]) {
-      return `Column header #${i+1} should be named '${expectedColumns[i]}' but was named '${actualColumns[i]}'.`
-    }
-  }
-  if (expectedColumns.length !== actualColumns.length) {
-    return `There should be ${expectedColumns.length} columns, but there were actually ${actualColumns.length}.`
-  }
   let firstErrorString = syncFirstErrorString(data)
   if (firstErrorString) return firstErrorString
   lookupAllSemesterIds(data) // a side effect, oh well...
-  firstErrorString = await validateAdvisors('advisor', 'Advisor', data)
+  firstErrorString = validateAdvisors('advisor', 'Advisor', data)
   if (firstErrorString) return firstErrorString
-  firstErrorString = await validateAdvisors('researchAdvisor', 'Research advisor', data)
+  firstErrorString = validateAdvisors('researchAdvisor', 'Research advisor', data)
   if (firstErrorString) return firstErrorString
   firstErrorString = validateOnyensAndPids(data)
   if (firstErrorString) return firstErrorString
@@ -766,7 +735,7 @@ studentController.upload = (req, res) => {
     var data = XLSX.utils.sheet_to_json(worksheet, {dateNF:'YYYY-MM-DD'})
     const error = await validateUpload(data)
     if (error) return res.render('../views/error.ejs', {string: error})
-    return Promise.all(data.map(upsertStudent))
+    return Promise.all(data.forEach(upsertStudent))
       .then(_ => res.redirect('/student/upload/true'))
       .catch((string) => res.render('../views/error.ejs', {string}))
   })
