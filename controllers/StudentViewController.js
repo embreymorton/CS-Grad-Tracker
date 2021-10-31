@@ -9,21 +9,6 @@ var nodemailer = require('nodemailer');
 
 var studentViewController = {};
 
-var transport = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.gmailUser,
-    pass: process.env.gmailPass
-  }
-})
-
-var mailOptions = {
-  from: process.env.gmailUser, // sender address
-  to: "", // list of receivers
-  subject: "", // Subject line
-  text: "No reply", // plaintext body
-}
-
 // Students only allowed to edit certain fields
 studentViewController.put = async function (req, res) {
   var input = req.body;
@@ -113,19 +98,6 @@ studentViewController.viewForm = async function (req, res) {
 studentViewController.updateForm = async function (req, res) {
   var input = req.body;
 
-  // nodemailer test 10/2
-  // let testAccount = await nodemailer.createTestAccount();
-  const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"};
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass
-    }
-  })
-
-
   if (req.params.title == null) {
     res.render("../views/error.ejs", { string: "Did not include student ID or title of form" });
   } else {
@@ -146,35 +118,56 @@ studentViewController.updateForm = async function (req, res) {
       const result = await util.checkFormCompletion(studentId);
       // I feel like there needs to be a check for this result.
       //ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
-      mailOptions.to = ['advisor', 'researchAdvisor']
-        .map(key => studentInfo[key])
-        .filter(advisor => advisor && advisor.email)
-        .map(advisor => advisor.email)
-      mailOptions.subject = studentInfo.firstName + " " + studentInfo.lastName + " has submitted " + req.params.title;
-      mailOptions.text = "The student has completed the following forms as of now: " + result;
-      if (process.env.mode == 'testing') {
-        transport.sendMail(mailOptions, function (error, response) {
-          if (error) {
-            console.error(error);
-          } else {
-            console.log("Message sent");
-          }
-          // if you don't want to use this transport object anymore, uncomment following line
-          transport.close(); // shut down the connection pool, no more messages
-        });
-
-        // nodemailer test 10/2
-        let info = await transporter.sendMail({
-          from: '"Fred Foo 👻" <foo@example.com>',
-          to: "bar@example.com, bax@example.com",
-          subject: "[UNC-CS] Approval needed: ${name} - ${formname}",
-          text: "Hello worlds's'sss body!",
-          html: "<b>This is html!</b>" 
-        });
-        console.log(info);
-        console.log(`Message sent was: ${info.messageId}`); // should be something like '<b658...>'
-        console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(info)}`)
+      
+      /* Email Sending */
+      if (!['CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04', 'CS06', 'CS13'].includes(req.params.title)) {
+        return
       }
+
+      // let testAccount = await nodemailer.createTestAccount();
+      const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
+      let transporter = process.env.mode == 'testing' 
+      ? nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      })
+      : nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.gmailUser,
+          pass: process.env.gmailPass
+        }
+      })
+      
+      const mailOptions = {
+        from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
+        to: process.env.mode != 'testing' 
+          ? 
+            ['advisor', 'researchAdvisor']
+            .map(key => studentInfo[key])
+              .filter(advisor => advisor && advisor.email)
+              .map(advisor => advisor.email)
+          : "bar@example.com, bax@example.com",
+        subject: `[UNC-CS] Approval needed: ${studentInfo.firstName + ' ' + studentInfo.lastName} - ${req.params.title}`,
+        text: `Your student ${studentInfo.firstName + ' ' + studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
+        ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
+        html: `
+          <p>Your student ${studentInfo.firstName + ' ' + studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
+          <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
+          <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
+          <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
+        `
+      }
+
+      const response = await transporter.sendMail(mailOptions).catch((err) => console.error(err))
+      console.log(response)
+      console.log(`Message sent was: ${response.messageId}`)
+      console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
+      transporter.close()
     }
   }
 }
