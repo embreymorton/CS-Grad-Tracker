@@ -597,7 +597,7 @@ const findStudentByPid = async ({pid}) => (
 const updateStudent = async (student) => {
   const {onyen, pid} = student
   const validated = util.validateModelData(student, schema.Student)
-  const opts = {runValidators: true, context: 'query'}
+  const opts = {runValidators: true,}
   return await schema.Student
     .updateOne({onyen, pid}, validated, opts)
     .exec()

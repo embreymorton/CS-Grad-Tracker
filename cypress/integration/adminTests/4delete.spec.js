@@ -28,6 +28,17 @@ describe('Delete data', ()=>{
     cy.contains('No jobs found.');
   })
 
+ 
+  it('Searching for a student should return the single student and you should be able to delete it', ()=>{
+    cy.visit('/student');
+    data.searchStudentHelper();
+    cy.get('.student-table').find('tr').should('have.length', 2);
+    //select first value of table to make sure it is the student we searched for
+    cy.get('tbody > tr > td').eq(0).contains(studentTextFields.onyen);
+    cy.get('.delete-student-submit').click();
+    data.searchStudentHelper();
+    cy.contains('No student found.');
+  });
   it('Searching for a course should return the single course and you should be able to delete it', ()=>{
     cy.visit('/course');
 
@@ -51,14 +62,5 @@ describe('Delete data', ()=>{
     cy.get('.search-course-button').click();
   }
 
-  it('Searching for a student should return the single student and you should be able to delete it', ()=>{
-    cy.visit('/student');
-    data.searchStudentHelper();
-    cy.get('.student-table').find('tr').should('have.length', 2);
-    //select first value of table to make sure it is the student we searched for
-    cy.get('tbody > tr > td').eq(0).contains(studentTextFields.onyen);
-    cy.get('.delete-student-submit').click();
-    data.searchStudentHelper();
-    cy.contains('No student found.');
-  });
 })
+

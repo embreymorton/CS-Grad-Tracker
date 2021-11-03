@@ -26,13 +26,10 @@ let auth0 = null
 
 //session configuration
 const mongoUrl = process.env.databaseString
-const mongoOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}
+
 
 const secret = process.env.sessionSecret
-const store = MongoStore.create({mongoUrl, mongoOptions})
+const store = MongoStore.create({mongoUrl})
 const session = {
   secret,
   cookie: {},

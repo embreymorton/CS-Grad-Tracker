@@ -270,7 +270,7 @@ facultyController.upload = function(req, res){
       if(element.firstName != null && element.pid != null && element.onyen != null && element.csid != null){
 
         //find one and update automatically inserts even if empty
-        schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true, runValidators: true, context: 'query'}).exec().then(function(result){
+        schema.Faculty.findOneAndUpdate({pid: element.pid}, element, {upsert: true, runValidators: true,}).exec().then(function(result){
           count++;
           if(count == data.length){
             res.redirect("/faculty/upload/true");

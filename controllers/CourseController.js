@@ -423,7 +423,7 @@ courseController.upload = function(req, res){
                     });
                   }
                   else{
-                    schema.Course.update({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}, element, {runValidators: true, context: 'query'}).exec().then(function(result){
+                    schema.Course.update({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}, element, {runValidators: true,}).exec().then(function(result){
                       count++;
                       if(count == data.length){
                         res.redirect("/course/upload/true");

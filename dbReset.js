@@ -5,7 +5,7 @@ mongoose.Promise = require('bluebird')
 
 require('./env').load() // to load databaseString into process.env
 
-mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.databaseString)
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {

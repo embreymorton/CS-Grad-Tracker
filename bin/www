@@ -13,7 +13,7 @@ Once a connection with the database has been secured, start the app
 on host:port
 */
 console.log('Starting server in ' + process.env.mode + ' mode...')
-mongoose.connect(process.env.databaseString, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+mongoose.connect(process.env.databaseString)
 mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
