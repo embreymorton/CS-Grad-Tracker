@@ -775,6 +775,9 @@ studentController.upload = (req, res) => {
 
 studentController.download = function(req, res){
   schema.Student.find({}, '-_id -__v').populate('advisor').populate('semesterStarted').populate('researchAdvisor').sort({lastName:1, firstName:1}).lean().exec().then(function(result){
+    if (result == null || result == undefined || result.length == 0) {
+      return res.render("../views/error.ejs", {string: "No students found."})
+  }
     var m = schema.Student.schema.obj
     var template = {}
     for(var key in m){

@@ -724,6 +724,9 @@ jobController.unAssign = function (req, res) {
 
 jobController.download = function (req, res) {
     schema.Job.find({}, "-_id -__v").populate("course").populate("supervisor").populate("semester").lean().exec().then(function (result) {
+        if (result == null || result == undefined || result.length == 0) {
+            return res.render("../views/error.ejs", {string: "No jobs found."})
+        }
         result.sort(function (a, b) {
             if (a.semester.year == b.semester.year) {
                 if (a.semester.season < b.semester.season) {
