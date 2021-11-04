@@ -2,6 +2,10 @@
 var mongoose = require('mongoose')
 var schema = {}
 
+// date format regex
+// /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+const matchDate = [/^0[1-9]|1[012]\/0[1-9]|[12][0-9]|3[01]\/[0-9]{4}$/, '{VALUE} must be in form mm/dd/yyyy']
+
 // Faculty
 var facultySchema = mongoose.Schema({
   onyen: {
@@ -110,63 +114,63 @@ var studentSchema = mongoose.Schema({
   semestersOnLeave: Number,
   backgroundApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   mastersAwarded: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   prpPassed: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   technicalWritingApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   proceedToPhdFormSubmitted: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   msProgramOfStudyApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   phdProgramOfStudyApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   researchPlanningMeeting: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   programProductRequirement: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   committeeCompApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   phdProposalApproved: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   phdAwarded: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   oralExamPassed: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   dissertationDefencePassed: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   dissertationSubmitted: {
     type: String,
-    match: [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form mm/dd/yyyy']
+    match: matchDate
   },
   jobHistory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Job'}],
   semesterStarted: { type: mongoose.Schema.Types.ObjectId, ref: 'Semester' },
