@@ -765,13 +765,16 @@ const validateUpload = async (data) => {
 studentController.upload = (req, res) => {
   (new formidable.IncomingForm()).parse(req, async (err, fields, files) => {
     var f = files[Object.keys(files)[0]]
-    console.log("file", f)
-    var workbook = XLSX.readFile(f.path, {cellDates: true, cellNF: true, cellText:false, raw: true})
-    console.log("workbook", workbook)
+    var workbook = XLSX.readFile(f.path, {cellDates: true, cellNF: true, cellText:false, raw: false})
     var worksheet = workbook.Sheets[workbook.SheetNames[0]]
-    console.log("sdaf", worksheet)
-    var data = XLSX.utils.sheet_to_json(worksheet, {raw: true})
-    console.log(data);
+    var data = XLSX.utils.sheet_to_json(worksheet, {raw: true, dateNF: 'YYYY-MM-DD', cellDates: true})
+        data.forEach(d => {
+      Object.keys(d).forEach((key) => {
+        if (d[key] instanceof Date) {
+          d[key] = d[key].toISOString().split('T')[0]
+        } 
+      })
+    })
     const error = await validateUpload(data)
     if (error) return res.render('../views/error.ejs', {string: error})
     return Promise.all(data.map(upsertStudent))
