@@ -104,9 +104,6 @@ app.set('view engine', 'ejs')
 //bootstrap static resource
 app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist')))
 
-//node_modules statis resource
-app.use(express.static(path.join(__dirname, 'node_modules')))
-
 //public static resource
 app.use(express.static(path.join(__dirname, 'public')))
 
