@@ -6,7 +6,7 @@ const config = {
     url: "mongodb://localhost:27017",
 
     // TODO Change this to your database name:
-    databaseName: "cs_grad_data_dev",
+    databaseName: "cs_grad_data-dev",
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting
@@ -27,7 +27,7 @@ const config = {
 
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
-  useFileHash: false
+  useFileHash: true
 };
 
 // Return the config as a promise
