@@ -34,6 +34,7 @@ const approvalCheckbox = (editAccess, signer, opts) => {
         col(5)(
           x(`em#${signerName}Label`)(approvalLabel),
           x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+          // creates a hidden text box with the same value as the checkbox so that it will send on form submission
           x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.
           x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
         ),

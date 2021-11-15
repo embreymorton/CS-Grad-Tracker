@@ -6,7 +6,7 @@ const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
-const signatureRow = require('../common/signatureRow')
+const signatureDropDown = require('../common/signatureDropDown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -41,7 +41,7 @@ const mainContent = (opts) => {
 }
 
 const cs02Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, faculty } = opts
   const editAccess = admin || isStudent
   const row = formRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
@@ -51,7 +51,7 @@ const cs02Form = (opts) => {
     div('Basis for Waiver'),
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
-
+  console.log(faculty)
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
@@ -63,7 +63,7 @@ const cs02Form = (opts) => {
       approvalCheckbox(admin, 'advisor', opts),
       vert,
       div('Designated Instructor Signature:'),
-      signatureRow(admin, 'instructor', form),
+      signatureDropDown(admin, 'instructor', faculty, opts),
       editAccess
         ? x('button.btn.btn-primary.CS02-submit')('Submit')
         : null,
