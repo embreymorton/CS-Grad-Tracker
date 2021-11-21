@@ -73,6 +73,7 @@ studentViewController.viewForm = async function (req, res) {
   const { params, session } = req
   const formName = params.title
   if (formName != null && params.uploadSuccess != null) {
+    const faculty = await schema.Faculty.find({}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
@@ -88,7 +89,7 @@ studentViewController.viewForm = async function (req, res) {
       const { cspNonce } = res.locals
       const locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess,
-        formName, cspNonce
+        faculty, formName, cspNonce
       }
       res.render(view, locals)
     }
@@ -164,9 +165,12 @@ studentViewController.updateForm = async function (req, res) {
       }
 
       const response = await transporter.sendMail(mailOptions).catch((err) => console.error(err))
-      console.log(response)
-      console.log(`Message sent was: ${response.messageId}`)
-      console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
+      if (!response) {
+        console.error("Email cannot be sent. Please look at response above.")
+      } else {
+        console.log(`Message sent was: ${response.messageId}`)
+        console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
+      }
       transporter.close()
     }
   }

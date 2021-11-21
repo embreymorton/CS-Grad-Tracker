@@ -61,24 +61,24 @@ function pageScript(opts, initialState) {
 
   el.innerHTML =
   `
-    const label = document.getElementById('${signerName}Label');
-    const checkbox = document.getElementById('${signerName}Checkbox');
-    const approvalData = document.getElementById('${signerName}');
-    const dateData = document.getElementById('${dateName}');
-    const changeHandler = () => {
-      if (checkbox.checked) {
-        const now = new Date();
-        label.innerText = "Advisor ${advisorName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ":";
-        approvalData.setAttribute("value", true);
-        dateData.setAttribute("value", now.toString());
-      } else {
-        label.innerText = "Advisor ${advisorName} approves:";
-        approvalData.setAttribute("value", false);
-        dateData.removeAttribute("value");
+    onLoad = () => {
+      const label = document.getElementById('${signerName}Label');
+      const checkbox = document.getElementById('${signerName}Checkbox');
+      const approvalData = document.getElementById('${signerName}');
+      const dateData = document.getElementById('${dateName}');
+      const changeHandler = () => {
+        if (checkbox.checked) {
+          const now = new Date();
+          label.innerText = "Advisor ${advisorName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ":";
+          approvalData.setAttribute("value", true);
+          dateData.setAttribute("value", now.toString());
+        } else {
+          label.innerText = "Advisor ${advisorName} approves:";
+          approvalData.setAttribute("value", false);
+          dateData.removeAttribute("value");
+        }
       }
-    }
 
-    const onLoad = () => {
       checkbox.addEventListener('change', changeHandler);
     }
 

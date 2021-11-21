@@ -51,7 +51,6 @@ const cs02Form = (opts) => {
     div('Basis for Waiver'),
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
-  console.log(faculty)
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
