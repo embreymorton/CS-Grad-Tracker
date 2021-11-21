@@ -77,8 +77,8 @@ app.use(
     directives: {
       defaultSrc: "'self'",
       scriptSrc: ["'self'",
-      "'sha256-Cdw+Ec4rRN4nCDm9jk/U8dnfKeXGhD6xBbtQZlVSsrU='",//views\job\create.ejs
-      "'sha256-20qJReWMQHRoMs4MMND5XnXSkNCyL+mwN9aUXnBVkvc='",//views\studentView\index.ejs
+      // "'sha256-Cdw+Ec4rRN4nCDm9jk/U8dnfKeXGhD6xBbtQZlVSsrU='",//views\job\create.ejs
+      // "'sha256-20qJReWMQHRoMs4MMND5XnXSkNCyL+mwN9aUXnBVkvc='",//views\studentView\index.ejs
        (req, res) => `'nonce-${res.locals.cspNonce}'`],
     },
   })
