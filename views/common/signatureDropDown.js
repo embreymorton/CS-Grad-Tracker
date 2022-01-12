@@ -1,6 +1,7 @@
 const x = require('hyperaxe')
 const input = require('./input')
 const pseudoInput = require('./pseudoInput')
+const pseudoCheckbox = require('./pseudoCheckbox')
 
 /**
  * A component that lets you choose from a list of names for an approval signature. Automatically changes label
