@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- views/report/advisorReport.ejs -->
+
+
+<html>
+  <head>
+    <title>Reports</title>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-lg-2 sidebar text-center">
+
+          <%- include("../partials/admin-sidebar.ejs") %>
+
+        </div>
+        <div align ="center" class="col-lg-10 panelbg text-center">
+
+          <h3 class="space">Advisor Report</h3>
+          <span>
+            <p><a href="/report/advisorReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
+            <p><a href="/report/advisorReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
+          </span>
+
+          <% if(report.length>0) { %>
+            <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-advisor-report-last">Advisor Last Name</th>
+                  <th scope="col" class="col-advisor-report-first">Advisor First Name</th>
+                  <th scope="col" class="col-advisor-report-first">Semesters</th> <!-- computed from semester started and semesters on leave -->
+                  <th scope="col" class="col-advisor-report-researchAdvisor">Advisee Last Name</th>
+                  <th scope="col" class="col-advisor-report-advisor">Advisee First Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(let i=0; i<report.length; i++) { %>
+                  <tr>
+                    <td><%= report[i].lastName%></td>
+                    <td><%= report[i].firstName%></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <% for(let j=0; j<report[i].students.length; j++) { %>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td><%= report[i].students[j].activeSemesters%></td>
+                      <td><%= report[i].students[j].lastName%></td>
+                      <td><%= report[i].students[j].firstName%></td>
+                    </tr>
+                  <% } % >
+                < % } % >
+              </tbody>
+            </table>
+          <% } else { %>
+            <div>No students found.</div>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -9,7 +9,7 @@ var reportController = {}
 
 const aggregateData = async ({pid, admin}) => {
   try {
-    const students = await schema.Student.find({status: 'Active'}).sort({
+    const students = await schema.Student.find({status: 'Active', advisor: {$exists: true}}).sort({
       lastName: 1,
       firstName: 1
     }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
@@ -113,6 +113,47 @@ const prepareProgressReport = async (students, filetype) => { // assigns spreads
     output[i] = report;
   }
   return output;
+}
+
+const aggregateLoadData = async () => {
+  try {
+    const faculty = await schema.Faculty.find().sort({
+      lastName: 1,
+      firstName: 1
+    }).lean().exec()
+    // unsure if report should only include active students
+    const students = await schema.Student.find({status: 'Active'}).sort({
+      lastName: 1,
+      firstName: 1
+    }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
+    if (students.length == 0) return []
+    console.log(faculty)
+    console.log(students)
+    students.forEach((student) => (
+      student.activeSemesters = calculateActiveSemesters(student)
+    ))
+    const descending = ({activeSemesters: x}, {activeSemesters: y}) => (
+      x < y ? 1 : x > y ? -1 : 0
+    )
+    students.sort(descending)
+    for (const advisor of faculty) {
+      advisor.students = []
+      let toRemoveIndices = []
+      students.forEach((student, i) => {
+        if (student.advisor.pid == advisor.pid) {
+          advisor.students.push(student)
+          toRemoveIndices.push(i)
+        }
+      })
+      while (toRemoveIndices) {
+        students.splice(toRemoveIndices.pop(), 1)
+      }
+    }
+    return faculty
+  } catch (error) {
+    console.log(error)
+    return [null, error]
+  }
 }
 
 reportController.get = function (req, res) {
@@ -244,6 +285,15 @@ reportController.downloadAdvisorReportCSV = function (req, res) {
     res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     fs.createReadStream(filePath).pipe(res);
   });
+}
+
+reportController.getAdvisorLoadReport = async (req, res) => {
+  if (!res.locals.admin) {
+    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor load reports."})
+  }
+  const [ report, string ] = await aggregateLoadData()
+  if (report) res.render('../views/report/advisorLoadReport.ejs', { report })
+  else res.render('../views/error.ejs', { string })
 }
 
 module.exports = reportController;

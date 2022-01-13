@@ -21,17 +21,17 @@ router.use(function(req, res, next){
 router.get("/", report.get);
 
 router.get("/progressReport", report.getProgressReport);
+router.get("/progressReport/downloadXLSX", report.downloadProgressReportXLSX);
+router.get("/progressReport/downloadCSV", report.downloadProgressReportCSV);
 
 router.get("/tuitionReport", report.getTuitionReport);
 
 router.get("/advisorReport", report.getAdvisorReport);
-
-router.get("/progressReport/downloadXLSX", report.downloadProgressReportXLSX);
-
-router.get("/progressReport/downloadCSV", report.downloadProgressReportCSV);
-
 router.get("/advisorReport/downloadXLSX", report.downloadAdvisorReportXLSX);
-
 router.get("/advisorReport/downloadCSV", report.downloadAdvisorReportCSV);
+
+router.get("/advisorLoadReport", report.getAdvisorLoadReport);
+
+
 
 module.exports = router;
