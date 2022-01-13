@@ -4,6 +4,7 @@ const schema = require('./models/schema')
 const showForm = (formName) => (form) =>
 console.log(`${formName}: '${form.student.firstName}' '${form.student.lastName}' - '${form.advisorSignature}'`)
 
+console.log(schema['CS02'])
 const problems = []
 mongoose.connect('mongodb://localhost:27017/cs_grad_data-dev')
 mongoose.connection
@@ -22,15 +23,20 @@ mongoose.connection
           model: 'Faculty'
         }]
       }).exec()).forEach((form) => {
-        // console.log(form.advisorSignature) // it seems like if schema.js's type definition for a field doesn't match the database's, then it'll just give us undefined
-        if (form.advisorSignature) {
-          if (form.advisorSignature != `${form.student.advisor.firstName} ${form.student.advisor.lastName}` ||
-          form.advisorSignature != `${form.student.researchAdvisor.firstName} ${form.student.researchAdvisor.lastName}`) {
+        // console.log("How?", form.advisorSignature) // it seems like if schema.js's type definition for a field doesn't match the database's, then it'll just give us undefined
+        // TODO: 1/13 next step: change the schema
+        if (form.advisorSignature != undefined) {
+          console.log("false")
+          console.log(form.advisorSignature)
+          let advisorName = form.student.advisor ? `${form.student.advisor.firstName} ${form.student.advisor.lastName}` : '(unspecified)' // currently students with signatures but no advisors will be considered 
+          let researchAdvisorName = form.student.researchAdvisor ? `${form.student.researchAdvisor.firstName} ${form.student.researchAdvisor.lastName}` : '(unspecified)'
+          if (form.advisorSignature != advisorName ||
+              form.advisorSignature != researchAdvisorName) {
             problems.push(`${formName} - Student: '${form.student.firstName} ${form.student.lastName}' has an \`advisorSignature\` that does not match their advisor or researchAdvisor's name.`)
             console.log(`${formName} - Student: '${form.student.firstName} ${form.student.lastName}' has an \`advisorSignature\` that does not match their advisor or researchAdvisor's name.`)
           }
         } else {
-          // console.log(`${formName} - Student: '${form.student.firstName} ${form.student.lastName}' does not have an advisorSignature`)
+          console.log(`${formName} - Student: '${form.student.firstName} ${form.student.lastName}' does not have an advisorSignature`)
         }
       })
     })
