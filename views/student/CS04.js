@@ -6,6 +6,8 @@ const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
+const approvalCheckboxRow = require('../common/approvalCheckboxRow')
+
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -78,22 +80,8 @@ const cs04Form = (opts) => {
       ),
       hr(),
 
-      div('Student signature:'),
-      signatureRow(admin || isStudent, 'student', form), vert,
-      div('Chair signature:'),
-      signatureRow(admin, 'chairman', form), vert,
-
-      row(
-        colMd(4)(
-          div('Approved:'),
-          select(
-            { name: 'approved', disabled: !admin || null },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.approved || null }, 'Not approved'),
-            option({ value: 'true', selected: form.approved || null }, 'Approved'),
-          )
-        )
-      ),
+      div('Advisor signature:'),
+        approvalCheckboxRow(admin, 'advisor', opts), hr(),
 
       editAccess
         ? [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')]

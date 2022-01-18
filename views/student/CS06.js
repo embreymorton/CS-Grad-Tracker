@@ -324,7 +324,7 @@ const cs06Form = (opts) => {
       div('Each committee member should review the program of study.  The Chair is requested to check off or initial beside each member who has reviewed this program of study. '),
       row(
         colMd(6)(strong('Committee Member')),
-        colMd(2)('Select Advisor'),
+        colMd(2)('Select Research Advisor'),
         colMd(2)('Select Chair'),
       ),
 
