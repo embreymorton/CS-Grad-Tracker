@@ -12,8 +12,9 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-2 sidebar text-center">
-
+          
           <%- include("../partials/admin-sidebar.ejs") %>
+          <% const last = report.length-1 %>
 
         </div>
         <div align ="center" class="col-lg-10 panelbg text-center">
@@ -61,8 +62,7 @@
                 </tr>
               </thead>
               <tbody>
-                <% const last = report.length-1 %>
-                <% for(let k=0; k<report[last].length; k++) { %>
+                <% for(let k=0; k<report[last].students.length; k++) { %>
                   <tr>
                     <td><%= report[last].students[k].activeSemesters%></td>
                     <td><%= report[last].students[k].lastName%></td>
@@ -71,7 +71,6 @@
                 <% } %>
               </tbody>
             </table>
-            <h1><%= report[last].students[0].firstName%></h1>
           <% } else { %>
             <div>No students found.</div>
           <% } %>
