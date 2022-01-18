@@ -6,15 +6,10 @@ const name = `${lastName}, ${firstName}`
 
 let CS04 = {
   projectDescription: 'ASDF',
-  studentSignature: 'AA',
-  studentDateSigned: 'AAA',
-  chairmanSignature: 'ASDF',
-  chairmanDateSigned: 'ASSDF',
 }
 
 let CS04Dropdowns = {
   docProprietary: 'false',
-  approved: 'false'
 }
 
 describe('Test CS04 submissions', ()=>{
@@ -46,12 +41,7 @@ describe('Test CS04 submissions', ()=>{
 
     cy.contains(name)
     cy.contains(pid.toString())
-    cy.contains(CS04.chairmanSignature);
-    cy.contains(CS04.chairmanDateSigned);
-
-    delete CS04.chairmanSignature
-    delete CS04.chairmanDateSigned;
-
+  
     util.fillFormAsStudent(CS04);
     cy.get('.CS04-submit').click();
     util.checkFormAsStudent(CS04);
