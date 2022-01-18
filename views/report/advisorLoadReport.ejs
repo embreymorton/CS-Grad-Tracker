@@ -19,11 +19,6 @@
         <div align ="center" class="col-lg-10 panelbg text-center">
 
           <h3 class="space">Advisor Report</h3>
-          <span>
-            <p><a href="/report/advisorReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
-            <p><a href="/report/advisorReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
-          </span>
-
           <% if(report.length>0) { %>
             <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
               <thead>
@@ -36,7 +31,7 @@
                 </tr>
               </thead>
               <tbody>
-                <% for(let i=0; i<report.length; i++) { %>
+                <% for(let i=0; i<report.length-1; i++) { %>
                   <tr>
                     <td><%= report[i].lastName%></td>
                     <td><%= report[i].firstName%></td>
@@ -52,10 +47,31 @@
                       <td><%= report[i].students[j].lastName%></td>
                       <td><%= report[i].students[j].firstName%></td>
                     </tr>
-                  <% } % >
-                < % } % >
+                  <% } %>
+                <% } %>
               </tbody>
             </table>
+            <h4 class="space">Advisorless Students</h4>
+            <table id="advisorless-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisorless-report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Semesters</th>
+                  <th scope="col">Student Last Name</th>
+                  <th scope="col">Student First Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% const last = report.length-1 %>
+                <% for(let k=0; k<report[last].length; k++) { %>
+                  <tr>
+                    <td><%= report[last].students[k].activeSemesters%></td>
+                    <td><%= report[last].students[k].lastName%></td>
+                    <td><%= report[last].students[k].firstName%></td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+            <h1><%= report[last].students[0].firstName%></h1>
           <% } else { %>
             <div>No students found.</div>
           <% } %>

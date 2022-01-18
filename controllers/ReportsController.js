@@ -127,29 +127,23 @@ const aggregateLoadData = async () => {
       firstName: 1
     }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
     if (students.length == 0) return []
-    console.log(faculty)
-    console.log(students)
     students.forEach((student) => (
       student.activeSemesters = calculateActiveSemesters(student)
     ))
+    // students' w/o an advisor are listed in fakeAdvisor.students
+    const fakeAdvisor = {pid: -999, firstName: "", lastName: "Advisorless Students", students: []}
+    fakeAdvisor.students = util.filterOut(students, student => student.advisor == undefined)
+    console.log(fakeAdvisor)
+
     const descending = ({activeSemesters: x}, {activeSemesters: y}) => (
       x < y ? 1 : x > y ? -1 : 0
     )
     students.sort(descending)
     for (const advisor of faculty) {
-      advisor.students = []
-      let toRemoveIndices = []
-      students.forEach((student, i) => {
-        if (student.advisor.pid == advisor.pid) {
-          advisor.students.push(student)
-          toRemoveIndices.push(i)
-        }
-      })
-      while (toRemoveIndices) {
-        students.splice(toRemoveIndices.pop(), 1)
-      }
+      advisor.students = util.filterOut(students, (student) => student.advisor.pid == advisor.pid)
     }
-    return faculty
+    faculty.push(fakeAdvisor) // fakeAdvisor is always the last item in the faculty array
+    return [faculty, null]
   } catch (error) {
     console.log(error)
     return [null, error]

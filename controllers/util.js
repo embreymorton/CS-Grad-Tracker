@@ -179,6 +179,28 @@ _.checkFormCompletion = studentID =>
     ).catch(reject)
   })
 
+  /**
+   * filterOut works just like the standard Array.filter function, but it mutates
+   * the original array by removing elements that pass the test function.
+   * @param {Array} arr 
+   * @param {Function} test 
+   * @returns 
+   */
+_.filterOut = (arr, test) => {
+  const indiciesToRemove = []
+  const filteredArr = []
+  arr.forEach((obj, i) => {
+    if (test(obj)) {
+      filteredArr.push(obj)
+      indiciesToRemove.push(i)
+    }
+  })
+  while (indiciesToRemove.length) {
+    arr.splice(indiciesToRemove.pop(), 1)
+  }
+  return filteredArr
+}
+
 const checkOneForm = studentID => formName =>
   schema[formName].findOne({student: studentID}).exec()
 
