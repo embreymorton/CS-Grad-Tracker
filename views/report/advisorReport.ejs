@@ -24,7 +24,7 @@
             <p><a href="/report/advisorReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
           </span>
 
-          <% if(report.length>0) { %>
+          <% if(report != undefined && report.length>0) { %>
             <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
               <thead>
                 <tr>

@@ -155,8 +155,8 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = async (req, res) => {
-  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin});
-  if (report) res.render('../views/report/progressReport.ejs', { report })
+  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}) 
+  if (!string) res.render('../views/report/progressReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }
 
@@ -190,13 +190,13 @@ reportController.downloadProgressReportCSV = async function (req, res) {
 
 reportController.getTuitionReport = (req, res) => {
   if (!res.locals.admin) {
-    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view tuition reports."})
+    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view tuition reports."}) 
   }
   let tutionReport = [];
-  aggregateTuitionData(tutionReport).then((result) => {
-    res.render('../views/report/tuitionReport.ejs', {report: result});
+  aggregateTuitionData(tutionReport).then((result) => { 
+    res.render('../views/report/tuitionReport.ejs', {report: result})
   }).catch((error) => {
-    res.render('../views/error.ejs', {string: error});
+    res.render('../views/error.ejs', {string: error})
   })
 }
 
@@ -205,7 +205,7 @@ reportController.getAdvisorReport = async (req, res) => {
     res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor reports."})
   }
   const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin})
-  if (report) res.render('../views/report/advisorReport.ejs', { report })
+  if (!string) res.render('../views/report/advisorReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }
 
@@ -286,7 +286,7 @@ reportController.getAdvisorLoadReport = async (req, res) => {
     res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor load reports."})
   }
   const [ report, string ] = await aggregateLoadData()
-  if (report) res.render('../views/report/advisorLoadReport.ejs', { report })
+  if (!string) res.render('../views/report/advisorLoadReport.ejs', { report })
   else res.render('../views/error.ejs', { string })
 }
 
