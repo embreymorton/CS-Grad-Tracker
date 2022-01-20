@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
+const signatureDropDown = require('../common/signatureDropDown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -40,7 +41,7 @@ const mainContent = (opts) => {
 }
 
 const cs13Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, faculty } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a, br } = x
   const select = x('select.form-control')
@@ -68,7 +69,8 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureRow(admin, 'comp523', form), hr(),
+      signatureDropDown(admin, 'comp523', faculty, opts),
+      hr(),
 
       x('h4.underline')('Industry Experience'),
       row(

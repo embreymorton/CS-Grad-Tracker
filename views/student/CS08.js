@@ -6,6 +6,7 @@ const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
+const signatureDropDown = require('../common/signatureDropDown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -36,7 +37,7 @@ const mainContent = (opts) => {
 }
 
 const cs08Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, faculty } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a } = x
   const vert = x('div.verticalSpace')()
@@ -76,9 +77,10 @@ const cs08Form = (opts) => {
       div('We have judged this paper to be of thesis quality in both substance and presentation. It therefore satisfies the writing requirement for the M.S. in Computer Science.'),
 
       div('Primary Reader signature'),
-      signatureRow(admin, 'primary', form),
+      signatureDropDown(admin, 'primary', faculty, opts),
+
       div('Secondary Reader signature'),
-      signatureRow(admin, 'secondary', form),
+      signatureDropDown(admin, 'secondary', faculty, opts),
 
       editAccess
         ? [

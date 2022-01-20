@@ -6,7 +6,7 @@ const pseudoCheckbox = require('./pseudoCheckbox')
 /**
  * A component that lets you choose from a list of names for an approval signature. Automatically changes label
  * based on the date when the dropdown is changed.
- * @param {Number} editAccess NOT DECIDED YET
+ * @param {Boolean} editAccess whether user is an admin/faculty -> true, or a student -> false
  * @param {String} key represents the type of value being selected, also functions as an HTML element's `id` so it should be distinct
  * @param {Array<Object>} values a list of names to choose from, each object should be in form `{firstName: ..., lastName: ...}`
  * @param {Object} opts looks for {cspNone, form} where form is the query from the database
@@ -21,7 +21,7 @@ const signatureDropDown = (editAccess, key, values, opts) => {
   const roValue = (name) => (pseudoInput(values[name]))
   const rwValue = (name) => (input('select', name, values[name], true))
   const value = editAccess ? rwValue : roValue
-  const instructorSelected = opts.form.instructorSignature || "";
+  const instructorSelected = opts.form[sigName] || "";
   
   // list of dropdown options
   let options = []
@@ -35,7 +35,7 @@ const signatureDropDown = (editAccess, key, values, opts) => {
   }
 
   // check if signer has approved yet; approval depends solely on whether the date field is filled
-  const isApproved = opts.form[dateName] != ""
+  const isApproved = opts.form[dateName] != undefined && opts.form[dateName] != "" 
   const approvalDate = isApproved ? new Date(opts.form[dateName]) : new Date()
   const approvedDateMMDDYYYY = `${approvalDate.getMonth()+1}/${approvalDate.getDate()}/${approvalDate.getFullYear()}`;
   const approvalLabel = isApproved ? 
@@ -59,7 +59,7 @@ const signatureDropDown = (editAccess, key, values, opts) => {
       x('.row')(
       col(5)(
         em('In place of your signature, please select your name:'),
-        x(`select#${sigName}Select`)({value: instructorSelected, required: true},
+        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select`)({value: instructorSelected, required: true},
             options
         ),
         x(`input#${sigName}`)({type: "hidden", name: sigName, value: instructorSelected}),
