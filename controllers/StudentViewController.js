@@ -109,12 +109,9 @@ studentViewController.updateForm = async function (req, res) {
       var studentId = studentInfo._id;
       const form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, input).exec();
       if (form != null) {
-        res.redirect("/studentView/forms" + "/" + req.params.title + "/true");
       } else {
         var inputModel = new schema[req.params.title](input);
-        inputModel.save().then(function (result) {
-          res.redirect("/studentView/forms/" + req.params.title + "/true");
-        });
+        await inputModel.save()
       }
       const result = await util.checkFormCompletion(studentId);
       // I feel like there needs to be a check for this result.
@@ -124,6 +121,8 @@ studentViewController.updateForm = async function (req, res) {
       if (!['CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04', 'CS06', 'CS13'].includes(req.params.title)) {
         return
       }
+
+      let hasEmailsSent = true
 
       // let testAccount = await nodemailer.createTestAccount();
       const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
@@ -166,13 +165,15 @@ studentViewController.updateForm = async function (req, res) {
 
       const response = await transporter.sendMail(advisorEmail).catch((err) => console.error(err))
       if (!response) {
+        hasEmailsSent = false
         console.error("Advisor email cannot be sent. Please look at response above.")
+        res.render('../views/error.ejs', {string: "Form has been properly saved. However, an email was unable to be sent to your advisor. Please contact your advisors or instructors to approve the form."})
       } else {
         console.log(`Message sent was: ${response.messageId}`)
         console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
       }
 
-      if (['CS02', 'CS08', 'CS13'].includes(req.params.title)) {
+      if (['CS02'].includes(req.params.title)) { //TODO: add custom code for CS08, CS11, also rn CS08 gets skipped due to the first if statement, try to make each email sending in its own if block
         const instructorName = form.instructorSignature
         const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === instructorName).email
         console.log(facultyEmail)
@@ -192,7 +193,9 @@ studentViewController.updateForm = async function (req, res) {
 
         const response = await transporter.sendMail(instructorEmail).catch((err) => console.error(err))
         if (!response) {
+          hasEmailsSent = false
           console.error("Instructor email cannot be sent. Please look at response above.")
+          res.render('../views/error.ejs', {string: "Form has been properly saved. However, an email was unable to be sent to your advisor. Please contact your advisors or instructors to approve the form."})
         } else {
           console.log(`Message sent was: ${response.messageId}`)
           console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
@@ -200,6 +203,10 @@ studentViewController.updateForm = async function (req, res) {
       }
 
       transporter.close()
+      if (hasEmailsSent) {
+        res.redirect("/studentView/forms/" + req.params.title + "/true")
+      }
+
     }
   }
 }
