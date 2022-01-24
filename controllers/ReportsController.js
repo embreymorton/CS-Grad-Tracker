@@ -133,7 +133,6 @@ const aggregateLoadData = async () => {
     // students' w/o an advisor are listed in fakeAdvisor.students
     const fakeAdvisor = {pid: -999, firstName: "", lastName: "Advisorless Students", students: []}
     fakeAdvisor.students = util.filterOut(students, student => student.advisor == undefined)
-    console.log(fakeAdvisor)
 
     const descending = ({activeSemesters: x}, {activeSemesters: y}) => (
       x < y ? 1 : x > y ? -1 : 0
