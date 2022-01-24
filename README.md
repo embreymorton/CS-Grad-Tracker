@@ -8,10 +8,10 @@ Work-Study program at The University of North Carolina at Chapel Hill.
 The clients of this project are all staff/administrators that work in Sitterson
 Hall as part of graduate program for computer science students.
 
-Takoda Ren and Sebastian Crowell are the students currently working on this
+Kevin Chen, Elaine Dong, and Zain Khan are the students currently working on this
 project.
 
-In the past, Shane Flannigan worked on this project.
+In the past, Shane Flannigan, Takoda Ren, and Sebastian Crowell worked on this project.
 
 # Contacts
 Jeff Terrell <terrell@cs.unc.edu>
@@ -148,9 +148,6 @@ npm --version
 Once you are invited into the GitLab repository, click the blue "Clone" button and copy the link using your preference of SSH or HTTPS. Open powershell and cd into a folder of your choice for code. Run `git clone <copied-link>` and cd into the created folder. 
 
 Install all the dependencies for the app by running `npm install`. It should create a `node_modules` folder, but you don't really need to touch it.
-
-### Setup Auth0 and MongoDB
-Please read the sections on setting up an Auth0 instance (**Serena** can you update this when done?) and adding an admin account to your database.
 
 ### Adding an Admin Account
 Open the `data/AdminInputScript.txt` file. Edit the email section to have your email. Then run `node data/AdminInputScript.txt`.
