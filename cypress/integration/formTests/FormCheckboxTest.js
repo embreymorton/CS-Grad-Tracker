@@ -5,8 +5,6 @@ const CS02 = {
   dateSubmitted: 'Feb.2, 2020',
   courseNumber: 'COMP 560',
   basisWaiver: 'Taken',
-  instructorSignature: 'jeffe',
-  instructorDateSigned: 'time'
 }
 
 describe('Test Checkbox on forms pages', ()=>{

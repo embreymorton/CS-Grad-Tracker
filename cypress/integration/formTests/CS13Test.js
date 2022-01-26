@@ -5,8 +5,6 @@ const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
 let CS13 = {
-  comp523Signature : 'asdas',
-  comp523DateSigned: 'dddd',
   jobInfo: 'ssss',
   product: 'WO',
   client: 'Tony',

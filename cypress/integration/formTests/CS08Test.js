@@ -12,10 +12,6 @@ let CS08 = {
   primaryDate: '1asdasdqwc',
   secondaryReader: '2asdasd',
   secondaryDate: '2asdasdqwc',
-  primarySignature: '1asdasd',
-  primaryDateSigned: '1asdasdqwc',
-  secondarySignature: '2asdasd',
-  secondaryDateSigned: '2asdasdqwc',
 }
 
 describe('Test CS08 submissions', ()=>{
