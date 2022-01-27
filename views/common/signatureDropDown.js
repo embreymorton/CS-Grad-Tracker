@@ -98,15 +98,15 @@ function pageScript(opts, initialState) {
       }
       let selectHandler = () => {
         instructorData.setAttribute("value", select.value);
-        if (instructorData.value != '${instructorSelected}') {
+        if (instructorData.value != '${instructorSelected}' && checkbox) {
           checkbox.checked = false;
           refreshCheckbox();
         }
       }
 
-      select.onchange = selectHandler;
-      select.addEventListener('onchange', selectHandler);
-      checkbox.addEventListener('change', checkboxHandler);
+      select ? select.onchange = selectHandler : null;
+      // select.addEventListener('onchange', selectHandler);
+      checkbox ? checkbox.addEventListener('change', checkboxHandler) : null;
     }
     document.addEventListener('DOMContentLoaded', onLoad);
     `;

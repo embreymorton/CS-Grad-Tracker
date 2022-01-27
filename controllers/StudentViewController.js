@@ -173,14 +173,20 @@ studentViewController.updateForm = async function (req, res) {
         console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
       }
 
-      if (['CS02'].includes(req.params.title)) { //TODO: add custom code for CS08, CS11, also rn CS08 gets skipped due to the first if statement, try to make each email sending in its own if block
-        const instructorName = form.instructorSignature
-        const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === instructorName).email
-        console.log(facultyEmail)
+      /**
+       * Sends email based on the faculty selected in the dropdown box.
+       * *transporter, schema is closure-d in.
+       * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
+       * @param {String} title - the faculty member's title for email subject line eg. "Instructor"
+       * @return {Boolean} - whether the email successfully sent or not
+       */
+      const dropdownEmailing = async (key, title) => {
+        const keyName = form[key]
+        const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === keyName).email
         const instructorEmail = {
           from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
           to: facultyEmail,
-          subject: `[UNC-CS] Instructor Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
+          subject: `[UNC-CS] ${title} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
           text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
                 ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
           html: `
@@ -193,13 +199,29 @@ studentViewController.updateForm = async function (req, res) {
 
         const response = await transporter.sendMail(instructorEmail).catch((err) => console.error(err))
         if (!response) {
-          hasEmailsSent = false
-          console.error("Instructor email cannot be sent. Please look at response above.")
+          console.error(`${title} email cannot be sent. Please look at response above.`)
           res.render('../views/error.ejs', {string: "Form has been properly saved. However, an email was unable to be sent to your advisor. Please contact your advisors or instructors to approve the form."})
+          return false
         } else {
           console.log(`Message sent was: ${response.messageId}`)
           console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
+          return true
         }
+      }
+
+      switch (req.params.title) {
+        case 'CS02':
+          await dropdownEmailing("instructorSignature", "Instructor") ? null : hasEmailsSent = false
+          break;
+        case 'CS08': // TODO: make checking emails parallel
+          await dropdownEmailing("primarySignature", "Primary Reader") &
+          await dropdownEmailing("secondarySignature", "Secondary Reader") ? null : hasEmailsSent = false
+          break;
+        case 'CS13':
+          if (form.comp523) {
+            await dropdownEmailing("comp523Signature", "COMP 523 Instructor") ? null : hasEmailsSent = false
+          }
+          break;
       }
 
       transporter.close()
@@ -279,5 +301,6 @@ studentViewController.downloadCourses = async function (req, res) {
   res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   fs.createReadStream(filePath).pipe(res);
 }
+
 
 module.exports = studentViewController;
