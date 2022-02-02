@@ -127,7 +127,10 @@ const label = {
   technicalWritingApproved: 'Technical writing approved',
   USResidency: 'US Residency',
 }
-
+const minimum = {
+  hoursCompleted: min = "0",
+  semestersOnLeave: min = "0"
+}
 const type = {
   alternativeName: 'text',
   backgroundApproved: 'date',
@@ -138,7 +141,7 @@ const type = {
   email: 'email',
   enteringStatus: 'text',
   firstName: 'text',
-  hoursCompleted: 'number',
+  hoursCompleted: 'number', 
   lastName: 'text',
   leaveExtension: 'text',
   mastersAwarded: 'date',
@@ -186,10 +189,10 @@ const uneditableTextFieldWithHiddenInput = (name, value) => fieldDiv(
   x('input.form-control')({type: 'hidden', name, value})
 )
 
-const inputField = ({ name, student, required, checked }) => (
+const inputField = ({ name, student, required, checked, min }) => (
   fieldDiv(
     label[name],
-    input(type[name], name, (student || {})[name], required, checked)
+    input(type[name], name, (student || {})[name], required, checked, min )
   )
 )
 
