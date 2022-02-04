@@ -50,8 +50,6 @@ describe('Test CS13 submissions', ()=>{
     cy.contains(pid.toString())
 
     ;[
-      'comp523Signature',
-      'comp523DateSigned',
       'alt1Signature',
       'alt1DateSigned',
       'alt2Signature',
@@ -60,6 +58,8 @@ describe('Test CS13 submissions', ()=>{
       cy.contains(CS13[field])
       delete CS13[field]
     })
+
+    console.log("SCREAM:", CS13)
 
     util.fillFormAsStudent(CS13)
     cy.get('.CS13-submit').click()

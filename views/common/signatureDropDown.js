@@ -10,9 +10,10 @@ const pseudoCheckbox = require('./pseudoCheckbox')
  * @param {String} key represents the type of value being selected, also functions as an HTML element's `id` so it should be distinct
  * @param {Array<Object>} values a list of names to choose from, each object should be in form `{firstName: ..., lastName: ...}`
  * @param {Object} opts looks for {cspNone, form} where form is the query from the database
+ * @param {Boolean} required whether the dropdown should be require or not to submit the form; true by default
  * @returns 
  */
-const signatureDropDown = (editAccess, key, values, opts) => {
+const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
   const sigName = `${key}Signature`
@@ -59,7 +60,7 @@ const signatureDropDown = (editAccess, key, values, opts) => {
       x('.row')(
       col(5)(
         em('In place of your signature, please select your name:'),
-        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select`)({value: instructorSelected, required: true},
+        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select`)({value: instructorSelected, required: required ? true : null},
             options
         ),
         x(`input#${sigName}`)({type: "hidden", name: sigName, value: instructorSelected}),

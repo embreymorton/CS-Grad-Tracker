@@ -31,6 +31,10 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS08);
+    cy.get('#primarySignatureSelect').select('faculty faculty')
+    cy.get('#primaryDateSignedCheckbox').check()
+    cy.get('#secondarySignatureSelect').select('admin admin')
+    cy.get 
     cy.get('.CS08-submit').click();
     util.checkFormAsAdmin(CS08);
   })
@@ -41,23 +45,19 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.contains(CS08.primaryReader);
-    cy.contains(CS08.primaryDate);
-    cy.contains(CS08.secondaryReader);
-    cy.contains(CS08.secondaryDate);
-    cy.contains(CS08.primarySignature);
-    cy.contains(CS08.secondarySignature);
-    cy.contains(CS08.primaryDateSigned);
-    cy.contains(CS08.secondaryDateSigned);
+    cy.get('.form-control[name="primaryReader"]').should('have.value', CS08.primaryReader);
+    cy.get('.form-control[name="primaryDate"]').should('have.value', CS08.primaryDate);
+    cy.get('.form-control[name="secondaryReader"]').should('have.value', CS08.secondaryReader);
+    cy.get('.form-control[name="secondaryDate"]').should('have.value', CS08.secondaryDate);
+    cy.get('.pseudo-input').contains('faculty faculty')
+    cy.get('.pseudo-checked')
+    cy.get('#secondarySignatureSelect').should('have.value', 'admin admin')
+
 
     delete CS08.primaryReader;
     delete CS08.primaryDate;
     delete CS08.secondaryReader;
     delete CS08.secondaryDate;
-    delete CS08.primarySignature;
-    delete CS08.secondarySignature;
-    delete CS08.primaryDateSigned;
-    delete CS08.secondaryDateSigned;
 
     util.fillFormAsStudent(CS08);
     cy.get('.CS08-submit').click();

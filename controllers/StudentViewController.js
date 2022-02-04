@@ -116,11 +116,6 @@ studentViewController.updateForm = async function (req, res) {
       const result = await util.checkFormCompletion(studentId);
       // I feel like there needs to be a check for this result.
       //ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
-      
-      /* Skip Email Sending */
-      if (!['CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS04', 'CS06', 'CS13'].includes(req.params.title)) {
-        return
-      }
 
       let hasEmailsSent = true
 

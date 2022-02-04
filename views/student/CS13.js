@@ -69,7 +69,7 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureDropDown(admin, 'comp523', faculty, opts),
+      signatureDropDown(admin, 'comp523', faculty, opts, false),
       hr(),
 
       x('h4.underline')('Industry Experience'),

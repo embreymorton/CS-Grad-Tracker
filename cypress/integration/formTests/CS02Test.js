@@ -26,6 +26,7 @@ describe('Test CS02 submissions', () => {
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS02)
+    cy.get('#instructorSignatureSelect').select('faculty faculty')
     cy.get('.CS02-submit').click()
     util.fillFormAsStudent(CS02)
   })
@@ -35,14 +36,7 @@ describe('Test CS02 submissions', () => {
     cy.visit('/studentView/forms/CS02/false')
     cy.contains(name)
     cy.contains(pid.toString())
-
-    ;[
-      'instructorSignature',
-      'instructorDateSigned',
-    ].forEach((field) => {
-      cy.contains(CS02[field])
-      delete CS02[field]
-    })
+    cy.contains('faculty faculty')
 
     util.fillFormAsStudent(CS02)
     cy.get('.CS02-submit').click()
