@@ -7,7 +7,7 @@ const name = `${lastName}, ${firstName}`
 
 
 const CS02 = {
-    dateSubmitted: 'Feb.2, 2020',
+  dateSubmitted: 'Feb.2, 2020',
     courseNumber: 'COMP 560',
     basisWaiver: 'Taken',
   }
@@ -29,6 +29,7 @@ const CS02 = {
       cy.contains(name)
       cy.contains(pid.toString())
       util.fillCleanFormAsAdmin(CS02)
+      cy.get('#instructorSignatureSelect').select('admin admin')
       cy.get('.CS02-submit').click()
       util.fillFormAsStudent(CS02)
     })
@@ -38,15 +39,6 @@ const CS02 = {
       cy.visit('/studentView/forms/CS02/false')
       cy.contains(name)
       cy.contains(pid.toString())
-  
-      ;[
-        'instructorSignature',
-        'instructorDateSigned',
-      ].forEach((field) => {
-        cy.contains(CS02[field])
-        delete CS02[field]
-      })
-  
       util.fillFormAsStudent(CS02)
       cy.get('.CS02-submit').click()
       util.checkFormAsStudent(CS02)
@@ -58,7 +50,7 @@ const CS02 = {
       cy.get('#password').type('J7PWfjJ4FewKyAQhRj')
       cy.get('.btn').first().click()
       cy.visit('https://ethereal.email/messages')
-      cy.get('td a').eq(2).click()
+      cy.get('a[href^="/messages/"]').first().click()
       const now = new Date()
       cy.get('.datestring').first().invoke('attr', 'title').then(title => {
         const mailDate = new Date(title);
