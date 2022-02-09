@@ -43,8 +43,8 @@ facultyController.post = function (req, res) {
       if (result !== null){
         res.render("../views/error.ejs", {string: "That faculty already exists"});
       }
-      else if(!input.pid.match("\d{9}")){
-        res.render("../views/error.ejs", {string: "PID needs to be of length 9"});
+      else if(!input.pid.match(/\d{9}/)){
+        res.render("../views/error.ejs", {string: `PID needs to be only 9 digits (was '${input.pid}')`});
       }
       else {
         input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
