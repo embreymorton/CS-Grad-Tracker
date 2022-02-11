@@ -10,25 +10,20 @@ const { validateFormData } = require("./util.js");
 
 var studentViewController = {};
 
-// Students only allowed to edit certain fields
 studentViewController.put = async function (req, res) {
-  var input = req.body;
-  var editableFields = ["firstName", "lastName", "alternativeName", "gender", "ethnicity"];
-  if (input.firstName != null && input.lastName != null && input._id != null) {
-    const result = await schema.Student.findOne({ _id: input._id }).exec();
-    if (result != null) {
-      for (var i = 0; i < editableFields.length; i++) {
-        result[editableFields[i]] = input[editableFields[i]];
-      }
-      result.save(function (err, updated) {
-        res.redirect("/studentView");
-      });
-    } else {
-      res.render("../views/error.ejs", { string: "StudentNotFound" });
-    }
-  } else {
-    res.render("../views/error.ejs", { string: "RequiredParamNotFound" });
+  const input = req.body
+  const result = await schema.Student.findOne({ pid: req.session.userPID }).exec()
+  if (result == null) {
+    res.render("../views/error.ejs", { string: "StudentNotFound" })
+    return
   }
+  // list of fields students can alter
+  ;["firstName", "lastName", "alternativeName", "gender"].forEach((key) => {
+    result[key] = input[key]
+  })
+  result.save(function (err, updated) {
+    res.redirect("/studentView")
+  });
 }
 
 studentViewController.get = async function (req, res) {
