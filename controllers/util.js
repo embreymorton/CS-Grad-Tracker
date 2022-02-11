@@ -201,6 +201,42 @@ _.filterOut = (arr, test) => {
   return filteredArr
 }
 
+/**
+ * Removes any fields from form data that a student should not be able to change.
+ * Be sure to check over and update this function if a form is made s.t. it includes 
+ * a field that should disallow students from editing.
+ * @param {Object} formData form data from HTML form gotten from req.body !MUTATED!
+ * @returns {Object} same formData passed in
+ */
+_.validateFormData = (formData) => {
+  ;[
+    '_id',
+    '__v',
+    'student',
+    'advisorSignature',
+    'advisorDateSigned',
+    'instructorDateSigned',
+    'directorSignature',
+    'directorDateSigned',
+    'approved',
+    'approvalReason',
+    'chairSignature',
+    'chairDateSigned',
+    'reasonApproved',
+    'primarySignature',
+    'primaryDateSigned',
+    'secondarySignature',
+    'secondaryDateSigned',
+    'comp523Signature',
+    'comp523DateSigned',
+    'alt1Signature',
+    'alt1DateSigned',
+    'alt2Signature',
+    'alt2DateSigned'
+  ].forEach((key) => delete formData[key])
+  return formData
+}
+
 const checkOneForm = studentID => formName =>
   schema[formName].findOne({student: studentID}).exec()
 

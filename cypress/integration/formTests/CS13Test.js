@@ -59,8 +59,6 @@ describe('Test CS13 submissions', ()=>{
       delete CS13[field]
     })
 
-    console.log("SCREAM:", CS13)
-
     util.fillFormAsStudent(CS13)
     cy.get('.CS13-submit').click()
     util.checkFormAsStudent(CS13)

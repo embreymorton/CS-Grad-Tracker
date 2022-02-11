@@ -17,7 +17,6 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
   const sigName = `${key}Signature`
-  console.log(sigName);
   const dateName = `${key}DateSigned`
   const roValue = (name) => (pseudoInput(values[name]))
   const rwValue = (name) => (input('select', name, values[name], true))

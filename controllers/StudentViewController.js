@@ -6,6 +6,7 @@ var path = require("path");
 var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
+const { validateFormData } = require("./util.js");
 
 var studentViewController = {};
 
@@ -107,7 +108,7 @@ studentViewController.updateForm = async function (req, res) {
       res.render("../views/error.ejs", { string: "Student not found" });
     } else {
       var studentId = studentInfo._id;
-      const form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, input, {new: true}).exec();
+      const form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, validateFormData(input), {new: true}).exec();
       if (form != null) {
       } else {
         var inputModel = new schema[req.params.title](input);
