@@ -228,19 +228,19 @@ studentController.jobs = function(req, res){
   }
 }
 
-// studentController.deleteJob = function(req, res){
-//   var input = req.body
-//   if(input.studentId != null && input.jobId != null){
-//     schema.Student.update({_id:input.studentId}, {$pull:{jobHistory: input.jobId}}).exec().then(function(result){
-//       res.redirect('/student/jobs/' + input.studentId)
-//     }).catch(function(err){
-//       res.render('../views/error.ejs', {string:'Student was not found.'})
-//     })
-//   }
-//   else{
-//     res.render('../views/error.ejs', {string: 'Either studentId or jobId is missing.'})
-//   }
-// }
+studentController.deleteJob = function(req, res){
+  var input = req.body
+  if(input.studentId != null && input.jobId != null){
+    schema.Student.update({_id:input.studentId}, {$pull:{jobHistory: input.jobId}}).exec().then(function(result){
+      res.redirect('/student/jobs/' + input.studentId)
+    }).catch(function(err){
+      res.render('../views/error.ejs', {string:'Student was not found.'})
+    })
+  }
+  else{
+    res.render('../views/error.ejs', {string: 'Either studentId or jobId is missing.'})
+  }
+}
 
 studentController.addJobs = function(req, res){
   var input = req.body
