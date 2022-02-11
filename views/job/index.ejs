@@ -35,7 +35,7 @@
                   <th scope="col"
                   class="col-jobStudents">Students</th>
                   <th scope="col" class="col-jobAssign">Assign</th>
-                  <th scope="col" class="col-jobDelete"></th>
+                  <th scope="col" class="col-jobEdit">Edit</th>
                 </tr>
               </thead>
               <tbody>
@@ -75,11 +75,6 @@
                     <div class="editRow">
                       <div class="editColumn">
                       <a href="/job/edit/<%=jobs[i]._id%>" class="editTag"><i class="fas fa-edit editColor"></i></a>
-                      </div>
-                      <div class="editColumn">
-                      <form action="/job/delete/<%=jobs[i]._id%>" method="post">
-                        <button type="submit" class="btn btn-default delete-job-button" onclick="return confirm('Do you really want to delete this?');"><i class="fas fa-trash-alt"></i></button>
-                      </form>
                       </div>
                     </div>
                     </td>

@@ -34,7 +34,7 @@ router.post("/post", job.post);
 
 router.post("/put", job.put);
 
-router.post("/delete/:_id", job.delete);
+// router.post("/delete/:_id", job.delete);
 
 router.post("/upload", job.upload);
 
