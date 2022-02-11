@@ -189,6 +189,7 @@ courseController.put = function (req, res) {
  * @throws CourseNotFound (should not occur if frontend done properly)
  * @throws RequireParamNotFound (should not occur if frontend done properly)
  */
+// TODO: delete function without throwing route.post error
 courseController.delete = function (req, res) {
   var id = req.params._id;
   if(id != null){
@@ -221,8 +222,6 @@ courseController.delete = function (req, res) {
   else{
     res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
-
-
 }
 
 /*
