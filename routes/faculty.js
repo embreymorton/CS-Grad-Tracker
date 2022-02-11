@@ -30,7 +30,7 @@ router.post("/post", faculty.post);
 
 router.post("/put", faculty.put);
 
-router.post("/delete/:_id", faculty.delete);
+// ("/delete/:_id", faculty.delete);
 
 router.post("/upload", faculty.upload);
 

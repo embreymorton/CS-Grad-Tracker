@@ -97,7 +97,7 @@ router.post('/post', authorizeAdmin, student.post);
 
 router.post('/put', authorizeAdmin, student.put);
 
-router.post('/delete/:_id', authorizeAdmin, student.delete);
+// router.post('/delete/:_id', authorizeAdmin, student.delete);
 
 router.post("/deleteJob", authorizeAdmin, student.deleteJob);
 
