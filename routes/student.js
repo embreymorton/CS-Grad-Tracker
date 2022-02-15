@@ -59,13 +59,13 @@ router.get('/', authorizeFaculty, student.get);
 
 router.get('/create', authorizeAdmin, student.create);
 
-router.get('/edit/:_id', authorizeFaculty, student.edit);
+router.get('/edit/:_id', authorizeAdmin, student.edit);
 
 router.get("/jobs/:_id", authorizeAdvisor, student.jobs);
 
 router.get("/notes/:_id", authorizeAdvisor, student.notesPage);
 
-router.get("/forms/:_id", authorizeFaculty, student.formPage);
+router.get("/forms/:_id", authorizeAdvisor, student.formPage);
 //pdf version of forms page route
 //router.get("/forms/:_id/:uploadSuccess", authorizeAdvisor, student.formPage);
 
@@ -74,7 +74,7 @@ router.get("/forms/:_id", authorizeFaculty, student.formPage);
 
 router.get("/upload/:uploadSuccess", authorizeAdmin, student.uploadPage);
 
-router.get("/download", authorizeFaculty, student.download);
+router.get("/download", authorizeAdmin, student.download);
 
 router.get("/downloadCourses/:_id", authorizeAdvisor, student.downloadCourses);
 
