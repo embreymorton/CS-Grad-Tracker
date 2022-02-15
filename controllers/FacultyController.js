@@ -111,9 +111,11 @@ facultyController.get = function (req, res) {
  *
  * @req.body {String} onyen (Required)
  * @req.body {String} firstName (Required)
+ * @req.body {String} csid (Required)
  * @req.body {String} lastName (Required)
  * @req.body {Number} pid (Required)
  * @req.body {Boolean} active (Required)
+ * @req.body {Boolean} admin (Required)
  *
  * @success redirects to /faculty/edit/:_id (facultyController.edit)
  * which displays the newly updated faculty data
@@ -151,7 +153,7 @@ facultyController.create = function(req, res){
 /**
  * @url {get} /faculty/edit/:_id
  *
- * @description Called when a faculty is to be
+ * @description Renders the edit faculty page. Called when a faculty is to be
  * edited by the user. _id is required, and is
  * sent in a html parameter.
  *
