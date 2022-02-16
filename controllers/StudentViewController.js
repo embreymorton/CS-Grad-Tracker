@@ -100,7 +100,7 @@ studentViewController.updateForm = async function (req, res) {
     return
   }
 
-  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").exec()
+  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
   if (studentInfo == null) {
     res.render("../views/error.ejs", { string: "Student not found" })
     return
@@ -112,13 +112,10 @@ studentViewController.updateForm = async function (req, res) {
     form = new schema[req.params.title]({...formData, student: studentId});
     await form.save()
   } 
-  const result = await util.checkFormCompletion(studentId);
+  const formCompletionResult = await util.checkFormCompletion(studentId);
   // I feel like there needs to be a check for this result.
-  //ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
+  // ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
 
-  let hasEmailsSent = true
-
-  // let testAccount = await nodemailer.createTestAccount();
   const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
   let transporter = process.env.mode == 'testing' || process.env.mode == 'development' // comment out `|| ... = 'development'` to test with actual email
   ? nodemailer.createTransport({
@@ -136,92 +133,97 @@ studentViewController.updateForm = async function (req, res) {
       pass: process.env.gmailPass
     }
   })
-  
-  const advisorEmail = {
-    from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
-    to: process.env.mode != 'testing' 
-      ? 
-        ['advisor', 'researchAdvisor']
-        .map(key => studentInfo[key])
-          .filter(advisor => advisor && advisor.email)
-          .map(advisor => advisor.email)
-      : "bar@example.com, bax@example.com",
-    subject: `[UNC-CS] Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
-    text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
-          ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
-    html: `
-      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
-      <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
-      <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
-      <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
-    `
-  }
 
-  const response = await transporter.sendMail(advisorEmail).catch((err) => console.error(err))
-  if (!response) {
-    hasEmailsSent = false
-    console.error("Advisor email cannot be sent. Please look at response above.")
-    res.render('../views/error.ejs', {string: "Form has been properly saved. However, an email was unable to be sent to your advisor. Please contact your advisors or instructors to approve the form."})
-  } else {
-    console.log(`Message sent was: ${response.messageId}`)
-    console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
+  /**
+   * Creates a preformatted email body and header ready to be used by nodemailer.
+   * @param {String} to list of email addresses separated by ", " 
+   * @param {String} subjectTitle what type of approval person is needed, eg. Advisor, Instructor, Primary Reader, etc.
+   * @param {Object} studentInfo information about the student
+   * @param {Object} req Express.js request information
+   * @returns preformatted email object
+   */
+  const generateEmail = (to, subjectTitle, studentInfo, req) => {
+    return {
+      from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
+      to,
+      subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
+      text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
+          ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
+      html: `
+        <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
+        <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
+        <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
+        <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
+      `
+    }
   }
 
   /**
-   * Sends email based on the faculty selected in the dropdown box.
-   * *transporter, schema is closure-d in.
+   * Given an argument list of formatted/generated email objects, sends all emails parallel-ly. 
+   * @param  {...GeneratedEmail} toSend 
+   * @returns true if all emails sent, false if any failed
+   */
+  const send = async (...toSend) => {
+    const email = async (email) => {
+      const response = await transporter.sendMail(email).catch(console.error)
+      if (!response) {
+        return false
+      } else {
+        console.log(`Emailed: ${response.accepted} | failed to send: ${response.rejected} | preview at: ${nodemailer.getTestMessageUrl(response)}`)
+        return true
+      }
+    }
+
+    const result = await Promise.all(toSend.map(letter => email(letter)))
+    return result.every(res => res === true)
+  }
+  
+  const advisors = ['advisor', 'researchAdvisor']
+    .map(key => studentInfo[key])
+    .filter(advisor => advisor && advisor.email)
+    .map(advisor => advisor.email)
+    .join(', ')
+  const advisorEmail = generateEmail(advisors, "Advisor", studentInfo, req)
+
+  /**
+   * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
    * @param {String} title - the faculty member's title for email subject line eg. "Instructor"
    * @return {Boolean} - whether the email successfully sent or not
    */
-  const dropdownEmailing = async (key, title) => {
+  const generateDropdownEmail = async (key, title) => {
     const keyName = form[key]
     const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === keyName).email
-    const instructorEmail = {
-      from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
-      to: facultyEmail,
-      subject: `[UNC-CS] ${title} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
-      text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
-            ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
-      html: `
-      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
-      <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
-      <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
-      <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
-    `
-    }
-
-    const response = await transporter.sendMail(instructorEmail).catch((err) => console.error(err))
-    if (!response) {
-      console.error(`${title} email cannot be sent. Please look at response above.`)
-      res.render('../views/error.ejs', {string: "Form has been properly saved. However, an email was unable to be sent to your advisor. Please contact your advisors or instructors to approve the form."})
-      return false
-    } else {
-      console.log(`Message sent was: ${response.messageId}`)
-      console.log(`Preview message's URL: ${nodemailer.getTestMessageUrl(response)}`)
-      return true
-    }
+    return generateEmail(facultyEmail, title, studentInfo, req)
   }
 
+  let result;
   switch (req.params.title) {
     // the awaits DO matter, VSCode claims they're superfluous but they're not!
-    case 'CS02':
-      await dropdownEmailing("instructorSignature", "Instructor") ? null : hasEmailsSent = false
+    case 'CS01': case 'CS01BSMS': // forms that only have advisorSignature checkbox
+    case 'CS03': case 'CS04':
+      result = await send(advisorEmail)
       break;
-    case 'CS08': // TODO: make checking emails parallel
-      await dropdownEmailing("primarySignature", "Primary Reader") &
-      await dropdownEmailing("secondarySignature", "Secondary Reader") ? null : hasEmailsSent = false
+    case 'CS02':
+      const instructorEmail = await generateDropdownEmail("instructorSignature", "Instructor")
+      result = await send(advisorEmail, instructorEmail) 
+      break;
+    case 'CS08': 
+      const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")
+      const secondaryEmail = await generateDropdownEmail("secondarySignature", "Secondary Reader")
+      result = await send(advisorEmail, primaryEmail, secondaryEmail)
       break;
     case 'CS13':
-      if (form.comp523) {
-        await dropdownEmailing("comp523Signature", "COMP 523 Instructor") ? null : hasEmailsSent = false
-      }
+      const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
+      result = await send(advisorEmail, comp523Email)
       break;
   }
 
   transporter.close()
-  if (hasEmailsSent) {
+  if (result) {
     res.redirect("/studentView/forms/" + req.params.title + "/true")
+  } else {
+    res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact each of your advisors to ensure they will help complete your form." })
   }
 }
 
