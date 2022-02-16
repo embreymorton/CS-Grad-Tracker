@@ -189,7 +189,7 @@ studentViewController.updateForm = async function (req, res) {
    * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
    * @param {String} title - the faculty member's title for email subject line eg. "Instructor"
-   * @return {Boolean} - whether the email successfully sent or not
+   * @return {Promise<Object>} - generated email object
    */
   const generateDropdownEmail = async (key, title) => {
     const keyName = form[key]
