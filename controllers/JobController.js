@@ -172,42 +172,6 @@ jobController.put = function (req, res) {
     }
 }
 
-/**
- * @url {post} /job/delete/:_id
- * @class Job
- *
- * @description Called when a job is to be deleted,
- * requires _id, to be sent as a html parameter.
- *
- * @req.params {String} id (Required)
- *
- * @success redirects to /job (jobController.get)
- * @failure renders error.ejs with appropriate error message
- *
- * @throws {Object} JobNotFound (should not occur if frontend done properly)
- * @throws {Object} RequiredParamNotFound (should not occur if frontend done properly)
- */
-// jobController.delete = function (req, res) {
-//     var id = req.params._id;
-//     if (id != null) {
-//         //students reference jobs, so check if any students are referencing before deleting
-//         schema.Student.find({jobHistory: id}).exec().then(function (result) {
-//             if (result.length > 0) {
-//                 res.render("../views/error.ejs", {string: "Could not delete job because a student is referencing it."});
-//             } else {
-//                 //nothing references this job, so try to delete it
-//                 schema.Job.findOneAndRemove({_id: id}).exec().then(function (result) {
-//                     if (result) {
-//                         res.redirect("/job");
-//                     } else res.render("../views/error.ejs", {string: "JobNotFound"});
-//                 });
-//             }
-//         });
-//     } else {
-//         res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
-//     }
-// }
-
 /*
  * @url {get} /job/create
  *
