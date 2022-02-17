@@ -59,7 +59,7 @@ router.get('/', authorizeFaculty, student.get);
 
 router.get('/create', authorizeAdmin, student.create);
 
-router.get('/edit/:_id', authorizeAdmin, student.edit);
+router.get('/edit/:_id', authorizeAdvisor, student.edit);
 
 router.get("/jobs/:_id", authorizeAdvisor, student.jobs);
 
