@@ -227,7 +227,6 @@ _.validateFormData = (formData) => {
     'primaryDateSigned',
     'secondarySignature',
     'secondaryDateSigned',
-    'comp523Signature',
     'comp523DateSigned',
     'alt1Signature',
     'alt1DateSigned',
