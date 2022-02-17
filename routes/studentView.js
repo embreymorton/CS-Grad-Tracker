@@ -30,6 +30,4 @@ router.post("/put", student.put);
 
 router.post("/forms/update/:title", student.updateForm);
 
-// router.post("/delete/:_id", student.delete);
-
 module.exports = router;

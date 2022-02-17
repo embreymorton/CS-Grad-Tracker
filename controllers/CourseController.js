@@ -175,56 +175,6 @@ courseController.put = function (req, res) {
   }
 }
 
-/**
- * @url {post} /course/delete/:_id
- *
- * @description Called when a course is to be deleted,
- * requires _id, to be sent as a html parameter.
- *
- * @req.params {String} _id (Required)
- *
- * @success redirects to /course (facultyController.get)
- * @failure renders error.ejs with appropriate error message
- *
- * @throws CourseNotFound (should not occur if frontend done properly)
- * @throws RequireParamNotFound (should not occur if frontend done properly)
- */
-courseController.delete = function (req, res) {
-  var id = req.params._id;
-  if(id != null){
-    //check if any students reference this course
-    schema.Student.find({courseHistory: {$elemMatch: {_id: id}}}).exec().then(function(result){
-      if(result.length > 0){
-        res.render("../views/error.ejs", {string: "Could not delete course because student is referencing it."});
-      }
-      else{
-        //check if any jobs reference this course
-        schema.Job.find({course: id}).exec().then(function(result){
-          if(result.length > 0){
-            res.render("../views/error.ejs", {string: "Could not delete course because job is referencing it."});
-          }
-          else{
-            //nothing references this course, so try to delete it
-            schema.Course.findOneAndRemove({_id: id}).exec().then(function (result) {
-              if (result){
-                res.redirect("/course");
-              }
-              else{
-                res.render("../views/error.ejs", {string: "CourseNotFound"});
-              }
-            });
-          }
-        });
-      }
-    });
-  }
-  else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
-  }
-
-
-}
-
 /*
  * @url {get} /course/create
  *

@@ -138,60 +138,6 @@ facultyController.put = function (req, res) {
   }
 }
 
-/**
- * @url {post} /faculty/delete/:_id
- *
- * @description Called when a faculty is to be deleted,
- * requires _id, to be sent as a html parameter.
- *
- * @req.params {String} _id (Required)
- *
- * @success redirects to /faculty (facultyController.get)
- * @failure renders error.ejs with error message
- *
- * @throws {Object} FacultyNotFound (should not be thrown if front end is done correctly)
- * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
- */
-facultyController.delete = function (req, res) {
-  var id = req.params._id;
-  if (id != null) {
-    /*courses, students, and jobs reference faculty, so have to check
-    if they reference this faculty. Doesn't seem to be any default mongo
-    behavior for delete/remove that checks if any outside document is
-    referencing the faculty*/
-    schema.Course.find({faculty: id}).exec().then(function(result){
-      if(result.length > 0){
-        res.render("../views/error.ejs", {string: "Could not delete faculty because a course is referencing it."});
-      }
-      else{
-        schema.Student.find({advisor: id}).exec().then(function(result){
-          if(result.length > 0){
-            res.render("../views/error.ejs", {string: "Could not delete faculty because a student is referencing it."});
-          }
-          else{
-            schema.Job.find({supervisor: id}).exec().then(function(result){
-              if(result.length > 0){
-                res.render("../views/error.ejs", {string: "Could not delete faculty because a job is referencing it."});
-              }
-              else{
-                //nothing references this faculty, so try to delete it
-                schema.Faculty.findOneAndRemove({_id: id}).exec().then(function(result){
-                  if(result){
-                    res.redirect("/faculty");
-                  }
-                  else throw new Error("FacultyNotFound");
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  } else {
-    throw new Error("RequiredParamNotFound");
-  }
-}
-
 /*
  * @url {get} /faculty/create
  *
