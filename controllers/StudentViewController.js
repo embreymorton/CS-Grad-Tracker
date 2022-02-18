@@ -221,6 +221,8 @@ studentViewController.updateForm = async function (req, res) {
         result = await send(advisorEmail)
       }
       break;
+    default:
+      result = true;
   }
 
   transporter.close()
