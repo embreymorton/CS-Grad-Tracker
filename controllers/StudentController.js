@@ -95,12 +95,14 @@ studentController.put = function (req, res) {
   schema.Student.findOne(filter).exec().then((student) => {
     const deletedFields = getDeletedFields(student, input)
     deletedFields.map((f) => input2[f] = '')
-    schema.Student.findOneAndUpdate(filter, input2).exec().then((student) => {
+    schema.Student.findOneAndUpdate(filter, input2, {runValidators: true}).exec().then((student) => {
       if (student == null) {
         res.render('../views/error.ejs', {string: 'StudentNotFound'})
       } else {
         res.redirect('/student/edit/' + student._id)
       }
+    }).catch(err => {
+      res.render('../views/error.ejs', {string: err})
     })
   })
 }

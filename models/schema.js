@@ -104,14 +104,20 @@ var studentSchema = mongoose.Schema({
     enum: ['MASTERS', 'PHD', 'BOTH'],
     default: 'MASTERS'
   },
-  hoursCompleted: Number,
+  hoursCompleted: {
+    type: Number,
+    min: [0, 'must be 0 or more']
+  },
   citizenship: Boolean,
   fundingEligibility: {
     type: String,
     enum: ['NOT GUARANTEED', 'GUARANTEED', 'PROBATION'],
     default: 'NOT GUARANTEED'
   },
-  semestersOnLeave: Number,
+  semestersOnLeave: {
+    type: Number,
+    min: [0, 'must be 0 or more']
+  },
   backgroundApproved: {
     type: String,
     match: matchDate

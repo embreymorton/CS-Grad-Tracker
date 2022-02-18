@@ -12,7 +12,7 @@ var studentViewController = {};
 // Students only allowed to edit certain fields
 studentViewController.put = async function (req, res) {
   var input = req.body;
-  var editableFields = ["firstName", "lastName", "alternativeName", "gender"];
+  var editableFields = ["firstName", "lastName", "alternativeName", "gender", "ethnicity"];
   if (input.firstName != null && input.lastName != null && input._id != null) {
     const result = await schema.Student.findOne({ _id: input._id }).exec();
     if (result != null) {
