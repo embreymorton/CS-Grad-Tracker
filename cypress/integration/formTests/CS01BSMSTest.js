@@ -31,6 +31,18 @@ describe('Test CS01MSBS submissions', ()=>{
 
   const { lastName, firstName, pid } = student
   const name = lastName + ', ' + firstName
+  
+  it('Give student student an advisor', () => {
+    cy.visit('/changeUser/admin');
+    cy.visit('/student');
+
+    cy.get('.edit-student-button').click();
+
+    cy.get('.student-navigation-edit-button').click()
+    cy.url().should('contain', '/student/edit');
+    cy.get('select[name="advisor"]').select('admin, admin')
+    cy.get('.btn-success').click()
+  })
 
   it('Submit CS01MSBS form from administrator side', ()=>{
     cy.visit('/changeUser/student')

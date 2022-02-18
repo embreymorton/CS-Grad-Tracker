@@ -4,15 +4,30 @@ const nodemailer = require("nodemailer")
 
 const { lastName, firstName, pid } = data.student
 const name = `${lastName}, ${firstName}`
+const studentTextFields = data.studentTextFields;
+      const job = data.job;
+      const studentDropdownFields = data.studentDropdownFields;
+      const course = data.course;
+      const note = data.note;
 
 
+
+// data.searchStudentHelper = ()=>{
+//         cy.get('.search-last-name')
+//           .type(data.studentTextFields.lastName)
+//           .should('have.value', data.studentTextFields.lastName)
+      
+//         cy.get('.search-pid')
+//           .type(data.studentTextFields.pid)
+//           .should('have.value', data.studentTextFields.pid)
+      
+//         cy.get('.search-student-submit').click();
+//       }
 const CS02 = {
   dateSubmitted: 'Feb.2, 2020',
     courseNumber: 'COMP 560',
     basisWaiver: 'Taken',
   }
-
-
   describe('Test Checkbox on forms pages', ()=>{
     before(() => {
       cy.request('/util/resetDatabaseToSnapshot')
@@ -20,6 +35,18 @@ const CS02 = {
 
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid')
+    })
+
+    it('Give student student an advisor', () => {
+      cy.visit('/changeUser/admin');
+      cy.visit('/student');
+  
+      cy.get('.edit-student-button').click();
+  
+      cy.get('.student-navigation-edit-button').click()
+      cy.url().should('contain', '/student/edit');
+      cy.get('select[name="advisor"]').select('admin, admin')
+      cy.get('.btn-success').click()
     })
   
     it('Submit CS02 form from administrator side', () => {
