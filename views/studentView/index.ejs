@@ -301,7 +301,7 @@
                                 <div class="form-group row">
                                     <label for="inputSemesterStarted" class="col-md-4">Semester started</label>
                                     <div class="col-md-8">
-                                        <%=student.semesterStarted%>
+                                        <%=student.semesterStarted.season%> <%=student.semesterStarted.year%>
                                     </div>
                                 </div>
 
@@ -312,7 +312,6 @@
                                             if (student.advisor != null && student.advisor._id.equals(faculty[i]._id)) { %>
                                                 <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
                                             <%}
-
                                          } %>
                                     </div>
                                 </div>
