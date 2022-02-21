@@ -16,7 +16,7 @@ const profileFields = (opts) => {
   const createOnlyField = admin ? createOnlyField_ : displayField
   const input = admin ? input_ : displayField
   const selectField_ = admin ? selectField : displayField
-  const semestersField_ = admin ? semestersField : displayField
+  const semestersField_ = admin ? semestersField : displaySemestersField
   const facAdvisorField_ = admin ? facAdvisorField : displayFacAdvisor
 
   return (
@@ -172,6 +172,21 @@ const displayFacAdvisor = (name, faculty, student) => (
     facultyName(faculty, student[name] && student[name]._id)
   )
 )
+
+const displaySemestersField = (name, semester, student) => {
+  if (student.semesterStarted) {
+    const semesterOfStudentLabel = `${student.semesterStarted.season} ${student.semesterStarted.year}`
+    return fieldDiv(
+      label[name],
+      semesterOfStudentLabel
+    )
+  } else {
+    return fieldDiv(
+      label[name],
+      ""
+    )
+  }
+}
 
 const facultyName = (faculty, id) => {
   const name = ({ lastName, firstName}) => `${lastName}, ${firstName}`
