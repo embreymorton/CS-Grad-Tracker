@@ -39,7 +39,7 @@ const profileFields = (opts) => {
         input('lastName', { required: true }),
         selectField_('pronouns', pronouns, student),
         createOnlyField('pid'),
-        selectField_('status', statuses, student),
+        student && (student.phdAwarded != '' && student.phdAwarded != undefined) ? fieldDiv(label['status'], "Graduated") : selectField_('status', statuses, student),
         input('alternativeName'),
         selectField_('gender', genders, student),
         selectField_('ethnicity', ethnicities, student),
