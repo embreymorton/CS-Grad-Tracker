@@ -40,6 +40,16 @@ function authorizeAdvisor(req, res, next){
   }
 }
 
+function setActiveStudentsQuery(req, res, next) {
+  if (req.query.status !== undefined) {
+    next()
+  } else {
+    const originalQueries = req.query
+    const queries = Object.keys(originalQueries).map(key => `${key}=${originalQueries[key]}`).join('&')
+    res.redirect("/student?" + queries + "&status=Active")
+  }
+}
+
 router.use(function(req, res, next){
   if(req.session.accessLevel == 3){
     res.locals.admin = true;
@@ -55,7 +65,7 @@ router.use(function(req, res, next){
   next();
 });
 
-router.get('/', authorizeFaculty, student.get);
+router.get('/', authorizeFaculty, setActiveStudentsQuery, student.get);
 
 router.get('/create', authorizeAdmin, student.create);
 
