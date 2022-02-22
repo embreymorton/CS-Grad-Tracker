@@ -5,7 +5,7 @@ const pastDate = '2019-02-02';
 
 data.studentTextFields = {
   onyen : 'student',
-  csid : 'student',
+  csid : 'student ',
   email : 'student@cs.unc.edu',
   firstName : 'student',
   lastName : 'student',
@@ -41,7 +41,7 @@ data.job = {
 
 data.studentDropdownFields = {
   pronouns: 'she, her',
-  status: 'Active',
+  // status: 'Active',
   gender: 'FEMALE',
   ethnicity: 'OTHER',
   stateResidency: 'YES',

@@ -121,6 +121,12 @@ describe('Upload and create data', ()=>{
 
     //on the edit page, verify that all fields we submitted are indeed populated with data
     for(key in studentTextFields){
+      if(key == 'csid'){
+        cy.get(`#editStudentForm input[name=${key}]`)
+        .should('have.value', studentTextFields[key]+ ' (@cs.unc.edu)' );
+        continue
+      }
+
       cy.get(`#editStudentForm input[name=${key}]`)
         .should('have.value', studentTextFields[key]);
     }
@@ -129,6 +135,7 @@ describe('Upload and create data', ()=>{
       cy.get(`#editStudentForm select[name=${key}]`)
         .should('have.value', studentDropdownFields[key]);
     }
+    cy.contains('Graduated')
   });
 });
 
