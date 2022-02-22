@@ -1,5 +1,4 @@
 <!-- /views/student/search-student.ejs -->
-<% if (locals.admin) { %>
 
 <p>Search students</p>
 <div class="search-bar">
@@ -34,6 +33,7 @@
     </div>
   </form>
 </div>
+<% if (locals.admin) { %>
 <div>
   <p><a href="/student/create" class="btn btn-primary btn-block create-student-button">Create student</a></p>
   <p><a href="/student/upload/false" class="btn btn-primary btn-block upload-student-button">Upload students</a></p>
