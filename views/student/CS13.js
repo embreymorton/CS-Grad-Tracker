@@ -8,6 +8,7 @@ const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
+const cancelEditButton = require('../common/cancelEditButton')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -150,6 +151,7 @@ const cs13Form = (opts) => {
           x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')
         ]
       : null,
+      cancelEditButton(isStudent ? null : student._id),
     )
   )
 }

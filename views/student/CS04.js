@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
+const cancelEditButton = require('../common/cancelEditButton')
 
 
 const main = (opts) => {
@@ -86,6 +87,7 @@ const cs04Form = (opts) => {
       editAccess
         ? [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')]
         : null,
+      cancelEditButton(isStudent ? null : student._id),
     )
   ]
 }
