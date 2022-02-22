@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
+const cancelEditButton = require('../common/cancelEditButton')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -267,6 +268,7 @@ const cs03Form = (opts) => {
       editAccess
         ? x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit')
         : null,
+      cancelEditButton(isStudent ? null : student._id),
     )
   )
 }

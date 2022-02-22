@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
+const cancelEditButton = require('../common/cancelEditButton')
 
 const main = (opts) => {
   const { uploadSuccess, formName } = opts
@@ -96,6 +97,7 @@ const cs01Form = (opts) => {
           { type: 'submit', onclick: 'refreshRequired()' },
           'Submit')
         : null,
+      cancelEditButton(isStudent ? null : student._id),
     )
   )
 }
