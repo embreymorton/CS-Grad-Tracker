@@ -33,7 +33,7 @@ const profileFields = (opts) => {
             )
           )
         ) :
-        uneditableTextFieldWithHiddenInput('csid', student['csid']),
+        uneditableTextFieldWithHiddenInput('csid', `${student['csid']} (@cs.unc.edu)`),
         input('email', { required: true }),
         input('firstName', { required: true }),
         input('lastName', { required: true }),
