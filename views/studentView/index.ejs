@@ -301,7 +301,13 @@
                                 <div class="form-group row">
                                     <label for="inputSemesterStarted" class="col-md-4">Semester started</label>
                                     <div class="col-md-8">
-                                        <%=student.semesterStarted.season%> <%=student.semesterStarted.year%>
+
+                                        <%{
+                                            if (student.semesterStarted != null) { %>
+                                                <%=student.semesterStarted.season%> <%=student.semesterStarted.year%>
+                                            <%}
+                                        }%>
+
                                     </div>
                                 </div>
 
