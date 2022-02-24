@@ -168,16 +168,31 @@ _.listObjectToString = function (input) {
   return result
 }
 
-_.checkFormCompletion = studentID =>
-  new Promise((resolve, reject) => {
-    const formNames =
-          ['01BSMS', '01', '02', '03', '04', '06', '08', '13']
-          .map(id => 'CS' + id)
-    const promises = formNames.map(checkOneForm(studentID))
-    Promise.all(promises).then(forms =>
-      resolve(forms.filter(form => form != null && form.name != null))
-    ).catch(reject)
-  })
+/**
+ * @param {String} name - name of form being checked e.g. "CS02"
+ * @param {FormSchema} form - the CSXX Form object returned by a Mongoose query
+ * @returns true if form is complete for student (*any* signatures filled), false otherwise
+ */
+_.checkFormCompletion = (name, form) => {
+  switch (name) {
+    case 'CS01': 
+    case 'CS01BSMS': 
+    case 'CS02':
+    case 'CS03':
+    case 'CS04':
+      return form.advisorSignature // according to trello #268
+    case 'CS06':
+      return form.approved
+    case 'CS08': 
+      return form.primarySignature && form.secondarySignature
+    case 'CS13':
+      return (form.comp523 && form.instructorDateSigned) ||
+               (form.hadJob && form.advisorSignature) ||
+               (form.alternative && form.alt1Signature && form.alt2Signature)
+    default:
+      return false
+  }
+}
 
   /**
    * filterOut works just like the standard Array.filter function, but it mutates
@@ -235,8 +250,5 @@ _.validateFormData = (formData) => {
   ].forEach((key) => delete formData[key])
   return formData
 }
-
-const checkOneForm = studentID => formName =>
-  schema[formName].findOne({student: studentID}).exec()
 
 module.exports = _

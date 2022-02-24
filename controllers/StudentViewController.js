@@ -85,7 +85,7 @@ studentViewController.viewForm = async function (req, res) {
       const { cspNonce } = res.locals
       const locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess,
-        faculty, formName, cspNonce
+        faculty, formName, cspNonce, isComplete: util.checkFormCompletion(formName, form)
       }
       res.render(view, locals)
     }
@@ -112,8 +112,6 @@ studentViewController.updateForm = async function (req, res) {
     form = new schema[req.params.title]({...formData, student: studentId});
     await form.save()
   } 
-  const formCompletionResult = await util.checkFormCompletion(studentId);
-  // I feel like there needs to be a check for this result.
   // ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
 
   const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
