@@ -159,7 +159,7 @@ courseController.put = function (req, res) {
   var input = req.body;
   input = util.validateModelData(input, schema.Course);
   if(util.allFieldsExist(input, schema.Course)){
-    schema.Course.findOneAndUpdate({_id: input._id}, input).exec().then(function(result){
+    schema.Course.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function(result){
       if(result != null){
         res.redirect("/course/edit/"+result._id);
       }
@@ -335,7 +335,7 @@ courseController.upload = function(req, res){
         schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
           if(result != null){
             element.faculty = result._id;
-            schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true}).exec().then(function(result){
+            schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true, runValidators: true}).exec().then(function(result){
                 element.semester = result._id;
 
                 //check if the course is already in the courseInfo schema

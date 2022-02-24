@@ -158,7 +158,7 @@ jobController.put = function (req, res) {
     var input = req.body;
     input = util.validateModelData(input, schema.Job);
     if (input.position != null && input.supervisor != null && input._id != null) {
-        schema.Job.findOneAndUpdate({_id: input._id}, input).exec().then(function (result) {
+        schema.Job.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function (result) {
             if (result != null) {
                 res.redirect("/job/edit/" + result._id);
             } else {
@@ -342,7 +342,8 @@ jobController.upload = function (req, res) {
                             year: parseInt(semester[1])
                         }, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {
                             new: true,
-                            upsert: true
+                            upsert: true,
+                            runValidators: true
                         }).exec().then(function (result) {
                             element.semester = result._id;
 

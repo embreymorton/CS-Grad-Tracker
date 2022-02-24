@@ -129,7 +129,7 @@ facultyController.put = function (req, res) {
   input.admin == null ? input.admin = false : input.admin = true;
   var input = util.validateModelData(input, schema.Faculty);
   if (util.allFieldsExist(input, schema.Faculty)) {
-    schema.Faculty.findOneAndUpdate({_id: input._id}, input).exec().then(function (result) {
+    schema.Faculty.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function (result) {
       if (result != null){
         res.redirect("/faculty/edit/"+result._id);
       }

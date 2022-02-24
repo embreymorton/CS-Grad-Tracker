@@ -107,7 +107,7 @@ studentViewController.updateForm = async function (req, res) {
   }
 
   const studentId = studentInfo._id
-  let form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true}).exec()
+  let form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
   if (form == null) { // form not created for student yet
     form = new schema[req.params.title]({...formData, student: studentId});
     await form.save()
