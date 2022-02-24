@@ -396,8 +396,7 @@ var CS04Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   projectDescription: String,
   docProprietary: Boolean,
-  studentSignature: String, studentDateSigned: String,
-  chairmanSignature: String, chairmanDateSigned: String,
+  advisorSignature: Boolean, advisorDateSigned: String,
   approved: Boolean
 })
 

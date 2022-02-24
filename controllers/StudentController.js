@@ -299,7 +299,7 @@ studentController.updateForm = function(req, res){
       if(result != null){
         var studentId = result._id
 
-        schema[req.params.title].findOneAndUpdate({student: studentId}, input).exec().then(function(result){
+        schema[req.params.title].findOneAndUpdate({student: studentId}, input, { runValidators: true }).exec().then(function(result){
           if(result != null){
             res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
           }
@@ -309,7 +309,7 @@ studentController.updateForm = function(req, res){
               res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
             })
           }
-        })
+        }).catch(err => res.render('../views/error.ejs', {string: err}))
       }
       else{
         res.render('../views/error.ejs', {string: 'Student not found'})
@@ -472,7 +472,7 @@ studentController.uploadCourses = function(req, res){
           return res.render('../views/error.ejs', {string: element.semester+" is incorrect. Semester must be in form 'SS YYYY'."})
         }
 
-        schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true}).exec().then(function(result){
+        schema.Semester.findOneAndUpdate({season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {season: semester[0].toUpperCase(), year: parseInt(semester[1])}, {new: true, upsert: true, runValidators: true}).exec().then(function(result){
           element.semester = result._id
 
           schema.Faculty.findOne({lastName: facultyName[0], firstName: facultyName[1]}).exec().then(function(result){
@@ -644,7 +644,7 @@ const lookupSemesterId = async (element) => {
   const season = season1.toUpperCase()
   const year = parseInt(year1)
   const data = {season, year}
-  const sem = await schema.Semester.findOneAndUpdate(data, data, {new: true, upsert: true}).exec()
+  const sem = await schema.Semester.findOneAndUpdate(data, data, {new: true, upsert: true, runValidators: true}).exec()
   element.semesterStarted = sem._id
 }
 
@@ -850,7 +850,7 @@ studentController.updateNote = function (req, res) {
         input.student = req.params._id
         util.allFieldsExist(input, schema.Note)
 
-        schema.Note.findOneAndUpdate({_id: _id}, input).exec().then(function(result){
+        schema.Note.findOneAndUpdate({_id: _id}, input, { runValidators: true }).exec().then(function(result){
           if(result != null){
             res.redirect('/student/notes/' + req.params._id)
           }
