@@ -8,6 +8,7 @@ const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
+const { is } = require('bluebird')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -60,13 +61,11 @@ const cs02Form = (opts) => {
       row(div('Course Number:'), 'courseNumber'), vert,
       row(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
-      approvalCheckbox(admin, 'advisor', opts),
+      approvalCheckbox(!isStudent, 'advisor', opts),
       vert,
       div('Designated Instructor Signature:'),
-      signatureDropDown(admin, 'instructor', faculty, opts),
-      editAccess
-        ? x('button.btn.btn-primary.CS02-submit')('Submit')
-        : null,
+      signatureDropDown(!isStudent, 'instructor', faculty, opts),
+      x('button.btn.btn-primary.CS02-submit')('Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
   )

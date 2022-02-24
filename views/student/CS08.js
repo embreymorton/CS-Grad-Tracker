@@ -78,17 +78,12 @@ const cs08Form = (opts) => {
       div('We have judged this paper to be of thesis quality in both substance and presentation. It therefore satisfies the writing requirement for the M.S. in Computer Science.'),
 
       div('Primary Reader signature'),
-      signatureDropDown(admin, 'primary', faculty, opts),
+      signatureDropDown(!isStudent, 'primary', faculty, opts),
 
       div('Secondary Reader signature'),
-      signatureDropDown(admin, 'secondary', faculty, opts),
+      signatureDropDown(!isStudent, 'secondary', faculty, opts),
 
-      editAccess
-        ? [
-          vert,
-          x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')
-        ]
-      : null,
+      [vert, x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   )

@@ -82,11 +82,9 @@ const cs04Form = (opts) => {
       hr(),
 
       div('Advisor signature:'),
-        approvalCheckboxRow(admin, 'advisor', opts), hr(),
+      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
-      editAccess
-        ? [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')]
-        : null,
+      [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   ]

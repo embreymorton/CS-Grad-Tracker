@@ -89,14 +89,12 @@ const cs01Form = (opts) => {
 
       p('Advisor Signature:'),
       // signatureRow(admin, 'advisor', form),
-      approvalCheckboxRow(admin, 'advisor', opts),
+      approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
 
-      admin || isStudent
-        ? x('button.btn.btn-primary.CS01-submit')(
-          { type: 'submit', onclick: 'refreshRequired()' },
-          'Submit')
-        : null,
+      x('button.btn.btn-primary.CS01-submit')(
+        { type: 'submit', onclick: 'refreshRequired()' },
+        'Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
   )

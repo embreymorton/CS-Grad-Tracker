@@ -70,7 +70,7 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureDropDown(admin, 'comp523', faculty, opts, false),
+      signatureDropDown(!isStudent, 'comp523', faculty, opts, false),
       hr(),
 
       x('h4.underline')('Industry Experience'),
@@ -97,7 +97,7 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Advisor signature:'),
-      approvalCheckboxRow(admin, 'advisor', opts), hr(),
+      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       x('h4.underline')('Alternative'),
       row(
@@ -140,17 +140,12 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Signature #1:'),
-      signatureRow(admin, 'alt1', form), vert,
+      signatureRow(!isStudent, 'alt1', form), vert,
 
       div('Signature #2:'),
-      signatureRow(admin, 'alt2', form),
+      signatureRow(!isStudent, 'alt2', form),
 
-      editAccess
-        ? [
-          vert,
-          x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')
-        ]
-      : null,
+      [vert, x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   )

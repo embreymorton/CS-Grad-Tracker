@@ -233,7 +233,7 @@ const cs03Form = (opts) => {
       div('Student signature:'),
       signatureRow(admin || isStudent, 'student', form), vert,
       div('Advisor signature:'),
-      approvalCheckboxRow(admin, 'advisor', opts), hr(),
+      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       div('Approved:'),
       row(
@@ -265,9 +265,7 @@ const cs03Form = (opts) => {
       div('Director signature:'),
       signatureRow(admin, 'director', form),
 
-      editAccess
-        ? x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit')
-        : null,
+      x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
   )
