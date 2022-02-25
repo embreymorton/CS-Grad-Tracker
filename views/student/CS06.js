@@ -36,7 +36,7 @@ const mainContent = (opts) => {
 }
 
 const cs06Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete } = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
           breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
@@ -74,7 +74,7 @@ const cs06Form = (opts) => {
       row(
         colMd(2)('Title of Dissertation or Topic of Research Area*'),
         colMd(6)(
-          editAccess
+          editAccess && !isComplete
             ? input('text', 'dissTitle', dissTitle, true)
             : pseudoInput(dissTitle)
         )
@@ -91,7 +91,7 @@ const cs06Form = (opts) => {
           div('Comp 915: Technical Communication in CS. File CS-02 if waived.*')
         ),
         colMd(2)(
-          select(
+          isComplete ? pseudoInput(comp915) : select(
             { name: 'comp915', ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !comp915 || null }, 'false'),
@@ -143,7 +143,7 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Category*'),
           range6.map((i) => (
-            select(
+            isComplete ? pseudoInput(breadthCourseCategory && breadthCourseCategory[i]) : select(
               { name: 'breadthCourseCategory', required: true, ...disabled },
               option({ value: '' }, ''),
               option({ value: 'T', selected: breadthCourseCategory && breadthCourseCategory[i] == 'T' || null }, 'T'),
@@ -157,7 +157,7 @@ const cs06Form = (opts) => {
         colMd(6)(
           div('Course Number, Title, & Name of Univ.*'),
           range6.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'breadthCourseInfo', breadthCourseInfo && breadthCourseInfo[i], true)
               : pseudoInput(breadthCourseInfo && breadthCourseInfo[i])
           ))
@@ -166,7 +166,7 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Semester/Year*'),
           range6.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
               : pseudoInput(breadthCourseDate && breadthCourseDate[i])
           ))
@@ -175,7 +175,7 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Grade*'),
           range6.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
               : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
           ))
@@ -192,7 +192,7 @@ const cs06Form = (opts) => {
         colMd(6)(
           div('Course Number, Title, & Name of Univ*'),
           range4.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'concentrationCourseInfo', concentrationCourseInfo && concentrationCourseInfo[i])
               : pseudoInput(concentrationCourseInfo && concentrationCourseInfo[i])
           ))
@@ -200,7 +200,7 @@ const cs06Form = (opts) => {
         colMd(3)(
           div('Semester/Year*'),
           range4.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
               : pseudoInput(concentrationCourseDate && concentrationCourseDate[i])
           ))
@@ -208,7 +208,7 @@ const cs06Form = (opts) => {
         colMd(3)(
           div('Credit/Hours*'),
           range4.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('number', 'concentrationCourseHours', concentrationCourseHours && concentrationCourseHours[i])
               : pseudoInput(concentrationCourseHours && concentrationCourseHours[i])
           ))
@@ -222,7 +222,7 @@ const cs06Form = (opts) => {
         colMd(4)(
           div('Course Number & Title*'),
           range4.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'otherCourseInfo', otherCourseInfo && otherCourseInfo[i])
               : pseudoInput(otherCourseInfo && otherCourseInfo[i])
           ))
@@ -230,7 +230,7 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Credit Hours*'),
           range4.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('number', 'otherCourseHours', otherCourseHours && otherCourseHours[i])
               : pseudoInput(otherCourseHours && otherCourseHours[i])
           ))
@@ -240,7 +240,7 @@ const cs06Form = (opts) => {
       row(
         colMd(4)(
           div('Note:'),
-          x('textarea.form-control')(
+          isComplete ? pseudoInput(note) : x('textarea.form-control')(
             { rows: 6, name: 'note', ...disabled },
             note
           )
@@ -251,7 +251,7 @@ const cs06Form = (opts) => {
       row(
         colMd(4)(
           div('List any other courses here that you believe are relevant to your program of study.'),
-          x('textarea.form-control')(
+          isComplete ? pseudoInput(otherCourses) : x('textarea.form-control')(
             { rows: 6, name: 'otherCourses', ...disabled },
             otherCourses
           )
@@ -266,7 +266,7 @@ const cs06Form = (opts) => {
             'See policy in ',
             a({ href: 'https://handbook.unc.edu/phd.html' }, 'The Graduate School Handbook')
           ),
-          x('textarea.form-control')(
+          isComplete ? pseudoInput(minor) : x('textarea.form-control')(
             { rows: 6, name: 'minor', ...disabled },
             minor
           )
@@ -279,7 +279,7 @@ const cs06Form = (opts) => {
       div('(it is not necessary to have all other requirements completed to turn in your program of study)'),
       div('A. Background Preparation worksheet*'),
       colMd(4)(
-        select(
+        isComplete ? pseudoInput(backgroundPrepWorkSheet) : select(
           { name: 'backgroundPrepWorkSheet', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !backgroundPrepWorkSheet || null }, 'false'),
@@ -289,7 +289,7 @@ const cs06Form = (opts) => {
 
       div('B. Program Product requirement*'),
       colMd(4)(
-        select(
+        isComplete ? pseudoInput(programProductRequirement) : select(
           { name: 'programProductRequirement', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !programProductRequirement || null }, 'false'),
@@ -299,7 +299,7 @@ const cs06Form = (opts) => {
 
       div('C. PhD. Written Exam (a.k.a. the writing requirement)*'),
       colMd(4)(
-        select(
+        isComplete ? pseudoInput(PHDWrittenExam) : select(
           { name: 'PHDWrittenExam', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !PHDWrittenExam || null }, 'false'),
@@ -309,7 +309,7 @@ const cs06Form = (opts) => {
 
       div('D. PhD Oral Comprehensive Exam*'),
       colMd(4)(
-        select(
+        isComplete ? pseudoInput(PHDOralExam) : select(
           { name: 'PHDOralExam', ...disabled },
           option({ value: '' }, ''),
           option({ value: 'false', selected: !PHDOralExam || null }, 'false'),
@@ -335,7 +335,7 @@ const cs06Form = (opts) => {
             x('div.form-group.row')(
               x('label.col-md-2')(`${i+1}.* `),
               colMd(10)(
-                editAccess
+                editAccess && !isComplete
                   ? input('text', 'committee', committee && committee[i], true)
                   : x('div.committee-name')(pseudoInput(committee && committee[i]))
               )
@@ -426,7 +426,7 @@ const cs06Form = (opts) => {
       ),
       vert,
 
-      editAccess
+     !isComplete
         ? [
           vert,
           x('div.hidden')({ id: 'errorMessage' }),
@@ -439,12 +439,12 @@ const cs06Form = (opts) => {
 }
 
 const namePidRow = (opts, editAccess) => {
-  const { student, form } = opts
+  const { student, form, isComplete } = opts
   const { lastName, firstName, pid } = student
   const { dateEntered } = form
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
+  const value = editAccess && !isComplete
         ? (type, name, val) => (input(type, name, val, true))
         : (type, name, val) => (pseudoInput(val))
   return (

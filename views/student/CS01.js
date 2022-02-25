@@ -9,8 +9,11 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 
+let complete = false;
+
 const main = (opts) => {
-  const { uploadSuccess, formName } = opts
+  const { uploadSuccess, formName, isComplete} = opts
+  complete = isComplete
   const title = `${formName} Background Preparation Worksheet`
   const cs01 = formName === 'CS01'
   return page(
@@ -46,7 +49,7 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, admin, formName } = opts
+  const { postMethod, student, form, isStudent, admin, formName, isComplete } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
   const row = formRow(admin || isStudent, form)
@@ -92,7 +95,7 @@ const cs01Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
 
-      x('button.btn.btn-primary.CS01-submit')(
+      isComplete ? null : x('button.btn.btn-primary.CS01-submit')(
         { type: 'submit', onclick: 'refreshRequired()' },
         'Submit'),
       cancelEditButton(isStudent ? null : student._id),
@@ -124,7 +127,7 @@ const formRow = (admin, values) => (key) => {
   const dateFieldName = `${key}Date`
   const roValue = (name) => (pseudoInput(values[name]))
   const rwValue = (name) => (input('text', name, values[name], true))
-  const value = admin ? rwValue : roValue
+  const value = admin && !complete ? rwValue : roValue
   return (
     row(
       colMd(4)(descriptions[key]),

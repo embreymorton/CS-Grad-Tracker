@@ -6,7 +6,7 @@ var path = require("path");
 var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
-const { validateFormData } = require("./util.js");
+const { validateFormData, checkFormCompletion } = require("./util.js");
 
 var studentViewController = {};
 
@@ -107,11 +107,19 @@ studentViewController.updateForm = async function (req, res) {
   }
 
   const studentId = studentInfo._id
-  let form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
+  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
+  const isComplete = util.checkFormCompletion(req.params.title, form)
   if (form == null) { // form not created for student yet
     form = new schema[req.params.title]({...formData, student: studentId});
     await form.save()
-  } 
+  } else {
+    if (isComplete) {
+      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+      return
+    } else {
+      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
+    }
+  }
   // ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
 
   const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}

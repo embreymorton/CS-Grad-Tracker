@@ -186,7 +186,7 @@ _.checkFormCompletion = (name, form) => {
     case 'CS08': 
       return form.primarySignature && form.secondarySignature
     case 'CS13':
-      return (form.comp523 && form.instructorDateSigned) ||
+      return (form.comp523 && form.comp523DateSigned) ||
                (form.hadJob && form.advisorSignature) ||
                (form.alternative && form.alt1Signature && form.alt2Signature)
     default:

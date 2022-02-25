@@ -42,14 +42,14 @@ const mainContent = (opts) => {
 }
 
 const cs13Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty } = opts
+  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a, br } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
   const disabled = editAccess ? {} : { disabled: true }
-
+  console.log(isComplete)
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },
@@ -57,7 +57,7 @@ const cs13Form = (opts) => {
       namePidRow(student), hr(),
 
       x('h4.underline')('Comp 523'),
-      row(
+      isComplete ? pseudoInput(form.comp523) : row(
         colMd(2)(
           select(
             { name: 'comp523', required: true, ...disabled },
@@ -74,7 +74,7 @@ const cs13Form = (opts) => {
       hr(),
 
       x('h4.underline')('Industry Experience'),
-      row(
+      isComplete ? pseudoInput(form.comp523) : row(
         colMd(2)(
           select(
             { name: 'hadJob', required: true, ...disabled },
@@ -86,7 +86,7 @@ const cs13Form = (opts) => {
         colMd(10)('Student has spent at least 3 months in a software development job in an organization with an established development process and participated substantively in the development of a program product.'),
       ), vert,
 
-      row(
+      isComplete ? pseudoInput(form.jobInfo) : row(
         colMd(4)('Company, Development Experience, and Duration',),
         colMd(8)(
           x('textarea.form-control')(
@@ -100,7 +100,7 @@ const cs13Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       x('h4.underline')('Alternative'),
-      row(
+      isComplete ? pseudoInput(form.alternative) : row(
         colMd(2)(
           select(
             { name: 'alternative', required: true, ...disabled },
@@ -117,7 +117,7 @@ const cs13Form = (opts) => {
       ), vert,
 
       row(colMd(12)('Product and Deliverables:')),
-      row(colMd(12)(
+      isComplete ? pseudoInput(form.product) : row(colMd(12)(
         x('textarea.form-control')(
           { name: 'product', rows: 6, ...disabled },
           form.product
@@ -127,13 +127,13 @@ const cs13Form = (opts) => {
       row(
         colMd(2)('Client:'),
         colMd(4)(
-          editAccess
+          editAccess && !isComplete
             ? input('text', 'client', form.client, true)
             : pseudoInput(form.client)
         ),
         colMd(2)('Position:'),
         colMd(4)(
-          editAccess
+          editAccess && !isComplete
             ? input('text', 'position', form.position, true)
             : pseudoInput(form.position)
         ),
@@ -145,7 +145,7 @@ const cs13Form = (opts) => {
       div('Signature #2:'),
       signatureRow(!isStudent, 'alt2', form),
 
-      [vert, x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
+      [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   )

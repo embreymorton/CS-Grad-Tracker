@@ -38,7 +38,7 @@ const mainContent = (opts) => {
 }
 
 const cs08Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty } = opts
+  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a } = x
   const vert = x('div.verticalSpace')()
@@ -59,7 +59,7 @@ const cs08Form = (opts) => {
       semesterYearRow(opts, editAccess), hr(),
 
       strong('Title of Paper:'),
-      colMd(4)(
+      isComplete ? pseudoInput(form.title) : colMd(4)(
         x('textarea.form-control')(
           { rows: 6, name: 'title', required: true, ...disabled },
           form.title
@@ -83,7 +83,7 @@ const cs08Form = (opts) => {
       div('Secondary Reader signature'),
       signatureDropDown(!isStudent, 'secondary', faculty, opts),
 
-      [vert, x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
+      [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   )
@@ -108,9 +108,10 @@ const namePidRow = (student) => {
 }
 
 const semesterYearRow = (opts, editAccess) => {
+  const { isComplete } = opts
   const { semester, year } = opts.form
   const { div } = x
-  const value = editAccess
+  const value = editAccess && !isComplete
         ? (type, name, val) => (input(type, name, val, true))
         : (type, name, val) => (pseudoInput(val))
   return (
@@ -128,14 +129,14 @@ const semesterYearRow = (opts, editAccess) => {
 }
 
 const readerDateRow = (opts, editAccess, modifier) => {
-  const { form } = opts
+  const { form, isComplete } = opts
   const readerField = `${modifier}Reader`
   const dateField = `${modifier}Date`
   const readerValue = form[readerField]
   const dateValue = form[dateField]
   const { div } = x
   const modifierLabel = modifier.toUpperCase()[0] + modifier.substr(1)
-  const value = editAccess
+  const value = editAccess && !isComplete
         ? (type, name, val) => (input(type, name, val, true))
         : (type, name, val) => (pseudoInput(val))
   return (
