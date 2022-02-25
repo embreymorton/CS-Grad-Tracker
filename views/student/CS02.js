@@ -9,9 +9,11 @@ const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const { is } = require('bluebird')
+let complete = false
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
+  const { uploadSuccess, isComplete} = opts
+  complete = isComplete
   const title = 'CS02 Course Waiver'
   return page(
     { ...opts, title },
@@ -43,7 +45,7 @@ const mainContent = (opts) => {
 }
 
 const cs02Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty } = opts
+  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
   const editAccess = admin || isStudent
   const row = formRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
@@ -65,14 +67,14 @@ const cs02Form = (opts) => {
       vert,
       div('Designated Instructor Signature:'),
       signatureDropDown(!isStudent, 'instructor', faculty, opts),
-      x('button.btn.btn-primary.CS02-submit')('Submit'),
+      isComplete ? null : x('button.btn.btn-primary.CS02-submit')('Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
   )
 }
 
 const namePidDateRow = (opts, editAccess) => {
-  const { student, form } = opts
+  const { student, form, isComplete } = opts
   const { lastName, firstName, pid } = student
   const { dateSubmitted } = form
   const name = `${lastName}, ${firstName}`
@@ -92,14 +94,15 @@ const namePidDateRow = (opts, editAccess) => {
       ),
       colMd(4)(
         div('Date submitted'),
-        value('text', 'dateSubmitted', dateSubmitted)
+        isComplete ? pseudoInput(dateSubmitted)
+        : value('text', 'dateSubmitted', dateSubmitted)
       ),
     )
   )
 }
 
 const formRow = (values, editAccess) => (label, name) => {
-  const value = editAccess
+  const value = editAccess && !complete
         ? input('text', name, values[name], true)
         : pseudoInput(values[name])
   return (

@@ -40,13 +40,13 @@ const mainContent = (opts) => {
 }
 
 const cs04Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
-  const disabled = editAccess ? {} : { disabled: true }
+  const disabled = editAccess && !isComplete ? {} : { disabled: true }
 
   return [
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
@@ -84,7 +84,7 @@ const cs04Form = (opts) => {
       div('Advisor signature:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
-      [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
+      isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),
     )
   ]

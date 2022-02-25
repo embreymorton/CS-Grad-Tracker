@@ -40,7 +40,7 @@ const mainContent = (opts) => {
 }
 
 const cs03Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option, a } = x
@@ -52,7 +52,7 @@ const cs03Form = (opts) => {
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
   const range13 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  const disabled = editAccess ? {} : { disabled: true }
+  const disabled = editAccess && !isComplete ? {} : { disabled: true }
 
   return (
     x('form.cs-form')(
@@ -86,7 +86,7 @@ const cs03Form = (opts) => {
         colMd(1)(
           div('Dist'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'DR', form.DR && form.DR[i])
               : pseudoInput(form.DR && form.DR[i])
           ))
@@ -94,7 +94,7 @@ const cs03Form = (opts) => {
         colMd(2)(
           div('University'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'university', form.university && form.university[i])
               : pseudoInput(form.university && form.university[i])
           ))
@@ -102,7 +102,7 @@ const cs03Form = (opts) => {
         colMd(1)(
           div('Department'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'dept', form.dept && form.dept[i])
               : pseudoInput(form.dept && form.dept[i])
           ))
@@ -110,7 +110,7 @@ const cs03Form = (opts) => {
         colMd(2)(
           div('Course'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'course', form.course && form.course[i])
               : pseudoInput(form.course && form.course[i])
           ))
@@ -118,7 +118,7 @@ const cs03Form = (opts) => {
         colMd(1)(
           div('Hours'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('number', 'hours', form.hours && form.hours[i])
               : pseudoInput(form.hours && form.hours[i])
           ))
@@ -126,7 +126,7 @@ const cs03Form = (opts) => {
         colMd(2)(
           div('Semester'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'semester', form.semester && form.semester[i])
               : pseudoInput(form.semester && form.semester[i])
           ))
@@ -134,7 +134,7 @@ const cs03Form = (opts) => {
         colMd(3)(
           div('Brief Title'),
           range13.map((i) => (
-            editAccess
+            editAccess && !isComplete
               ? input('text', 'title', form.title && form.title[i])
               : pseudoInput(form.title && form.title[i])
           ))
@@ -264,8 +264,7 @@ const cs03Form = (opts) => {
 
       div('Director signature:'),
       signatureRow(admin, 'director', form),
-
-      x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
+      isComplete ? null : x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
   )
