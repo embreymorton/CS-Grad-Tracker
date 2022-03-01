@@ -71,8 +71,6 @@ describe('Test CS13 submissions', ()=>{
       delete CS13[field]
     })
 
-    util.fillFormAsStudent(CS13)
-    cy.get('.CS13-submit').click()
-    util.checkFormAsStudent(CS13)
+    cy.get(`.CS13-submit`).should('not.exist')
   })
 })

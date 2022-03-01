@@ -9,16 +9,17 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
+const { checkFormCompletion } = require('../../controllers/util')
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
+  const { uploadSuccess, isComplete } = opts
   const title = 'CS13'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
-    pageScript(opts.cspNonce),
+    isComplete ? null : pageScript(opts.cspNonce),
   )
 }
 
@@ -57,9 +58,9 @@ const cs13Form = (opts) => {
       namePidRow(student), hr(),
 
       x('h4.underline')('Comp 523'),
-      isComplete ? pseudoInput(form.comp523) : row(
+      row(
         colMd(2)(
-          select(
+          isComplete ? pseudoInput(form.comp523) : select(
             { name: 'comp523', required: true, ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.comp523 || null }, 'false'),
@@ -74,9 +75,9 @@ const cs13Form = (opts) => {
       hr(),
 
       x('h4.underline')('Industry Experience'),
-      isComplete ? pseudoInput(form.comp523) : row(
+      row(
         colMd(2)(
-          select(
+          isComplete ? pseudoInput(form.hadJob) : select(
             { name: 'hadJob', required: true, ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.hadJob || null }, 'false'),
@@ -86,10 +87,10 @@ const cs13Form = (opts) => {
         colMd(10)('Student has spent at least 3 months in a software development job in an organization with an established development process and participated substantively in the development of a program product.'),
       ), vert,
 
-      isComplete ? pseudoInput(form.jobInfo) : row(
+      row(
         colMd(4)('Company, Development Experience, and Duration',),
         colMd(8)(
-          x('textarea.form-control')(
+          isComplete ? pseudoInput(form.jobInfo) : x('textarea.form-control')(
             { name: 'jobInfo', rows: 6, ...disabled },
             form.jobInfo
           )
@@ -100,9 +101,9 @@ const cs13Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       x('h4.underline')('Alternative'),
-      isComplete ? pseudoInput(form.alternative) : row(
+      row(
         colMd(2)(
-          select(
+          isComplete ? pseudoInput(form.alternative) : select(
             { name: 'alternative', required: true, ...disabled },
             option({ value: '' }, ''),
             option({ value: 'false', selected: !form.alternative || null }, 'false'),
