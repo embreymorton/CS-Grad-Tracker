@@ -68,12 +68,17 @@ studentViewController.forms = async function (req, res) {
 studentViewController.viewForm = async function (req, res) {
   const { params, session } = req
   const formName = params.title
+  if (!schema[formName]) {
+    res.render('../views/error.ejs', { string: `${formName} is not a real form.`})
+    return
+  }
   if (formName != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
-      res.render('..views/error.ejs', { string: 'Student id not specified.' })
+      res.render('../views/error.ejs', { string: 'Student id not specified.' })
+      return
     } else {
       const result = await schema[formName].findOne({ student: student._id }).exec();
       const form = result || {}
@@ -88,6 +93,7 @@ studentViewController.viewForm = async function (req, res) {
         faculty, formName, cspNonce, isComplete: util.checkFormCompletion(formName, form)
       }
       res.render(view, locals)
+      return
     }
   }
 }
