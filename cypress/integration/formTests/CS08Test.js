@@ -45,7 +45,6 @@ describe('Test CS08 submissions', ()=>{
     cy.get('#primarySignatureSelect').select('faculty faculty')
     cy.get('#primaryDateSignedCheckbox').check()
     cy.get('#secondarySignatureSelect').select('admin admin')
-    cy.get 
     cy.get('.CS08-submit').click();
     util.checkFormAsAdmin(CS08);
   })
