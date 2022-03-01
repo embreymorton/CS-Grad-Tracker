@@ -79,7 +79,7 @@ const namePidDateRow = (opts, editAccess) => {
   const { dateSubmitted } = form
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess
+  const value = editAccess && !isComplete
         ? (type, name, val) => (input(type, name, val, true))
         : (type, name, val) => (pseudoInput(val))
   return (
@@ -94,8 +94,7 @@ const namePidDateRow = (opts, editAccess) => {
       ),
       colMd(4)(
         div('Date submitted'),
-        isComplete ? pseudoInput(dateSubmitted)
-        : value('text', 'dateSubmitted', dateSubmitted)
+        value('text', 'dateSubmitted', dateSubmitted)
       ),
     )
   )
