@@ -101,8 +101,8 @@ studentViewController.viewForm = async function (req, res) {
 studentViewController.updateForm = async function (req, res) {
   const formData = validateFormData(req.body)
 
-  if (req.params.title == null) {
-    res.render("../views/error.ejs", { string: "Did not include student ID or title of form" })
+  if (req.params.title == null || !schema[formName]) {
+    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
     return
   }
 
