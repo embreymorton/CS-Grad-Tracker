@@ -50,7 +50,6 @@ const cs13Form = (opts) => {
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
   const disabled = editAccess ? {} : { disabled: true }
-  console.log(isComplete)
   return (
     x('form.cs-form')(
       { action: postMethod, method: 'post' },

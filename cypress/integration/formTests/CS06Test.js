@@ -33,7 +33,7 @@ let CS06Dropdowns = {
   programProductRequirement: 'false',
   PHDWrittenExam: 'false',
   PHDOralExam: 'true',
-  approved: 'Approved',
+  approved: '',
 }
 
 describe('Test CS06 submissions', () => {
