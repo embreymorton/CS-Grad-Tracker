@@ -203,8 +203,36 @@ reportController.getAdvisorReport = async (req, res) => {
   if (!res.locals.admin) {
     res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor reports."})
   }
+
+  const sortField = req.query.sortField
+  const isAsc = req.query.sortOrder == 'asc'
+  
   const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin})
-  if (!string) res.render('../views/report/advisorReport.ejs', { report })
+  // sorting reports based on query params
+
+  // const numberSort 
+  let orderedReport = report.sort((repA, repB) => {
+    if (sortField == "lastName" || sortField == "firstName") {
+      return repA[sortField].toUpperCase().localeCompare(repB[sortField].toUpperCase())
+    } else if (sortField == "researchAdvisor" || sortField == "advisor") {  // TODO: make sure this doesn't break if advisor is undefined
+      let conjoinedNameA = repA[sortField] ? repA[sortField].lastName + ", " + repA[sortField].firstName : ""
+      let conjoinedNameB = repB[sortField] ? repB[sortField].lastName + ", " + repB[sortField].firstName : ""
+      return conjoinedNameA.toUpperCase().localeCompare(conjoinedNameB.toUpperCase())
+    } else if (sortField == "pid") {
+      return repA[sortField] - repB[sortField]
+    } else if (sortField == "semesterStarted"){
+      if (!repA.semesterStarted && !repB.semesterStarted) {return 0}
+      if (!repA.semesterStarted && repB.semesterStarted) {return -1}
+      if (repA.semesterStarted && !repB.semesterStarted) {return 1}
+      return repA.semesterStarted.year - repB.semesterStarted.year
+    }
+  })
+
+  if (isAsc == false) {
+    orderedReport = orderedReport.reverse()
+  }
+
+  if (!string) res.render('../views/report/advisorReport.ejs', { report: orderedReport, sortOrder: req.query.sortOrder, sortField })
   else res.render('../views/error.ejs', { string })
 }
 

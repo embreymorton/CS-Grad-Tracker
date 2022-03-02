@@ -28,13 +28,67 @@
             <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
               <thead>
                 <tr>
-                  <th scope="col" class="col-advisor-report-last">Last name</th>
-                  <th scope="col" class="col-advisor-report-first">First Name</th>
-                  <th scope="col" class="col-advisor-report-first">PID</th>
-                  <th scope="col" class="col-advisor-report-first">Semester</th> <!-- computed from semester started and semesters on leave -->
-                  <th scope="col" class="col-advisor-report-researchAdvisor">Research Advisor</th>
+                  <th scope="col" class="col-advisor-report-last">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=lastName&sortOrder=asc' : '/report/advisorReport?sortField=lastName&sortOrder=dsc' %>">Last name</a>
+                    <% if (sortField == "lastName") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th>
+                  <th scope="col" class="col-advisor-report-first">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=firstName&sortOrder=asc' : '/report/advisorReport?sortField=firstName&sortOrder=dsc' %>">First Name</a>
+                    <% if (sortField == "firstName") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th>
+                  <th scope="col" class="col-advisor-report-first">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=pid&sortOrder=asc' : '/report/advisorReport?sortField=pid&sortOrder=dsc' %>">PID</a>
+                    <% if (sortField == "pid") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th>
+                  <th scope="col" class="col-advisor-report-first">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=semesterStarted&sortOrder=asc' : '/report/advisorReport?sortField=semesterStarted&sortOrder=dsc' %>">Semester</a>
+                    <% if (sortField == "semesterStarted") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th> <!-- computed from semester started and semesters on leave -->
+                  <th scope="col" class="col-advisor-report-researchAdvisor">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=researchAdvisor&sortOrder=asc' : '/report/advisorReport?sortField=researchAdvisor&sortOrder=dsc' %>">Research Advisor</a>
+                    <% if (sortField == "researchAdvisor") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th>
                   <!-- <th scope="col" class="col-advisor-report-otherResearchAdvisor">Other Research Advisor (non-faculty)</th> -->
-                  <th scope="col" class="col-advisor-report-advisor">Advisor</th>
+                  <th scope="col" class="col-advisor-report-advisor">
+                    <a class="sort-header-link" href="<%= sortOrder == 'dsc' ? '/report/advisorReport?sortField=advisor&sortOrder=asc' : '/report/advisorReport?sortField=advisor&sortOrder=dsc' %>">Advisor</a>
+                    <% if (sortField == "advisor") { %> 
+                      <% if (sortOrder == 'dsc') { %>
+                        <span>▼</span>
+                      <% } else { %>
+                        <span>▲</span>
+                      <% } %>
+                    <% } %>
+                  </th>
                   <!-- <th scope="col" class="col-advisor-report-otherAdvisor">Other Advisor (non-faculty)</th> -->
                 </tr>
               </thead>

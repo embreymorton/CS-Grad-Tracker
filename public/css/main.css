@@ -226,3 +226,8 @@ form [name=dept] {
 .no-spinner[type=number] {
   -moz-appearance: textfield;
 }
+
+.sort-header-link {
+  color: black;
+  text-decoration: underline;
+}
