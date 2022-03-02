@@ -206,28 +206,41 @@ reportController.getAdvisorReport = async (req, res) => {
 
   const sortField = req.query.sortField
   const isAsc = req.query.sortOrder == 'asc'
-  
   const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin})
+  
   // sorting reports based on query params
+  const subsort = sortField === 'lastName' // subsorts entries with the same field value by lastName, unless main field is lastName, then sorts by firstName
+    ? (repA, repB) => repA['firstName'].toUpperCase().localeCompare(repB['firstName'].toUpperCase())
+    : (repA, repB) => repA['lastName'].toUpperCase().localeCompare(repB['lastName'].toUpperCase())
 
-  // const numberSort 
-  let orderedReport = report.sort((repA, repB) => {
-    if (sortField == "lastName" || sortField == "firstName") {
-      return repA[sortField].toUpperCase().localeCompare(repB[sortField].toUpperCase())
-    } else if (sortField == "researchAdvisor" || sortField == "advisor") {  // TODO: make sure this doesn't break if advisor is undefined
-      let conjoinedNameA = repA[sortField] ? repA[sortField].lastName + ", " + repA[sortField].firstName : ""
-      let conjoinedNameB = repB[sortField] ? repB[sortField].lastName + ", " + repB[sortField].firstName : ""
-      return conjoinedNameA.toUpperCase().localeCompare(conjoinedNameB.toUpperCase())
-    } else if (sortField == "pid") {
-      return repA[sortField] - repB[sortField]
-    } else if (sortField == "semesterStarted"){
-      if (!repA.semesterStarted && !repB.semesterStarted) {return 0}
-      if (!repA.semesterStarted && repB.semesterStarted) {return -1}
-      if (repA.semesterStarted && !repB.semesterStarted) {return 1}
-      return repA.semesterStarted.year - repB.semesterStarted.year
-    }
-  })
-
+  let reportSorter;
+  switch (sortField) { // how i wish Lisp/Racket (case) functions existed in js
+    case 'lastName':
+    case 'firstName':
+      reportSorter = (repA, repB) => repA[sortField].toUpperCase().localeCompare(repB[sortField].toUpperCase()) || subsort(repA, repB)
+      break
+    case 'researchAdvisor':
+    case 'advisor':
+      reportSorter = (repA, repB) => {
+        let conjoinedNameA = repA[sortField] ? repA[sortField].lastName + ", " + repA[sortField].firstName : ""
+        let conjoinedNameB = repB[sortField] ? repB[sortField].lastName + ", " + repB[sortField].firstName : ""
+        return conjoinedNameA.toUpperCase().localeCompare(conjoinedNameB.toUpperCase()) || subsort(repA, repB)
+      }
+      break
+    case 'pid':
+      reportSorter = (repA, repB) => repA[sortField] - repB[sortField] || subsort(repA, repB)
+      break
+    case 'semesterStarted':
+      reportSorter = (repA, repB) => {
+        if (!repA.semesterStarted && !repB.semesterStarted) { return 0 }
+        if (!repA.semesterStarted && repB.semesterStarted) { return -1 }
+        if (repA.semesterStarted && !repB.semesterStarted) { return 1 }
+        return repA.semesterStarted.year - repB.semesterStarted.year || subsort(repA, repB)
+      }
+      break
+  }
+  
+  let orderedReport = reportSorter ? report.sort(reportSorter) : report
   if (isAsc == false) {
     orderedReport = orderedReport.reverse()
   }
