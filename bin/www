@@ -23,4 +23,27 @@ mongoose.connection
   .once('open', function () {
     console.log("App running at " + process.env.host + ":" + process.env.port)
     global.server = app.listen(process.env.port, process.env.host)
+    process.on('uncaughtException', async (err) => {
+      console.error(err)
+      console.error("Backend process crashed! :(")
+      if (process.env.mode == 'development') {
+        try {
+          nodemailer = require('nodemailer')
+          const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
+          const response = await nodemailer.createTransport({
+            host: "smtp.ethereal.email",
+            port: 587,
+            auth: {
+              user: testAccount.user,
+              pass: testAccount.pass
+            }
+          }).sendMail({to: "kekevi@live.unc.edu", subject: "CS-GradTracking has crashed!", text: `you are really putting yourself on call... Crashed at ${new Date()}`}).catch(
+            () => console.log("This is awkward... The email to notify developers that the server has crashed failed to send."))
+          console.log("It's okay 😎, we've just alerted the devlopers here: " + nodemailer.getTestMessageUrl(response))
+        } catch (e) {
+          console.error("omg the error catcher just threw an error too...", e)
+        }
+      }
+      process.exit(1)
+    })
   })
