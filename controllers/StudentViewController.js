@@ -18,7 +18,7 @@ studentViewController.put = async function (req, res) {
     return
   }
   // list of fields students can alter
-  ;["firstName", "lastName", "alternativeName", "gender"].forEach((key) => {
+  ;["firstName", "lastName", "alternativeName", "gender", "ethnicity"].forEach((key) => {
     result[key] = input[key]
   })
   result.save(function (err, updated) {
