@@ -1,3 +1,4 @@
+const { from } = require("form-data");
 var XLSX = require("xlsx");
 var schema = require('../models/schema.js')
 var _ = {}
@@ -169,11 +170,15 @@ _.listObjectToString = function (input) {
 }
 
 /**
+ * **ensure form is not null!**
  * @param {String} name - name of form being checked e.g. "CS02"
  * @param {FormSchema} form - the CSXX Form object returned by a Mongoose query
  * @returns true if form is complete for student (*any* signatures filled), false otherwise
  */
 _.checkFormCompletion = (name, form) => {
+  if (!form) {
+    return false
+  }
   switch (name) {
     case 'CS01': 
     case 'CS01BSMS': 
@@ -189,6 +194,7 @@ _.checkFormCompletion = (name, form) => {
       return (form.comp523 && form.comp523DateSigned) ||
                (form.hadJob && form.advisorSignature) ||
                (form.alternative && form.alt1Signature && form.alt2Signature)
+               
     default:
       return false
   }

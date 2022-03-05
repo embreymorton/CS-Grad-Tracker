@@ -21,7 +21,7 @@ const main = (opts) => {
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
-    cs01 ? refreshRequiredScript() : null,
+    pageScript(opts)
   )
 }
 
@@ -55,7 +55,7 @@ const cs01Form = (opts) => {
   const row = formRow(admin || isStudent, form)
   const bsms = formName !== 'CS01'
   return (
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', _id.toString()),
       namePidRow(student), hr(),
@@ -69,7 +69,7 @@ const cs01Form = (opts) => {
       row('comp521'), x('.verticalSpace')(),
       row('comp520'), x('.verticalSpace')(),
       row('comp530'), x('.verticalSpace')(),
-      x('.text-center')('(*Any two of these three will suffice*)'), hr(),
+      x('.text-center.bold')('(Any two of these three will suffice)'), hr(),
 
       row('comp524'), hr(),
       row('comp541'), hr(),
@@ -95,8 +95,8 @@ const cs01Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
 
-      isComplete ? null : x('button.btn.btn-primary.CS01-submit')(
-        { type: 'submit', onclick: 'refreshRequired()' },
+      isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
+        { type: 'submit' },
         'Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )
@@ -125,8 +125,9 @@ const formRow = (admin, values) => (key) => {
   const { div } = x
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
+  const isRequired = !(['comp521', 'comp520', 'comp530'].includes(key))
   const roValue = (name) => (pseudoInput(values[name]))
-  const rwValue = (name) => (input('text', name, values[name], true))
+  const rwValue = (name) => (input('text', name, values[name], isRequired))
   const value = admin && !complete ? rwValue : roValue
   return (
     row(
@@ -143,32 +144,32 @@ const formRow = (admin, values) => (key) => {
   )
 }
 
-const refreshRequiredScript = () => {
-  x('script')(
-    {type: 'text/javascript'},
-    `
-      function refreshRequired() {
-        // only require two out of 3 of the following courses
-        const comp521Covered = document.getElementByName('comp521Covered')[0]
-        const comp521Date = document.getElementByName('comp521Date')[0]
-
-        const comp520Covered = document.getElementByName('comp520Covered')[0]
-        const comp520Date = document.getElementByName('comp520Date')[0]
-
-        const comp530Covered = document.getElementByName('comp530Covered')[0]
-        const comp530Date = document.getElementByName('comp530Date')[0]
-
-        comp521Covered.required = !(comp520Covered.value.length != 0 && comp530Covered.value.length != 0);
-        comp521Date.required = !(comp520Covered.value.length != 0 && comp530Covered.value.length != 0);
-
-        comp520Covered.required = !(comp521Covered.value.length != 0 && comp530Covered.value.length != 0);
-        comp520Date.required = !(comp521Covered.value.length != 0 && comp530Covered.value.length != 0);
-
-        comp530Covered.required = !(comp521Covered.value.length != 0 && comp520Covered.value.length != 0);
-        comp530Date.required = !(comp521Covered.value.length != 0 && comp520Covered.value.length != 0);
+const pageScript = (opts) => {
+  const script = x('script')({type: 'text/javascript'})
+  const javascript = `
+  const onLoad = () => {
+    const keys = ['comp521', 'comp520', 'comp530']
+    const coveredInputs = keys.map((key) => document.getElementsByName(key + 'Covered')[0])
+    const dateInputs = keys.map((key) => document.getElementsByName (key + 'Date')[0])
+    
+    const inputChangeCheck = () => {
+      const complete = coveredInputs.map((covered, i) => covered.value.length > 0 && dateInputs[i].value.length > 0)
+      if (complete.reduce((prev, curr) => prev + (curr ? 1 : 0), 0) >= 2) { // number of completes
+        coveredInputs.concat(dateInputs).forEach((input) => input.required = false)
+        return true
+      } else {
+        coveredInputs.concat(dateInputs).forEach((input) => input.required = true)
+        return false
       }
-    `
-  )
+    }
+    coveredInputs.concat(dateInputs).forEach((input) => input.addEventListener('input', inputChangeCheck))
+    document.getElementById('cs-form').onsubmit = inputChangeCheck
+  }
+  document.addEventListener('DOMContentLoaded', onLoad)
+  `
+  script.innerHTML = javascript
+  script.setAttribute('nonce', opts.cspNonce)
+  return script
 }
 
 const { strong } = x

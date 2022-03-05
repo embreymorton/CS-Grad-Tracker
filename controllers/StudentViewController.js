@@ -1,5 +1,4 @@
 var schema = require("../models/schema.js");
-var util = require("./util.js");
 var formidable = require("formidable");
 var fs = require("fs");
 var path = require("path");
@@ -90,7 +89,7 @@ studentViewController.viewForm = async function (req, res) {
       const { cspNonce } = res.locals
       const locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess,
-        faculty, formName, cspNonce, isComplete: util.checkFormCompletion(formName, form)
+        faculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
       res.render(view, locals)
       return
@@ -114,11 +113,11 @@ studentViewController.updateForm = async function (req, res) {
 
   const studentId = studentInfo._id
   let form = await schema[req.params.title].findOne({ student: studentId }).exec()
-  const isComplete = util.checkFormCompletion(req.params.title, form)
   if (form == null) { // form not created for student yet
     form = new schema[req.params.title]({...formData, student: studentId});
     await form.save()
   } else {
+    const isComplete = checkFormCompletion(req.params.title, form)
     if (isComplete) {
       res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
       return

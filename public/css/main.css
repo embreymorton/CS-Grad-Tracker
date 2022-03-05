@@ -231,3 +231,7 @@ form [name=dept] {
   color: black;
   text-decoration: underline;
 }
+
+.bold {
+  font-weight: bold;
+}
