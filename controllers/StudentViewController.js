@@ -73,6 +73,7 @@ studentViewController.viewForm = async function (req, res) {
   }
   if (formName != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
@@ -88,8 +89,8 @@ studentViewController.viewForm = async function (req, res) {
       const view = `../views/student/${viewFile}`
       const { cspNonce } = res.locals
       const locals = {
-        student, form, uploadSuccess, isStudent, postMethod, hasAccess,
-        faculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+        student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
+        activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
       res.render(view, locals)
       return

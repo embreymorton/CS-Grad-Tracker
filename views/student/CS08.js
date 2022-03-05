@@ -38,7 +38,7 @@ const mainContent = (opts) => {
 }
 
 const cs08Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a } = x
   const vert = x('div.verticalSpace')()
@@ -78,10 +78,10 @@ const cs08Form = (opts) => {
       div('We have judged this paper to be of thesis quality in both substance and presentation. It therefore satisfies the writing requirement for the M.S. in Computer Science.'),
 
       div('Primary Reader signature'),
-      signatureDropDown(!isStudent, 'primary', faculty, opts),
+      signatureDropDown(!isStudent, 'primary', activeFaculty, opts),
 
       div('Secondary Reader signature'),
-      signatureDropDown(!isStudent, 'secondary', faculty, opts),
+      signatureDropDown(!isStudent, 'secondary', activeFaculty, opts),
 
       [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),

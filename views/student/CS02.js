@@ -45,9 +45,9 @@ const mainContent = (opts) => {
 }
 
 const cs02Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
   const editAccess = admin || isStudent
-  const row = formRow(form, editAccess)
+  const frow = formRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
   const { div, hr } = x
   const vert = x('div.verticalSpace')()
@@ -60,13 +60,13 @@ const cs02Form = (opts) => {
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidDateRow(opts, editAccess), hr(),
-      row(div('Course Number:'), 'courseNumber'), vert,
-      row(basisForWaiverLabel, 'basisWaiver'), hr(),
+      frow(div('Course Number:'), 'courseNumber'), vert,
+      frow(basisForWaiverLabel, 'basisWaiver'), hr(),
       div('Advisor Signature:'),
       approvalCheckbox(!isStudent, 'advisor', opts),
       vert,
       div('Designated Instructor Signature:'),
-      signatureDropDown(!isStudent, 'instructor', faculty, opts),
+      signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
       isComplete ? null : x('button.btn.btn-primary.CS02-submit')('Submit'),
       cancelEditButton(isStudent ? null : student._id),
     )

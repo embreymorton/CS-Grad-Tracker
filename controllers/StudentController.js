@@ -131,36 +131,32 @@ studentController.create = function(req, res){
   })
 }
 
-studentController.edit = (req, res) => {
+studentController.edit = async (req, res) => {
   if (!req.params._id) {
     res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
   } else {
     const admin = req.session.accessLevel == 3
-    schema.Student.findOne({_id: req.params._id}).populate('semesterStarted').populate('advisor').exec().then(student => {
-      if (student == null) {
-        res.render('../views/error.ejs', {string: 'Student not found'})
-      } else {
-        const vals = key => schema.Student.schema.path(key).enumValues
-        const pronouns = vals('pronouns')
-        const genders = vals('gender')
-        const ethnicities = vals('ethnicity')
-        const stateResidencies = vals('stateResidency')
-        const USResidencies = vals('USResidency')
-        const degrees = vals('intendedDegree')
-        const statuses = vals('status')
-        const eligibility = vals('fundingEligibility')
-        schema.Semester.find({}).sort({year:1, season:1}).exec().then(semesters => {
-          schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec().then(faculty => {
-            const locals = {
-              admin, student, faculty, semesters, degrees, stateResidencies,
-              USResidencies, ethnicities, genders, eligibility, pronouns,
-              statuses
-            }
-            res.render('../views/student/edit', locals)
-          })
-        })
-      }
-    })
+    const student = await schema.Student.findOne({_id: req.params._id}).populate('semesterStarted').populate('advisor').exec()
+    if (student == null) {
+      res.render('../views/error.ejs', {string: 'Student not found'})
+    }
+    const vals = key => schema.Student.schema.path(key).enumValues
+    const pronouns = vals('pronouns')
+    const genders = vals('gender')
+    const ethnicities = vals('ethnicity')
+    const stateResidencies = vals('stateResidency')
+    const USResidencies = vals('USResidency')
+    const degrees = vals('intendedDegree')
+    const statuses = vals('status')
+    const eligibility = vals('fundingEligibility')
+    const semesters = await schema.Semester.find({}).sort({year:1, season:1}).exec()
+    const faculty = await schema.Faculty.find({}).sort({lastName:1, firstName:1}).exec()
+    const locals = {
+      admin, student, faculty, semesters, degrees, stateResidencies,
+      USResidencies, ethnicities, genders, eligibility, pronouns,
+      statuses,
+    }
+    res.render('../views/student/edit', locals)
   }
 }
 
@@ -267,6 +263,7 @@ studentController.viewForm = async (req, res) => {
   const formName = params.title
   if (formName != null && _id != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ _id }).populate('advisor').populate('researchAdvisor').exec()
 
@@ -286,7 +283,7 @@ studentController.viewForm = async (req, res) => {
     const { cspNonce } = res.locals
     const locals = {
       student, form, uploadSuccess, isStudent, admin, postMethod,
-      hasAccess, faculty, formName, cspNonce
+      hasAccess, faculty, activeFaculty, formName, cspNonce
     }
     res.render(view, locals)
   }

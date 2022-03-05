@@ -43,7 +43,7 @@ const mainContent = (opts) => {
 }
 
 const cs13Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, faculty, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a, br } = x
   const select = x('select.form-control')
@@ -70,7 +70,7 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureDropDown(!isStudent, 'comp523', faculty, opts, false),
+      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, false),
       hr(),
 
       x('h4.underline')('Industry Experience'),

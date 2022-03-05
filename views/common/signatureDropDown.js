@@ -26,11 +26,12 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   // list of dropdown options
   let options = []
   options.push(x('option')({value: "", selected: "", disabled: "", hidden: ""}, "Select instructor to approve."))
+  values = [...values].sort((a, b) => a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName)) // sort names by last, first name
   for (var i = 0; i < values.length; i++) {
     if (`${values[i].firstName} ${values[i].lastName}` === instructorSelected) {
-      options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`, selected: ""}, `${values[i].firstName} ${values[i].lastName}`))
+      options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`, selected: ""}, `${values[i].lastName}, ${values[i].firstName}`))
     } else {
-      options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`}, `${values[i].firstName} ${values[i].lastName}`))
+      options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`}, `${values[i].lastName}, ${values[i].firstName}`))
     }
   }
 
@@ -59,7 +60,7 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
       x('.row')(
       col(5)(
         em('In place of your signature, please select your name:'),
-        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select`)({value: instructorSelected, required: required ? true : null},
+        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select.form-control`)({value: instructorSelected, required: required ? true : null},
             options
         ),
         x(`input#${sigName}`)({type: "hidden", name: sigName, value: instructorSelected}),
