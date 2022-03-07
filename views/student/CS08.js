@@ -4,7 +4,6 @@ const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
-const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
@@ -56,7 +55,7 @@ const cs08Form = (opts) => {
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student),
-      semesterYearRow(opts, editAccess), hr(),
+      hr(),
 
       strong('Title of Paper:'),
       isComplete ? pseudoInput(form.title) : colMd(4)(
@@ -75,8 +74,7 @@ const cs08Form = (opts) => {
       readerDateRow(opts, editAccess, 'secondary'), hr(),
 
       strong('Approval'),
-      div('We have judged this paper to be of thesis quality in both substance and presentation. It therefore satisfies the writing requirement for the M.S. in Computer Science.'),
-
+      div('We have judged this paper in both substance and presentation to satisfy the writing requirement for the M.S. in Computer Science.'),
       div('Primary Reader signature'),
       signatureDropDown(!isStudent, 'primary', activeFaculty, opts),
 
@@ -107,29 +105,8 @@ const namePidRow = (student) => {
   )
 }
 
-const semesterYearRow = (opts, editAccess) => {
-  const { isComplete } = opts
-  const { semester, year } = opts.form
-  const { div } = x
-  const value = editAccess && !isComplete
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
-  return (
-    row(
-      colMd(6)(
-        div('Semester'),
-        value('text', 'semester', semester)
-      ),
-      colMd(6)(
-        div('Year'),
-        value('number', 'year', year)
-      ),
-    )
-  )
-}
-
 const readerDateRow = (opts, editAccess, modifier) => {
-  const { form, isComplete } = opts
+  const { form, isComplete, isStudent } = opts
   const readerField = `${modifier}Reader`
   const dateField = `${modifier}Date`
   const readerValue = form[readerField]
@@ -137,6 +114,9 @@ const readerDateRow = (opts, editAccess, modifier) => {
   const { div } = x
   const modifierLabel = modifier.toUpperCase()[0] + modifier.substr(1)
   const value = editAccess && !isComplete
+        ? (type, name, val) => (input(type, name, val, true))
+        : (type, name, val) => (pseudoInput(val))
+  const date = !isStudent
         ? (type, name, val) => (input(type, name, val, true))
         : (type, name, val) => (pseudoInput(val))
   return (
@@ -147,10 +127,15 @@ const readerDateRow = (opts, editAccess, modifier) => {
       ),
       colMd(6)(
         div('Date Draft Received'),
-        value('text', dateField, dateValue)
+        date('text', dateField, dateValue)
       ),
     )
   )
 }
 
 module.exports = main
+
+
+// TODO: make primary and secondary reader fields dropdowns
+// email readers when form is submitted
+// make students unable to change approval signature dropdowns
