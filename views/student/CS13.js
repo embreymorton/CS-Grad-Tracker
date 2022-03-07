@@ -140,10 +140,12 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Signature #1:'),
-      signatureRow(!isStudent, 'alt1', form), vert,
+      signatureDropDown(!isStudent, 'alt1', activeFaculty, opts, false), vert,
+      // signatureRow(!isStudent, 'alt1', form), vert,
 
       div('Signature #2:'),
-      signatureRow(!isStudent, 'alt2', form),
+      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, false), vert,
+      // signatureRow(!isStudent, 'alt2', form),
 
       [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
       cancelEditButton(isStudent ? null : student._id),

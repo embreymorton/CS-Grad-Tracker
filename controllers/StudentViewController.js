@@ -229,8 +229,12 @@ studentViewController.updateForm = async function (req, res) {
       if (form.comp523 && form.comp523Signature) {
         const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
         result = await send(advisorEmail, comp523Email)
-      } else {
+      } else if (form.hadJob) {
         result = await send(advisorEmail)
+      } else if (form.alternative) {
+        const alt1Email = await generateDropdownEmail("alt1Signature", "Alternative #1")
+        const alt2Email = await generateDropdownEmail("alt2Signature", "Alternative #2")
+        result = await send(alt1Email, alt2Email) 
       }
       break;
     default:

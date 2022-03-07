@@ -193,7 +193,7 @@ _.checkFormCompletion = (name, form) => {
     case 'CS13':
       return (form.comp523 && form.comp523DateSigned) ||
                (form.hadJob && form.advisorSignature) ||
-               (form.alternative && form.alt1Signature && form.alt2Signature)
+               (form.alternative && form.alt1DateSigned && form.alt2DateSigned)
                
     default:
       return false
@@ -249,9 +249,9 @@ _.validateFormData = (formData) => {
     'secondarySignature',
     'secondaryDateSigned',
     'comp523DateSigned',
-    'alt1Signature',
+    // 'alt1Signature', CS13 changed to dropdowns
     'alt1DateSigned',
-    'alt2Signature',
+    // 'alt2Signature',
     'alt2DateSigned'
   ].forEach((key) => delete formData[key])
   return formData
