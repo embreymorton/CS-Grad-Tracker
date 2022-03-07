@@ -32,8 +32,11 @@ const profileFields = (opts) => {
               x('label.col-md-8')('@cs.unc.edu')
             )
           )
-        ) :
-        uneditableTextFieldWithHiddenInput('csid', `${student['csid']} (@cs.unc.edu)`),
+        ) : fieldDiv(
+          label['csid'],
+          `${student['csid']} (@cs.unc.edu)`,
+          x('input.form-control')({type: 'hidden', name: 'csid', value: student['csid']})
+        ),
         input('email', { required: true }),
         input('firstName', { required: true }),
         input('lastName', { required: true }),
