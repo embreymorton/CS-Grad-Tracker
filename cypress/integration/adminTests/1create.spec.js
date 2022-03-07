@@ -122,8 +122,7 @@ describe('Upload and create data', ()=>{
     //on the edit page, verify that all fields we submitted are indeed populated with data
     for(key in studentTextFields){
       if(key == 'csid'){
-        cy.get(`#editStudentForm input[name=${key}]`)
-        .should('have.value', studentTextFields[key]+ ' (@cs.unc.edu)' );
+        cy.contains(`${studentTextFields[key]} (@cs.unc.edu)`)
         continue
       }
 
