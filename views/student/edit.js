@@ -15,6 +15,14 @@ const main = (opts) => {
     h1(title),
     profile(opts),
     x('.space')(),
+    admin ? [
+      form({action: '/student/delete/' + _id.toString(),
+            method: 'post'},
+           x('button.btn.btn-danger')(
+             {type: 'submit',
+              onclick: "return confirm('Do you really want to delete this?')"},
+             'Delete'))
+    ] : null,
   )
 }
 

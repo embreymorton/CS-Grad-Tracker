@@ -110,6 +110,24 @@ studentController.put = function (req, res) {
 const getDeletedFields = (student, updateMap) =>
   Object.keys(updateMap).filter(key => student[key] !== undefined && typeof student[key] !== 'object' && updateMap[key] === '')
 
+
+studentController.delete = function (req, res) {
+  var id = req.params._id
+  if (id != null) {
+    /*Documents reference students; since documents are
+    personal student documents, just delete the documents.
+    */
+    schema.Student.findOneAndRemove({_id: id}).exec().then(function(result){
+      if(result){
+        res.redirect('/student')
+      }
+      else{
+        res.render('../views/error.ejs', {string: 'StudentNotFound'})
+      }
+    })
+  }
+}
+    
 studentController.create = function(req, res){
   const vals = key => schema.Student.schema.path(key).enumValues
   const pronouns = vals('pronouns')
