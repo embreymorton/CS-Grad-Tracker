@@ -9,6 +9,7 @@ const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const { is } = require('bluebird')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 let complete = false
 
 const main = (opts) => {
@@ -67,8 +68,10 @@ const cs02Form = (opts) => {
       vert,
       div('Designated Instructor Signature:'),
       signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
-      isComplete ? null : x('button.btn.btn-primary.CS02-submit')('Submit'),
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        isComplete ? null : x('button.btn.btn-primary.CS02-submit')('Submit'),
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }

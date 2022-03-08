@@ -10,6 +10,7 @@ const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const { checkFormCompletion } = require('../../controllers/util')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 const main = (opts) => {
   const { uploadSuccess, isComplete } = opts
@@ -147,8 +148,10 @@ const cs13Form = (opts) => {
       signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, false), vert,
       // signatureRow(!isStudent, 'alt2', form),
 
-      [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }

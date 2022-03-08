@@ -235,3 +235,11 @@ form [name=dept] {
 .bold {
   font-weight: bold;
 }
+
+.button-bar {
+  padding-top: 10px;
+}
+
+.button-bar * {
+  margin-right: 5px;
+}

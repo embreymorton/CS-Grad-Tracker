@@ -8,6 +8,7 @@ const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const cancelEditButton = require('../common/cancelEditButton')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 
 const main = (opts) => {
@@ -82,10 +83,11 @@ const cs04Form = (opts) => {
       hr(),
 
       div('Advisor signature:'),
-      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
-
-      isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
-      cancelEditButton(isStudent ? null : student._id),
+      approvalCheckboxRow(!isStudent, 'advisor', opts),
+      buttonBarWrapper(
+        isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   ]
 }

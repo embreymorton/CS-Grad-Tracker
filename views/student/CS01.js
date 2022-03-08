@@ -8,6 +8,7 @@ const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 let complete = false;
 
@@ -95,10 +96,12 @@ const cs01Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
 
-      isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
-        { type: 'submit' },
-        'Submit'),
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
+          { type: 'submit' },
+          'Submit'),
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }

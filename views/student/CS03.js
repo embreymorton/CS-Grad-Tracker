@@ -8,6 +8,7 @@ const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -264,8 +265,10 @@ const cs03Form = (opts) => {
 
       div('Director signature:'),
       signatureRow(admin, 'director', form),
-      isComplete ? null : x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        isComplete ? null : x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }

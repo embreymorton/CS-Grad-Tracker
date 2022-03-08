@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -426,14 +427,16 @@ const cs06Form = (opts) => {
       ),
       vert,
 
-     !isComplete
-        ? [
-          vert,
-          x('div.hidden')({ id: 'errorMessage' }),
-          x('button.btn.btn-primary.CS06-submit')({ type: 'submit' }, 'Submit')
-        ]
-      : null,
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        !isComplete
+          ? [
+            vert,
+            x('div.hidden')({ id: 'errorMessage' }),
+            x('button.btn.btn-primary.CS06-submit')({ type: 'submit' }, 'Submit')
+          ]
+        : null,
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }

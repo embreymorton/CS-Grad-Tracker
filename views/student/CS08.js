@@ -7,6 +7,7 @@ const { row, colMd } = require('../common/grid')
 const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
+const buttonBarWrapper = require('../common/buttonBarWrapper')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -80,9 +81,10 @@ const cs08Form = (opts) => {
 
       div('Secondary Reader signature'),
       signatureDropDown(!isStudent, 'secondary', activeFaculty, opts),
-
-      [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
-      cancelEditButton(isStudent ? null : student._id),
+      buttonBarWrapper(
+        [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
+        cancelEditButton(isStudent ? null : student._id),
+      )
     )
   )
 }
