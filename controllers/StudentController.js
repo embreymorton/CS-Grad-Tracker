@@ -5,6 +5,7 @@ var fs = require('fs')
 var path = require('path')
 var XLSX = require('xlsx')
 var mongoose = require('mongoose')
+const { getYYYYMMDD, checkFormCompletion } = require('./util.js')
 var studentController = {}
 
 studentController.post = function (req, res) {
@@ -307,20 +308,24 @@ studentController.viewForm = async (req, res) => {
   }
 }
 
-studentController.updateForm = function(req, res){
+studentController.updateForm = async function(req, res){
   var input = req.body
   if(req.params.title != null && req.params._id != null){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       if(result != null){
         var studentId = result._id
 
-        schema[req.params.title].findOneAndUpdate({student: studentId}, input, { runValidators: true }).exec().then(function(result){
+        schema[req.params.title].findOneAndUpdate({student: studentId}, input, { runValidators: true }).exec().then(async function(result){
           if(result != null){
+            const newform = await schema[req.params.title].findOne({student: studentId}, input, { runValidators: true }).populate('student').exec()
+            await updateStudentFields(req.params.title, newform)
             res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
           }
           else{
             var inputModel = new schema[req.params.title](input)
-            inputModel.save().then(function(result){
+            inputModel.save().then(async function(result){
+              console.log('new form')
+              await updateStudentFields(req.params.title, result)
               res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
             })
           }
@@ -333,6 +338,51 @@ studentController.updateForm = function(req, res){
   }
   else{
     res.render('../views/error.ejs', {string: 'Did not include student ID or title of form'})
+  }
+}
+
+async function updateStudentFields(formName, form) {
+  if (!form) {
+    console.err('null or undefined form passed into updateStudentFields')
+    return
+  }
+  const student = form.student || {}
+  switch (formName) {
+    case 'CS01':
+    case 'CS01BSMS':
+      if (form.advisorSignature && !student.backgroundApproved) {
+        const result = await schema.Student.findOneAndUpdate({_id: student._id}, {backgroundApproved: getYYYYMMDD(form.advisorDateSigned)}, {useValidators: true})
+      }
+      break
+    case 'CS04':
+      if (form.advisorSignature && !student.technicalWritingApproved) {
+        const result = await schema.Student.findOneAndUpdate({_id: student._id}, {technicalWritingApproved: getYYYYMMDD(form.advisorDateSigned)}, {useValidators: true})
+      }
+      break
+    case 'CS08':
+      const primary = form.primaryDateSigned
+      const secondary = form.secondaryDateSigned
+      if (primary && secondary && !student.technicalWritingApproved) {
+        const latestTime = new Date(Math.max(new Date(primary).getTime(), new Date(secondary).getTime()))
+        const result = await schema.Student.findOneAndUpdate({_id: student._id}, {technicalWritingApproved: getYYYYMMDD(latestTime)}, {useValidators: true})
+      }
+      break
+    case 'CS13':
+      if (checkFormCompletion(formName, form) && !student.programProductRequirement) {
+        if (form.comp523) {
+          const result = await schema.Student.findOneAndUpdate({_id: student._id}, {programProductRequirement: getYYYYMMDD(form.comp523DateSigned)}, {useValidators: true})
+        } else if (form.hadJob) {
+          const result = await schema.Student.findOneAndUpdate({_id: student._id}, {programProductRequirement: getYYYYMMDD(form.advisorDateSigned)}, {useValidators: true})
+        } else if (form.alternative) {
+          const alt1Date = form.alt1DateSigned
+          const alt2Date = form.alt2DateSigned
+          const latestTime = new Date(Math.max(new Date(alt1Date).getTime(), new Date(alt2Date).getTime()))
+          const result = await schema.Student.findOneAndUpdate({_id: student._id}, {programProductRequirement: getYYYYMMDD(latestTime)}, {useValidators: true})
+        }
+      }
+      break
+    default:
+      return
   }
 }
 

@@ -257,4 +257,12 @@ _.validateFormData = (formData) => {
   return formData
 }
 
+_.getYYYYMMDD = (str) => {
+  const date = new Date(str)
+  if (isNaN(date)) {
+    return ''
+  } 
+  return `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
+}
+
 module.exports = _
