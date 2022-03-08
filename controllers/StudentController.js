@@ -343,7 +343,7 @@ studentController.updateForm = async function(req, res){
 
 async function updateStudentFields(formName, form) {
   if (!form) {
-    console.err('null or undefined form passed into updateStudentFields')
+    console.error('null or undefined form passed into updateStudentFields')
     return
   }
   const student = form.student || {}
