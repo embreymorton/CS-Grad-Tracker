@@ -5,8 +5,6 @@ const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
 let CS08 = {
-  semester : 'asdsadsa',
-  year : '1293',
   title : 'a',
   primaryReader: '1asdasd',
   primaryDate: '1asdasdqwc',
@@ -56,9 +54,7 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(pid.toString())
 
     cy.get('.form-control[name="primaryReader"]').should('have.value', CS08.primaryReader);
-    cy.get('.form-control[name="primaryDate"]').should('have.value', CS08.primaryDate);
     cy.get('.form-control[name="secondaryReader"]').should('have.value', CS08.secondaryReader);
-    cy.get('.form-control[name="secondaryDate"]').should('have.value', CS08.secondaryDate);
     cy.get('.pseudo-input').contains('faculty faculty')
     cy.get('.pseudo-checked')
     cy.get('#secondarySignatureSelect').should('have.value', 'admin admin')
