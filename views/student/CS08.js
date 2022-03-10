@@ -8,6 +8,7 @@ const pseudoInput = require('../common/pseudoInput')
 const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const dropdown = require('../common/dropdown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -77,10 +78,13 @@ const cs08Form = (opts) => {
       strong('Approval'),
       div('We have judged this paper in both substance and presentation to satisfy the writing requirement for the M.S. in Computer Science.'),
       div('Primary Reader signature'),
-      signatureDropDown(!isStudent, 'primary', activeFaculty, opts),
+      //signatureDropDown(!isStudent, 'primary', activeFaculty, opts),
+      approvalRow(opts, editAccess, 'primary'),
 
       div('Secondary Reader signature'),
-      signatureDropDown(!isStudent, 'secondary', activeFaculty, opts),
+      //signatureDropDown(!isStudent, 'secondary', activeFaculty, opts),
+      approvalRow(opts, editAccess, 'secondary'),
+
       buttonBarWrapper(
         [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
         cancelEditButton(isStudent ? null : student._id),
@@ -108,24 +112,24 @@ const namePidRow = (student) => {
 }
 
 const readerDateRow = (opts, editAccess, modifier) => {
-  const { form, isComplete, isStudent } = opts
+  const { form, isComplete, isStudent, activeFaculty } = opts
   const readerField = `${modifier}Reader`
   const dateField = `${modifier}Date`
   const readerValue = form[readerField]
   const dateValue = form[dateField]
   const { div } = x
   const modifierLabel = modifier.toUpperCase()[0] + modifier.substr(1)
-  const value = editAccess && !isComplete
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
   const date = !isStudent
-        ? (type, name, val) => (input(type, name, val, true))
+        ? (type, name, val) => (input(type, name, val))
         : (type, name, val) => (pseudoInput(val))
   return (
     row(
-      colMd(6)(
-        div(`${modifierLabel} Reader`),
-        value('text', readerField, readerValue)
+      dropdown(
+        editAccess,
+        readerField,
+        activeFaculty,
+        opts,
+        div(`${modifierLabel} Reader`)
       ),
       colMd(6)(
         div('Date Draft Received'),
@@ -135,9 +139,36 @@ const readerDateRow = (opts, editAccess, modifier) => {
   )
 }
 
+const approvalRow = (opts, editAccess, modifier) => {
+  const { form, isStudent } = opts
+  const readerField = `${modifier}Reader`
+  const readerName = form[readerField]
+  const dateField = `${modifier}DateSigned`
+  const dateSigned = new Date(form[dateField])
+  const dateSignedMMDDYYYY = `${dateSigned.getMonth()+1}/${dateSigned.getDate()}/${dateSigned.getFullYear()}`;
+  const isApproved = !isNaN(dateSigned)
+  const approvalLabel = isApproved ? 
+  `${readerName} approved as of ${dateSignedMMDDYYYY}.` :
+  `Not yet approved.`
+
+  return (
+    row(
+      colMd(6)(
+        pseudoInput(readerName)
+      ),
+      colMd(6)(
+        x(`em#${dateField}Label`)(approvalLabel),
+        x(`input#${dateField}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+        x(`input#${dateField}`)({type: "hidden", name: dateField, value: isApproved ? dateSigned.toString() : undefined})
+      )
+    )
+  )
+
+}
+
 module.exports = main
 
 
-// TODO: make primary and secondary reader fields dropdowns
+// TODO:
 // email readers when form is submitted
-// make students unable to change approval signature dropdowns
+// rework approval section

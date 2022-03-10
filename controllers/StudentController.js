@@ -324,7 +324,6 @@ studentController.updateForm = async function(req, res){
           else{
             var inputModel = new schema[req.params.title](input)
             inputModel.save().then(async function(result){
-              console.log('new form')
               await updateStudentFields(req.params.title, result)
               res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
             })
