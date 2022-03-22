@@ -6,10 +6,8 @@ const name = `${lastName}, ${firstName}`
 
 let CS08 = {
   title : 'a',
-  primaryReader: '1asdasd',
-  primaryDate: '1asdasdqwc',
-  secondaryReader: '2asdasd',
-  secondaryDate: '2asdasdqwc',
+  primaryDate : '2019-09-19',
+  secondaryDate : '2019-09-20'
 }
 
 describe('Test CS08 submissions', ()=>{
@@ -23,9 +21,7 @@ describe('Test CS08 submissions', ()=>{
   it('Give student student an advisor', () => {
     cy.visit('/changeUser/admin');
     cy.visit('/student');
-
     cy.get('.edit-student-button').click();
-
     cy.get('.student-navigation-edit-button').click()
     cy.url().should('contain', '/student/edit');
     cy.get('select[name="advisor"]').select('admin, admin')
@@ -40,9 +36,9 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS08);
-    cy.get('#primarySignatureSelect').select('faculty faculty')
+    cy.get('#primaryReaderSelect').select('faculty faculty')
     cy.get('#primaryDateSignedCheckbox').check()
-    cy.get('#secondarySignatureSelect').select('admin admin')
+    cy.get('#secondaryReaderSelect').select('admin admin')
     cy.get('.CS08-submit').click();
     util.checkFormAsAdmin(CS08);
   })
@@ -53,11 +49,12 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.get('.form-control[name="primaryReader"]').should('have.value', CS08.primaryReader);
-    cy.get('.form-control[name="secondaryReader"]').should('have.value', CS08.secondaryReader);
+    cy.contains('2019-09-19')
+    cy.contains('2019-09-20')
+    cy.contains('faculty faculty')
+    cy.contains('admin admin')
     cy.get('.pseudo-input').contains('faculty faculty')
     cy.get('.pseudo-checked')
-    cy.get('#secondarySignatureSelect').should('have.value', 'admin admin')
 
 
     delete CS08.primaryReader;
