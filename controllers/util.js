@@ -244,9 +244,7 @@ _.validateFormData = (formData) => {
     'chairSignature',
     'chairDateSigned',
     'reasonApproved',
-    'primarySignature',
     'primaryDateSigned',
-    'secondarySignature',
     'secondaryDateSigned',
     'comp523DateSigned',
     // 'alt1Signature', CS13 changed to dropdowns

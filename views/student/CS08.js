@@ -5,10 +5,10 @@ const studentBar = require('../common/studentBar')
 const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const pseudoInput = require('../common/pseudoInput')
-const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const dropdown = require('../common/dropdown')
+const pseudoCheckbox = require('../common/pseudoCheckbox')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -77,20 +77,45 @@ const cs08Form = (opts) => {
 
       strong('Approval'),
       div('We have judged this paper in both substance and presentation to satisfy the writing requirement for the M.S. in Computer Science.'),
-      div('Primary Reader signature'),
-      //signatureDropDown(!isStudent, 'primary', activeFaculty, opts),
-      approvalRow(opts, editAccess, 'primary'),
+      div('Primary Reader Signature'),
+      approvalRow(opts, 'primary'),
 
-      div('Secondary Reader signature'),
-      //signatureDropDown(!isStudent, 'secondary', activeFaculty, opts),
-      approvalRow(opts, editAccess, 'secondary'),
+      div('Secondary Reader Signature'),
+      approvalRow(opts, 'secondary'),
 
       buttonBarWrapper(
-        [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit')({ type: 'submit' }, 'Submit')],
+        [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit#submit')({ type: 'submit' }, 'Submit')],
+        pageSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )
   )
+}
+
+function pageSubmitScript(opts) {
+  const script = x('script')({type: 'text/javascript'})
+  const javascript = `
+  let onLoad = () => {
+    const inputChangeCheck = () => {
+      const primaryField = document.getElementById("primaryReader")
+      const secondaryField = document.getElementById("secondaryReader")
+      var primarySigField = document.getElementById("primarySignature")
+      var secondarySigField = document.getElementById("secondarySignature")
+      primarySigField.value = primaryField.value
+      console.log(primarySigField.value)
+      console.log(primaryField.value)
+      secondarySigField.value = secondaryField.value
+      return true
+    }
+    document.getElementById("primaryReaderSelect").addEventListener('change', inputChangeCheck)
+    document.getElementById("secondaryReaderSelect").addEventListener('change', inputChangeCheck)
+    document.getElementById('submit').onsubmit = inputChangeCheck
+  }
+  document.addEventListener('DOMContentLoaded', onLoad)
+  `
+  script.innerHTML = javascript
+  script.setAttribute('nonce', opts.cspNonce)
+  return script
 }
 
 const namePidRow = (student) => {
@@ -111,6 +136,7 @@ const namePidRow = (student) => {
   )
 }
 
+// TODO: when form is complete, lock down dropdowns
 const readerDateRow = (opts, editAccess, modifier) => {
   const { form, isComplete, isStudent, activeFaculty } = opts
   const readerField = `${modifier}Reader`
@@ -124,6 +150,11 @@ const readerDateRow = (opts, editAccess, modifier) => {
         : (type, name, val) => (pseudoInput(val))
   return (
     row(
+      isComplete ?
+      colMd(6)(
+        div(`${modifierLabel} Reader`),
+        pseudoInput(readerValue)
+      ) :
       dropdown(
         editAccess,
         readerField,
@@ -139,7 +170,7 @@ const readerDateRow = (opts, editAccess, modifier) => {
   )
 }
 
-const approvalRow = (opts, editAccess, modifier) => {
+const approvalRow = (opts, modifier) => {
   const { form, isStudent } = opts
   const readerField = `${modifier}Reader`
   const readerName = form[readerField]
@@ -147,6 +178,7 @@ const approvalRow = (opts, editAccess, modifier) => {
   const dateSigned = new Date(form[dateField])
   const dateSignedMMDDYYYY = `${dateSigned.getMonth()+1}/${dateSigned.getDate()}/${dateSigned.getFullYear()}`;
   const isApproved = !isNaN(dateSigned)
+  const sigField = `${modifier}Signature`
   const approvalLabel = isApproved ? 
   `${readerName} approved as of ${dateSignedMMDDYYYY}.` :
   `Not yet approved.`
@@ -156,14 +188,55 @@ const approvalRow = (opts, editAccess, modifier) => {
       colMd(6)(
         pseudoInput(readerName)
       ),
+      !isStudent ?
       colMd(6)(
         x(`em#${dateField}Label`)(approvalLabel),
         x(`input#${dateField}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
-        x(`input#${dateField}`)({type: "hidden", name: dateField, value: isApproved ? dateSigned.toString() : undefined})
-      )
+        x(`input#${dateField}`)({type: "hidden", name: dateField, value: isApproved ? dateSigned.toString() : undefined}),
+        x(`input#${sigField}`)({type: "hidden", name: sigField, value: form[sigField] ? form[sigField] : ""}),
+        pageScript(opts, { dateField, readerName, })
+      ) :
+      colMd(6)(
+        x(`em#${dateField}Label`)(approvalLabel),
+        pseudoCheckbox(isApproved),
+        x(`input#${sigField}`)({type: "hidden", name: sigField, value: form[sigField] ? form[sigField] : ""}),
+      ),
     )
   )
 
+}
+
+function pageScript(opts, initialState) { 
+  const { dateField, readerName } = initialState;
+  const el = x('script')({type: 'text/javascript'});
+
+  el.innerHTML =
+  `
+    onLoad = () => {
+      const label = document.getElementById('${dateField}Label');
+      const checkbox = document.getElementById('${dateField}Checkbox');
+      // const approvalData = document.getElementById('${dateField}');
+      const dateData = document.getElementById('${dateField}');
+      const changeHandler = () => {
+        if (checkbox.checked) {
+          const now = new Date();
+          label.innerText = "${readerName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ":";
+          // approvalData.setAttribute("value", true);
+          dateData.setAttribute("value", now.toString());
+        } else {
+          label.innerText = "${readerName} approves:";
+          // approvalData.setAttribute("value", false);
+          dateData.removeAttribute("value");
+        }
+      }
+
+      checkbox.addEventListener('change', changeHandler);
+    }
+
+    document.addEventListener('DOMContentLoaded', onLoad);
+  `;
+  el.setAttribute('nonce', opts.cspNonce);
+  return el
 }
 
 module.exports = main
