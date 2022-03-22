@@ -164,7 +164,7 @@ const readerDateRow = (opts, editAccess, modifier) => {
       ),
       colMd(6)(
         div('Date Draft Received'),
-        date('text', dateField, dateValue)
+        date('date', dateField, dateValue)
       ),
     )
   )
