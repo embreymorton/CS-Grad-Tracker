@@ -9,6 +9,7 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const disableSubmitScript = require('../common/disableSubmitScript')
 
 let complete = false;
 
@@ -100,6 +101,7 @@ const cs01Form = (opts) => {
         isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
           { type: 'submit' },
           'Submit'),
+          disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

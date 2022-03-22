@@ -11,6 +11,8 @@ const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const { checkFormCompletion } = require('../../controllers/util')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const disableSubmitScript = require('../common/disableSubmitScript')
+
 
 const main = (opts) => {
   const { uploadSuccess, isComplete } = opts
@@ -52,7 +54,7 @@ const cs13Form = (opts) => {
   const range4 = [0, 1, 2, 3]
   const disabled = editAccess ? {} : { disabled: true }
   return (
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
@@ -149,7 +151,8 @@ const cs13Form = (opts) => {
       // signatureRow(!isStudent, 'alt2', form),
 
       buttonBarWrapper(
-        [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit')({ type: 'submit' }, 'Submit')],
+        [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit#submit-btn')({ type: 'submit' }, 'Submit')],
+        disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )
@@ -219,6 +222,9 @@ const pageScriptText = () => (`
     if (oneSectionActive()) return true
     alert('Error: please set one section to true (and the rest to false)')
     event.preventDefault()
+    setTimeout(()=>{
+      document.getElementById('submit-btn').disabled = false
+    },100)
   }
 
   const setListeners = () => {

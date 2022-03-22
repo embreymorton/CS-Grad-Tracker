@@ -9,6 +9,7 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const disableSubmitScript = require('../common/disableSubmitScript')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -56,7 +57,7 @@ const cs03Form = (opts) => {
   const disabled = editAccess && !isComplete ? {} : { disabled: true }
 
   return (
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
@@ -266,7 +267,8 @@ const cs03Form = (opts) => {
       div('Director signature:'),
       signatureRow(admin, 'director', form),
       buttonBarWrapper(
-        isComplete ? null : x('button.btn.btn-primary.CS03-submit')({ type: 'submit' }, 'Submit'),
+        isComplete ? null : x('button.btn.btn-primary.CS03-submit#submit-btn')({ type: 'submit' }, 'Submit'),
+        disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

@@ -8,6 +8,7 @@ const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const disableSubmitScript = require('../common/disableSubmitScript')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -59,7 +60,7 @@ const cs06Form = (opts) => {
   const disabled = editAccess ? {} : { disabled: true }
 
   return (
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(opts, editAccess), hr(),
@@ -432,9 +433,10 @@ const cs06Form = (opts) => {
           ? [
             vert,
             x('div.hidden')({ id: 'errorMessage' }),
-            x('button.btn.btn-primary.CS06-submit')({ type: 'submit' }, 'Submit')
+            x('button.btn.btn-primary.CS06-submit#submit-btn')({ type: 'submit' }, 'Submit')
           ]
         : null,
+        disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

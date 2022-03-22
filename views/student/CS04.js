@@ -9,6 +9,7 @@ const pseudoInput = require('../common/pseudoInput')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
+const disableSubmitScript = require('../common/disableSubmitScript')
 
 
 const main = (opts) => {
@@ -53,7 +54,7 @@ const cs04Form = (opts) => {
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
     strong('All fields required!'),
     hr(),
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
@@ -85,7 +86,8 @@ const cs04Form = (opts) => {
       div('Advisor signature:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       buttonBarWrapper(
-        isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit')({ type: 'submit' }, 'Submit')],
+        isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit#submit-btn')({ type: 'submit' }, 'Submit')],
+        disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

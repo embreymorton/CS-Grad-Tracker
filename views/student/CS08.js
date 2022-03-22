@@ -9,6 +9,7 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const dropdown = require('../common/dropdown')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
+const disableSubmitScript = require('../common/disableSubmitScript')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -53,7 +54,7 @@ const cs08Form = (opts) => {
   const disabled = editAccess ? {} : { disabled: true }
 
   return (
-    x('form.cs-form')(
+    x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student),
@@ -84,8 +85,8 @@ const cs08Form = (opts) => {
       approvalRow(opts, 'secondary'),
 
       buttonBarWrapper(
-        [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit#submit')({ type: 'submit' }, 'Submit')],
-        pageSubmitScript(opts),
+        [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit#submit-btn')({ type: 'submit' }, 'Submit')],
+        disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )
