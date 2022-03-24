@@ -6,23 +6,24 @@ const _ = {}
 _._transporter = null
 
 /**
- * Manually (re)start transporter.
+ * Manually (re)start transporter. 
+ * @param {Boolean} forceProduction forces using the Gmail transporter in process.env.gmailUser or process.env.gmail
  */
-_.startTransporter = () => {
-  _._transporter = process.env.mode == 'testing' || process.env.mode == 'development' // comment out `|| ... = 'development'` to test with actual email
+_.startTransporter = (forceProduction = false) => {
+  _._transporter = process.env.mode == 'production' || forceProduction 
   ? nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.gmailUser,
+      pass: process.env.gmailPass
+    }
+  })
+  : nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
     auth: {
       user: testAccount.user,
       pass: testAccount.pass
-    }
-  })
-  : nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: process.env.gmailUser,
-      pass: process.env.gmailPass
     }
   })
 }
@@ -69,6 +70,15 @@ _.generateSupervisorEmail = (to, studentInfo, req) => {
       <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
       <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
     `
+  }
+}
+
+_.generateDeveloperEmail = (text) => {
+  return {
+    from: '"CS-GradTracking" <noreply@cs.unc.edu>',
+    to: "terrell@cs.unc.edu, kekevi@live.unc.edu",
+    subject: `CS-GradTracking Site is ${text}`,
+    text: `${new Date()}: ${text}`
   }
 }
 

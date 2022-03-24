@@ -179,25 +179,23 @@ studentViewController.submitform = async function(req,res){
     return generateApprovalEmail(facultyEmail, title, studentInfo, req)
   }
 
-  const { mode } = process.env
   let result;
   switch (req.params.title) {
-    // the awaits DO matter, VSCode claims they're superfluous but they're not!
     case 'CS01': // forms that only have advisorSignature checkbox
-    case 'CS04':
-      result = await send(advisorEmail)
-      break;
-    case 'CS03':
-      if (mode == 'production')
-      result = await send(supervisorEmail) 
-      break;
-    case 'CS06':
-      if (mode == 'production')
-      result = await send(supervisorEmail) 
+      result = await send(advisorEmail);
       break;
     case 'CS02':
       const instructorEmail = await generateDropdownEmail("instructorSignature", "Instructor")
       result = await send(advisorEmail, instructorEmail)
+      break;
+    case 'CS03':
+      result = await send(advisorEmail, supervisorEmail) 
+      break;
+    case 'CS04':
+      result = await send(advisorEmail)
+      break;
+    case 'CS06':
+      result = await send(supervisorEmail) 
       break;
     case 'CS08': 
       const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")

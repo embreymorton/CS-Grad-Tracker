@@ -56,7 +56,9 @@
     "db:reset": "cross-env NODE_ENV=testing node dbReset.js",
     "test": "cypress run",
     "ci": "start-server-and-test start-ci http://localhost:8080 test",
-    "migrate:up": "migrate-mongo up"
+    "migrate:up": "migrate-mongo up",
+    "uptime": "cross-env NODE_ENV=development node uptime.js",
+    "uptime-prod": "cross-env NODE_ENV=production node uptime.js"
   },
   "repository": {
     "type": "git",
