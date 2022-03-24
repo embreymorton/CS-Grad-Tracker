@@ -86,8 +86,7 @@ studentViewController.viewForm = async function (req, res) {
       const isStudent = true
       const hasAccess = true
       const postMethod = '/studentView/forms/update/' + formName
-      const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}`
-      const view = `../views/student/${viewFile}`
+      const view = `../views/student/${formName}`
       const { cspNonce } = res.locals
       const locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,

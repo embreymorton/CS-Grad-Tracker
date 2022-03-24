@@ -181,7 +181,6 @@ _.checkFormCompletion = (name, form) => {
   }
   switch (name) {
     case 'CS01': 
-    case 'CS01BSMS': 
     case 'CS02':
     case 'CS03':
     case 'CS04':

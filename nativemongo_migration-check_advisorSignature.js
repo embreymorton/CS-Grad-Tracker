@@ -32,7 +32,7 @@ mongoose.connection.on('error', console.error.bind(console, 'Mongoose failed to 
   
     console.log("These are the forms with errors:")
 
-    ;['cs01', 'cs01bsms', 'cs02', 'cs03', 'cs13'].forEach(async (formName) => {
+    ;['cs01', 'cs02', 'cs03', 'cs13'].forEach(async (formName) => {
       const collection = await db.collection(formName).find({}).toArray()
       collection.forEach((form) => {
         if (form.advisorSignature != undefined) {

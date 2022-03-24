@@ -55,7 +55,6 @@ const cs01Form = (opts) => {
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
   const row = formRow(admin || isStudent, form)
-  const bsms = formName !== 'CS01'
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
@@ -63,10 +62,10 @@ const cs01Form = (opts) => {
       namePidRow(student), hr(),
       h3('Background Course Information'), x('.verticalSpace')(),
 
-      bsms ? null : [ row('comp283'), hr() ],
-      bsms ? null : [ row('comp410'), hr() ],
-      bsms ? null : [ row('comp411'), hr() ],
-      bsms ? null : [ row('comp455'), hr() ],
+      [ row('comp283'), hr() ],
+      [ row('comp410'), hr() ],
+      [ row('comp411'), hr() ],
+      [ row('comp455'), hr() ],
 
       row('comp521'), x('.verticalSpace')(),
       row('comp520'), x('.verticalSpace')(),
@@ -75,12 +74,12 @@ const cs01Form = (opts) => {
 
       row('comp524'), hr(),
       row('comp541'), hr(),
-      bsms ? null : [ row('comp550'), hr() ],
-      bsms ? null : [ row('math233'), hr() ],
-      bsms ? null : [ row('math381'), hr() ],
-      bsms ? null : [ row('math547'), hr() ],
+      [ row('comp550'), hr() ],
+      [ row('math233'), hr() ],
+      [ row('math381'), hr() ],
+      [ row('math547'), hr() ],
       row('math661'), hr(),
-      bsms ? null : [ row('stat435'), hr() ],
+      [ row('stat435'), hr() ],
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',

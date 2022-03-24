@@ -297,8 +297,7 @@ studentController.viewForm = async (req, res) => {
     const result2 = util.checkAdvisorAdmin(req.session.userPID, _id)
     const hasAccess = !!result2 || admin
     const postMethod = `/student/forms/update/${student._id}/${formName}`
-    const viewFile = `${formName === 'CS01BSMS' ? 'CS01' : formName}`
-    const view = `../views/student/${viewFile}`
+    const view = `../views/student/${formName}`
     const { cspNonce } = res.locals
     const locals = {
       student, form, uploadSuccess, isStudent, admin, postMethod,
