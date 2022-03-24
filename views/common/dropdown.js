@@ -29,7 +29,7 @@ const dropdown = (editAccess, name, values, opts, label = null, required = true)
   return (
     col(6)(
       label,
-      !editAccess && isApproved ? pseudoInput(facultySelected) : x(`select#${name}Select.form-control`)({value: facultySelected, required: required ? true : null},
+      !editAccess ? pseudoInput(facultySelected) : x(`select#${name}Select.form-control`)({value: facultySelected, required: required ? true : null},
           options
       ),
       x(`input#${name}`)({type: "hidden", name, value: facultySelected}),

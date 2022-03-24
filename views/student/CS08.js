@@ -87,6 +87,7 @@ const cs08Form = (opts) => {
       buttonBarWrapper(
         [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit#submit-btn')({ type: 'submit' }, 'Submit')],
         disableSubmitScript(opts),
+        pageSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
       )
     )
@@ -103,14 +104,11 @@ function pageSubmitScript(opts) {
       var primarySigField = document.getElementById("primarySignature")
       var secondarySigField = document.getElementById("secondarySignature")
       primarySigField.value = primaryField.value
-      console.log(primarySigField.value)
-      console.log(primaryField.value)
       secondarySigField.value = secondaryField.value
       return true
     }
     document.getElementById("primaryReaderSelect").addEventListener('change', inputChangeCheck)
     document.getElementById("secondaryReaderSelect").addEventListener('change', inputChangeCheck)
-    document.getElementById('submit').onsubmit = inputChangeCheck
   }
   document.addEventListener('DOMContentLoaded', onLoad)
   `
