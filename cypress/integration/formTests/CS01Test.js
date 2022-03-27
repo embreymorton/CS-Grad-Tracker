@@ -33,7 +33,7 @@ let CS01 = {
   stat435Covered: 'O',
   stat435Date: 'O',
   studentSignature: data.student.lastName,
-  studentDateSigned: 'BRUH',
+  studentDateSigned: '2019-09-19',
 }
 
 describe('Test CS01 submissions', ()=>{

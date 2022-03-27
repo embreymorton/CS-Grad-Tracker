@@ -464,7 +464,7 @@ const namePidRow = (opts, editAccess) => {
       ),
       colMd(4)(
         div('Date entered program*'),
-        value('text', 'dateEntered', dateEntered)
+        value('date', 'dateEntered', dateEntered)
       ),
     )
   )
