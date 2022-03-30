@@ -130,19 +130,19 @@ const formRow = (admin, values) => (key) => {
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
   const isRequired = !(['comp521', 'comp520', 'comp530'].includes(key))
-  const roValue = (name) => (pseudoInput(values[name]))
-  const rwValue = (name) => (input('text', name, values[name], isRequired))
+  const roValue = (name, type) => (pseudoInput(values[name]))
+  const rwValue = (name, type) => (input(`${type}`, name, values[name], isRequired))
   const value = admin && !complete ? rwValue : roValue
   return (
     row(
       colMd(4)(descriptions[key]),
       colMd(4)(
         div('Covered by:'),
-        value(coveredFieldName),
+        value(coveredFieldName, 'text'),
       ),
       colMd(4)(
         div('Dates:'),
-        value(dateFieldName),
+        value(dateFieldName, 'date'),
       ),
     )
   )
