@@ -101,10 +101,14 @@ function pageSubmitScript(opts) {
     const inputChangeCheck = () => {
       const primaryField = document.getElementById("primaryReader")
       const secondaryField = document.getElementById("secondaryReader")
+      const primaryLabel = document.getElementById("primary-pseudo")
+      const secondaryLabel = document.getElementById("secondary-pseudo")
       var primarySigField = document.getElementById("primarySignature")
       var secondarySigField = document.getElementById("secondarySignature")
       primarySigField.value = primaryField.value
       secondarySigField.value = secondaryField.value
+      primaryLabel.innerText = primaryField.value
+      secondaryLabel.innerText = secondaryField.value
       return true
     }
     document.getElementById("primaryReaderSelect").addEventListener('change', inputChangeCheck)
@@ -155,7 +159,7 @@ const readerDateRow = (opts, editAccess, modifier) => {
         pseudoInput(readerValue)
       ) :
       dropdown(
-        editAccess,
+        editAccess, // change this line to allow for faculty to always be able to edit dropdown
         readerField,
         activeFaculty,
         opts,
@@ -185,7 +189,7 @@ const approvalRow = (opts, modifier) => {
   return (
     row(
       colMd(6)(
-        pseudoInput(readerName)
+        pseudoInput(readerName, `#${modifier}-pseudo`)
       ),
       !isStudent ?
       colMd(6)(
