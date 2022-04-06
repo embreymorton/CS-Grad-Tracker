@@ -70,6 +70,26 @@ const cs03Form = (opts) => {
 
       strong('I. Course Requirement'),
       div("Thirty (30) semester hours of courses numbered 400 or higher must be taken (excluding COMP 495, 496, 691H, 692H). Of these 30 hours, at least 18 hours must be in Computer Science (designated COMP in the catalog) numbered 400-890, and the remaining 12 hours must include COMP 993: Master's Thesis Research or COMP 992: MS Non-Thesis Option."),
+      div('Residence credit- minimum number of required semesters of UNC-Chapel Hill registration, 9 or more credit hours earn a full semester of residence, 6 to 8.9 credit hours earn three-fourths semester of residence, 3 to 5.9 credit hours earn one-half semester of residence. 0 to 2.9 credit hours earn one-fourth semester of residence.',
+        a(
+          {href: 'https://handbook.unc.edu/residencecredit.html' },
+          ' Residence Credit'
+          ),
+      ),
+      div('The student’s mastery of content will be determined by the course grade in the set of three courses: a P- or better must be obtained in each course, and a Calingaert score of -3 or higher must be obtained on the three courses combined.',
+          a(
+            { href: 'https://cs.unc.edu/academics/graduate/ms-requirements/' },
+            ' MS-Requirements'
+            ),
+      ),
+      div('Transfer of credit- Up to 6 semester hours of graduate credit may be transferred from another accredited institution, or from courses taken at UNC-CH before admission to the Graduate School.',
+            a(
+              { href: 'https://gradschool.unc.edu/pdf/wtrnform.pdf '},
+              ' Please submit this form along with the CS-03.'
+            ),
+      ),
+      div('Minimum 3 hours of COMP 992 or COMP 993 (formal thesis) - maximum of 6 hours.'
+      ),
       div(
         'If a minor is elected, see the ',
         a(
@@ -77,7 +97,7 @@ const cs03Form = (opts) => {
           'Graduate School Handbook'
         ),
         '.'),
-      div('List the courses you expect to use to meet the MS requirements.  Include Section Number for COMP 790 and COMP 990-993 courses.  Do NOT list research team meeting seminars.  Indicate courses used to satisfy the distribution requirement with a mark in the Dist column.'),
+      div('List the courses you expect to use to meet the MS requirements.  Include Section Number for COMP 790 and COMP 990-993 courses.  Do NOT list research team meeting seminars.  Indicate courses used to satisfy the distribution requirement with a mark in the DR column.'),
       row(
         colMd(4)('A = Applications'),
         colMd(4)('S = Systems & Hardware'),
@@ -86,7 +106,7 @@ const cs03Form = (opts) => {
 
       row(
         colMd(1)(
-          div('Dist'),
+          div('DR'),
           range13.map((i) => (
             editAccess && !isComplete
               ? input('text', 'DR', form.DR && form.DR[i])
