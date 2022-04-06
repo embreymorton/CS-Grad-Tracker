@@ -24,7 +24,7 @@ const studentTextFields = data.studentTextFields;
 //         cy.get('.search-student-submit').click();
 //       }
 const CS02 = {
-  dateSubmitted: 'Feb.2, 2020',
+  dateSubmitted: '2019-02-02',
     courseNumber: 'COMP 560',
     basisWaiver: 'Taken',
   }

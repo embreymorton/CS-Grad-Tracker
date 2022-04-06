@@ -12,10 +12,10 @@ let CS03 = {
   semester: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   title: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   studentSignature: 'A',
-  studentDateSigned: 'AA',
+  studentDateSigned: '2019-09-19',
   approvalReason: 'ASDF',
   directorSignature: 'ASDF',
-  directorDateSigned: 'YOYOYO'
+  directorDateSigned: '2019-09-19'
 }
 
 let CS03Dropdowns = {

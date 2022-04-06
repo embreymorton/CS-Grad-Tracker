@@ -100,7 +100,7 @@ const namePidDateRow = (opts, editAccess) => {
       ),
       colMd(4)(
         div('Date submitted'),
-        value('text', 'dateSubmitted', dateSubmitted)
+        value('date', 'dateSubmitted', dateSubmitted)
       ),
     )
   )

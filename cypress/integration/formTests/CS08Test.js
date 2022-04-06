@@ -49,13 +49,12 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.contains('2019-09-19')
-    cy.contains('2019-09-20')
+    cy.contains(CS08.primaryDate)
+    cy.contains(CS08.secondaryDate)
     cy.contains('faculty faculty')
     cy.contains('admin admin')
     cy.get('.pseudo-input').contains('faculty faculty')
     cy.get('.pseudo-checked')
-
 
     delete CS08.primaryReader;
     delete CS08.primaryDate;

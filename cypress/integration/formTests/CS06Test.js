@@ -5,7 +5,7 @@ const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
 let CS06 = {
-  dateEntered: 'feb. 3, 2020',
+  dateEntered: '2019-02-03',
   dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
   breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   breadthCourseDate: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
@@ -20,10 +20,10 @@ let CS06 = {
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
   committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   chairSignature: 'AJ',
-  chairDateSigned: 'AJJ',
+  chairDateSigned: '2019-09-19',
   reasonApproved: 'Your left arm',
   directorSignature: 'LIAAAAR',
-  directorDateSigned: 'LIAAAARJ',
+  directorDateSigned: '2019-09-19',
 }
 
 let CS06Dropdowns = {
