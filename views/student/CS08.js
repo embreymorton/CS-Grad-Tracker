@@ -159,7 +159,7 @@ const readerDateRow = (opts, editAccess, modifier) => {
         pseudoInput(readerValue)
       ) :
       dropdown(
-        editAccess, // change this line to allow for faculty to always be able to edit dropdown
+        editAccess, // remove this line to allow for faculty to always be able to edit dropdown
         readerField,
         activeFaculty,
         opts,

@@ -72,8 +72,10 @@ const cs02Form = (opts) => {
       signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS02-submit#submit-btn')('Submit'),
+        x('button.btn.btn-light')('Save'),
         disableSubmitScript(opts),
         cancelEditButton(isStudent ? null : student._id),
+        saveDraftButton
       )
     )
   )
