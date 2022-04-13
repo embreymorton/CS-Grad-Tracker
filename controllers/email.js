@@ -10,7 +10,7 @@ _._transporter = null
  * @param {Boolean} forceProduction forces using the Gmail transporter in process.env.gmailUser or process.env.gmail
  */
 _.startTransporter = (forceProduction = false) => {
-  _._transporter = process.env.mode == 'production' || forceProduction 
+  _._transporter = (process.env.mode == 'production' || forceProduction) // && false // uncomment to force nodemailer
   ? nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -73,12 +73,12 @@ _.generateSupervisorEmail = (to, studentInfo, req) => {
   }
 }
 
-_.generateDeveloperEmail = (text) => {
+_.generateDeveloperEmail = (subjectText, bodyText) => {
   return {
     from: '"CS-GradTracking" <noreply@cs.unc.edu>',
     to: "terrell@cs.unc.edu, kekevi@live.unc.edu",
-    subject: `CS-GradTracking Site is ${text}`,
-    text: `${new Date()}: ${text}`
+    subject: `CS-GradTracking Site: ${subjectText}`,
+    text: `${new Date()}: ${bodyText}`
   }
 }
 
