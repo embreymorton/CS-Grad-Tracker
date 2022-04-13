@@ -262,4 +262,16 @@ _.getYYYYMMDD = (str) => {
   return `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
 }
 
+/**
+ * Crashes the server on purpose. 
+ * For testing purposes only, so only works when on testing or development env just in case.
+ */
+_.forceCrash = () => {
+  if (process.env.mode != 'production') {
+    process.nextTick(function () {
+      throw new Error("Induced crash. If this happens in production, please check that `forceCrash()` is not used in the code.");
+    });
+  }
+}
+
 module.exports = _

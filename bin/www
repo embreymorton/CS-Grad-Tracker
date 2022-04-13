@@ -26,14 +26,19 @@ mongoose.connection
     process.on('uncaughtException', async (err) => {
       console.error(err)
       console.error("Backend process crashed! :(")
-      if (process.env.mode == 'development') {
-        const {send, generateDeveloperEmail} = require('./controllers/email')
+      try {
+        const {send, generateDeveloperEmail} = require('../controllers/email')
         const response = await send(generateDeveloperEmail(
           "Backend Crash",
           `From \`bin/www\`'s uptime monitoring: The server has crashed with this error:
           ${err}`
         ))
-        if (!response) console.error("Awkward... The exception monitoring email was unable to be sent.")
+        if (!response) {
+          console.error("Error: The exception monitoring email was unable to be sent.")
+        }
+      } catch (err) {
+        console.error("Awkward, the exception handler had an error:", err)
+        process.exit(1)
       }
       process.exit(1)
     })
