@@ -98,6 +98,35 @@ studentViewController.viewForm = async function (req, res) {
   }
 }
 
+studentViewController.saveDraft = async function (req, res) {
+  const formData = validateFormData(req.body)
+  if (req.params.title == null || !schema[req.params.title]) {
+    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
+    return 
+  }
+
+  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (studentInfo == null) {
+    res.render("../views/error.ejs", { string: "Student not found" })
+    return
+  }
+
+  const studentId = studentInfo._id
+  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
+  if (form == null) { // form not created for student yet
+    form = new schema[req.params.title]({...formData, student: studentId});
+    await form.save()
+  } else {
+    const isComplete = checkFormCompletion(req.params.title, form)
+    if (isComplete) {
+      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+      return
+    } else {
+      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
+    }
+  }
+}
+
 studentViewController.updateForm = async function (req, res) {
   const formData = validateFormData(req.body)
 
