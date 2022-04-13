@@ -73,10 +73,11 @@ _.generateSupervisorEmail = (to, studentInfo, req) => {
   }
 }
 
-_.generateDeveloperEmail = (subjectText, bodyText) => {
+const developerEmails = "terrell@cs.unc.edu, kekevi@live.unc.edu, elaine13@email.unc.edu, zkhan@unc.edu"
+_.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
   return {
     from: '"CS-GradTracking" <noreply@cs.unc.edu>',
-    to: "terrell@cs.unc.edu, kekevi@live.unc.edu",
+    to,
     subject: `CS-GradTracking Site: ${subjectText}`,
     text: `${new Date()}: ${bodyText}`
   }
