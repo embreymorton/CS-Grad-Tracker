@@ -9,7 +9,7 @@ var reportController = {}
 
 const aggregateData = async ({pid, admin}) => {
   try {
-    const students = await schema.Student.find({status: 'Active', advisor: {$exists: true}}).sort({
+    const students = await schema.Student.find({status: 'Active'}).sort({
       lastName: 1,
       firstName: 1
     }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
