@@ -486,9 +486,9 @@ const pageScript = (opts) => {
 
 const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('save-btn').onclick(() => {
+    document.getElementById('save-btn').onclick = () => {
       wasSaveButtonPressed = true
-    })
+    }
     const committee = ${JSON.stringify(committee)}
     const advisor = '${advisor}'
     const chairman = '${chairman}'
@@ -521,6 +521,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
       else if (!advsr) showError('you must set an advisor')
       else if (!chair) showError('you must set a chair')
       else hideError()
+      console.log(wasSaveButtonPressed)
       if (!wasSaveButtonPressed && (!advsr || !chair)) event.preventDefault()
     })
   }
@@ -536,7 +537,8 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < breadth.length; j++) {
           if (concentration[i].value == breadth[j].value) {
             concentration[i].setCustomValidity('Course listed in A.')
-            event.preventDefault()
+            console.log(wasSaveButtonPressed)
+            !wasSaveButtonPressed || event.preventDefault()
           } else {
             concentration[i].setCustomValidity('')
           }
@@ -548,7 +550,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < breadth.length; j++) {
           if (other[i].value == breadth[j].value) {
             other[i].setCustomValidity('Course listed in A.')
-            event.preventDefault()
+            !wasSaveButtonPressed || event.preventDefault()
           } else {
             other[i].setCustomValidity('')
           }
@@ -557,7 +559,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < concentration.length; j++) {
           if (other[i].value == concentration[j].value) {
             other[i].setCustomValidity('Course listed in B.')
-            event.preventDefault()
+            !wasSaveButtonPressed || event.preventDefault()
           } else {
             other[i].setCustomValidity('')
           }
