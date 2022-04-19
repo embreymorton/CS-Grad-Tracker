@@ -10,6 +10,7 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 
 const main = (opts) => {
@@ -88,6 +89,7 @@ const cs04Form = (opts) => {
       buttonBarWrapper(
         isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit#submit-btn')({ type: 'submit' }, 'Submit')],
         disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

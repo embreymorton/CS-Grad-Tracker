@@ -12,6 +12,7 @@ const cancelEditButton = require('../common/cancelEditButton')
 const { checkFormCompletion } = require('../../controllers/util')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 
 const main = (opts) => {
@@ -153,6 +154,7 @@ const cs13Form = (opts) => {
       buttonBarWrapper(
         [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit#submit-btn')({ type: 'submit' }, 'Submit')],
         disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

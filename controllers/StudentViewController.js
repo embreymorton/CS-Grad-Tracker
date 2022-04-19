@@ -98,19 +98,17 @@ studentViewController.viewForm = async function (req, res) {
   }
 }
 
-studentViewController.saveDraft = async function (req, res) {
+studentViewController.saveForm = async function (req, res) {
   const formData = validateFormData(req.body)
   if (req.params.title == null || !schema[req.params.title]) {
     res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
     return 
   }
-
   const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
   if (studentInfo == null) {
     res.render("../views/error.ejs", { string: "Student not found" })
     return
   }
-
   const studentId = studentInfo._id
   let form = await schema[req.params.title].findOne({ student: studentId }).exec()
   if (form == null) { // form not created for student yet
@@ -125,6 +123,8 @@ studentViewController.saveDraft = async function (req, res) {
       form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
     }
   }
+  res.redirect("/studentView/forms/" + req.params.title + "/false")
+  return
 }
 
 studentViewController.updateForm = async function (req, res) {

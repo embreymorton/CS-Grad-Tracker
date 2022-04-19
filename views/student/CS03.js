@@ -10,6 +10,7 @@ const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -289,6 +290,7 @@ const cs03Form = (opts) => {
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS03-submit#submit-btn')({ type: 'submit' }, 'Submit'),
         disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

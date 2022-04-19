@@ -103,6 +103,8 @@ is required to fill out the form. (If only student/advisor, hidden to everyone e
 */
 router.post("/forms/update/:_id/:title", authorizeFaculty, student.updateForm);
 
+router.post("/forms/save/:_id/:title", authorizeFaculty, student.updateForm); // submit button is same as save button for admin
+
 router.post('/post', authorizeAdmin, student.post);
 
 router.post('/put', authorizeAdmin, student.put);

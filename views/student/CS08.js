@@ -10,6 +10,7 @@ const buttonBarWrapper = require('../common/buttonBarWrapper')
 const dropdown = require('../common/dropdown')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -88,6 +89,7 @@ const cs08Form = (opts) => {
         [vert, isComplete ? null : x('button.btn.btn-primary.CS08-submit#submit-btn')({ type: 'submit' }, 'Submit')],
         disableSubmitScript(opts),
         pageSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

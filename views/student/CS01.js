@@ -10,6 +10,7 @@ const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 let complete = false;
 
@@ -101,6 +102,7 @@ const cs01Form = (opts) => {
           { type: 'submit' },
           'Submit'),
           disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )

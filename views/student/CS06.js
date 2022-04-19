@@ -9,6 +9,7 @@ const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -437,6 +438,7 @@ const cs06Form = (opts) => {
           ]
         : null,
         disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
     )
@@ -484,6 +486,9 @@ const pageScript = (opts) => {
 
 const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('save-btn').onclick(() => {
+      wasSaveButtonPressed = true
+    })
     const committee = ${JSON.stringify(committee)}
     const advisor = '${advisor}'
     const chairman = '${chairman}'
@@ -494,7 +499,8 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
     setNoCourseOverlapRequirement()
     if (editAccess) setNameChangeListeners()
   })
-
+  let wasSaveButtonPressed = false
+  
   const setRadioishButtonClickHandlers = () => {
     // can't use onclick attribute because of content security policy
     ['advisor', 'chairman'].forEach((key) => {
@@ -515,7 +521,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
       else if (!advsr) showError('you must set an advisor')
       else if (!chair) showError('you must set a chair')
       else hideError()
-      if (!advsr || !chair) event.preventDefault()
+      if (!wasSaveButtonPressed && (!advsr || !chair)) event.preventDefault()
     })
   }
 

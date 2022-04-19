@@ -1,17 +1,23 @@
 const x = require('hyperaxe')
 
+/**
+ * Also adds formNoValidate to save button
+ * @param {*} opts for cspNonce 
+ * @returns 
+ */
 function disableSubmitScript(opts){
     const el = x('script')({type: 'text/javascript'});
   
     el.innerHTML =
     `
       onLoad = () => {
-       function disableHandler(){
-        document.getElementById('submit-btn').disabled = true
-        return true
+        document.getElementById('save-btn').formNoValidate = true;
+        function disableHandler(){
+          document.getElementById('submit-btn').disabled = true
+          return true
         }
-  
-       document.getElementById('cs-form').addEventListener('submit', disableHandler);
+    
+        document.getElementById('cs-form').addEventListener('submit', disableHandler);
     }
   
       document.addEventListener('DOMContentLoaded', onLoad);

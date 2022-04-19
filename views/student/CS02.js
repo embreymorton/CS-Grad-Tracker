@@ -11,6 +11,7 @@ const cancelEditButton = require('../common/cancelEditButton')
 const { is } = require('bluebird')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
+const saveEditButton = require('../common/saveEditsButton')
 let complete = false
 
 
@@ -72,10 +73,9 @@ const cs02Form = (opts) => {
       signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS02-submit#submit-btn')('Submit'),
-        x('button.btn.btn-light')('Save'),
         disableSubmitScript(opts),
+        isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
-        saveDraftButton
       )
     )
   )
