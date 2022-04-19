@@ -11,7 +11,8 @@ function disableSubmitScript(opts){
     el.innerHTML =
     `
       onLoad = () => {
-        document.getElementById('save-btn').formNoValidate = true;
+        const save_button = document.getElementById('save-btn')
+        save_button ? save_button.formNoValidate = true : null
         function disableHandler(){
           document.getElementById('submit-btn').disabled = true
           return true
