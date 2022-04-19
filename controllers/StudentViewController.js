@@ -6,7 +6,7 @@ var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
 const { validateFormData, checkFormCompletion } = require("./util.js");
-const { send, generateApprovalEmail } = require("./email");
+const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
 
 var studentViewController = {};
 
@@ -126,6 +126,38 @@ studentViewController.updateForm = async function (req, res) {
       form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
     }
   }
+}
+ 
+studentViewController.submitform = async function(req,res){
+  console.log('here')
+  const formData = validateFormData(req.body)
+
+  if (req.params.title == null || !schema[req.params.title]) {
+    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
+    return
+  }
+
+  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (studentInfo == null) {
+    res.render("../views/error.ejs", { string: "Student not found" })
+    return
+  }
+
+  const studentId = studentInfo._id
+  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
+  if (form == null) { // form not created for student yet
+    form = new schema[req.params.title]({...formData, student: studentId});
+    console.log('reach here')
+    await form.save()
+  } else {
+    const isComplete = checkFormCompletion(req.params.title, form)
+    if (isComplete) {
+      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+      return
+    } else {
+      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
+    }
+  }
   // ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
   
   const advisors = ['advisor', 'researchAdvisor']
@@ -134,7 +166,7 @@ studentViewController.updateForm = async function (req, res) {
     .map(advisor => advisor.email)
     .join(', ')
   const advisorEmail = generateApprovalEmail(advisors, "Advisor", studentInfo, req)
-
+  const supervisorEmail = generateSupervisorEmail(advisors, studentInfo, req)
   /**
    * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
@@ -147,16 +179,25 @@ studentViewController.updateForm = async function (req, res) {
     return generateApprovalEmail(facultyEmail, title, studentInfo, req)
   }
 
+  const { mode } = process.env
   let result;
   switch (req.params.title) {
     // the awaits DO matter, VSCode claims they're superfluous but they're not!
-    case 'CS01': case 'CS01BSMS': // forms that only have advisorSignature checkbox
-    case 'CS03': case 'CS04':
+    case 'CS01': // forms that only have advisorSignature checkbox
+    case 'CS04':
       result = await send(advisorEmail)
+      break;
+    case 'CS03':
+      if (mode == 'production')
+      result = await send(supervisorEmail) 
+      break;
+    case 'CS06':
+      if (mode == 'production')
+      result = await send(supervisorEmail) 
       break;
     case 'CS02':
       const instructorEmail = await generateDropdownEmail("instructorSignature", "Instructor")
-      result = await send(advisorEmail, instructorEmail) 
+      result = await send(advisorEmail, instructorEmail)
       break;
     case 'CS08': 
       const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")

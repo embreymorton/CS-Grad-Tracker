@@ -12,7 +12,7 @@ mongoose.connection
 .once('open', async () => {
   console.log('These are the forms with errors:')
   await (async () => {
-    ;['CS01', 'CS01BSMS', 'CS02', 'CS03', 'CS13'].forEach(async (formName) => {
+    ;['CS01', 'CS02', 'CS03', 'CS13'].forEach(async (formName) => {
       (await schema[formName].find({}).populate({
         path: 'student',
         populate: [{

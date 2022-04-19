@@ -313,7 +313,6 @@ studentController.updateForm = async function(req, res){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       if(result != null){
         var studentId = result._id
-
         schema[req.params.title].findOneAndUpdate({student: studentId}, input, { runValidators: true }).exec().then(async function(result){
           if(result != null){
             const newform = await schema[req.params.title].findOne({student: studentId}, input, { runValidators: true }).populate('student').exec()
@@ -347,7 +346,6 @@ async function updateStudentFields(formName, form) {
   const student = form.student || {}
   switch (formName) {
     case 'CS01':
-    case 'CS01BSMS':
       if (form.advisorSignature && !student.backgroundApproved) {
         const result = await schema.Student.findOneAndUpdate({_id: student._id}, {backgroundApproved: getYYYYMMDD(form.advisorDateSigned)}, {useValidators: true})
       }

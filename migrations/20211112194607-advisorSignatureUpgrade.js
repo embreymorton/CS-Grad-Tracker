@@ -5,7 +5,7 @@ module.exports = {
     // `false` if field exists and is an empty string (we should make this the case for whitespace only strings too)
     // doesn't change anything if the field doesn't exist
     // does lose data in the case where the signer is not the same person as the advisor 
-    ['cs01', 'cs01bsms', 'cs02', 'cs03', 'cs13'].forEach(async (schema) => {
+    ['cs01', 'cs02', 'cs03', 'cs13'].forEach(async (schema) => {
       await db.collection(schema).updateMany({advisorSignature: {$exists: true, $ne: ""}}, {$set: {advisorSignature: true}})
       await db.collection(schema).updateMany({advisorSignature: {$exists: true, $eq: ""}}, {$set: {advisorSignature: false}})
     })
