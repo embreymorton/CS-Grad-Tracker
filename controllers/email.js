@@ -44,8 +44,8 @@ _.closeTransporter = () => {
    * @returns preformatted email object
    */
 _.generateApprovalEmail = (to, subjectTitle, studentInfo, req) => {
-  return { 
-    from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>', 
+  return {
+    from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
     to,
     subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
     text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
