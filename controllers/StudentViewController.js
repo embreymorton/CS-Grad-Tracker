@@ -128,7 +128,7 @@ studentViewController.updateForm = async function (req, res) {
   }
 }
  
-studentViewController.submitform = async function(req,res){
+studentViewController.updateForm = async function(req,res){
   console.log('here')
   const formData = validateFormData(req.body)
 
