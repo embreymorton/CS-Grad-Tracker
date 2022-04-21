@@ -59,7 +59,7 @@ _.generateApprovalEmail = (to, subjectTitle, studentInfo, req) => {
   }
 }
 
-_.generateSupervisorEmail = (to, studentInfo, req) => {
+_.generateSupervisorEmail = (studentInfo, req) => {
   return {
     from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
     to: 'kenny@cs.unc.edu',

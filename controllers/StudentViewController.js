@@ -128,8 +128,7 @@ studentViewController.updateForm = async function (req, res) {
   }
 }
  
-studentViewController.updateForm = async function(req,res){
-  console.log('here')
+studentViewController.updateForm = async function(req,res) {
   const formData = validateFormData(req.body)
 
   if (req.params.title == null || !schema[req.params.title]) {
@@ -166,7 +165,7 @@ studentViewController.updateForm = async function(req,res){
     .map(advisor => advisor.email)
     .join(', ')
   const advisorEmail = generateApprovalEmail(advisors, "Advisor", studentInfo, req)
-  const supervisorEmail = generateSupervisorEmail(advisors, studentInfo, req)
+  const supervisorEmail = generateSupervisorEmail(studentInfo, req)
   /**
    * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
