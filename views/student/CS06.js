@@ -486,9 +486,6 @@ const pageScript = (opts) => {
 
 const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('save-btn').onclick = () => {
-      wasSaveButtonPressed = true
-    }
     const committee = ${JSON.stringify(committee)}
     const advisor = '${advisor}'
     const chairman = '${chairman}'
@@ -499,7 +496,6 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
     setNoCourseOverlapRequirement()
     if (editAccess) setNameChangeListeners()
   })
-  let wasSaveButtonPressed = false
   
   const setRadioishButtonClickHandlers = () => {
     // can't use onclick attribute because of content security policy
@@ -515,19 +511,24 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
 
   const setRadioishSelectionRequirement = () => {
     document.querySelector('form.cs-form').addEventListener('submit', (event) => {
+      if (event.submitter || event.submitter.id == "save-btn") {
+        return
+      }
       const advsr = document.querySelector('[name=advisor]').value
       const chair = document.querySelector('[name=chairman]').value
       if (!advsr && !chair) showError('you must set both an advisor and a chair')
       else if (!advsr) showError('you must set an advisor')
       else if (!chair) showError('you must set a chair')
       else hideError()
-      console.log(wasSaveButtonPressed)
-      if (!wasSaveButtonPressed && (!advsr || !chair)) event.preventDefault()
+      if (!advsr || !chair) event.preventDefault()
     })
   }
 
   const setNoCourseOverlapRequirement = () => {
     document.querySelector('form.cs-form').addEventListener('submit', (event) => {
+      if (event.submitter || event.submitter.id == "save-btn") {
+        return
+      }
       const breadth = document.getElementsByName('breadthCourseInfo')
       const concentration = document.getElementsByName('concentrationCourseInfo')
       const other = document.getElementsByName('otherCourseInfo')
@@ -537,8 +538,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < breadth.length; j++) {
           if (concentration[i].value == breadth[j].value) {
             concentration[i].setCustomValidity('Course listed in A.')
-            console.log(wasSaveButtonPressed)
-            !wasSaveButtonPressed || event.preventDefault()
+            event.preventDefault()
           } else {
             concentration[i].setCustomValidity('')
           }
@@ -550,7 +550,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < breadth.length; j++) {
           if (other[i].value == breadth[j].value) {
             other[i].setCustomValidity('Course listed in A.')
-            !wasSaveButtonPressed || event.preventDefault()
+            event.preventDefault()
           } else {
             other[i].setCustomValidity('')
           }
@@ -559,7 +559,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         for (var j = 0; j < concentration.length; j++) {
           if (other[i].value == concentration[j].value) {
             other[i].setCustomValidity('Course listed in B.')
-            !wasSaveButtonPressed || event.preventDefault()
+            event.preventDefault()
           } else {
             other[i].setCustomValidity('')
           }
