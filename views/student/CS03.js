@@ -54,8 +54,61 @@ const cs03Form = (opts) => {
     div('Basis for Waiver'),
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
-  const range13 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const range = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const disabled = editAccess && !isComplete ? {} : { disabled: true }
+
+  const distRow = (label, form, i, {editAccess, isComplete}) => {
+    return [
+      row(
+        colMd(12)(
+          x('div')(label)
+        )
+      ),
+      row(
+      colMd(2)(
+        div('University'),
+        editAccess && !isComplete
+          ? input('text', 'university', form.university && form.university[i])
+          : pseudoInput(form.university && form.university[i])
+      ),
+      colMd(1)(
+        div('Department'),
+        editAccess && !isComplete
+          ? input('text', 'dept', form.dept && form.dept[i])
+          : pseudoInput(form.dept && form.dept[i])
+        ),
+      colMd(2)(
+        div('Course'),
+        editAccess && !isComplete
+          ? input('text', 'course', form.course && form.course[i])
+          : pseudoInput(form.course && form.course[i])
+        ),
+      colMd(1)(
+        div('Hours'),
+        editAccess && !isComplete
+          ? input('number', 'hours', form.hours && form.hours[i])
+          : pseudoInput(form.hours && form.hours[i])
+        ),
+      colMd(2)(
+        div('Semester'),
+        editAccess && !isComplete
+          ? input('text', 'semester', form.semester && form.semester[i])
+          : pseudoInput(form.semester && form.semester[i])
+        ),
+      colMd(3)(
+        div('Brief Title'),
+        editAccess && !isComplete
+          ? input('text', 'title', form.title && form.title[i])
+          : pseudoInput(form.title && form.title[i])
+        ),
+      colMd(1)
+        div('Grade'),
+        editAccess && !isComplete
+          ? select(
+            { name: 'grade'}
+          )
+    ), hr]
+  }
 
   return (
     x('form.cs-form#cs-form')(
@@ -104,19 +157,13 @@ const cs03Form = (opts) => {
         colMd(4)('S = Systems & Hardware'),
         colMd(4)('T = Theory & Formal Thinking'),
       ), hr(),
-
+      distRow('Applications:', form, 0, {editAccess, isComplete}),
+      distRow('Systems & Hardware:', form, 1, {editAccess, isComplete}),
+      distRow('Theory & Formal Thinking:', form, 2, {editAccess, isComplete}),
       row(
-        colMd(1)(
-          div('DR'),
-          range13.map((i) => (
-            editAccess && !isComplete
-              ? input('text', 'DR', form.DR && form.DR[i])
-              : pseudoInput(form.DR && form.DR[i])
-          ))
-        ),
         colMd(2)(
           div('University'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('text', 'university', form.university && form.university[i])
               : pseudoInput(form.university && form.university[i])
@@ -124,7 +171,7 @@ const cs03Form = (opts) => {
         ),
         colMd(1)(
           div('Department'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('text', 'dept', form.dept && form.dept[i])
               : pseudoInput(form.dept && form.dept[i])
@@ -132,7 +179,7 @@ const cs03Form = (opts) => {
         ),
         colMd(2)(
           div('Course'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('text', 'course', form.course && form.course[i])
               : pseudoInput(form.course && form.course[i])
@@ -140,7 +187,7 @@ const cs03Form = (opts) => {
         ),
         colMd(1)(
           div('Hours'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('number', 'hours', form.hours && form.hours[i])
               : pseudoInput(form.hours && form.hours[i])
@@ -148,7 +195,7 @@ const cs03Form = (opts) => {
         ),
         colMd(2)(
           div('Semester'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('text', 'semester', form.semester && form.semester[i])
               : pseudoInput(form.semester && form.semester[i])
@@ -156,7 +203,7 @@ const cs03Form = (opts) => {
         ),
         colMd(3)(
           div('Brief Title'),
-          range13.map((i) => (
+          range.map((i) => (
             editAccess && !isComplete
               ? input('text', 'title', form.title && form.title[i])
               : pseudoInput(form.title && form.title[i])

@@ -360,13 +360,14 @@ var CS02Schema = mongoose.Schema({
 
 var CS03Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
-  DR: [String],
-  university: [String],
+  university: [String], 
   dept: [String],
   course: [String],
   hours: [Number],
   semester: [String],
-  title: [String],
+  title: [String], // this and above should be length 13
+  grade: [String], // should be length 3
+  gradeModifier: [String],
   backgroundPrep: Boolean,
   programProduct: Boolean,
   comprehensivePaper: Boolean,
