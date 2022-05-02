@@ -306,7 +306,7 @@ studentController.viewForm = async (req, res) => {
       student, form, uploadSuccess, isStudent, admin, postMethod,
       hasAccess, faculty, activeFaculty, formName, cspNonce
     }
-    res.render(view, locals)
+    return res.render(view, locals)
   }
   return res.render("../views/error.ejs", { string: "Invalid URL parameters." })
 }
