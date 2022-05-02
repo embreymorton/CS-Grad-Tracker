@@ -68,6 +68,9 @@ studentViewController.forms = async function (req, res) {
 studentViewController.viewForm = async function (req, res) {
   const { params, session } = req
   const formName = params.title
+  if (formName == 'CS02') {
+    return res.redirect(`/studentView/multiforms/${formName}`)
+  }
   if (!schema[formName]) {
     res.render('../views/error.ejs', { string: `${formName} is not a real form.`})
     return
@@ -237,7 +240,7 @@ studentViewController.formVersions = async function (req, res) {
   // if adding more forms with multiple submissions, change the sort field, these are for CS02:
   const titleField = 'courseNumber'
   const subtitleField = 'dateSubmitted'
-  const forms = await schema[req.params.title].find({ student: studentId }).sort('courseNumber').exec()
+  const forms = await schema[req.params.title].find({ student: studentId }).sort(titleField).exec()
 
   // generating opts
   const isStudent = true
@@ -255,8 +258,8 @@ studentViewController.viewFormVersion = async (req, res) => {
   const { params, session } = req
   const formName = params.title
   let formId = params.formId
-  if (formName == null || !schema[formName]) {
-    res.render('../views/error.ejs', { string: `${formName} is not a real form.`})
+  if (formName == null || !schema[formName] || formName != 'CS02') {
+    res.render('../views/error.ejs', { string: `${formName} is not a real form or does not support multiple submissions.`})
     return
   }
   if (!mongoose.isValidObjectId(formId) && formId != 'new') {
@@ -295,10 +298,11 @@ studentViewController.viewFormVersion = async (req, res) => {
     const isStudent = true
     const hasAccess = true
     const postMethod = `/studentView/multiforms/update/${formName}/${formId}`
+    const seeAllSubmissions = `/studentView/multiforms/${formName}`
     const view = `../views/student/${formName}`
     const { cspNonce } = res.locals
     const locals = {
-      student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
+      student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty,
       activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
     }
     res.render(view, locals)
@@ -333,7 +337,7 @@ studentViewController.updateFormVersion = async function (req, res) {
     return
   }
 
-  const result = await sendEmails(student, formName, form, `${linkHeader(req)}TODO:/false`)
+  const result = await sendEmails(student, formName, form, `${linkHeader(req)}/student/multiforms/view/${studentId}/${formName}/${formId}/false`)
   if (result) {
     res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)
   } else {

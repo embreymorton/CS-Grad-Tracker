@@ -92,7 +92,6 @@ router.get("/courses/:_id", authorizeAdvisor, student.courses);
 
 router.get("/uploadCourses/:uploadSuccess", authorizeAdmin, student.uploadCoursePage);
 
-//next two are new form routes
 router.get("/forms/viewForm/:_id/:title/:uploadSuccess", authorizeFaculty, student.viewForm);
 
 /*
@@ -103,7 +102,16 @@ is required to fill out the form. (If only student/advisor, hidden to everyone e
 */
 router.post("/forms/update/:_id/:title", authorizeFaculty, student.updateForm);
 
-router.post("/forms/save/:_id/:title", authorizeFaculty, student.updateForm); // submit button is same as save button for admin
+router.post("/forms/save/:_id/:title", authorizeFaculty, student.updateForm); // submit button is currently same as save button for faculty
+
+// multiforms
+router.get("/multiforms/:_id/:formName", authorizeAdvisor, student.formVersions);
+
+router.get("/multiforms/view/:_id/:formName/:formId/:uploadSuccess", authorizeFaculty, student.viewMultiform);
+
+router.post("/multiforms/update/:_id/:formName/:formId", authorizeFaculty, student.updateMultiform);
+
+router.post("/multiforms/save/:_id/:formName/:formId", authorizeFaculty, student.updateMultiform); // submit button is currently same as save button for faculty
 
 router.post('/post', authorizeAdmin, student.post);
 

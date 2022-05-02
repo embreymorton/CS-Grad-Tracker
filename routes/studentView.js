@@ -32,11 +32,11 @@ router.post("/forms/update/:title", student.updateForm); // TODO: maybe it's bet
 
 router.post("/forms/save/:title", student.saveForm);
 
-router.post("/multiforms/update/:title/:formId", student.updateFormVersion);
-
 router.get("/multiforms/:title", student.formVersions);
 
 router.get("/multiforms/:title/:formId/:uploadSuccess", student.viewFormVersion);
+
+router.post("/multiforms/update/:title/:formId", student.updateFormVersion);
 
 router.post("/multiforms/save/:title/:formId", student.saveFormVersion);
 

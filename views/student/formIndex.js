@@ -39,12 +39,16 @@ const mainContent = (opts) => {
       formBlocks.length == 0 ? div("No saved forms.") : null,
       ...formBlocks
     ),
-    a({href: isStudent ? `/studentView/multiforms/${formName}/new/false` : 'https://google.com/TODO:', class: 'btn btn-primary'}, 'Create New Form')
+    a({href: isStudent ? 
+        `/studentView/multiforms/${formName}/new/false` 
+        : `/student/multiforms/view/${student._id}/${formName}/new/false`, 
+      class: 'btn btn-primary'
+    }, 'Create New Form')
   ]
 }
 
 const singleForm = (form, opts) => {
-  const { formName, titleField, subtitleField, isStudent } = opts
+  const { formName, titleField, subtitleField, isStudent, student } = opts
   const { h6, div, i } = x
   const gutterbox = x('div.col-md-4.col-12')
   const box = x('div.bg-light.rounded.p-2.m-2')
@@ -54,7 +58,10 @@ const singleForm = (form, opts) => {
     h6(form[titleField] || "Untitled"),
     div(form[subtitleField] || "---"),
     div(`Completed: ${util.checkFormCompletion(formName, form) ? '✅ Yes' : '❌ No'}`),
-    abutton({href: isStudent ? `/studentView/multiforms/${formName}/${form._id}/false` : `https://google.com`}, 'View')
+    abutton({href: isStudent ? 
+      `/studentView/multiforms/${formName}/${form._id}/false` 
+      : `/student/multiforms/view/${student._id}/${formName}/${form._id}/false`
+    }, 'View')
   ))
 }
 

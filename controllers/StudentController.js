@@ -280,6 +280,9 @@ studentController.viewForm = async (req, res) => {
   const { params } = req
   const { _id } = params
   const formName = params.title
+  if (formName == 'CS02') {
+    return res.redirect(`/student/multiforms/${_id}/${formName}`)
+  }
   if (formName != null && _id != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
@@ -336,6 +339,105 @@ studentController.updateForm = async function(req, res){
   else{
     res.render('../views/error.ejs', {string: 'Did not include student ID or title of form'})
   }
+}
+
+// multiforms
+studentController.formVersions = async (req, res) => {
+  const studentId = req.params._id
+  const { formName } = req.params
+  if (!mongoose.isValidObjectId(studentId) || !formName) {
+    res.render('../views/error.ejs', { string: 'Not a valid internal student id or form name.' })
+    return
+  }
+  if (formName != 'CS02') {
+    res.render('../views/error.ejs', { string: `${formName} does not allow multiple submissions.` })
+    return
+  }
+
+  // if adding more forms with multiple submissions, change the sort field, these are for CS02:
+  const titleField = 'courseNumber'
+  const subtitleField = 'dateSubmitted'
+  const forms = await schema[formName].find({ student: studentId }).sort(titleField).exec()
+
+  // generating opts
+  const isStudent = false
+  const hasAccess = true // TODO: maybe?
+  const { cspNonce } = res.locals
+  const student = await schema.Student.findOne({ _id: studentId }).exec()
+  const opts = {
+    student, forms, isStudent, hasAccess, formName, cspNonce,
+    titleField, subtitleField
+  }
+  res.render("../views/student/formIndex.js", opts)
+  return
+}
+
+studentController.viewMultiform = async (req, res) => {
+  const studentId = req.params._id
+  const { formName, formId } = req.params
+  if (!mongoose.isValidObjectId(studentId) || formId !== 'new' && !mongoose.isValidObjectId(formId) || !schema[formName]) {
+    return res.render('../views/error.ejs', { string: 'Not a valid internal student id, internal form id, or form name.' })
+  }
+  if (formName != 'CS02') {
+    return res.render('../views/error.ejs', { string: `${formName} does not allow multiple submissions.` })
+  }
+
+  const student = await schema.Student.findOne({ _id: studentId }).populate('advisor').populate('researchAdvisor').exec()
+  if (student == null) {
+    return res.render('..views/error.ejs', {string: 'Student with this id could not be found.'})
+  }
+
+  if (formId === 'new') {
+    const numberOfPrevSubmissions = (await schema[formName].find({ student: student._id })).length
+    if (numberOfPrevSubmissions > 25) {
+      return res.render('../views/error.js', { string: `Too many ${formName} forms found.` })
+    }
+    const newform = new schema[formName]({student: studentId})
+    return res.redirect(`/student/multiforms/view/${studentId}/${formName}/${newform._id}/false`)
+  }
+
+  // building opts
+  const faculty = await schema.Faculty.find({}).exec()
+  const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
+  const uploadSuccess = req.params.uploadSuccess === 'true'
+  const result = await schema[formName].findOne({student: studentId, _id: formId }).exec()
+  const form = result || {}
+  const isStudent = false
+  const admin = req.session.accessLevel == 3
+  const result2 = util.checkAdvisorAdmin(req.session.userPID, studentId)
+  const hasAccess = !!result2 || admin
+  const postMethod = `/student/multiforms/update/${studentId}/${formName}/${formId}`
+  const seeAllSubmissions = `/student/multiforms/${studentId}/${formName}`
+  const view = `../views/student/${formName}`
+  const { cspNonce } = res.locals
+  const locals = {
+    student, form, uploadSuccess, isStudent, admin, postMethod, seeAllSubmissions,
+    hasAccess, faculty, activeFaculty, formName, cspNonce
+  }
+  return res.render(view, locals)
+}
+
+studentController.updateMultiform = async (req, res) => {
+  const input = req.body
+  const studentId = req.params._id
+  const { formName, formId } = req.params
+  if (!schema[formName] || formName != 'CS02') {
+    return res.render("../views/error.ejs", { string: `${formName} is not a valid form or does not allow multiple submissions.` })
+  }
+  if (!mongoose.isValidObjectId(studentId) || !mongoose.isValidObjectId(formId)) {
+    return res.render("../views/error.ejs", { string: "Internal student id or form id is invalid." })
+  }
+
+  const student = await schema.Student.findOne({_id: studentId}).exec()
+  if (!student) {
+    return res.render("../views/error.ejs", { string: "Student could not be found." })
+  }
+  const form = await schema[formName].findOneAndUpdate({student: studentId, _id: formId}, input, {runValidators: true, new: true}).populate('student').exec()
+  if (form == null) {
+    return res.render("../views/error.ejs", { string: `Form id invalid, please create a new submission through the index for ${formName}.`})
+  }
+  await updateStudentFields(formName, form)
+  return res.redirect(`/student/multiforms/view/${studentId}/${formName}/${formId}/true`)
 }
 
 async function updateStudentFields(formName, form) {
