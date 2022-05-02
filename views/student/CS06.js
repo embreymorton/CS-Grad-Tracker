@@ -42,7 +42,7 @@ const cs06Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, isComplete } = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
-          breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
+          breadthCourseDate, breadthCourseGrade, breadthCourseGradeModifier, concentrationCourseInfo,
           concentrationCourseDate, concentrationCourseHours,
           otherCourseInfo, otherCourseHours, note, otherCourses, minor,
           backgroundPrepWorkSheet, programProductRequirement,
@@ -157,7 +157,7 @@ const cs06Form = (opts) => {
           ))
         ),
 
-        colMd(6)(
+        colMd(4)(
           div('Course Number, Title, & Name of Univ.*'),
           range6.map((i) => (
             editAccess && !isComplete
@@ -183,6 +183,16 @@ const cs06Form = (opts) => {
               : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
           ))
         ),
+        colMd(2)(
+          div('Grade Modifier'),
+          range6.map((i) => (
+            isComplete && !editAccess ? pseudoInput(breadthCourseGradeModifier && breadthCourseGradeModifier[i]) : select(
+              { name: 'breadthCourseGradeModifier', ...disabled },
+              option({ value: '' }, ''),
+              option({ value: '+', selected: breadthCourseGradeModifier && breadthCourseGradeModifier[i] == '+' || null }, '+'),
+              option({ value: '-', selected: breadthCourseGradeModifier && breadthCourseGradeModifier[i] == '-' || null }, '-'),
+            )
+          ))
       ),
       hr(),
 
@@ -443,7 +453,7 @@ const cs06Form = (opts) => {
       )
     )
   )
-}
+  )}
 
 const namePidRow = (opts, editAccess) => {
   const { student, form, isComplete } = opts

@@ -398,6 +398,7 @@ var CS06Schema = mongoose.Schema({
   breadthCourseInfo: [String],
   breadthCourseDate: [String],
   breadthCourseGrade: [String],
+  breadthCourseGradeModifier: [String],
   concentrationCourseInfo: [String],
   concentrationCourseDate: [String],
   concentrationCourseHours: [Number],
