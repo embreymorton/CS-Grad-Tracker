@@ -4,6 +4,7 @@ var formidable = require("formidable");
 var XLSX = require("xlsx");
 var fs = require("fs");
 var path = require("path");
+const mongoose = require('mongoose')
 
 var jobController = {};
 

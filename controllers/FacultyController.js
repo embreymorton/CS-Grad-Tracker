@@ -4,6 +4,7 @@ var XLSX = require("xlsx");
 var fs = require("fs");
 var path = require("path");
 var formidable = require("formidable");
+const mongoose = require('mongoose')
 
 var facultyController = {};
 
