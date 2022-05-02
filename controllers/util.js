@@ -262,6 +262,9 @@ _.getYYYYMMDD = (str) => {
   return `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
 }
 
+/** using an Express request object, creates a link to the website up to the top-level domain (does NOT include a '/' at the end) */
+_.linkHeader = (req) => `${req.protocol}://${req.get('Host')}`
+
 /**
  * Crashes the server on purpose. 
  * For testing purposes only, so only works when on testing or development env just in case.

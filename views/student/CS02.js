@@ -27,10 +27,12 @@ const main = (opts) => {
   )
 }
 
+const peer = (thing) => {console.log(thing); return(thing)}
+
 const mainContent = (opts) => {
-  const { student, hasAccess } = opts
+  const { student, hasAccess, isStudent } = opts
   const { lastName, firstName } = student
-  const { h4, h3, div, strong, hr } = x
+  const { h4, h3, div, strong, hr, a } = x
   const form = !hasAccess
         ? div('You do not have access')
         : cs02Form(opts)
@@ -38,6 +40,7 @@ const mainContent = (opts) => {
     h4(lastName, ', ', firstName),
     h3('Course Waiver'),
     h3('CS-02'),
+    a({href: peer(isStudent) ? `/studentView/multiforms/CS02` : `/formIndexTODO:`, class: 'btn btn-primary'}, 'See More Submissions'),
     div(
       { class: 'text-left' },
       div('This student is exempt from the breadth requirement listed below.'),

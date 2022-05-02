@@ -350,7 +350,7 @@ var CS01Schema = mongoose.Schema({
 })
 
 var CS02Schema = mongoose.Schema({
-  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: false},
   dateSubmitted: String,
   courseNumber: String,
   basisWaiver: String,

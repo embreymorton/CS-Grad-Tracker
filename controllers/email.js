@@ -40,34 +40,36 @@ _.closeTransporter = () => {
    * @param {String} to list of email addresses separated by ", " 
    * @param {String} subjectTitle what type of approval person is needed, eg. 'Advisor', Instructor, Primary Reader, etc.
    * @param {Object} studentInfo information about the student
-   * @param {Object} req Express.js request information
+   * @param {String} formName 
+   * @param {String} linkToForm 
    * @returns preformatted email object
    */
-_.generateApprovalEmail = (to, subjectTitle, studentInfo, req) => {
+_.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) => {
   return {
     from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
     to,
-    subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${req.params.title}`,
-    text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
-        ${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
+    subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${formName}`,
+    text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
+        ${linkToForm}\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
     html: `
-      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
-      <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
+      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
       <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
       <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
     `
   }
 }
 
-_.generateSupervisorEmail = (studentInfo, req) => {
+_.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
   return {
     from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
     to: 'kenny@cs.unc.edu',
-    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} ${req.params.title} form submission`,
-    text: `Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title} as part of the requirements for their graduate degree.`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} ${formName} form submission`,
+    text: `Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree.\n\n
+    Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.\n\ngo here: `,
     html: `
-      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${req.params.title}. Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}, go here:</p>
-      <a href="${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false">${req.protocol}://${req.get('Host')}/student/forms/viewForm/${studentInfo._id}/${req.params.title}/false</a>
+      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName}. Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}, go here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
       <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
     `
   }

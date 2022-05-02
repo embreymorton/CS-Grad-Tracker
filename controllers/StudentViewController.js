@@ -5,7 +5,7 @@ var path = require("path");
 var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
-const { validateFormData, checkFormCompletion } = require("./util.js");
+const { validateFormData, checkFormCompletion, linkHeader } = require("./util.js");
 const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
 
 var studentViewController = {};
@@ -98,156 +98,54 @@ studentViewController.viewForm = async function (req, res) {
   }
 }
 
-studentViewController.saveForm = async function (req, res) {
+studentViewController.saveForm = async function (req, res) { 
   const formData = validateFormData(req.body)
-  if (req.params.title == null || !schema[req.params.title]) {
+  const formName = req.params.title
+  if (formName == null || !schema[formName]) {
     res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
     return 
   }
-  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
-  if (studentInfo == null) {
+  const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (student == null) {
     res.render("../views/error.ejs", { string: "Student not found" })
     return
   }
-  const studentId = studentInfo._id
-  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
-  if (form == null) { // form not created for student yet
-    form = new schema[req.params.title]({...formData, student: studentId});
-    await form.save()
-  } else {
-    const isComplete = checkFormCompletion(req.params.title, form)
-    if (isComplete) {
-      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
-      return
-    } else {
-      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
-    }
+  const studentId = student._id
+  let form = await schema[formName].findOne({ student: studentId }).exec()
+  form = await upsertForm(student, formName, form, formData)
+  if (!form) {
+    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+    return
   }
-  res.redirect("/studentView/forms/" + req.params.title + "/false")
+  res.redirect("/studentView/forms/" + formName + "/false")
   return
-}
-
-studentViewController.updateForm = async function (req, res) {
-  const formData = validateFormData(req.body)
-
-  if (req.params.title == null || !schema[req.params.title]) {
-    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
-    return
-  }
-
-  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
-  if (studentInfo == null) {
-    res.render("../views/error.ejs", { string: "Student not found" })
-    return
-  }
-
-  const studentId = studentInfo._id
-  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
-  if (form == null) { // form not created for student yet
-    form = new schema[req.params.title]({...formData, student: studentId});
-    await form.save()
-  } else {
-    const isComplete = checkFormCompletion(req.params.title, form)
-    if (isComplete) {
-      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
-      return
-    } else {
-      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
-    }
-  }
 }
  
 studentViewController.updateForm = async function(req,res) {
   const formData = validateFormData(req.body)
-
-  if (req.params.title == null || !schema[req.params.title]) {
+  const formName = req.params.title
+  if (formName == null || !schema[formName]) {
     res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
     return
   }
 
-  const studentInfo = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
-  if (studentInfo == null) {
+  const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (student == null) {
     res.render("../views/error.ejs", { string: "Student not found" })
     return
   }
 
-  const studentId = studentInfo._id
-  let form = await schema[req.params.title].findOne({ student: studentId }).exec()
-  if (form == null) { // form not created for student yet
-    form = new schema[req.params.title]({...formData, student: studentId});
-    console.log('reach here')
-    await form.save()
-  } else {
-    const isComplete = checkFormCompletion(req.params.title, form)
-    if (isComplete) {
-      res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
-      return
-    } else {
-      form = await schema[req.params.title].findOneAndUpdate({ student: studentId }, formData, {new: true, runValidators: true}).exec()
-    }
+  const studentId = student._id
+  let form = await schema[formName].findOne({ student: studentId }).exec()
+  form = await upsertForm(student, formName, form, formData)
+  if (!form) {
+    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+    return
   }
-  // ADD DENISE/JASLEEN WHEN IN PRODUCTION FOR REAL
   
-  const advisors = ['advisor', 'researchAdvisor']
-    .map(key => studentInfo[key])
-    .filter(advisor => advisor && advisor.email)
-    .map(advisor => advisor.email)
-    .join(', ')
-  const advisorEmail = generateApprovalEmail(advisors, "Advisor", studentInfo, req)
-  const supervisorEmail = generateSupervisorEmail(studentInfo, req)
-  /**
-   * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
-   * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
-   * @param {String} title - the faculty member's title for email subject line eg. "Instructor"
-   * @return {Promise<Object>} - generated email object
-   */
-  const generateDropdownEmail = async (key, title) => {
-    const keyName = form[key]
-    const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === keyName).email
-    return generateApprovalEmail(facultyEmail, title, studentInfo, req)
-  }
-
-  let result;
-  switch (req.params.title) {
-    case 'CS01': // forms that only have advisorSignature checkbox
-      result = await send(advisorEmail);
-      break;
-    case 'CS02':
-      const instructorEmail = await generateDropdownEmail("instructorSignature", "Instructor")
-      result = await send(advisorEmail, instructorEmail)
-      break;
-    case 'CS03':
-      result = await send(advisorEmail, supervisorEmail) 
-      break;
-    case 'CS04':
-      result = await send(advisorEmail)
-      break;
-    case 'CS06':
-      result = await send(supervisorEmail) 
-      break;
-    case 'CS08': 
-      const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")
-      const secondaryEmail = await generateDropdownEmail("secondarySignature", "Secondary Reader")
-      result = await send(primaryEmail, secondaryEmail)
-      break;
-    case 'CS13':
-      if (form.comp523 && form.comp523Signature) {
-        const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
-        result = await send(comp523Email)
-      } else if (form.hadJob) {
-        result = await send(advisorEmail)
-      } else if (form.alternative) {
-        const alt1Email = await generateDropdownEmail("alt1Signature", "Alternative #1")
-        const alt2Email = await generateDropdownEmail("alt2Signature", "Alternative #2")
-        result = await send(alt1Email, alt2Email) 
-      }
-      break;
-    default:
-      result = true;
-  }
-
+  const result = await sendEmails(student, req.params.title, form, `${linkHeader(req)}/student/forms/viewForm/${studentId}/${req.params.title}/false`)
   if (result) {
-    res.redirect("/studentView/forms/" + req.params.title + "/true")
+    res.redirect(`/studentView/forms/${req.params.title}/true`)
   } else {
     res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact each of your advisors to ensure they will help complete your form." })
   }
@@ -320,6 +218,257 @@ studentViewController.downloadCourses = async function (req, res) {
   res.setHeader("Content-Disposition", "filename=" + result.onyen + " grades.xlsx");
   res.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   fs.createReadStream(filePath).pipe(res);
+}
+
+studentViewController.formVersions = async function (req, res) {
+  const formName = req.params.title
+  if (formName != 'CS02') { // currently only allow CS02 to have multiple copies
+    res.render("../views/error.ejs", { string: "Not a valid form name or is not a form that allows multiple submissions." })
+    return
+  }
+
+  const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (student == null) {
+    res.render("../views/error.ejs", { string: "Student not found" })
+    return
+  }
+  const studentId = student._id
+
+  // if adding more forms with multiple submissions, change the sort field, these are for CS02:
+  const titleField = 'courseNumber'
+  const subtitleField = 'dateSubmitted'
+  const forms = await schema[req.params.title].find({ student: studentId }).sort('courseNumber').exec()
+
+  // generating opts
+  const isStudent = true
+  const hasAccess = true
+  const { cspNonce } = res.locals
+  const opts = {
+    student, forms, isStudent, hasAccess, formName, cspNonce,
+    titleField, subtitleField
+  }
+  res.render("../views/student/formIndex.js", opts)
+  return
+}
+
+studentViewController.viewFormVersion = async (req, res) => {
+  const { params, session } = req
+  const formName = params.title
+  let formId = params.formId
+  if (formName == null || !schema[formName]) {
+    res.render('../views/error.ejs', { string: `${formName} is not a real form.`})
+    return
+  }
+  if (!mongoose.isValidObjectId(formId) && formId != 'new') {
+    res.render('../views/error.ejs', { string: `${formId} is not a valid form.` })
+    return
+  }
+  
+  if (params.uploadSuccess != null) {
+    const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const uploadSuccess = params.uploadSuccess == 'true'
+    const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
+    if (student == null) {
+      res.render('../views/error.ejs', { string: 'Student id not specified.' })
+      return
+    }
+
+    if (formId === 'new') {
+      const numberOfPrevSubmissions = (await schema[formName].find({ student: student._id })).length
+      if (numberOfPrevSubmissions > 25) {
+        res.render('../views/error.js', { string: `Too many ${formName} forms found.` })
+        return
+      }
+
+      const newform = await upsertForm(student, formName, null, {})
+      res.redirect(`/studentView/multiforms/${formName}/${newform._id}/false`)
+      return
+    }
+
+    const result = await schema[formName].findOne({ student: student._id, _id: formId }).exec();
+    if (result == null) {
+      res.render("../views/error.js", { string: "Form not found." })
+      return
+    }
+    const form = result || {}
+    const isStudent = true
+    const hasAccess = true
+    const postMethod = `/studentView/multiforms/update/${formName}/${formId}`
+    const view = `../views/student/${formName}`
+    const { cspNonce } = res.locals
+    const locals = {
+      student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
+      activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+    }
+    res.render(view, locals)
+    return
+  }
+}
+
+studentViewController.updateFormVersion = async function (req, res) {
+  const formData = validateFormData(req.body)
+  const formName = req.params.title
+  const formId = req.params.formId
+  if (formName == null || !schema[formName]) {
+    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
+    return
+  }
+  if (!mongoose.isValidObjectId(formId)) {
+    res.render('../views/error.ejs', { string: `${formId} is not a valid form.` })
+    return
+  }
+
+  const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (student == null) {
+    res.render("../views/error.ejs", { string: "Student not found" })
+    return
+  }
+
+  const studentId = student._id
+  let form = await schema[formName].findOne({ student: studentId, _id: formId }).exec()
+  form = await upsertForm(student, formName, form, formData)
+  if (!form) {
+    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+    return
+  }
+
+  const result = await sendEmails(student, formName, form, `${linkHeader(req)}TODO:/false`)
+  if (result) {
+    res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)
+  } else {
+    res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact each of your advisors to ensure they will help complete your form." })
+  }
+}
+
+studentViewController.saveFormVersion = async function (req, res) {
+  const formData = validateFormData(req.body)
+  const formName = req.params.title
+  const formId = req.params.formId
+  if (formName == null || !schema[formName]) {
+    res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
+    return 
+  }
+  if (!mongoose.isValidObjectId(formId) || formId != 'new') {
+    res.render('../views/error.ejs', { string: `${formId} is not a valid form` })
+    return
+  }
+
+  const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
+  if (student == null) {
+    res.render("../views/error.ejs", { string: "Student not found" })
+    return
+  }
+  
+  const studentId = student._id
+  let form = await schema[formName].findOne({ _id: formId, student: studentId }).exec()
+  form = await upsertForm(student, formName, form, formData)
+  if (!form) {
+    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+    return
+  }
+  res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)
+  return
+}
+
+/*
+  Helpers
+*/
+
+// might be nice to have a `renderForm` helper
+const renderStudentViewForm = async () => {
+
+}
+
+/**
+ * 
+ * @param {schema[Student]} student 
+ * @param {String} formName 
+ * @param {schema[CSXX]} form if null, creates a new form
+ * @param {Object} formData key-values that should be upserted
+ * @returns null if form could not be updated (is complete); new/updated form object if successful
+ */
+const upsertForm = async (student, formName, form, formData) => {
+  if (form == null) { // form not created for student yet
+    form = new schema[formName]({...formData, student: student._id });
+    await form.save()
+    return form
+  } 
+  
+  if (checkFormCompletion(formName, form)) {
+    return null
+  }
+  
+  return await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
+}
+
+/**
+ * send emails based on the form name you put in
+ * @param {schema.Student} student the student you want to send the email for
+ * @param {String} formName 
+ * @param {schema[CSXX]} form specific form you want the email data to come from
+ * @param {Express.Request} req request sent to the object
+ * @returns 
+ */
+const sendEmails = async (student, formName, form, linkToForm) => {
+  const advisors = ['advisor', 'researchAdvisor']
+    .map(key => student[key])
+    .filter(advisor => advisor && advisor.email)
+    .map(advisor => advisor.email)
+    .join(', ')
+  const advisorEmail = generateApprovalEmail(advisors, "Advisor", student, formName, linkToForm)
+  const supervisorEmail = generateSupervisorEmail(student, formName, linkToForm)
+  /**
+   * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
+   * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
+   * @param {String} title - the faculty member's title for email subject line eg. "Instructor"
+   * @return {Promise<Object>} - generated email object
+   */
+  const generateDropdownEmail = async (key, title) => {
+    const keyName = form[key]
+    const facultyEmail = (await schema.Faculty.find({}).exec()).find(f => `${f.firstName} ${f.lastName}` === keyName).email
+    return generateApprovalEmail(facultyEmail, title, student, formName, linkToForm)
+  }
+
+  let result;
+  switch (formName) {
+    case 'CS01': // forms that only have advisorSignature checkbox
+      result = await send(advisorEmail);
+      break
+    case 'CS02':
+      const instructorEmail = await generateDropdownEmail("instructorSignature", "Instructor")
+      result = await send(advisorEmail, instructorEmail)
+      break
+    case 'CS03':
+      result = await send(advisorEmail, supervisorEmail) 
+      break
+    case 'CS04':
+      result = await send(advisorEmail)
+      break
+    case 'CS06':
+      result = await send(supervisorEmail) 
+      break
+    case 'CS08': 
+      const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")
+      const secondaryEmail = await generateDropdownEmail("secondarySignature", "Secondary Reader")
+      result = await send(primaryEmail, secondaryEmail)
+      break
+    case 'CS13':
+      if (form.comp523 && form.comp523Signature) {
+        const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
+        result = await send(comp523Email)
+      } else if (form.hadJob) {
+        result = await send(advisorEmail)
+      } else if (form.alternative) {
+        const alt1Email = await generateDropdownEmail("alt1Signature", "Alternative #1")
+        const alt2Email = await generateDropdownEmail("alt2Signature", "Alternative #2")
+        result = await send(alt1Email, alt2Email) 
+      }
+      break
+    default:
+      result = true
+  }
+  return result
 }
 
 

@@ -28,8 +28,16 @@ router.get("/downloadCourses", student.downloadCourses);
 // router.post("/post", student.post);
 router.post("/put", student.put);
 
-router.post("/forms/update/:title", student.updateForm);
+router.post("/forms/update/:title", student.updateForm); // TODO: maybe it's better if update just accepted a formId
 
-router.post("/forms/save/:title", student.saveForm)
+router.post("/forms/save/:title", student.saveForm);
+
+router.post("/multiforms/update/:title/:formId", student.updateFormVersion);
+
+router.get("/multiforms/:title", student.formVersions);
+
+router.get("/multiforms/:title/:formId/:uploadSuccess", student.viewFormVersion);
+
+router.post("/multiforms/save/:title/:formId", student.saveFormVersion);
 
 module.exports = router;
