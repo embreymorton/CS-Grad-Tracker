@@ -258,12 +258,12 @@ studentViewController.viewFormVersion = async (req, res) => {
   const { params, session } = req
   const formName = params.title
   let formId = params.formId
-  if (formName == null || !schema[formName] || formName != 'CS02') {
-    res.render('../views/error.ejs', { string: `${formName} is not a real form or does not support multiple submissions.`})
-    return
-  }
   if (!mongoose.isValidObjectId(formId) && formId != 'new') {
     res.render('../views/error.ejs', { string: `${formId} is not a valid form.` })
+    return
+  }
+  if (formName == null || !schema[formName] || formName != 'CS02') {
+    res.render('../views/error.ejs', { string: `${formName} is not a real form or does not support multiple submissions.`})
     return
   }
   
@@ -353,7 +353,7 @@ studentViewController.saveFormVersion = async function (req, res) {
     res.render("../views/error.ejs", { string: "Did not include title of form or is not a real form." })
     return 
   }
-  if (!mongoose.isValidObjectId(formId) || formId != 'new') {
+  if (!mongoose.isValidObjectId(formId)) {
     res.render('../views/error.ejs', { string: `${formId} is not a valid form` })
     return
   }

@@ -393,6 +393,7 @@ studentController.viewMultiform = async (req, res) => {
       return res.render('../views/error.js', { string: `Too many ${formName} forms found.` })
     }
     const newform = new schema[formName]({student: studentId})
+    await newform.save()
     return res.redirect(`/student/multiforms/view/${studentId}/${formName}/${newform._id}/false`)
   }
 
