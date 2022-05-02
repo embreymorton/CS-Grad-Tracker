@@ -114,7 +114,7 @@ const getDeletedFields = (student, updateMap) =>
 
 studentController.delete = function (req, res) {
   var id = req.params._id
-  if (id != null) {
+  if (id != null && mongoose.isValidObjectId(id)) {
     /*Documents reference students; since documents are
     personal student documents, just delete the documents.
     */
@@ -151,7 +151,7 @@ studentController.create = function(req, res){
 }
 
 studentController.edit = async (req, res) => {
-  if (!req.params._id) {
+  if (!req.params._id || !mongoose.isValidObjectId(req.params._id)) {
     res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
   } else {
     const admin = req.session.accessLevel == 3
@@ -180,7 +180,7 @@ studentController.edit = async (req, res) => {
 }
 
 studentController.jobs = function(req, res){
-  if(req.params._id){
+  if(req.params._id && mongoose.isValidObjectId(req.params._id)){
     var jobs
 
     schema.Job.find().populate('supervisor').populate('course').populate('semester').sort({position:1}).exec().then(function(result){
@@ -265,7 +265,7 @@ studentController.addJobs = function(req, res){
 }
 
 studentController.formPage = function(req, res){
-  if(req.params._id != null){
+  if(req.params._id != null || mongoose.isValidObjectId(req.params._id)){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       var student = result
       res.render('../views/student/forms.ejs', {student: student})
@@ -283,7 +283,7 @@ studentController.viewForm = async (req, res) => {
   if (formName == 'CS02') {
     return res.redirect(`/student/multiforms/${_id}/${formName}`)
   }
-  if (formName != null && _id != null && params.uploadSuccess != null) {
+  if (formName != null && _id != null && params.uploadSuccess != null && mongoose.isValidObjectId(_id)) {
     const faculty = await schema.Faculty.find({}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
@@ -308,11 +308,12 @@ studentController.viewForm = async (req, res) => {
     }
     res.render(view, locals)
   }
+  return res.render("../views/error.ejs", { string: "Invalid URL parameters." })
 }
 
 studentController.updateForm = async function(req, res){
   var input = req.body
-  if(req.params.title != null && req.params._id != null){
+  if(req.params.title != null && req.params._id != null && mongoose.isValidObjectId(req.params._id)){
     schema.Student.findOne({_id: req.params._id}).exec().then(function(result){
       if(result != null){
         var studentId = result._id
@@ -486,7 +487,7 @@ async function updateStudentFields(formName, form) {
 }
 
 studentController.courses = function(req, res){
-  if(req.params._id != null){
+  if(req.params._id != null || mongoose.isValidObjectId(req.params._id)){
     schema.Student.findOne({_id: req.params._id}).populate({
       path:'grades',
       populate:{path:'course', populate:{path:'semester'}}
@@ -512,7 +513,7 @@ studentController.courses = function(req, res){
     })
   }
   else{
-    res.render('../views/error.ejs', {string: 'Id missing.'})
+    res.render('../views/error.ejs', {string: 'Id missing or invalid.'})
   }
 }
 
@@ -987,7 +988,7 @@ function verifyBoolean(input){
 
 studentController.notesPage = function(req, res) {
   const studentId = req.params._id
-  if (!studentId) {
+  if (!studentId || !mongoose.isValidObjectId(studentId)) {
     res.render('../views/error.ejs', {string: 'RequiredParamNotFound'})
   } else {
     schema.Student.findOne({_id: studentId}).exec().then(function(student) {
@@ -1006,7 +1007,7 @@ studentController.updateNote = function (req, res) {
   var input = req.body
   var _id = req.params.noteId
   //verify that the required fields are not null
-  if(req.params._id != null){
+  if(req.params._id != null && mongoose.isValidObjectId(req.params._id)){
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
 
     schema.Student.findOne({_id: req.params._id}).exec().then(function (result) {
@@ -1038,7 +1039,7 @@ studentController.updateNote = function (req, res) {
 studentController.addNewNote = function (req, res) {
   var input = req.body
   //verify that the required fields are not null
-  if(req.params._id != null){
+  if(req.params._id != null && mongoose.isValidObjectId(req.params._id)){
     //try to find a student by unique identifiers: onyen or PID, display error page if one found
 
     schema.Student.findOne({_id: req.params._id}).exec().then(function (result) {

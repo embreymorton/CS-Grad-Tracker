@@ -209,7 +209,7 @@ jobController.create = function (req, res) {
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
 jobController.edit = function (req, res) {
-    if (req.params._id) { //_id from params because passed with job/edit/:_id
+    if (req.params._id && mongoose.isValidObjectId(req.params._id)) { //_id from params because passed with job/edit/:_id
         schema.Job.findOne({_id: req.params._id}).populate("supervisor").populate("course").populate("semester").populate("fundingSource").exec().then(function (result) {
             if (result != null) {
                 var job, faculty, courses, grants;
@@ -643,6 +643,9 @@ jobController.assignPage = function (req, res) {
 
 jobController.assign = function (req, res) {
     var jobId = req.params._id;
+    if (!mongoose.isValidObjectId(jobId)) {
+        return res.render("../views/error.ejs", { string: "Invalid job id." })
+    }
     var input = req.body;
     if (jobId != null && input.students != null) {
         //make sure the job is in the database

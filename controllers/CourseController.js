@@ -219,7 +219,7 @@ courseController.create = function (req, res){
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
 courseController.edit = function (req, res){
-  if(req.params._id){
+  if(req.params._id && mongoose.isValidObjectId(req.params._id)){
   //populate the faculty and semester fields with document data
   schema.Course.findOne({_id: req.params._id}).populate("faculty").populate("semester").exec().then(function(result){
     if(result != null){

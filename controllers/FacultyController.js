@@ -166,7 +166,7 @@ facultyController.create = function(req, res){
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
 facultyController.edit = function(req, res){
-  if (req.params._id) { //_id from params because passed with faculty/edit/:_id
+  if (req.params._id && mongoose.isValidObjectId(req.params._id)) { //_id from params because passed with faculty/edit/:_id
     schema.Faculty.findOne({_id: req.params._id}).exec().then(function (result) {
       if (result) res.render("../views/faculty/edit.ejs", {faculty: result});
       else throw new Error("FacultyNotFound");
