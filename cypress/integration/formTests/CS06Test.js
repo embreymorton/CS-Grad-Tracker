@@ -29,6 +29,7 @@ let CS06 = {
 let CS06Dropdowns = {
   comp915: 'true',
   breadthCourseCategory: ['S', 'A', 'O', 'T', 'T', 'T'],
+  breadthCourseGradeModifier: ['+', '-', '', '-', '+'],
   backgroundPrepWorkSheet: 'false',
   programProductRequirement: 'false',
   PHDWrittenExam: 'false',

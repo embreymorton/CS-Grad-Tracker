@@ -5,7 +5,6 @@ const { lastName, firstName, pid } = data.student
 const name = `${lastName}, ${firstName}`
 
 let CS03 = {
-  DR: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
   dept: ['COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP'],
   course: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   hours: ['1', '3', '4', '5', '2', '3', '5', '6', '7', '2'],
@@ -19,6 +18,8 @@ let CS03 = {
 }
 
 let CS03Dropdowns = {
+  grade: ['P', 'L', 'F'],
+  gradeModifier: ['+','-',''],
   backgroundPrep: 'true',
   programProduct: 'false',
   comprehensivePaper: 'true',
