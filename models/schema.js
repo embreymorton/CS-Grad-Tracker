@@ -367,7 +367,7 @@ var CS03Schema = mongoose.Schema({
   semester: [String],
   title: [String], // this and above should be length 13
   grade: [String], // should be length 3
-  gradeModifier: [String],
+  gradeModifier: [String], // should also be length 3
   backgroundPrep: Boolean,
   programProduct: Boolean,
   comprehensivePaper: Boolean,
