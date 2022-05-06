@@ -39,10 +39,10 @@ courseController.post = function (req, res) {
     //attempt to populate faculty and course, if they don't exist, error will be caught
     schema.Course.findOne(input).populate("faculty").populate("semester").exec().then(function (result) {
       if (result != null) {
-        res.render("../views/error.ejs", {string: "This course already exists."});
+        return res.render("../views/error.ejs", {string: "This course already exists."});
       }
       else if(input.department.length != 4){
-        res.render("../views/error.ejs", {string: "Please input four letter department code"});
+        return res.render("../views/error.ejs", {string: "Please input four letter department code"});
       }
       else {
         schema.CourseInfo.findOne({_id:input.courseInfo}).exec().then(function(result){
@@ -54,11 +54,11 @@ courseController.post = function (req, res) {
 
             var inputCourse = new schema.Course(util.validateModelData(input, schema.Course));
             inputCourse.save().then(function(result){
-              res.redirect("/course/edit/"+result._id);
+              return res.redirect("/course/edit/"+result._id);
             });
           }
           else{
-            res.render("../views/error.ejs", {string: "You were messing with the html :<"});
+            return res.render("../views/error.ejs", {string: "You were messing with the html :<"});
           }
         });
       }
@@ -66,11 +66,11 @@ courseController.post = function (req, res) {
     provided does not exist (shouldn't occur if frontend
     done properly), and populate is failing*/
     }).catch(function(err){
-      res.render("../views/error.ejs", {string: err.message});
+      return res.render("../views/error.ejs", {string: err.message});
     });
   }
   else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    return res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
 }
 
@@ -125,11 +125,11 @@ courseController.get = function (req, res) {
       }
       var search = util.listObjectToString(input);
       schema.Semester.find().sort({year: 1, season: 1}).exec().then(function(result){
-        res.render("../views/course/index.ejs", {courses: courses, semesters: result, search: search});
+        return res.render("../views/course/index.ejs", {courses: courses, semesters: result, search: search});
       });
     });
   }).catch(function(err){
-    res.json({"error": err.message, "origin": "course.put"});
+    return res.json({"error": err.message, "origin": "course.put"});
   });
 }
 
@@ -161,17 +161,17 @@ courseController.put = function (req, res) {
   if(util.allFieldsExist(input, schema.Course)){
     schema.Course.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function(result){
       if(result != null){
-        res.redirect("/course/edit/"+result._id);
+        return res.redirect("/course/edit/"+result._id);
       }
       else{
-        res.render("../views/error.ejs", {string: "CourseNotFound"});
+        return res.render("../views/error.ejs", {string: "CourseNotFound"});
       }
     }).catch(function(err){
-      res.json({"error": err.message, "origin": "course.put"});
+      return res.json({"error": err.message, "origin": "course.put"});
     });
   }
   else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    return res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
 }
 
@@ -196,7 +196,7 @@ courseController.create = function (req, res){
       schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
         semesters = result;
         var categories = schema.Course.schema.path("category").enumValues;
-        res.render('../views/course/create.ejs', {faculty: faculty, semesters: semesters, categories: categories, courseInfo: courseInfo});
+        return res.render('../views/course/create.ejs', {faculty: faculty, semesters: semesters, categories: categories, courseInfo: courseInfo});
 
       });
     });
@@ -234,7 +234,7 @@ courseController.edit = function (req, res){
         schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
           semesters = result;
           var categories = schema.Course.schema.path("category").enumValues;
-          res.render("../views/course/edit.ejs", {course: course, faculty: faculty, semesters: semesters, categories: categories});
+          return res.render("../views/course/edit.ejs", {course: course, faculty: faculty, semesters: semesters, categories: categories});
         });
       });
     }
@@ -245,7 +245,7 @@ courseController.edit = function (req, res){
   }
   //catches error if _id is null
   else{
-    res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+    return res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
   }
 }
 
@@ -262,7 +262,7 @@ courseController.uploadPage = function(req, res){
   }
   //always have to provide semesters because search requires it
   schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
-    res.render("../views/course/upload.ejs", {semesters: result, uploadSuccess: uploadSuccess});
+    return res.render("../views/course/upload.ejs", {semesters: result, uploadSuccess: uploadSuccess});
   });
 }
 
@@ -366,20 +366,20 @@ courseController.upload = function(req, res){
                     inputCourse.save().then(function(result){
                       count++;
                       if(count == data.length){
-                        res.redirect("/course/upload/true");
+                        return res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-                      res.render("../views/error.ejs", {string: err});
+                      return res.render("../views/error.ejs", {string: err});
                     });
                   }
                   else{
                     schema.Course.update({number: element.number, section: element.section, univNumber: element.univNumber, faculty: element.faculty, semester: element.semester}, element, {runValidators: true,}).exec().then(function(result){
                       count++;
                       if(count == data.length){
-                        res.redirect("/course/upload/true");
+                        return res.redirect("/course/upload/true");
                       }
                     }).catch(function(err){
-                      res.render("../views/error.ejs", {string: err});
+                      return res.render("../views/error.ejs", {string: err});
                       return;
                     });
                   }
@@ -387,12 +387,12 @@ courseController.upload = function(req, res){
             });
           }
           else{
-           res.render("../views/error.ejs", {string: element.name+" did not save because the faculty does not exist."});
+           return res.render("../views/error.ejs", {string: element.name+" did not save because the faculty does not exist."});
           }
         });
       }
       else{
-       res.render("../views/error.ejs", {string: element.name+" did not save because it is missing a field. All fields are required."});
+       return res.render("../views/error.ejs", {string: element.name+" did not save because it is missing a field. All fields are required."});
       }
     });
   });
@@ -436,7 +436,7 @@ courseController.uploadInfoPage = function(req, res){
   }
   //always have to provide semesters because search requires it
   schema.Semester.find({}).sort({year:1, season:1}).exec().then(function(result){
-    res.render("../views/course/uploadInfo.ejs", {semesters: result, uploadSuccess: uploadSuccess});
+    return res.render("../views/course/uploadInfo.ejs", {semesters: result, uploadSuccess: uploadSuccess});
   });
 }
 
@@ -467,10 +467,10 @@ courseController.uploadInfo = function(req, res){
             res.redirect("/course/uploadInfo/true");
           }
         }).catch((err) => {
-          res.render("../views/error.ejs", {string: err})
+          return res.render("../views/error.ejs", {string: err})
         });
       } else {
-        res.render("../views/error.ejs", {string: element.name+" is missing a field: all fields are required."});
+        return res.render("../views/error.ejs", {string: element.name+" is missing a field: all fields are required."});
       }
     });
   });
