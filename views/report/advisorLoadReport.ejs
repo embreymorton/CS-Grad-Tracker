@@ -20,6 +20,8 @@
 
           <h3 class="space">Advisor Load Report</h3>
 
+          <p>Note: Table of advisorless students are at the bottom of this page. Click <a href="#advisorless">here</a> to jump down.</p>
+
           <% if(report != undefined && report.length>0) { %>
             <% const last = report.length-1 %>
             <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
@@ -53,7 +55,7 @@
                 <% } %>
               </tbody>
             </table>
-            <h4 class="space">Advisorless Students</h4>
+            <h4 class="space" id="advisorless">Advisorless Students</h4>
             <table id="advisorless-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisorless-report-table">
               <thead>
                 <tr>

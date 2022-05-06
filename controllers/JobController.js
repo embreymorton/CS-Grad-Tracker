@@ -33,7 +33,7 @@ jobController.post = function (req, res) {
         //attempt to populate faculty, if they don't exist, error will be caught
         schema.Job.findOne(input).populate("supervisor").exec().then(function (result) {
             if (result != null) {
-                res.render("../views/error.ejs", {string: "This job already exists."});
+                return res.render("../views/error.ejs", {string: "This job already exists."});
             } else {
                 var inputJob = new schema.Job(util.validateModelData(input, schema.Job));
                 inputJob.save().then(function (result) {
@@ -44,11 +44,11 @@ jobController.post = function (req, res) {
             provided does not exist (shouldn't occur if frontend
             done properly), and populate is failing*/
         }).catch(function (err) {
-            res.render("../views/error.ejs", {string: err.message});
+            return res.render("../views/error.ejs", {string: err.message});
         });
 
     } else {
-        res.render("../views/error.ejs", {string: "Required parameter not found"});
+        return res.render("../views/error.ejs", {string: "Required parameter not found"});
     }
 }
 
@@ -102,7 +102,7 @@ jobController.get = function (req, res) {
                     semesters = result;
                     var count = 0;
                     if (jobs.length == 0) {
-                        res.render("../views/job/index.ejs", {
+                        return res.render("../views/job/index.ejs", {
                             jobs: jobs,
                             faculty: faculty,
                             courses: courses,
@@ -118,7 +118,7 @@ jobController.get = function (req, res) {
                             job.students = result;
                             count++;
                             if (count == jobs.length) {
-                                res.render("../views/job/index.ejs", {
+                                return res.render("../views/job/index.ejs", {
                                     jobs: jobs,
                                     faculty: faculty,
                                     courses: courses,
@@ -132,7 +132,7 @@ jobController.get = function (req, res) {
             });
         });
     }).catch(function (err) {
-        res.json({'error': err.message, 'origin': 'job.get'})
+        return res.json({'error': err.message, 'origin': 'job.get'})
     });
 }
 
@@ -161,15 +161,15 @@ jobController.put = function (req, res) {
     if (input.position != null && input.supervisor != null && input._id != null) {
         schema.Job.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function (result) {
             if (result != null) {
-                res.redirect("/job/edit/" + result._id);
+                return res.redirect("/job/edit/" + result._id);
             } else {
-                res.render("../views/error.ejs", {string: "JobNotFound"});
+                return res.render("../views/error.ejs", {string: "JobNotFound"});
             }
         }).catch(function (err) {
-            res.json({"error": err.message, "origin": "job.put"});
+            return res.json({"error": err.message, "origin": "job.put"});
         });
     } else {
-        res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+        return res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
     }
 }
 
@@ -187,7 +187,7 @@ jobController.create = function (req, res) {
         getSemesters().then(function (semesters) {
           const { cspNonce } = res.locals
           const locals = { faculty, courses, grants, jobTitles, semesters, cspNonce }
-          res.render('../views/job/create.ejs', locals)
+          return res.render('../views/job/create.ejs', locals)
         })
       })
     })
@@ -233,10 +233,10 @@ jobController.edit = function (req, res) {
                         });
                     });
                 });
-            } else res.render("../views/error.ejs", {string: "JobNotFound"});
+            } else return res.render("../views/error.ejs", {string: "JobNotFound"});
         });
     } else {
-        res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
+        return res.render("../views/error.ejs", {string: "RequiredParamNotFound"});
     }
 }
 
@@ -251,7 +251,7 @@ jobController.uploadPage = function (req, res) {
                 if (req.params.uploadSuccess == "true") {
                     uploadSuccess = true;
                 }
-                res.render("../views/job/upload.ejs", {
+                return res.render("../views/job/upload.ejs", {
                     faculty: faculty,
                     courses: courses,
                     semesters: result,
@@ -375,7 +375,7 @@ jobController.upload = function (req, res) {
                                                                 res.redirect("/job/upload/true");
                                                             }
                                                         }).catch(function (err) {
-                                                            res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
+                                                            return res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
                                                         });
                                                     } else {
                                                         count++;
@@ -384,7 +384,7 @@ jobController.upload = function (req, res) {
                                                         }
                                                     }
                                                 }).catch(function (err) {
-                                                    res.render("../views/error.ejs", {string: err});
+                                                    return res.render("../views/error.ejs", {string: err});
                                                 });
                                             } else {
                                                 if (element.onyen != null) {
@@ -394,7 +394,7 @@ jobController.upload = function (req, res) {
                                                             res.redirect("/job/upload/true");
                                                         }
                                                     }).catch(function (err) {
-                                                        res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
+                                                        return res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
                                                     });
                                                 } else {
                                                     count++;
@@ -424,7 +424,7 @@ jobController.upload = function (req, res) {
                                                         res.redirect("/job/upload/true");
                                                     }
                                                 }).catch(function (err) {
-                                                    res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
+                                                    return res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
                                                 });
                                             } else {
                                                 count++;
@@ -433,7 +433,7 @@ jobController.upload = function (req, res) {
                                                 }
                                             }
                                         }).catch(function (err) {
-                                            res.render("../views/error.ejs", {string: err});
+                                            return res.render("../views/error.ejs", {string: err});
                                         });
                                     } else {
                                         if (element.onyen != null) {
@@ -443,7 +443,7 @@ jobController.upload = function (req, res) {
                                                     res.redirect("/job/upload/true");
                                                 }
                                             }).catch(function (err) {
-                                                res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
+                                                return res.render("../views/error.ejs", {string: "Student " + element.onyen + " did not save job " + element.position + " because student was not found."});
                                             });
                                         } else {
                                             count++;
@@ -462,7 +462,7 @@ jobController.upload = function (req, res) {
 
 
             } else {
-                res.render("../views/error.ejs", {string: element.position + " " + element.supervisor + " did not save because it is missing a field: position, supervisor, and semester required."});
+                return res.render("../views/error.ejs", {string: element.position + " " + element.supervisor + " did not save because it is missing a field: position, supervisor, and semester required."});
             }
         });
     });
@@ -493,7 +493,7 @@ jobController.uploadGrantPage = function (req, res) {
                 if (req.params.uploadSuccess == "true") {
                     uploadSuccess = true;
                 }
-                res.render("../views/job/uploadGrant.ejs", {
+                return res.render("../views/job/uploadGrant.ejs", {
                     faculty: faculty,
                     courses: courses,
                     semesters: result,

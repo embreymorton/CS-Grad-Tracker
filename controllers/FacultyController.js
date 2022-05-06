@@ -42,10 +42,10 @@ facultyController.post = function (req, res) {
     if the faculty attempting to be created already exists*/
     schema.Faculty.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}]}).exec().then(function (result) {
       if (result !== null){
-        res.render("../views/error.ejs", {string: "That faculty already exists"});
+        return res.render("../views/error.ejs", {string: "That faculty already exists"});
       }
       else if(!input.pid.match(/\d{9}/)){
-        res.render("../views/error.ejs", {string: `PID needs to be only 9 digits (was '${input.pid}')`});
+        return res.render("../views/error.ejs", {string: `PID needs to be only 9 digits (was '${input.pid}')`});
       }
       else {
         input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
@@ -68,7 +68,7 @@ facultyController.post = function (req, res) {
   }
   //if all of the fields are not provided throw this error
   else{
-    throw new Error("RequiredParamNotFound");
+    return res.render('../views/error.ejs', { string: 'Required parameter not found.' })
   }
 }
 
@@ -97,9 +97,9 @@ facultyController.get = function (req, res) {
   input = util.makeRegexp(input); //make all text fields regular expressions with ignore case
   //find the faculty and sort by onyen, render /faculty/index.ejs on completion
   schema.Faculty.find(input).sort({lastName:1, firstName:1}).exec().then(function (result) {
-    res.render("../views/faculty/index.ejs", {faculty: result, search: search});
+    return res.render("../views/faculty/index.ejs", {faculty: result, search: search});
   }).catch(function (err) {
-    res.json({"error": err.message, "origin": "faculty.get"});
+    return res.json({"error": err.message, "origin": "faculty.get"});
   });
 }
 
@@ -132,12 +132,12 @@ facultyController.put = function (req, res) {
   if (util.allFieldsExist(input, schema.Faculty)) {
     schema.Faculty.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function (result) {
       if (result != null){
-        res.redirect("/faculty/edit/"+result._id);
+        return res.redirect("/faculty/edit/"+result._id);
       }
-      else throw new Error("FacultyNotFound");
+      return res.render('../views/error.ejs', { string: 'Faculty not found.' });
     });
   } else {
-    throw new Error("RequiredParamNotFound");
+    return res.render('../views/error.ejs', { string: 'Required param not found.' });
   }
 }
 
@@ -148,7 +148,7 @@ facultyController.put = function (req, res) {
  *
  */
 facultyController.create = function(req, res){
-  res.render("../views/faculty/create.ejs");
+  return res.render("../views/faculty/create.ejs");
 }
 
 /**
@@ -169,12 +169,11 @@ facultyController.create = function(req, res){
 facultyController.edit = function(req, res){
   if (req.params._id && mongoose.isValidObjectId(req.params._id)) { //_id from params because passed with faculty/edit/:_id
     schema.Faculty.findOne({_id: req.params._id}).exec().then(function (result) {
-      if (result) res.render("../views/faculty/edit.ejs", {faculty: result});
-      else throw new Error("FacultyNotFound");
+      if (result) return res.render("../views/faculty/edit.ejs", {faculty: result});
+      else return res.render("../views/error.ejs", { string: 'Faculty not found.'})
     })
-  } else {
-    throw new Error("RequiredParamNotFound");
-  }
+  } 
+  return res.render('../views/error.ejs', { string: 'Invalid faculty _id passed as parameter.'})
 }
 
 facultyController.download = function(req, res){
@@ -195,7 +194,7 @@ facultyController.uploadPage = function(req, res){
   if(req.params.uploadSuccess == "true"){
     uploadSuccess = true;
   }
-  res.render("../views/faculty/upload.ejs", {uploadSuccess: uploadSuccess});
+  return res.render("../views/faculty/upload.ejs", {uploadSuccess: uploadSuccess});
 
 }
 
@@ -225,11 +224,11 @@ facultyController.upload = function(req, res){
             res.redirect("/faculty/upload/true");
           }
         }).catch((err)=>{
-          res.render("../views/error.ejs", {string: err});
+          return res.render("../views/error.ejs", {string: err});
         });
       }
       else{
-        res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field: firstName, pid, onyen, and csid are required"});
+        return res.render("../views/error.ejs", {string: element.firstName+" did not save because it is missing a field: firstName, pid, onyen, and csid are required"});
       }
     });
   });
