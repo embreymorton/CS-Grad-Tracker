@@ -150,13 +150,13 @@ const aggregateLoadData = async () => {
 }
 
 reportController.get = function (req, res) {
-  res.render("../views/report/index.ejs", {})
+  return res.render("../views/report/index.ejs", {})
 }
 
 reportController.getProgressReport = async (req, res) => {
   const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}) 
-  if (!string) res.render('../views/report/progressReport.ejs', { report })
-  else res.render('../views/error.ejs', { string })
+  if (!string) return res.render('../views/report/progressReport.ejs', { report })
+  else return res.render('../views/error.ejs', { string })
 }
 
 reportController.downloadProgressReportXLSX = async function (req, res) {
@@ -193,15 +193,15 @@ reportController.getTuitionReport = (req, res) => {
   }
   let tutionReport = [];
   aggregateTuitionData(tutionReport).then((result) => { 
-    res.render('../views/report/tuitionReport.ejs', {report: result})
+    return res.render('../views/report/tuitionReport.ejs', {report: result})
   }).catch((error) => {
-    res.render('../views/error.ejs', {string: error})
+    return res.render('../views/error.ejs', {string: error})
   })
 }
 
 reportController.getAdvisorReport = async (req, res) => {
   if (!res.locals.admin) {
-    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor reports."})
+    return res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor reports."})
   }
 
   const sortField = req.query.sortField
@@ -245,8 +245,8 @@ reportController.getAdvisorReport = async (req, res) => {
     orderedReport = orderedReport.reverse()
   }
 
-  if (!string) res.render('../views/report/advisorReport.ejs', { report: orderedReport, sortOrder: req.query.sortOrder, sortField })
-  else res.render('../views/error.ejs', { string })
+  if (!string) return res.render('../views/report/advisorReport.ejs', { report: orderedReport, sortOrder: req.query.sortOrder, sortField })
+  else return res.render('../views/error.ejs', { string })
 }
 
 reportController.downloadAdvisorReportXLSX = function (req, res) {
@@ -323,11 +323,11 @@ reportController.downloadAdvisorReportCSV = function (req, res) {
 
 reportController.getAdvisorLoadReport = async (req, res) => {
   if (!res.locals.admin) {
-    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor load reports."})
+    return res.render('../views/error.ejs', {string: "Non-admin faculty cannot view advisor load reports."})
   }
   const [ report, string ] = await aggregateLoadData()
-  if (!string) res.render('../views/report/advisorLoadReport.ejs', { report })
-  else res.render('../views/error.ejs', { string })
+  if (!string) return res.render('../views/report/advisorLoadReport.ejs', { report })
+  else return res.render('../views/error.ejs', { string })
 }
 
 module.exports = reportController;

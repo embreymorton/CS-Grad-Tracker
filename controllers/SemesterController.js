@@ -9,9 +9,9 @@ semesterController.index = (req, res) => {
     .sort({year:1, season:1})
     .exec()
     .then((semesters) => {
-      res.render('../views/semester/index.js', { semesters })
+      return res.render('../views/semester/index.js', { semesters })
     }).catch((err) => {
-      res.json({ error: err.message, origin: 'semester.index' })
+      return res.json({ error: err.message, origin: 'semester.index' })
     })
 }
 
