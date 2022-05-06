@@ -53,6 +53,7 @@ const CS02 = {
       cy.visit('/changeUser/admin')
       util.visitFormAsAdmin()
       cy.get('.CS02').click()
+      cy.contains('Create New Form').click()
       cy.contains(name)
       cy.contains(pid.toString())
       util.fillCleanFormAsAdmin(CS02)
@@ -64,6 +65,7 @@ const CS02 = {
     it('Test Checkbox Submission and Date Field', () => {
       cy.visit('/changeUser/student')
       cy.visit('/studentView/forms/CS02/false')
+      cy.contains('View').click()
       cy.contains(name)
       cy.contains(pid.toString())
       util.fillFormAsStudent(CS02)
