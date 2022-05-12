@@ -521,7 +521,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
 
   const setRadioishSelectionRequirement = () => {
     document.querySelector('form.cs-form').addEventListener('submit', (event) => {
-      if (event.submitter || event.submitter.id == "save-btn") {
+      if (event.submitter && event.submitter.id == "save-btn") {
         return
       }
       const advsr = document.querySelector('[name=advisor]').value
@@ -536,7 +536,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
 
   const setNoCourseOverlapRequirement = () => {
     document.querySelector('form.cs-form').addEventListener('submit', (event) => {
-      if (event.submitter || event.submitter.id == "save-btn") {
+      if (event.submitter && event.submitter.id == "save-btn") {
         return
       }
       const breadth = document.getElementsByName('breadthCourseInfo')

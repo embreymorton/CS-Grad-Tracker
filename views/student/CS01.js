@@ -159,7 +159,7 @@ const pageScript = (opts) => {
     const dateInputs = keys.map((key) => document.getElementsByName (key + 'Date')[0])
     
     const inputChangeCheck = (event) => {
-      if (event.submitter || event.submitter.id == "save-btn") {
+      if (event.submitter && event.submitter.id == "save-btn") {
         return
       }
 
