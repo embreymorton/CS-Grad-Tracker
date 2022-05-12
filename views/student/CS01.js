@@ -101,7 +101,7 @@ const cs01Form = (opts) => {
         isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
           { type: 'submit' },
           'Submit'),
-          disableSubmitScript(opts),
+          // disableSubmitScript(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
@@ -153,12 +153,16 @@ const formRow = (admin, values) => (key) => {
 const pageScript = (opts) => {
   const script = x('script')({type: 'text/javascript'})
   const javascript = `
-  const onLoad = () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const keys = ['comp521', 'comp520', 'comp530']
     const coveredInputs = keys.map((key) => document.getElementsByName(key + 'Covered')[0])
     const dateInputs = keys.map((key) => document.getElementsByName (key + 'Date')[0])
     
-    const inputChangeCheck = () => {
+    const inputChangeCheck = (event) => {
+      if (event.submitter || event.submitter.id == "save-btn") {
+        return
+      }
+
       const complete = coveredInputs.map((covered, i) => covered.value.length > 0 && dateInputs[i].value.length > 0)
       if (complete.reduce((prev, curr) => prev + (curr ? 1 : 0), 0) >= 2) { // number of completes
         coveredInputs.concat(dateInputs).forEach((input) => input.required = false)
@@ -170,8 +174,7 @@ const pageScript = (opts) => {
     }
     coveredInputs.concat(dateInputs).forEach((input) => input.addEventListener('input', inputChangeCheck))
     document.getElementById('cs-form').onsubmit = inputChangeCheck
-  }
-  document.addEventListener('DOMContentLoaded', onLoad)
+  })
   `
   script.innerHTML = javascript
   script.setAttribute('nonce', opts.cspNonce)

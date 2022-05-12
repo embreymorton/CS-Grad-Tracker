@@ -1,7 +1,6 @@
 const x = require('hyperaxe')
 
 /**
- * Also adds formNoValidate to save button
  * @param {*} opts for cspNonce 
  * @returns 
  */
@@ -10,18 +9,14 @@ function disableSubmitScript(opts){
   
     el.innerHTML =
     `
-      onLoad = () => {
-        const save_button = document.getElementById('save-btn')
-        save_button ? save_button.formNoValidate = true : null
+      document.addEventListener('DOMContentLoaded', () => {
         function disableHandler(){
           document.getElementById('submit-btn').disabled = true
           return true
         }
     
         document.getElementById('cs-form').addEventListener('submit', disableHandler);
-    }
-  
-      document.addEventListener('DOMContentLoaded', onLoad);
+      });
     `;
     el.setAttribute('nonce', opts.cspNonce);
     return el
