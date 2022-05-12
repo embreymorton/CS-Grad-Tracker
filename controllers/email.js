@@ -63,7 +63,7 @@ _.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) 
 _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
   return {
     from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
-    to: 'kenny@cs.unc.edu',
+    to: 'kenney@cs.unc.edu',
     subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} ${formName} form submission`,
     text: `Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree.\n\n
     Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.\n\ngo here: `,
