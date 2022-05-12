@@ -166,14 +166,16 @@ facultyController.create = function(req, res){
  * @throws {Object} FacultyNotFound (shouldn't occur if frontend done properly)
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
-facultyController.edit = function(req, res){
+facultyController.edit = async function(req, res){
   if (req.params._id && mongoose.isValidObjectId(req.params._id)) { //_id from params because passed with faculty/edit/:_id
-    schema.Faculty.findOne({_id: req.params._id}).exec().then(function (result) {
-      if (result) return res.render("../views/faculty/edit.ejs", {faculty: result});
-      else return res.render("../views/error.ejs", { string: 'Faculty not found.'})
-    })
-  } 
-  return res.render('../views/error.ejs', { string: 'Invalid faculty _id passed as parameter.'})
+    const result = await schema.Faculty.findOne({_id: req.params._id}).exec()
+      if (result) 
+        return res.render("../views/faculty/edit.ejs", {faculty: result});
+      else 
+        return res.render("../views/error.ejs", { string: 'Faculty not found.'})
+  } else {
+    return res.render('../views/error.ejs', { string: 'Invalid faculty _id passed as parameter.'})
+  }
 }
 
 facultyController.download = function(req, res){
