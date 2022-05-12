@@ -193,6 +193,7 @@ const cs06Form = (opts) => {
               option({ value: '-', selected: breadthCourseGradeModifier && breadthCourseGradeModifier[i] == '-' || null }, '-'),
             )
           ))
+        ),
       ),
       hr(),
 
@@ -453,7 +454,7 @@ const cs06Form = (opts) => {
       )
     )
   )
-  )}
+}
 
 const namePidRow = (opts, editAccess) => {
   const { student, form, isComplete } = opts
