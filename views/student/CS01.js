@@ -101,7 +101,7 @@ const cs01Form = (opts) => {
         isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
           { type: 'submit' },
           'Submit'),
-          // disableSubmitScript(opts),
+          disableSubmitScript(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
