@@ -75,7 +75,7 @@ _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
   }
 }
 
-const developerEmails = "terrell@cs.unc.edu, kekevi@live.unc.edu, elaine13@email.unc.edu, zkhan@unc.edu"
+const developerEmails = "terrell@cs.unc.edu, dcowhig@cs.unc.edu, kekevi@live.unc.edu, elaine13@email.unc.edu, zkhan@unc.edu"
 _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
   return {
     from: '"CS-GradTracking" <noreply@cs.unc.edu>',
