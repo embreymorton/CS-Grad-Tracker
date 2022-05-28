@@ -61,13 +61,13 @@ let calculateActiveSemesters = (student) => {
   const today = new Date()
   const currentYear = today.getFullYear()
   const currentMonth = today.getMonth() + 1
-  const isSpring = currentMonth < 8
+  const isSpring = currentMonth < 6
   let { semesterStarted, semestersOnLeave } = student
   if (semesterStarted == null) return -1
   semestersOnLeave = semestersOnLeave || 0
   let activeSemesters = (currentYear - semesterStarted.year) * 2 - semestersOnLeave
-  if       (isSpring && semesterStarted.season == 'FA') activeSemesters--
-  else if (!isSpring && semesterStarted.season == 'SP') activeSemesters++
+  if (!isSpring) activeSemesters += 1
+  if (semesterStarted.season === 'SP') activeSemesters += 1
   return activeSemesters
 }
 
