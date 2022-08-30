@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-const testAccount = {user: "retta.doyle50@ethereal.email", pass: "J7PWfjJ4FewKyAQhRj"}
+const testAccount = {user: "dorris.blick1@ethereal.email", pass: "mFfaaB5zU4dWaUrV97"}
 
 const _ = {}
 _._transporter = null
