@@ -29,7 +29,7 @@ var facultyController = {};
  *
  * @throws {Object} RequiredParamNotFound (shouldn't occur if frontend done properly)
  */
-facultyController.post = function (req, res) {
+facultyController.post = async function (req, res) {
   var input = req.body; //because post request sent from form, get fields from the req"s body
   /*html checkboxes don't send false if the box is checked, it just sends nothing,
   so check if input.active equals null, if it is, that means the box wasn't checked,
@@ -37,34 +37,34 @@ facultyController.post = function (req, res) {
   input.active == null ? input.active = false : input.active = true;
   input.admin == null ? input.admin = false : input.admin = true;
   //Verify that all fields exist. Should be though if front end is done correctly.
-  if(util.allFieldsExist(input, schema.Faculty)){
+  if (!util.allFieldsExist(input, schema.Faculty)) {
+    return res.render
+  }
+  if (util.allFieldsExist(input, schema.Faculty)) {
     /*onyen and pid are unique, so look for faculty using those two fields to check
     if the faculty attempting to be created already exists*/
-    schema.Faculty.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}]}).exec().then(function (result) {
-      if (result !== null){
-        return res.render("../views/error.ejs", {string: "That faculty already exists"});
-      }
-      else if(!input.pid.match(/\d{9}/)){
-        return res.render("../views/error.ejs", {string: `PID needs to be only 9 digits (was '${input.pid}')`});
-      }
-      else {
-        input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
-        input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
-        input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
-        var inputFaculty = new schema.Faculty(util.validateModelData(input, schema.Faculty))
-        /*use the then function because save() is asynchronous. If you only have inputFaculty.save(); res.redirect...
-        it is possible that the data does not save in time (or load in time if performing queries that return data
-        that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
-        reliant on database operations inside of the then function of those operations*/
-        inputFaculty.save().then(function(result){
-          /*result of save function is the newly created faculty object, so
-          access _id from result*/
-          res.redirect("/faculty/edit/"+result._id);
-        });
-      }
-    }).catch(function (err) {
-      res.json({"error": err.message, "origin": "faculty.post"});
-    });
+    const result = await schema.Faculty.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}, {email: input.email}]}).exec()
+    if (result !== null){
+      return res.render("../views/error.ejs", {string: "That faculty already exists"});
+    } else if (!input.pid.match(/\d{9}/)) {
+      return res.render("../views/error.ejs", {string: `PID needs to be only 9 digits (was '${input.pid}')`});
+    } 
+    const student = await schema.Student.findOne({$or: [{onyen: input.onyen}, {pid: input.pid}, {email: input.email}]}).exec()
+    if (student) {
+      return res.render("../views/error.ejs", {string: "A student with this onyen, pid, or email address already exists."})
+    }
+    input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
+    input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
+    input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
+    var inputFaculty = new schema.Faculty(util.validateModelData(input, schema.Faculty))
+    /*use the then function because save() is asynchronous. If you only have inputFaculty.save(); res.redirect...
+    it is possible that the data does not save in time (or load in time if performing queries that return data
+    that is to be sent to a view) before the view loads which can cause errors. So put view rendering code which is
+    reliant on database operations inside of the then function of those operations*/
+    await inputFaculty.save()
+      /*result of save function is the newly created faculty object, so
+      access _id from result*/
+    res.redirect("/faculty/edit/"+result._id);
   }
   //if all of the fields are not provided throw this error
   else{
