@@ -33,27 +33,21 @@
                   <th scope="col" class="col-facultyPid">PID</th>
                   <th scope="col" class="col-facultySectionNumber">Section Number</th>
                   <th scope="col" class="col-facultyActive">Active</th>
-                  <th scope="col" class="col-facultyEdit">Edit</th>
                 </tr>
               </thead>
               <tbody>
 
                 <% for(var i=0; i<faculty.length; i++) { %>
                   <tr>
-                    <td><%= faculty[i].onyen%></td>
+                    <td>
+                      <a href="/faculty/edit/<%=faculty[i]._id%>" class="fas fa-edit editColor edit-faculty-button"><%= faculty[i].onyen%></a>
+                    </td>
                     <td><%= faculty[i].csid%></td>
                     <td><%= faculty[i].firstName%></td>
                     <td><%= faculty[i].lastName%></td>
                     <td><%= faculty[i].pid%></td>
                     <td><%= faculty[i].sectionNumber%></td>
                     <td><%= faculty[i].active%></td>
-                    <td>
-                      <div class="editRow">
-                        <div class="editColumn">
-                          <a href="/faculty/edit/<%=faculty[i]._id%>" class="editTag"><i class="fas fa-edit editColor"></i></a>
-                        </div>
-                      </div>
-                    </td>
                   </tr>
                 <% } %>
               </tbody>

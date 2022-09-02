@@ -1,5 +1,7 @@
 import data from '../../../data/testRoles'
 import util from './formUtil';
+import email from '../../../controllers/email'
+
 const nodemailer = require("nodemailer")
 
 const { lastName, firstName, pid } = data.student
@@ -75,8 +77,8 @@ const CS02 = {
 
     it('Logging into Ethereal to check', () => {
       cy.visit('https://ethereal.email/login')
-      cy.get('#address').type('retta.doyle50@ethereal.email')
-      cy.get('#password').type('J7PWfjJ4FewKyAQhRj')
+      cy.get('#address').type(email.testAccount.user)
+      cy.get('#password').type(email.testAccount.pass)
       cy.get('.btn').first().click()
       cy.visit('https://ethereal.email/messages')
       cy.get('a[href^="/messages/"]').first().click()

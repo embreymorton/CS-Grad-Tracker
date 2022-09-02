@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
 
-const testAccount = {user: "dorris.blick1@ethereal.email", pass: "mFfaaB5zU4dWaUrV97"}
-
 const _ = {}
 _._transporter = null
+
+_.testAccount = {user: "dorris.blick1@ethereal.email", pass: "mFfaaB5zU4dWaUrV97"}
 
 /**
  * Manually (re)start transporter. 
@@ -22,8 +22,8 @@ _.startTransporter = (forceProduction = false) => {
     host: "smtp.ethereal.email",
     port: 587,
     auth: {
-      user: testAccount.user,
-      pass: testAccount.pass
+      user: _.testAccount.user,
+      pass: _.testAccount.pass
     }
   })
 }
@@ -105,5 +105,5 @@ _.send = async (...toSend) => {
  return result.every(res => res === true)
 }
 
-transporter = _.startTransporter()
+_._transporter = _.startTransporter()
 module.exports = _
