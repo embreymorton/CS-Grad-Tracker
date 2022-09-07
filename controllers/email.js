@@ -91,6 +91,9 @@ _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
 * @returns true if all emails sent, false if any failed
 */
 _.send = async (...toSend) => {
+  if (!_._transporter) {
+    console.log("why is it null?")
+  }
  const email = async (email) => {
    const response = await _._transporter.sendMail(email).catch(console.error)
    if (!response) {
@@ -105,5 +108,5 @@ _.send = async (...toSend) => {
  return result.every(res => res === true)
 }
 
-_._transporter = _.startTransporter()
+const transporter = _.startTransporter()
 module.exports = _
