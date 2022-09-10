@@ -5,6 +5,11 @@ _._transporter = null
 
 _.testAccount = {user: "dorris.blick1@ethereal.email", pass: "mFfaaB5zU4dWaUrV97"}
 
+_.managerInfo = {
+  name: "Kris Jordan",
+  email: "kris@cs.unc.edu"
+}
+
 /**
  * Manually (re)start transporter. 
  * @param {Boolean} forceProduction forces using the Gmail transporter in process.env.gmailUser or process.env.gmail
@@ -50,12 +55,14 @@ _.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) 
     to,
     subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${formName}`,
     text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
-        ${linkToForm}\n\nIf you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\nFor questions about this app, contact Jeff Terrell <terrell@cs.unc.edu>.`,
+        ${linkToForm}\n\n
+        If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\n
+        For questions about this app, contact ${_.managerInfo.name} <${_.managerInfo.email}>.`,
     html: `
       <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
       <a href="${linkToForm}">${linkToForm}</a>
       <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
-      <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
+      <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
     `
   }
 }
@@ -66,16 +73,19 @@ _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
     to: 'kenney@cs.unc.edu',
     subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} ${formName} form submission`,
     text: `Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree.\n\n
-    Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.\n\ngo here: `,
+          Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.\n\n
+          View the form here: ${linkToForm}\n\n
+          For questions about this app, contact ${_.managerInfo.name} <${_.managerInfo.email}>`,
     html: `
-      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName}. Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}, go here:</p>
+      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName}. Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.</p>
+      <p>View the form here:</p>
       <a href="${linkToForm}">${linkToForm}</a>
-      <p>For questions about this app, contact Jeff Terrell &lt;terrell@cs.unc.edu&gt;.</p>
+      <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
     `
   }
 }
 
-const developerEmails = "terrell@cs.unc.edu, dcowhig@cs.unc.edu, kekevi@live.unc.edu, elaine13@email.unc.edu, zkhan@unc.edu"
+const developerEmails = "kris@cs.unc.edu, pozefsky@cs.unc.edu, kekevi@live.unc.edu, abz@email.unc.edu, lamaab@email.unc.edu"
 _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
   return {
     from: '"CS-GradTracking" <noreply@cs.unc.edu>',
@@ -91,9 +101,6 @@ _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
 * @returns true if all emails sent, false if any failed
 */
 _.send = async (...toSend) => {
-  if (!_._transporter) {
-    console.log("why is it null?")
-  }
  const email = async (email) => {
    const response = await _._transporter.sendMail(email).catch(console.error)
    if (!response) {
