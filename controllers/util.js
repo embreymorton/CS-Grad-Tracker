@@ -263,7 +263,7 @@ _.getYYYYMMDD = (str) => {
 }
 
 /** using an Express request object, creates a link to the website up to the top-level domain (does NOT include a '/' at the end) */
-_.linkHeader = (req) => `${req.protocol}://${req.hostname === 'localhost' ? req.get('Host') : req.hostname}`
+_.linkHeader = (req) => `${req.protocol}://${process.env.hostname}`
 
 /**
  * Crashes the server on purpose. 
