@@ -5,7 +5,7 @@ var path = require("path");
 var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
-const { validateFormData, checkFormCompletion, linkHeader } = require("./util.js");
+const { validateFormData, checkFormCompletion, linkHeader, isMultiform } = require("./util.js");
 const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
 
 var studentViewController = {};
@@ -68,7 +68,7 @@ studentViewController.forms = async function (req, res) {
 studentViewController.viewForm = async function (req, res) {
   const { params, session } = req
   const formName = params.title
-  if (formName == 'CS02') {
+  if (isMultiform(formName)) {
     return res.redirect(`/studentView/multiforms/${formName}`)
   }
   if (!schema[formName]) {
@@ -78,6 +78,7 @@ studentViewController.viewForm = async function (req, res) {
   if (formName != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
@@ -93,7 +94,7 @@ studentViewController.viewForm = async function (req, res) {
       const { cspNonce } = res.locals
       const locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
-        activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+        activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
       res.render(view, locals)
       return
@@ -225,22 +226,32 @@ studentViewController.downloadCourses = async function (req, res) {
 
 studentViewController.formVersions = async function (req, res) {
   const formName = req.params.title
-  if (formName != 'CS02') { // currently only allow CS02 to have multiple copies
+  if (!isMultiform(formName)) { 
     res.render("../views/error.ejs", { string: "Not a valid form name or is not a form that allows multiple submissions." })
     return
   }
 
   const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
   if (student == null) {
-    res.render("../views/error.ejs", { string: "Student not found" })
+    res.render("../views/error.ejs", { string: "Student not found." })
     return
   }
   const studentId = student._id
 
-  // if adding more forms with multiple submissions, change the sort field, these are for CS02:
-  const titleField = 'courseNumber'
-  const subtitleField = 'dateSubmitted'
-  const forms = await schema[req.params.title].find({ student: studentId }).sort(titleField).exec()
+  let titleField
+  let subtitleField
+  let populateFields = ''
+  switch (formName) {
+    case 'CS02':
+      titleField = 'courseNumber'
+      subtitleField = 'dateSubmitted'
+      break;
+    case 'SemesterProgressReport':
+      titleField = 'semesterString'
+      subtitleField = null
+      populateFields = 'semester'
+  }
+  const forms = await schema[req.params.title].find({ student: studentId }).populate(populateFields).sort(titleField).exec()
 
   // generating opts
   const isStudent = true
@@ -262,7 +273,7 @@ studentViewController.viewFormVersion = async (req, res) => {
     res.render('../views/error.ejs', { string: `${formId} is not a valid form.` })
     return
   }
-  if (formName == null || !schema[formName] || formName != 'CS02') {
+  if (formName == null || !schema[formName] || !isMultiform(formName)) {
     res.render('../views/error.ejs', { string: `${formName} is not a real form or does not support multiple submissions.`})
     return
   }
@@ -469,6 +480,8 @@ const sendEmails = async (student, formName, form, linkToForm) => {
         result = await send(alt1Email, alt2Email) 
       }
       break
+    // case 'SemesterProgressReport': / TODO:
+
     default:
       result = true
   }

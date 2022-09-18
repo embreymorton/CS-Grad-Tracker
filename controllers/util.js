@@ -170,7 +170,7 @@ _.listObjectToString = function (input) {
 }
 
 /**
- * **ensure form is not null!**
+ * **must ensure form is not null!**
  * @param {String} name - name of form being checked e.g. "CS02"
  * @param {FormSchema} form - the CSXX Form object returned by a Mongoose query
  * @returns true if form is complete for student (*any* signatures filled), false otherwise
@@ -199,6 +199,9 @@ _.checkFormCompletion = (name, form) => {
   }
 }
 
+/** @returns true if is multiform */
+_.isMultiform = (formName) => ['CS02', 'SemesterProgressReport'].includes(formName)
+
   /**
    * filterOut works just like the standard Array.filter function, but it mutates
    * the original array by removing elements that pass the test function.
@@ -225,7 +228,7 @@ _.filterOut = (arr, test) => {
  * Removes any fields from form data that a student should not be able to change.
  * Be sure to check over and update this function if a form is made s.t. it includes 
  * a field that should disallow students from editing.
- * @param {Object} formData form data from HTML form gotten from req.body !MUTATED!
+ * @param {Object} formData form data from HTML form gotten from req.body !WILL BE MUTATED!
  * @returns {Object} same formData passed in
  */
 _.validateFormData = (formData) => {

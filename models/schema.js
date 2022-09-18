@@ -195,6 +195,9 @@ var semesterSchema = mongoose.Schema({
     enum: ['FA', 'SP', 'S1', 'S2']
   }
 })
+semesterSchema.virtual('semesterString').get(function() {
+  return this.season + ' ' + this.year
+})
 
 // Courses
 var courseSchema = mongoose.Schema({
@@ -449,6 +452,70 @@ var CS13Schema = mongoose.Schema({
   alt2DateSigned: String,
 })
 
+const semesterProgressReportSchema = mongoose.Schema({
+  student: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Student', 
+    unique: false, 
+    required: true
+  },
+  semester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Semester',
+    validator: async function(v) {
+      const res = await schema.SemesterProgressReport.findOne({student: this.student, semester: v}).exec()
+      if (res) {
+        return "Form for this student with this semester has already been created."
+      }
+      return false
+    }
+  },
+  progressMade: String,
+  goals: String,
+  rataPreferences: String, // rata = RA or TA 
+  dateSubmitted: Date
+})
+semesterProgressReportSchema.virtual('semesterString', {
+  ref: 'Semester',
+  localField: 'semester',
+  foreignField: '_id',
+  justOne: true
+}).get(function () {
+  if (this.semester) {
+    return this.semester.semesterString
+  }
+  return 'Unspecified semester'
+})
+
+const semesterProgressEvaluationSchema = mongoose.Schema({ // separated collection as multiple faculty can evaluate a single student's semester
+  semesterProgressReport: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SemesterProgressReport',
+    required: true
+  },
+  faculty: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Faculty',
+    required: true
+  },
+  hasDiscussed: Boolean,
+  academicRating: {
+    type: Number,
+    min: 1,
+    max: 4,
+    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+  },
+  academicComments: String,
+  rataRating: {
+    type: Number,
+    min: 0,
+    max: 4,
+    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+  },
+  rataComments : String,
+  dateSubmitted: Date
+})
+
 schema.Faculty = mongoose.model('Faculty', facultySchema)
 schema.Student = mongoose.model('Student', studentSchema)
 schema.Semester = mongoose.model('Semester', semesterSchema)
@@ -466,6 +533,8 @@ schema.CS04 = mongoose.model('CS04', CS04Schema)
 schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
+schema.SemesterProgressReport = mongoose.model('SemesterProgressReport', semesterProgressReportSchema)
+schema.SemesterProgressEvaluation = mongoose.model('SemesterProgressEvaluation', semesterProgressEvaluationSchema)
 
 module.exports = schema
 

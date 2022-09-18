@@ -35,6 +35,7 @@ router.post("/forms/save/:title", student.saveForm);
 router.get("/multiforms/:title", student.formVersions);
 
 router.get("/multiforms/:title/:formId/:uploadSuccess", student.viewFormVersion);
+// to create a new student form, use the route above but set formId parameter to 'new' rather than an actual id
 
 router.post("/multiforms/update/:title/:formId", student.updateFormVersion);
 
