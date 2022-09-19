@@ -26,6 +26,7 @@
             <table align="center" border="1" class="table display-table table-striped table-bordered faculty-table">
               <thead>
                 <tr>
+                  <th scope="col" class="col-facultyOnyen">Edit</th>
                   <th scope="col" class="col-facultyOnyen">Onyen</th>
                   <th scope="col" class="col-facultyCSID">CSID</th>
                   <th scope="col" class="col-facultyFirstname">First name</th>
@@ -40,7 +41,12 @@
                 <% for(var i=0; i<faculty.length; i++) { %>
                   <tr>
                     <td>
-                      <a href="/faculty/edit/<%=faculty[i]._id%>" class="fas fa-edit editColor edit-faculty-button"><%= faculty[i].onyen%></a>
+                      <div>
+                        <a href="/faculty/edit/<%=faculty[i]._id%>" class="fas fa-edit editColor edit-faculty-button">Edit</a>
+                      </div>
+                    </td>
+                    <td>
+                      <%= faculty[i].onyen%>
                     </td>
                     <td><%= faculty[i].csid%></td>
                     <td><%= faculty[i].firstName%></td>
