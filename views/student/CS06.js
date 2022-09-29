@@ -149,10 +149,10 @@ const cs06Form = (opts) => {
             isComplete ? pseudoInput(breadthCourseCategory && breadthCourseCategory[i]) : select(
               { name: 'breadthCourseCategory', required: true, ...disabled },
               option({ value: '' }, ''),
-              option({ value: 'T', selected: breadthCourseCategory && breadthCourseCategory[i] == 'T' || null }, 'T'),
-              option({ value: 'S', selected: breadthCourseCategory && breadthCourseCategory[i] == 'S' || null }, 'S'),
-              option({ value: 'A', selected: breadthCourseCategory && breadthCourseCategory[i] == 'A' || null }, 'A'),
-              option({ value: 'O', selected: breadthCourseCategory && breadthCourseCategory[i] == 'O' || null }, 'O'),
+              option({ value: 'T', selected: breadthCourseCategory && breadthCourseCategory[i] == 'T' || null }, 'Theory'),
+              option({ value: 'S', selected: breadthCourseCategory && breadthCourseCategory[i] == 'S' || null }, 'Systems'),
+              option({ value: 'A', selected: breadthCourseCategory && breadthCourseCategory[i] == 'A' || null }, 'Applications'),
+              option({ value: 'O', selected: breadthCourseCategory && breadthCourseCategory[i] == 'O' || null }, 'Outside of CS'),
             )
           ))
         ),
