@@ -64,8 +64,11 @@ Users:
 ## Production mode .env tweaks
 - `mode=production`
 - `databaseString='mongodb://localhost/cs_grad_data-prod'`
+- `AUTH0_DOMAIN=dev-v1umz16i.auth0.com`
 - `AUTH0_CALLBACK_URL=http://csgrad.cs.unc.edu/callback`
 - `AUTH0_LOGOUT_URL=http://csgrad.cs.unc.edu`
+- `hostname="csgrad.cs.unc.edu"`
+
 
 ## Development/testing mode .env tweaks
 - `mode=production` or `mode=development`
