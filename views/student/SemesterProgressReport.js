@@ -14,7 +14,8 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const {dropdown, makeOption} = require('../common/dropdown')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
-const radio = require('../common/radio')
+const { radio, radioSet } = require('../common/radio')
+const { checkbox } = require('../common/baseComponents')
 let complete = false
 
 const vert = x('div.verticalSpace')()
@@ -34,7 +35,7 @@ const main = (opts) => {
 const mainContent = (opts) => {
   const { student, hasAccess, isStudent, seeAllSubmissions } = opts
   const { lastName, firstName } = student
-  const { h6, h5, h4, h3, div, strong, hr, a } = x
+  const { h6, h5, h4, h3, h2, div, strong, hr, a } = x
   const form = !hasAccess
         ? div('You do not have access')
         : progressReportForm(opts)
@@ -58,14 +59,6 @@ const mainContent = (opts) => {
     ),
     div(
       ' ' // <-- nbsp character
-    ),
-    h4(),
-    h3('Student Semester Progress Evaluation'),
-    div(
-      { class: 'text-left' },
-      div('Faculty members,'),
-      div('Please fill out this form for each student you are supervising. The recommended milestones of a graduate students are described above.'),
-      evaluationForm(opts)
     )
   ]
 }
@@ -86,6 +79,17 @@ const progressReportForm = (opts) => {
   const frow = textareaRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
   const { div, hr } = x
+
+  // making dropdown choices for the employment advisor
+  const employmentAdvisorChoices = activeFaculty.map((faculty) => makeOption(
+    faculty._id.toString(), 
+    faculty.fullName, 
+    form.employmentAdvisor?._id.equals(faculty._id) // select from the faculty list the one with the corresponding id
+  ))
+  if (student.advisor) { // default option that is identical to selecting their normal advisor
+    employmentAdvisorChoices.unshift(makeOption(student.advisor?._id.toString(), 'I am employed by my advisor.', form.employmentAdvisor == undefined, true))
+  }
+
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
@@ -99,7 +103,7 @@ const progressReportForm = (opts) => {
             semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, form.semester?._id.equals(semester._id))), 
             {
               isDisabled: isComplete, 
-              blankOption: 'Select a semester from the dropdown.'
+              blankOption: 'Select a semester from the dropdown.',
             }
           )
         )
@@ -111,12 +115,26 @@ const progressReportForm = (opts) => {
       vert,
       frow(div('Q3: List your prefrences for RA/TA positions next semester:'), 'rataPreferences', 8), 
       vert,
+      row(colMd(6)(
+        'Q4: If you are not employed by your main advisor for an RA/TA position, please select a different employment advisor from below:'
+      )),
+      row(
+        colMd(6)(
+          dropdown('employmentAdvisor',
+            employmentAdvisorChoices,
+            {
+              isDisabled: isComplete,
+              blankOption: 'You do not have an advisor specified and so you must select from the dropdown.', // overriden above if student has an advisor
+              isRequired: true
+            }
+          )
+        )
+      ),
+      vert,
+
+      // end of student's section
       hr(),
-      // div('Advisor Signature:'),
-      // approvalCheckbox(!isStudent, 'advisor', opts),
-      // vert,
-      // div('Designated Instructor Signature:'),
-      // signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
+      !isStudent ? evaluationSection(opts) : null, // IMPORTANT: Do not allow students to see the evaluation sections!
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS02-submit#submit-btn')('Submit'),
         disableSubmitScript(opts),
@@ -184,26 +202,76 @@ const textareaRow = (form, editAccess) => (label, name, width, required = true) 
   )
 }
 
-const evaluationForm = (opts) => {
-  const { form, admin, isStudent } = opts
+const evaluationSection = (opts) => {
+  const { form, admin, student, isStudent } = opts
   const editAccess = admin || isStudent
+  const textFrow = formRow(form, editAccess, 'text')
   const checkboxFrow = formRow(form, editAccess, 'checkbox')
-  const { hr } = x
+  const { hr, h2, h3, h4, div } = x
 
-  return x('form#evaluate-form.cs-form')(
-    hr(),
-    checkboxFrow(
-      'Q1. I have read the student progress report filled out by the student, and have discussed its contents with them.',
-      'hasDicussed', 12
+  return [
+    h4(),
+    div(
+      {class: 'text-center'},
+      h2('For Faculty:'),
+      h3('Student Semester Progress Evaluation'),
     ),
+    div(
+      { class: 'text-left' },
+      div('Faculty members,'),
+      div('Please fill out this form for each student you are supervising. The recommended milestones of a graduate students are described above.'),
+    ),
+    hr(),
+    rowCol(12,
+      'Q1. I have read the student progress report filled out by the student, and have discussed its contents with them.',
+      checkbox(
+        'hasDiscussed',
+        form.hasDiscussed
+      )
+    ),
+    vert,
     rowCol(12,
       "Q2. How would you rate the student's progress on their 'academic' goals? Please refer to the recommended/typical timeline for major milestones.",
-      radio('academicRating', 4, '4: EXCELLENT: The student\'s progress exceeds expectations.'),
-      radio('academicRating', 3, '3: FINE: The student made normal progress.'),
-      radio('academicRating', 2, '2: WEAK: The student made lower than expected progress, but I and the student have made a plan to remedy it.'),
-      radio('academicRating', 1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.'),
-    )
-  )
+      radioSet(
+        'academicRating',
+        [
+          [4, '4: EXCELLENT: The student\'s progress exceeds expectations.'],
+          [3, '3: FINE: The student made normal progress.'],
+          [2, '2: WEAK: The student made lower than expected progress, but I and the student have made a plan to remedy it.'],
+          [1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.']
+        ],
+        {currentValue: form.academicRating}
+      ),
+    ),
+    vert,
+    textFrow(
+      'Q3. Regarding your rating on the student\'s progress on their "academic" goals in the previous question, if you have additional comments, please enter them below.',
+      'academicComments',
+      8
+    ),
+    vert,
+    rowCol(12,
+      "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",
+      radioSet(
+        'rataRating',
+        [
+          [4, '4: Very Good'],
+          [3, '3: Good'],
+          [2, '2: Poor'],
+          [1, '1: Very Poor'],
+          [0, 'N/A: Student did not work as an RA.']
+        ],
+        {currentValue: form.rataRating}
+      ),
+    ),
+    vert,
+    textFrow(
+      'Q5. Regarding your rating on the student\'s performance as an RA/TA in the previous question, if you have additional comments, please enter them below.',
+      'rataComments',
+      8
+    ),
+    vert,
+  ]
   
 } 
 

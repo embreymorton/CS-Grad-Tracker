@@ -37,6 +37,9 @@ var facultySchema = mongoose.Schema({
   active: Boolean,
   admin: Boolean
 })
+facultySchema.virtual('fullName').get(function() {
+  return this.lastName + ', ' + this.firstName
+})
 
 // Students
 var studentSchema = mongoose.Schema({
@@ -193,7 +196,8 @@ var semesterSchema = mongoose.Schema({
   season: {
     type: String,
     enum: ['FA', 'SP', 'S1', 'S2']
-  }
+  },
+  // visible: Boolean // whether a semester is visible from dropdowns
 })
 semesterSchema.virtual('semesterString').get(function() {
   return this.season + ' ' + this.year
@@ -456,48 +460,38 @@ const semesterProgressReportSchema = mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Student', 
-    unique: false, 
     required: true
   },
   semester: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Semester',
-    validator: async function(v) {
-      const res = await schema.SemesterProgressReport.findOne({student: this.student, semester: v}).exec()
-      if (res) {
-        return "Form for this student with this semester has already been created."
-      }
-      return false
+    validate: {
+      validator: async function(v) {
+        if (this.student) {
+          const match = await schema.findOne({student: this.student, semester: v}).exec()
+          return !match
+        }
+        
+        // why so complicated?
+        // according to https://mongoosejs.com/docs/validation.html#update-validators-and-this, update validators (from functions like findOneAndUpdate with useValidators flag true)
+        // cannot use `this` to get the other values because they may not describe the entire object, therefore as an alternative we look at the Query object
+        const thisId = this._conditions._id
+        const studentId = this._update['$set'].student // can technically be determined by fetching for thisId
+        const match = await schema.SemesterProgressReport.findOne({student: studentId, semester: v, _id: {$ne: thisId}}).exec()
+        return !match
+      },
+      message: props => `Progress report for this semester already exists.`
     }
   },
   progressMade: String,
   goals: String,
   rataPreferences: String, // rata = RA or TA 
-  dateSubmitted: Date
-})
-semesterProgressReportSchema.virtual('semesterString', {
-  ref: 'Semester',
-  localField: 'semester',
-  foreignField: '_id',
-  justOne: true
-}).get(function () {
-  if (this.semester) {
-    return this.semester.semesterString
-  }
-  return 'Unspecified semester'
-})
+  employmentAdvisor: { // if employmentAdvisor is same as regular advisor, please copy it over
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Faculty'
+  },
 
-const semesterProgressEvaluationSchema = mongoose.Schema({ // separated collection as multiple faculty can evaluate a single student's semester
-  semesterProgressReport: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'SemesterProgressReport',
-    required: true
-  },
-  faculty: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Faculty',
-    required: true
-  },
+  // you must ensure that students are not allowed to see the following fields!
   hasDiscussed: Boolean,
   academicRating: {
     type: Number,
@@ -513,7 +507,17 @@ const semesterProgressEvaluationSchema = mongoose.Schema({ // separated collecti
     validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
   },
   rataComments : String,
-  dateSubmitted: Date
+})
+semesterProgressReportSchema.virtual('semesterString', {
+  ref: 'Semester',
+  localField: 'semester',
+  foreignField: '_id',
+  justOne: true
+}).get(function () {
+  if (this.semester) {
+    return this.semester.semesterString
+  }
+  return 'Unspecified semester'
 })
 
 schema.Faculty = mongoose.model('Faculty', facultySchema)
@@ -534,7 +538,6 @@ schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
 schema.SemesterProgressReport = mongoose.model('SemesterProgressReport', semesterProgressReportSchema)
-schema.SemesterProgressEvaluation = mongoose.model('SemesterProgressEvaluation', semesterProgressEvaluationSchema)
 
 module.exports = schema
 

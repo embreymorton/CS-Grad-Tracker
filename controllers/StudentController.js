@@ -450,8 +450,8 @@ studentController.updateMultiform = async (req, res) => {
   
   try {
     var form = await schema[formName].findOneAndUpdate({student: studentId, _id: formId}, input, {runValidators: true, new: true}).populate('student').exec()
-  } catch {
-    res.render('../views/error.ejs', { string: 'Invalid form input, could not update database.'})
+  } catch (e) {
+    res.render('../views/error.ejs', { string: `Invalid form input, could not update database: ${e}`})
     return
   }
   if (form == null) {

@@ -161,6 +161,13 @@ const cs13Form = (opts) => {
   )
 }
 
+const collapsingWrapper = (value, start, elements) => {
+  div(
+    {id: `collapse-${value}`, class: `` }
+  )
+  
+}
+
 const namePidRow = (student) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`

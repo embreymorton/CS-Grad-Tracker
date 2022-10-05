@@ -279,9 +279,6 @@ studentViewController.viewFormVersion = async (req, res) => {
   }
   
   if (params.uploadSuccess != null) {
-    const faculty = await schema.Faculty.find({}).exec()
-    const activeFaculty = await schema.Faculty.find({active: true}).exec()
-    const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
       res.render('../views/error.ejs', { string: 'Student id not specified.' })
@@ -306,6 +303,10 @@ studentViewController.viewFormVersion = async (req, res) => {
       return
     }
     const form = result || {}
+    const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const uploadSuccess = params.uploadSuccess == 'true'
+    const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const isStudent = true
     const hasAccess = true
     const postMethod = `/studentView/multiforms/update/${formName}/${formId}`
@@ -314,7 +315,7 @@ studentViewController.viewFormVersion = async (req, res) => {
     const { cspNonce } = res.locals
     const locals = {
       student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty,
-      activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+      activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
     }
     res.render(view, locals)
     return

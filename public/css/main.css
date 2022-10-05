@@ -264,3 +264,15 @@ form [name=dept] {
   border-radius: 2px;
   font-size: 20px;
 }
+
+.form-radio {
+  margin-left: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.form-radio input {
+  transform: scale(2);
+}
+.form-radio label {
+  padding-left: 3px;
+}
