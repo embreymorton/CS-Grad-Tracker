@@ -12,10 +12,8 @@ const { is } = require('bluebird')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const {dropdown, makeOption} = require('../common/dropdown')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
-const { radio, radioSet } = require('../common/radio')
-const { checkbox } = require('../common/baseComponents')
+const { checkbox, dropdown, makeOption, radioSet } = require('../common/baseComponents')
 let complete = false
 
 const vert = x('div.verticalSpace')()
@@ -136,7 +134,7 @@ const progressReportForm = (opts) => {
       hr(),
       !isStudent ? evaluationSection(opts) : null, // IMPORTANT: Do not allow students to see the evaluation sections!
       buttonBarWrapper(
-        isComplete ? null : x('button.btn.btn-primary.CS02-submit#submit-btn')('Submit'),
+        isComplete ? null : x('button.btn.btn-primary.SemesterProgressReport-submit#submit-btn')('Submit'),
         disableSubmitScript(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
@@ -203,12 +201,11 @@ const textareaRow = (form, editAccess) => (label, name, width, required = true) 
 }
 
 const evaluationSection = (opts) => {
-  const { form, admin, student, isStudent } = opts
+  const { form, admin, student, isStudent, cspNonce } = opts
   const editAccess = admin || isStudent
   const textFrow = formRow(form, editAccess, 'text')
-  const checkboxFrow = formRow(form, editAccess, 'checkbox')
   const { hr, h2, h3, h4, div } = x
-
+  
   return [
     h4(),
     div(
@@ -226,7 +223,9 @@ const evaluationSection = (opts) => {
       'Q1. I have read the student progress report filled out by the student, and have discussed its contents with them.',
       checkbox(
         'hasDiscussed',
-        form.hasDiscussed
+        form.hasDiscussed,
+        cspNonce,
+        {isRequired: false}
       )
     ),
     vert,
