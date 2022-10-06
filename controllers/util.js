@@ -193,7 +193,8 @@ _.checkFormCompletion = (name, form) => {
       return (form.comp523 && form.comp523DateSigned) ||
                (form.hadJob && form.advisorSignature) ||
                (form.alternative && form.alt1DateSigned && form.alt2DateSigned)
-               
+    case 'SemesterProgressReport':
+      return form.hasDiscussed && form.academicRating && form.rataRating
     default:
       return false
   }

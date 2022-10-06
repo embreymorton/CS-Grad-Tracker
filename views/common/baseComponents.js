@@ -115,6 +115,19 @@ const makeOption = (value, text, isSelected = false, isHidden = false) => x('opt
 const radioSet = (name, valueLabelList, {currentValue = null, isDisabled = false, isRequired = true} = {}) => valueLabelList.map(pair => radio(name, pair[0], pair[1], {currentValue, isDisabled, isRequired}))
 
 /**
+ * Creates a text input box.
+ * @param {String} name matches a field name on the form's schema, an id of `input-${name}` will also be set
+ * @param {*} value - initial value the input should have
+ * @param {Boolean} isDisabled
+ * @param {Boolean} isRequired defaults true 
+ */
+const input = (name, value, {isDisabled = false, isRequired = true}) => {
+  const disabled = isDisabled ? { disabled: '' } : {}
+  const required = isRequired ? { required: '' } : {}
+  return x(`input.form-control#input-${name}`)({type: 'text', name, value, ...required, ...disabled})
+}
+
+/**
  * Creates a \<script\> element for when you need front-end js execution
  * @param {*} nonce as component is js, nonce/cspNonce needs to be passed (usually a field in `opts`)
  * @param {String} scriptBody front-end js code wrapped as a string
@@ -129,5 +142,4 @@ const frontendScript = (nonce, scriptBody, attributes = {}) => {
   return script
 }
 
-
-module.exports = {checkbox, frontendScript, dropdown, makeOption, radio, radioSet}
+module.exports = { checkbox, frontendScript, dropdown, makeOption, radio, radioSet, input }

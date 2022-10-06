@@ -481,8 +481,16 @@ const sendEmails = async (student, formName, form, linkToForm) => {
         result = await send(alt1Email, alt2Email) 
       }
       break
-    // case 'SemesterProgressReport': / TODO:
-
+    case 'SemesterProgressReport':
+      await form.populate('employmentAdvisor')
+      if (student.advisor._id.equals(form.employmentAdvisor._id)) {
+        const academicAndEmploymentEmail = generateApprovalEmail(form.employmentAdvisor?.email, "Advisor", student, "Semester Progress Report", linkToForm)
+        result = await send(academicAndEmploymentEmail)
+      } else {
+        const employmentAdvisorEmail = generateApprovalEmail(form.employmentAdvisor?.email, "Employment Advisor", student, "Semester Progress Report", linkToForm)
+        result = await send(advisorEmail, employmentAdvisorEmail)
+      }
+      break
     default:
       result = true
   }

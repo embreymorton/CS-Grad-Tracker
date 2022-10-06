@@ -14,7 +14,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
 const { checkbox, dropdown, makeOption, radioSet } = require('../common/baseComponents')
-let complete = false
+let complete = null
 
 const vert = x('div.verticalSpace')()
 
@@ -167,9 +167,9 @@ const namePidRow = (opts, editAccess) => {
 
 const rowCol = (width, ...inside) => row(colMd(width)(...inside))
 
-const formRow = (values, editAccess, type = 'text') => (label, name, width = 6) => {
-  const value = editAccess && !complete
-        ? input(type, name, values[name], true)
+const formRow = (values, editAccess, type = 'text') => (label, name, width = 6, required = true) => {
+  const value = editAccess && !complete 
+        ? input(type, name, values[name], required)
         : (type == 'checkbox' ? pseudoCheckbox(values[name]) : pseudoInput(values[name]))
   return (
     row(
@@ -203,7 +203,7 @@ const textareaRow = (form, editAccess) => (label, name, width, required = true) 
 const evaluationSection = (opts) => {
   const { form, admin, student, isStudent, cspNonce } = opts
   const editAccess = admin || isStudent
-  const textFrow = formRow(form, editAccess, 'text')
+  const textFrow = formRow(form, editAccess || !isStudent, 'text')
   const { hr, h2, h3, h4, div } = x
   
   return [
@@ -219,13 +219,13 @@ const evaluationSection = (opts) => {
       div('Please fill out this form for each student you are supervising. The recommended milestones of a graduate students are described above.'),
     ),
     hr(),
+    h4('For the academic advisor:'),
     rowCol(12,
       'Q1. I have read the student progress report filled out by the student, and have discussed its contents with them.',
       checkbox(
         'hasDiscussed',
         form.hasDiscussed,
-        cspNonce,
-        {isRequired: false}
+        cspNonce
       )
     ),
     vert,
@@ -246,9 +246,12 @@ const evaluationSection = (opts) => {
     textFrow(
       'Q3. Regarding your rating on the student\'s progress on their "academic" goals in the previous question, if you have additional comments, please enter them below.',
       'academicComments',
-      8
+      8,
+      false
     ),
     vert,
+    hr,
+    h4('For the employment advisor:'),
     rowCol(12,
       "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",
       radioSet(
@@ -267,9 +270,11 @@ const evaluationSection = (opts) => {
     textFrow(
       'Q5. Regarding your rating on the student\'s performance as an RA/TA in the previous question, if you have additional comments, please enter them below.',
       'rataComments',
-      8
+      8,
+      false
     ),
     vert,
+    hr
   ]
   
 } 
