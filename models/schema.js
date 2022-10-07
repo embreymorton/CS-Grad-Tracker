@@ -202,6 +202,10 @@ var semesterSchema = mongoose.Schema({
 semesterSchema.virtual('semesterString').get(function() {
   return this.season + ' ' + this.year
 })
+// const seasonToMonth = {SP: 2, S1: 3, S2: 4, FA: 9} // from https://ccinfo.unc.edu/wp-content/uploads/sites/219/2019/02/Decoding_the_Academic_Term_Codes.pdf
+// semesterSchema.virtual('value').get(function() {
+//   return this.year * 10 + seasonToMonth[this.season]
+// })
 
 // Courses
 var courseSchema = mongoose.Schema({

@@ -7,13 +7,20 @@ var formidable = require("formidable")
 
 var reportController = {}
 
-const aggregateData = async ({pid, admin}) => {
+/** @param pid of logged in user @param admin whether logged in user is admin or not */
+const aggregateData = async (pid, admin) => {
   try {
-    const students = await schema.Student.find({status: 'Active'}).sort({
+    let students = await schema.Student.find({status: 'Active'}).sort({
       lastName: 1,
       firstName: 1
     }).populate('advisor').populate('semesterStarted').populate("researchAdvisor").lean().exec()
+    
+    if ( pid && !admin ) { // filters students so that non-admin advisors will only see their own students
+      students = students.filter((student) => student.advisor && student.advisor.pid == pid || student.researchAdvisor && student.researchAdvisor.pid == pid);
+    }
+
     if (students.length == 0) return []
+
     students.forEach((student) => (
       student.activeSemesters = calculateActiveSemesters(student)
     ))
@@ -25,10 +32,12 @@ const aggregateData = async ({pid, admin}) => {
       student.notes = await schema.Note.find({student: student._id})
     }
     await Promise.all(students.map(populateNotes))
-    if ( pid && !admin ) { // filters students so only advisors can see
-        const facultyStudents = students.filter((student) => student.advisor && student.advisor.pid == pid || student.researchAdvisor && student.researchAdvisor.pid == pid);
-        return [facultyStudents, null]
+
+    const populateSemesterProgress = async (student) => {
+      progressForms = await schema.SemesterProgressReport.find({student: student._id}).populate('semester').sort({year: -1, season: 1}).exec()
+      student.semesterProgress = progressForms;
     }
+    await Promise.all(students.map(populateSemesterProgress))
     return [students, null]
   } catch (error) {
     console.log(error)
@@ -110,6 +119,14 @@ const prepareProgressReport = async (students, filetype) => { // assigns spreads
       notes += "Note #" + (j+1) + ": " + studentNotes[j].title + " (" + studentNotes[j].date + ")" + newline + studentNotes[j].note + newline + newline;
     }
     report.notes = notes;
+
+    const semesterProgress = students[i].semesterProgress
+    report.academicReview = filetype == 'xlsx' ? '' : '\r\n'
+    report.employmentReview = filetype == 'xlsx' ? '' : '\r\n'
+    semesterProgress.forEach(form => {
+      report.academicReview += `${form.semesterString} - ${form.academicRating}: ${form.academicComments} ${newline}${newline}`
+      report.employmentReview += `${form.semesterString} - ${form.rataRating}: ${form.rataComments} ${newline}${newline}`
+    })
     output[i] = report;
   }
   return output;
@@ -154,13 +171,13 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = async (req, res) => {
-  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}) 
+  const [ report, string ] = await aggregateData(res.locals.userPID, res.locals.admin) 
   if (!string) return res.render('../views/report/progressReport.ejs', { report })
   else return res.render('../views/error.ejs', { string })
 }
 
 reportController.downloadProgressReportXLSX = async function (req, res) {
-  const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
+  const result = (await aggregateData(res.locals.userPID, res.locals.admin))[0];
   const output = await prepareProgressReport(result, 'xlsx');
 
   var wb = XLSX.utils.book_new();
@@ -174,7 +191,7 @@ reportController.downloadProgressReportXLSX = async function (req, res) {
 }
 
 reportController.downloadProgressReportCSV = async function (req, res) {
-  const result = (await aggregateData({pid: res.locals.userPID, admin: res.locals.admin}))[0];
+  const result = (await aggregateData(res.locals.userPID, res.locals.admin))[0];
   const output = await prepareProgressReport(result, 'csv');
 
   var wb = XLSX.utils.book_new();
@@ -206,7 +223,7 @@ reportController.getAdvisorReport = async (req, res) => {
 
   const sortField = req.query.sortField
   const isAsc = req.query.sortOrder == 'asc'
-  const [ report, string ] = await aggregateData({pid: res.locals.userPID, admin: res.locals.admin})
+  const [ report, string ] = await aggregateData(res.locals.userPID, res.locals.admin)
   
   // sorting reports based on query params
   const subsort = sortField === 'lastName' // subsorts entries with the same field value by lastName, unless main field is lastName, then sorts by firstName
