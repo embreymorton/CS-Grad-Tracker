@@ -402,8 +402,8 @@ studentController.viewMultiform = async (req, res) => {
 
   if (formId === 'new') {
     const numberOfPrevSubmissions = (await schema[formName].find({ student: student._id })).length
-    if (numberOfPrevSubmissions > 25) {
-      return res.render('../views/error.js', { string: `Too many ${formName} forms found. Current limit is ${25}.` })
+    if (numberOfPrevSubmissions > 50) {
+      return res.render('../views/error.js', { string: `Too many ${formName} forms found. Current limit is ${50}.` })
     }
     const newform = new schema[formName]({student: studentId})
     await newform.save()
