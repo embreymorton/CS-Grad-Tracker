@@ -34,7 +34,7 @@ let CS01 = {
   math661Date: '2021-01-01',
   stat435Covered: 'O',
   stat435Date: '2021-01-01',
-  studentSignature: data.student.lastName,
+  studentSignature: 'true',
   studentDateSigned: approvedDateMMDDYYYY,
   studentCheckbox: 'true',
 }
