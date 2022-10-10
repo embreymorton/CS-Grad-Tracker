@@ -30,13 +30,6 @@ util.fillCleanFormAsAdmin =
         } else {
           cy.wrap($el).clear().type(d)
         }
-        /*
-        if ($el.hasAttribute('type') && $el.getAttribute('type') == 'checkbox') {
-          
-        } else {
-          
-        }
-        */
       }
     })
   
