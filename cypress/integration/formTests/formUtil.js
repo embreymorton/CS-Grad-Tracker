@@ -39,7 +39,18 @@ util.checkFormAsAdmin =
     sel.should('have.value', d)
   )
 util.fillFormAsStudent =
-  makeFormDataHandler((sel, d) => sel.should('have.value', d).clear().type(d))
+  makeFormDataHandler((sel, d) => {
+    sel.then(($el) => {
+      if (Cypress.dom.isVisible($el)) {
+        var attr = Cypress.dom.stringify($el);
+        if (attr.includes('checkbox')) {
+          cy.wrap($el).check()
+        } else {
+          cy.wrap($el).should('have.value', d).clear().type(d)
+        }
+      }
+    })
+  })
 util.checkFormAsStudent =
   makeFormDataHandler((sel, d) => sel.should('have.value', d))
 util.selectDropdowns =
