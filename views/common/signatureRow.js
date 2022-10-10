@@ -47,6 +47,8 @@ const signatureRow = (editAccess, key, values) => {
 function pageScript(opts, initialState) { 
   const { signerName, dateName } = initialState;
   const el = x('script')({type: 'text/javascript'});
+  const approvedDate = new Date();
+  const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
 
   el.innerHTML =
   `
@@ -57,9 +59,9 @@ function pageScript(opts, initialState) {
       const dateData = document.getElementById('${dateName}');
       const changeHandler = () => {
         if (checkbox.checked) {
-          const now = new Date();
+
           approvalData.setAttribute("value", true);
-          dateData.setAttribute("value", now.toString());
+          dateData.setAttribute("value", ${approvedDateMMDDYYYY});
         } else {
           approvalData.setAttribute("value", false);
           dateData.removeAttribute("value");
