@@ -61,7 +61,7 @@ function pageScript(opts, initialState) {
         if (checkbox.checked) {
 
           approvalData.setAttribute("value", true);
-          dateData.setAttribute("value", ${approvedDateMMDDYYYY});
+          dateData.setAttribute("value", '${approvedDateMMDDYYYY}');
         } else {
           approvalData.setAttribute("value", false);
           dateData.removeAttribute("value");
