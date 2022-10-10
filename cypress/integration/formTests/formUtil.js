@@ -24,11 +24,22 @@ util.fillCleanFormAsAdmin =
   makeFormDataHandler((sel, d) => {
     sel.then(($el) => {
       if (Cypress.dom.isVisible($el)) {
-        if ($el.hasAttribute('type') && $el.getAttribute('type') == 'checkbox') {
-          $el.check()
+        var attr = $($el).attr('type');
+        if (typeof attr !== 'undefined' && attr !== false) {
+          if (attr == 'checkbox')
+            $el.check()
+          else
+            $el.clear().type(d)
         } else {
           $el.clear().type(d)
         }
+        /*
+        if ($el.hasAttribute('type') && $el.getAttribute('type') == 'checkbox') {
+          
+        } else {
+          
+        }
+        */
       }
     })
   
