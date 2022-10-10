@@ -35,7 +35,7 @@ let CS01 = {
   stat435Covered: 'O',
   stat435Date: '2021-01-01',
   studentSignature: 'true',
-  studentDateSigned: approvedDateMMDDYYYY,
+  studentDateSigned: `${approvedDateMMDDYYYY}`,
   studentCheckbox: 'true',
 }
 
