@@ -24,12 +24,9 @@ util.fillCleanFormAsAdmin =
   makeFormDataHandler((sel, d) => {
     sel.then(($el) => {
       if (Cypress.dom.isVisible($el)) {
-        var attr = $($el).attr('type');
-        if (typeof attr !== 'undefined' && attr !== false) {
-          if (attr == 'checkbox')
-            $el.check()
-          else
-            $el.clear().type(d)
+        var attr = Cypress.dom.stringify($el);
+        if (attr.includes('checkbox')) {
+          $el.check()
         } else {
           $el.clear().type(d)
         }
