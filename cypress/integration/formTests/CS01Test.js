@@ -2,7 +2,6 @@ import data from '../../../data/testRoles';
 import util from './formUtil';
 
 const approvedDate = new Date();
-const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
 let CS01 = {
   comp283Covered: 'A',
   comp283Date: '2021-01-01',
@@ -35,7 +34,7 @@ let CS01 = {
   stat435Covered: 'O',
   stat435Date: '2021-01-01',
   studentSignature: 'true',
-  studentDateSigned: approvedDateMMDDYYYY,
+  studentDateSigned: approvedDate,
   studentCheckbox: 'true',
 }
 
