@@ -35,7 +35,9 @@ util.fillCleanFormAsAdmin =
   
   })
 util.checkFormAsAdmin =
-  makeFormDataHandler((sel, d) => sel.should('have.value', d))
+  makeFormDataHandler((sel, d) => 
+    sel.should('have.value', d)
+  )
 util.fillFormAsStudent =
   makeFormDataHandler((sel, d) => sel.should('have.value', d).clear().type(d))
 util.checkFormAsStudent =
