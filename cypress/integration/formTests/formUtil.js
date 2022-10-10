@@ -21,7 +21,16 @@ const makeFormDataHandler = (affectSelection) => (formData) => (
 )
 
 util.fillCleanFormAsAdmin =
-  makeFormDataHandler((sel, d) => sel.clear().type(d))
+  makeFormDataHandler((sel, d) => {
+    if (!(sel.hasAttribute('type') && sel.getAttribute('type') == 'hidden')) {
+      if (sel.hasAttribute('type') && sel.getAttribute('type') == 'checkbox') {
+        sel.check()
+      } else {
+        sel.clear().type(d)
+      }
+    }
+  
+  })
 util.checkFormAsAdmin =
   makeFormDataHandler((sel, d) => sel.should('have.value', d))
 util.fillFormAsStudent =

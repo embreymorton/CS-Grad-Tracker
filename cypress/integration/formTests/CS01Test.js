@@ -33,7 +33,7 @@ let CS01 = {
   stat435Covered: 'O',
   stat435Date: '2021-01-01',
   studentSignature: data.student.lastName,
-  studentDateSigned: '2019-09-19',
+  studentDateSigned: new Date().toISOString().slice(0, 10),
 }
 
 describe('Test CS01 submissions', ()=>{
