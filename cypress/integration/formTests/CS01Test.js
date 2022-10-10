@@ -38,7 +38,7 @@ let CS01 = {
   stat435Date: '2021-01-01',
   studentSignature: 'true',
   studentDateSigned: `${actualApproved}`,
-  studentCheckbox: 'true',
+  studentCheckbox: 'on',
 }
 
 describe('Test CS01 submissions', ()=>{
