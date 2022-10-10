@@ -26,9 +26,9 @@ util.fillCleanFormAsAdmin =
       if (Cypress.dom.isVisible($el)) {
         var attr = Cypress.dom.stringify($el);
         if (attr.includes('checkbox')) {
-          $el.check()
+          cy.wrap($el).check()
         } else {
-          $el.clear().type(d)
+          cy.wrap($el).clear().type(d)
         }
         /*
         if ($el.hasAttribute('type') && $el.getAttribute('type') == 'checkbox') {
