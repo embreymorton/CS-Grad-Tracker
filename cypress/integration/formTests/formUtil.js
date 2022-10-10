@@ -22,13 +22,15 @@ const makeFormDataHandler = (affectSelection) => (formData) => (
 
 util.fillCleanFormAsAdmin =
   makeFormDataHandler((sel, d) => {
-    if (!(sel.hasAttribute('type') && sel.getAttribute('type') == 'hidden')) {
-      if (sel.hasAttribute('type') && sel.getAttribute('type') == 'checkbox') {
-        sel.check()
-      } else {
-        sel.clear().type(d)
+    sel.then(($el) => {
+      if (Cypress.dom.isVisible($el)) {
+        if ($el.hasAttribute('type') && $el.getAttribute('type') == 'checkbox') {
+          $el.check()
+        } else {
+          $el.clear().type(d)
+        }
       }
-    }
+    })
   
   })
 util.checkFormAsAdmin =
