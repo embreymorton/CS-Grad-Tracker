@@ -31,7 +31,9 @@ mongoose.connection
         const response = await send(generateDeveloperEmail(
           "Backend Crash",
           `From \`bin/www\`'s uptime monitoring: The server has crashed with this error:
-          ${err}`
+          ${err.name} ${err.message}
+          ${err.stack}`
+
         ))
         if (!response) {
           console.error("Error: The exception monitoring email was unable to be sent.")

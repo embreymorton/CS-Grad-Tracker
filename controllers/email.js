@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const _ = {}
 _._transporter = null
 
-_.testAccount = {user: "dorris.blick1@ethereal.email", pass: "mFfaaB5zU4dWaUrV97"}
+_.testAccount = {user: "ignatius.hegmann@ethereal.email", pass: "hVv9Jr7aGRxeKHxNxe"}
 
 _.managerInfo = {
   name: "Kris Jordan",
