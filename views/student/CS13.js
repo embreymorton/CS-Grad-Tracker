@@ -49,7 +49,7 @@ const mainContent = (opts) => {
 const cs13Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
   const editAccess = admin || isStudent
-  const { div, hr, strong, option, span, a, br } = x
+  const { div, hr, strong, option, span, a, br, button } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
@@ -60,8 +60,8 @@ const cs13Form = (opts) => {
       input('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
 
-      x('h4.underline')('Comp 523'),
-      row(
+      button({type: 'button'}, {class : 'comp523col'} ,('Comp 523')),
+      div({class: 'comp523cont'},row(
         colMd(2)(
           isComplete ? pseudoInput(form.comp523) : select(
             { name: 'comp523', required: true, ...disabled },
@@ -74,11 +74,10 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, false),
+      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, false)),
       hr(),
-
-      x('h4.underline')('Industry Experience'),
-      row(
+      button({type: 'button'}, {class : 'indcol'}, ('Industry Experience')),
+      div({class: 'indcont'},row(
         colMd(2)(
           isComplete ? pseudoInput(form.hadJob) : select(
             { name: 'hadJob', required: true, ...disabled },
@@ -101,10 +100,11 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Advisor signature:'),
-      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
+      approvalCheckboxRow(!isStudent, 'advisor', opts)),
+       hr(), 
+      button({type: 'button'}, {class : 'indcol'}, ('Alternative')),
 
-      x('h4.underline')('Alternative'),
-      row(
+      div({class : 'altcont'} , row(
         colMd(2)(
           isComplete ? pseudoInput(form.alternative) : select(
             { name: 'alternative', required: true, ...disabled },
@@ -148,7 +148,7 @@ const cs13Form = (opts) => {
       // signatureRow(!isStudent, 'alt1', form), vert,
 
       div('Signature #2:'),
-      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, false), vert,
+      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, false), vert),
       // signatureRow(!isStudent, 'alt2', form),
 
       buttonBarWrapper(
@@ -195,6 +195,49 @@ const pageScript = (nonce) => {
 // We handle requirement (2) by toggling the required attribute of fields.
 
 const pageScriptText = () => (`
+
+  var coll = document.getElementsByClassName("comp523col");
+  var content = document.getElementsByClassName("comp523cont");
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  } 
+
+  var coll = document.getElementsByClassName("indcol");
+  var content = document.getElementsByClassName("indcont");
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  } 
+
+  var coll = document.getElementsByClassName("altcol");
+  var content = document.getElementsByClassName("altcont");
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  } 
+
   const getField = (name) => document.querySelector('[name=' + name + ']')
   const fieldTrue = (name) => getField(name).value == 'true'
   const maybeSetReq = (guard) => (field) => {

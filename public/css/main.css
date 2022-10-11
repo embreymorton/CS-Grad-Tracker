@@ -243,3 +243,24 @@ form [name=dept] {
 .button-bar * {
   margin-right: 5px;
 }
+
+.comp523cont, 
+.indcont,
+.altcont {
+  display: none;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.active {
+  background-color: #6495ED;
+  color : white;
+}
+
+.comp523col, 
+.indcol,
+.altcol {
+  border: none;
+  border-radius: 2px;
+  font-size: 20px;
+}
