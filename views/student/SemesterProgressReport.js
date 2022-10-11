@@ -33,7 +33,7 @@ const main = (opts) => {
 const mainContent = (opts) => {
   const { student, hasAccess, isStudent, seeAllSubmissions } = opts
   const { lastName, firstName } = student
-  const { h6, h5, h4, h3, h2, div, strong, hr, a } = x
+  const { h6, h5, h4, h3, h2, div, details, summary, strong, hr, a } = x
   const form = !hasAccess
         ? div('You do not have access')
         : progressReportForm(opts)
@@ -41,18 +41,23 @@ const mainContent = (opts) => {
     h4(lastName, ', ', firstName),
     h3('Semester Progress Report'),
     a({href: seeAllSubmissions, class: 'btn btn-primary'}, 'See More Submissions'),
+    vert,
     div(
       { class: 'text-left' },
       div('Please discuss your semester goals and milestones with your advisor. Fill out this form with as much details as you can. Below is a recommended/typical timeline with some major milestones for your reference:'),
-      h5(strong('Recommended Milestones:')),
-      milestoneBullets('By the end of semester 4', ['Gain admission to PhD candidacy through PRP and faculty vote.']),
-      milestoneBullets('By the end of semester 5', ['Discuss research plan with at least three (potential) committee members; submit form CS-12.']),
-      milestoneBullets('By the end of semester 6', ['Name the remaining members of the doctoral committee (Graduate School form).', 'Submit Plan of Study (Form CS-06) with background preparation (Form CS-01) approved by the committee.']),
-      milestoneBullets('By the end of semester 7', ['Submit a dissertation proposal to the committee; hold meeting for approval of proposal,', 'OR Pass the Doctoral Oral examination.']),
-      milestoneBullets('By the end of semester 8', ['Submit disseration proposal AND pass the Doctoral Oral examination.', 'Apply for Admission to Candidacy for a Doctoral Degree (Graduate School form).']),
-      milestoneBullets('At any time', ['Satisfy the program product requirement: submit Form CS-13.', 'Satisfy the teach requirement: submit Form CS-11', 'Submit course waiver forms as appropriate.']),
-      milestoneBullets('Every six months after approval of the dissertation proposal', ['Meet with the committee to discuss dissertation progress.']),
-      milestoneBullets('By the end of semester 10', ['When dissertation is in substantially finished form, announce dissertation defense, giving two weeks\'s notice.', 'Pass Final Oral examination (dissertation defense).', 'Submit completed and signed dissertation to the Graduate School.']),
+      details({open: true},
+        summary(h5({class: 'd-inline'}, strong('Recommended Milestones:'))),
+        div(
+          milestoneBullets('By the end of semester 4', ['Gain admission to PhD candidacy through PRP and faculty vote.']),
+          milestoneBullets('By the end of semester 5', ['Discuss research plan with at least three (potential) committee members; submit form CS-12.']),
+          milestoneBullets('By the end of semester 6', ['Name the remaining members of the doctoral committee (Graduate School form).', 'Submit Plan of Study (Form CS-06) with background preparation (Form CS-01) approved by the committee.']),
+          milestoneBullets('By the end of semester 7', ['Submit a dissertation proposal to the committee; hold meeting for approval of proposal,', 'OR Pass the Doctoral Oral examination.']),
+          milestoneBullets('By the end of semester 8', ['Submit disseration proposal AND pass the Doctoral Oral examination.', 'Apply for Admission to Candidacy for a Doctoral Degree (Graduate School form).']),
+          milestoneBullets('At any time', ['Satisfy the program product requirement: submit Form CS-13.', 'Satisfy the teach requirement: submit Form CS-11', 'Submit course waiver forms as appropriate.']),
+          milestoneBullets('Every six months after approval of the dissertation proposal', ['Meet with the committee to discuss dissertation progress.']),
+          milestoneBullets('By the end of semester 10', ['When dissertation is in substantially finished form, announce dissertation defense, giving two weeks\'s notice.', 'Pass Final Oral examination (dissertation defense).', 'Submit completed and signed dissertation to the Graduate School.']),
+        ),
+      ),
       form
     ),
     div(
@@ -107,7 +112,7 @@ const progressReportForm = (opts) => {
         )
       ),
       hr(),
-      frow(div('Q1: What progress did you make this semester (or since your last progress report)? Please include any milestones completed, papers submitted, or other gneral progress made.'), 'progressMade', 8), 
+      frow(div('Q1: What progress did you make this semester (or since your last progress report)? Please include any milestones completed, papers submitted, or other general progress made.'), 'progressMade', 8), 
       vert,
       frow(div('Q2: What are your goals/plans for next semester (including summers)?'), 'goals', 8), 
       vert,
@@ -236,7 +241,7 @@ const evaluationSection = (opts) => {
         [
           [4, '4: EXCELLENT: The student\'s progress exceeds expectations.'],
           [3, '3: FINE: The student made normal progress.'],
-          [2, '2: WEAK: The student made lower than expected progress, but I and the student have made a plan to remedy it.'],
+          [2, '2: WEAK: The student made lower than expected progress, but the student and I have made a plan to remedy it.'],
           [1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.']
         ],
         {currentValue: form.academicRating}

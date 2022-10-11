@@ -34,7 +34,8 @@ const aggregateData = async (pid, admin) => {
     await Promise.all(students.map(populateNotes))
 
     const populateSemesterProgress = async (student) => {
-      progressForms = await schema.SemesterProgressReport.find({student: student._id}).populate('semester').sort({year: -1, season: 1}).exec()
+      const progressForms = await schema.SemesterProgressReport.find({student: student._id}).populate('semester').exec()
+      progressForms.sort((a, b) => b.semester?.year - a.semester?.year || a.semester?.season.localeCompare(b.semester?.season)) // js sorting easier than mongoose sort by populated field
       student.semesterProgress = progressForms;
     }
     await Promise.all(students.map(populateSemesterProgress))
