@@ -293,6 +293,10 @@ studentController.viewForm = async (req, res) => {
       return res.render('..views/error.ejs', {string: 'Student id not specified.'})
     }
 
+    if (!schema[formName]) {
+      return res.render('../views/error.ejs', {string: `${formName} is not a valid form.`})
+    }
+
     const result = await schema[formName].findOne({student: _id}).exec()
     const form = result || {}
     const isStudent = false
