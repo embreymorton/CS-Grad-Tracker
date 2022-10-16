@@ -69,11 +69,12 @@ install_dependencies:
       - node_modules/
 
 testing_testing:
-  image: cypress/base:12
+  image: cypress/base:16
   tags:
     - nodejs
   stage: test
   script:
+    - node --version
     - npm install -g start-server-and-test
     - npm run ci
 
