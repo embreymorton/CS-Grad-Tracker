@@ -317,7 +317,7 @@ studentController.viewForm = async (req, res) => {
 
 studentController.updateForm = async function(req, res){
   const input = req.body
-  if (req.params.title == null || req.params._id == null || mongoose.isValidObjectId(req.params._id)) {
+  if (req.params.title == null || req.params._id == null || !mongoose.isValidObjectId(req.params._id)) {
     res.render('../views/error.ejs', {string: 'Did not include valid student ID or title of form'})
     return
   }
@@ -327,18 +327,17 @@ studentController.updateForm = async function(req, res){
     return
   }
   const studentId = student._id
-  const form = await schema[req.params.title].findOneAndUpdate({student: studentId}, input, { runValidators: true }).exec().catch(err => res.render('../views/error.ejs', {string: err}))
-  if (!form) {
-    const newform = await schema[req.params.title].findOne({student: studentId}, input, { runValidators: true }).populate('student').exec()
-    await updateStudentFields(req.params.title, newform)
+  const form = await schema[req.params.title].findOneAndUpdate({student: studentId}, input, { new: true, runValidators: true }).exec().catch(err => res.render('../views/error.ejs', {string: err}))
+  if (form) {
+    await updateStudentFields(req.params.title, form)
     res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
     return
   }
 
-  // form already exists
-  const inputModel = new schema[req.params.title](input)
-  await inputModel.save()
-  await updateStudentFields(req.params.title, result)
+  // form doesn't exist
+  const inputModel = await (new schema[req.params.title](input)).save()
+  const newform = await inputModel.save()
+  await updateStudentFields(req.params.title, newform)
   res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
   return
 }
