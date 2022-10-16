@@ -5,10 +5,16 @@ const { div } = x
  * baseComponents.js
  * 
  * A series of basic form elements and their helper functions in hyperscript
- * Currently includes: checkbox, dropdown, radio, script
+ * Currently includes: checkbox, dropdown, radio, script.
+ * 
+ * `name` arguments are also used to generate 'data-cy' attributes for cypress testing. Currently
+ * these will only show up on dev or testing env
  */
 
 // for any `name` parameter, please ensure that the `name` matches a field in a form's schema AND that it only includes valid html attribute characters!
+
+const isProd = process.env.mode == 'production' // to reduce string comparisons
+const datacy = (name) => (isProd ? {} : {'data-cy': name})
 
 /**
  * Creates a checkbox input with the proper styling AND unlike html's basic checkbox,
@@ -28,7 +34,7 @@ const { div } = x
 
   return div(
     x(`input.form-control#checkbox-${name}`)( // the physical checkbox just functions like a button that sets a hidden input's value
-      {type: 'checkbox', ...required, ...checked, ...disabled},
+      {type: 'checkbox', 'data-cy': name, ...required, ...checked, ...disabled},
     ),
     x(`input#checkboxValue-${name}`)( // this hidden input contains the actual true/false value for the checkbox
       {type: 'hidden', name, value: isChecked, ...disabled},
@@ -61,7 +67,7 @@ const { div } = x
     options.unshift(makeOption('', blankOption, true, true))
   const disabled = isDisabled ? {disabled: ''} : {}
   const required = isRequired ? {required: ''} : {}
-  return x(`select.form-control#select-${name}`)({name, ...disabled, ...required}, options)
+  return x(`select.form-control#select-${name}`)({name, ...datacy(name), ...disabled, ...required}, options)
 }
 
 /**
@@ -98,7 +104,7 @@ const makeOption = (value, text, isSelected = false, isHidden = false) => x('opt
   const disabled = isDisabled ? { disabled: '' } : {}
   const required = isRequired ? { required: '' } : {}
   return x('div.form-check.form-radio')(
-    x(`input.form-check-input.check-radio#radio-${name}-${value}`)({name, value, type: 'radio', ...checked, ...disabled, ...required}),
+    x(`input.form-check-input.check-radio#radio-${name}-${value}`)({name, value, type: 'radio', ...datacy(name), ...checked, ...disabled, ...required}),
     x(`label.form-check-label`)({for: `radio-${name}-${value}`}, label)
   )
 }
@@ -120,11 +126,28 @@ const radioSet = (name, valueLabelList, {currentValue = null, isDisabled = false
  * @param {*} value - initial value the input should have
  * @param {Boolean} isDisabled
  * @param {Boolean} isRequired defaults true 
+ * @param {Boolean} isHidden defaults false
  */
-const input = (name, value, {isDisabled = false, isRequired = true}) => {
+const input = (name, value, {isDisabled = false, isRequired = true, isHidden = false}) => {
   const disabled = isDisabled ? { disabled: '' } : {}
   const required = isRequired ? { required: '' } : {}
-  return x(`input.form-control#input-${name}`)({type: 'text', name, value, ...required, ...disabled})
+  const type = isHidden ? 'hidden' : 'text'
+  return x(`input.form-control#input-${name}`)({type, name, value, ...datacy(name), ...required, ...disabled})
+}
+
+/**
+ * 
+ * @param {String} name matches a field name on the form's scheme
+ * @param {String} value initial text in the textarea
+ * @param {Boolean} isDisabled default false
+ * @param {Boolean} isRequired default true
+ * @param {Number} rows default number of rows of text (default 8)
+ * @returns 
+ */
+const textarea = (name, value, {isDisabled = false, isRequired = true, rows = 8}) => {
+  const disabled = isDisabled ? { disabled: '' } : {}
+  const required = isRequired ? { required: '' } : {}
+  return x(`textarea.form-control#textarea-${name}`)({name, rows, ...datacy(name), ...required, ...disabled}, value)
 }
 
 /**
@@ -142,4 +165,4 @@ const frontendScript = (nonce, scriptBody, attributes = {}) => {
   return script
 }
 
-module.exports = { checkbox, frontendScript, dropdown, makeOption, radio, radioSet, input }
+module.exports = { checkbox, frontendScript, dropdown, makeOption, radio, radioSet, input, textarea }

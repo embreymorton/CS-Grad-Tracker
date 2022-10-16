@@ -472,7 +472,7 @@ const semesterProgressReportSchema = mongoose.Schema({
     validate: {
       validator: async function(v) {
         if (this.student) {
-          const match = await schema.findOne({student: this.student, semester: v}).exec()
+          const match = await schema.SemesterProgressReport.findOne({student: this.student, semester: v}).exec()
           return !match
         }
         
@@ -480,7 +480,7 @@ const semesterProgressReportSchema = mongoose.Schema({
         // according to https://mongoosejs.com/docs/validation.html#update-validators-and-this, update validators (from functions like findOneAndUpdate with useValidators flag true)
         // cannot use `this` to get the other values because they may not describe the entire object, therefore as an alternative we look at the Query object
         const thisId = this._conditions._id
-        const studentId = this._update['$set'].student // can technically be determined by fetching for thisId
+        const studentId = this._update['$set'].student || (await schema.SemesterProgressReport.findOne({_id: thisId}, 'student').exec()).student // can technically be determined by fetching for thisId
         const match = await schema.SemesterProgressReport.findOne({student: studentId, semester: v, _id: {$ne: thisId}}).exec()
         return !match
       },

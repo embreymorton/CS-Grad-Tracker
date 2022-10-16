@@ -2,7 +2,6 @@ const x = require('hyperaxe')
 const page = require('../page')
 const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
-const input = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
@@ -13,7 +12,7 @@ const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
-const { checkbox, dropdown, makeOption, radioSet } = require('../common/baseComponents')
+const { checkbox, dropdown, makeOption, radioSet, textarea, input } = require('../common/baseComponents')
 let complete = null
 
 const vert = x('div.verticalSpace')()
@@ -96,7 +95,7 @@ const progressReportForm = (opts) => {
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
-      input('hidden', 'student', student._id.toString()),
+      input('student', student._id.toString(), {isHidden: true}),
       namePidRow(opts, editAccess), 
       hr(),
       div('Choose the semester you are filling this form for:'),
@@ -153,9 +152,7 @@ const namePidRow = (opts, editAccess) => {
   const { lastName, firstName, pid } = student
   const name = `${lastName}, ${firstName}`
   const { div } = x
-  const value = editAccess && !isComplete
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
+
   return (
     row(
       colMd(6)(
@@ -173,14 +170,12 @@ const namePidRow = (opts, editAccess) => {
 const rowCol = (width, ...inside) => row(colMd(width)(...inside))
 
 const formRow = (values, editAccess, type = 'text') => (label, name, width = 6, required = true) => {
-  const value = editAccess && !complete 
-        ? input(type, name, values[name], required)
-        : (type == 'checkbox' ? pseudoCheckbox(values[name]) : pseudoInput(values[name]))
+  const element = input(name, values[name], {isRequired: required, isDisabled: !(editAccess && !complete)})
   return (
     row(
       colMd(width)(
         label,
-        value,
+        element,
       )
     )
   )
@@ -192,15 +187,16 @@ const formRow = (values, editAccess, type = 'text') => (label, name, width = 6, 
  * can only create "pseudoInputs" which are uneditable. 
  */
 const textareaRow = (form, editAccess) => (label, name, width, required = true) => {
-  const disabledTag = editAccess && !complete ? {} : { disabled: true } // html disabled attribute is unary
-  const textarea = x('textarea.form-control')(
-    { rows: width, name, required, ...disabledTag},
-    form[name]
+  const isDisabled = !(editAccess && !complete)
+  const element = textarea(
+    name,
+    form[name],
+    { rows: width, isRequired: required, isDisabled},
   )
   return row(
     colMd(width)(
       label,
-      textarea
+      element
     )
   )
 }

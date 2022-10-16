@@ -116,9 +116,10 @@ studentViewController.saveForm = async function (req, res) {
   }
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   res.redirect("/studentView/forms/" + formName + "/false")
@@ -141,9 +142,10 @@ studentViewController.updateForm = async function(req,res) {
 
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   
@@ -292,7 +294,10 @@ studentViewController.viewFormVersion = async (req, res) => {
         return
       }
 
-      const newform = await upsertForm(student, formName, null, {})
+      const [newform, err] = await upsertForm(student, formName, null, {})
+      if (err) {
+        return res.render('../views/error.js', { string: err }) // potential error
+      }
       res.redirect(`/studentView/multiforms/${formName}/${newform._id}/false`)
       return
     }
@@ -343,9 +348,10 @@ studentViewController.updateFormVersion = async function (req, res) {
 
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId, _id: formId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
 
@@ -378,9 +384,10 @@ studentViewController.saveFormVersion = async function (req, res) {
   
   const studentId = student._id
   let form = await schema[formName].findOne({ _id: formId, student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err;
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)
@@ -391,31 +398,38 @@ studentViewController.saveFormVersion = async function (req, res) {
   Helpers
 */
 
-// might be nice to have a `renderForm` helper
-const renderStudentViewForm = async () => {
-
-}
-
 /**
  * 
  * @param {schema[Student]} student 
  * @param {String} formName 
  * @param {schema[CSXX]} form if null, creates a new form
  * @param {Object} formData key-values that should be upserted
- * @returns null if form could not be updated (is complete); new/updated form object if successful
+ * @returns [form, err] where form is the updated form and err is an error message if an error occurred
  */
 const upsertForm = async (student, formName, form, formData) => {
-  if (form == null) { // form not created for student yet
+  // form not created case
+  if (form == null) {
     form = new schema[formName]({...formData, student: student._id });
-    await form.save()
-    return form
+    try {
+      form = await form.save()
+    } catch (err) {
+      return [null, err]
+    }
+    return [form, null]
   } 
   
+  // update form case
   if (checkFormCompletion(formName, form)) {
-    return null
+    return [null, "Advisors have approved of form. No further edits are allowed."]
   }
-  
-  return await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
+
+  try {
+    form = await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
+  } catch (err) {
+    console.log(err)
+    return [null, err]
+  }
+  return [form, null]
 }
 
 /**

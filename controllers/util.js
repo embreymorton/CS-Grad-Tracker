@@ -194,7 +194,7 @@ _.checkFormCompletion = (name, form) => {
                (form.hadJob && form.advisorSignature) ||
                (form.alternative && form.alt1DateSigned && form.alt2DateSigned)
     case 'SemesterProgressReport':
-      return form.hasDiscussed && form.academicRating && form.rataRating
+      return form.hasDiscussed && form.academicRating && Number.isInteger(form.rataRating) // why in js is (null >= 0) ==> true
     default:
       return false
   }
@@ -230,9 +230,9 @@ _.filterOut = (arr, test) => {
  * Be sure to check over and update this function if a form is made s.t. it includes 
  * a field that should disallow students from editing.
  * @param {Object} formData form data from HTML form gotten from req.body !WILL BE MUTATED!
- * @returns {Object} same formData passed in
+ * @param {Object} formName to allow for form-specific removal
  */
-_.validateFormData = (formData) => {
+_.validateFormData = (formData, formName) => { // TODO: divide this by formName and ones that should only affect one form
   ;[
     '_id',
     '__v',
@@ -253,7 +253,12 @@ _.validateFormData = (formData) => {
     // 'alt1Signature', CS13 changed to dropdowns
     'alt1DateSigned',
     // 'alt2Signature',
-    'alt2DateSigned'
+    'alt2DateSigned',
+    'hasDicussed',
+    'academicRating',
+    'academicComments',
+    'rataRating',
+    'rataComments'
   ].forEach((key) => delete formData[key])
   return formData
 }
