@@ -4,8 +4,13 @@ import util from './formUtil'
 const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
+const approvedDate = new Date();
+const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
+const actualApproved = new Date(approvedDateMMDDYYYY);
+const yyyyMMDD = approvedDate.toISOString().split('T')[0]
+
 let CS06 = {
-  dateEntered: '2019-02-03',
+  dateEntered: `${yyyyMMDD}`,
   dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
   breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   breadthCourseDate: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
@@ -20,10 +25,12 @@ let CS06 = {
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
   committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   chairSignature: 'AJ',
-  chairDateSigned: '2019-09-19',
+  chairDateSigned: `${actualApproved}`,
+  chairCheckbox: 'on',
   reasonApproved: 'Your left arm',
   directorSignature: 'LIAAAAR',
-  directorDateSigned: '2019-09-19',
+  directorDateSigned: `${actualApproved}`,
+  directorCheckbox: 'on',
 }
 
 let CS06Dropdowns = {
@@ -71,6 +78,14 @@ describe('Test CS06 submissions', () => {
     cy.get('.CS06-submit').click()
     cy.get('[name=advisor]').should('have.value', CS06.committee[5])
     cy.get('[name=chairman]').should('have.value', CS06.committee[2])
+
+    delete CS06.chairSignature
+    delete CS06.chairDateSigned
+    delete CS06.chairCheckbox
+    delete CS06.directorSignature
+    delete CS06.directorDateSigned
+    delete CS06.directorCheckbox
+
     util.checkFormAsAdmin(CS06)
     util.checkDropdowns(CS06Dropdowns)
   })
@@ -86,8 +101,10 @@ describe('Test CS06 submissions', () => {
 
     delete CS06.chairSignature
     delete CS06.chairDateSigned
+    delete CS06.chairCheckbox
     delete CS06.directorSignature
     delete CS06.directorDateSigned
+    delete CS06.directorCheckbox
     delete CS06.reasonApproved
 
     util.fillFormAsStudent(CS06)
