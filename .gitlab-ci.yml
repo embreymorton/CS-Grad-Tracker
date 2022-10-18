@@ -60,7 +60,6 @@ install_dependencies:
   tags:
     - nodejs
   script:
-    - node --version
     - npm ci
     - npx cypress cache path
     - npx cypress cache list
@@ -74,7 +73,6 @@ testing_testing:
     - nodejs
   stage: test
   script:
-    - node --version
     - npm install -g start-server-and-test
     - npm run ci
 
