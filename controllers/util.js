@@ -170,7 +170,7 @@ _.listObjectToString = function (input) {
 }
 
 /**
- * **ensure form is not null!**
+ * **must ensure form is not null!**
  * @param {String} name - name of form being checked e.g. "CS02"
  * @param {FormSchema} form - the CSXX Form object returned by a Mongoose query
  * @returns true if form is complete for student (*any* signatures filled), false otherwise
@@ -190,14 +190,18 @@ _.checkFormCompletion = (name, form) => {
     case 'CS08': 
       return form.primaryDateSigned && form.secondaryDateSigned
     case 'CS13':
-      return (form.comp523 && form.comp523DateSigned) ||
-               (form.hadJob && form.advisorSignature) ||
-               (form.alternative && form.alt1DateSigned && form.alt2DateSigned)
-               
+      return (form.selectedSection == 'comp523' && form.comp523DateSigned) ||
+               (form.selectedSection == 'industry' && form.advisorSignature) ||
+               (form.selectedSection == 'alternative' && form.alt1DateSigned && form.alt2DateSigned)
+    case 'SemesterProgressReport':
+      return form.hasDiscussed && form.academicRating && Number.isInteger(form.rataRating) // why in js is (null >= 0) ==> true
     default:
       return false
   }
 }
+
+/** @returns true if is multiform */
+_.isMultiform = (formName) => ['CS02', 'SemesterProgressReport'].includes(formName)
 
   /**
    * filterOut works just like the standard Array.filter function, but it mutates
@@ -225,10 +229,10 @@ _.filterOut = (arr, test) => {
  * Removes any fields from form data that a student should not be able to change.
  * Be sure to check over and update this function if a form is made s.t. it includes 
  * a field that should disallow students from editing.
- * @param {Object} formData form data from HTML form gotten from req.body !MUTATED!
- * @returns {Object} same formData passed in
+ * @param {Object} formData form data from HTML form gotten from req.body !WILL BE MUTATED!
+ * @param {Object} formName to allow for form-specific removal
  */
-_.validateFormData = (formData) => {
+_.validateFormData = (formData, formName) => { // TODO: divide this by formName and ones that should only affect one form
   ;[
     '_id',
     '__v',
@@ -249,7 +253,12 @@ _.validateFormData = (formData) => {
     // 'alt1Signature', CS13 changed to dropdowns
     'alt1DateSigned',
     // 'alt2Signature',
-    'alt2DateSigned'
+    'alt2DateSigned',
+    'hasDicussed',
+    'academicRating',
+    'academicComments',
+    'rataRating',
+    'rataComments'
   ].forEach((key) => delete formData[key])
   return formData
 }

@@ -13,6 +13,12 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const util = require('../../controllers/util')
 
+/**
+ * Landing page for forms that may be submitted multiple times throughout the student's time at college.
+ * Allows you to make a new forms and view previously submitted ones.
+ * @param {*} opts 
+ * @returns 
+ */
 const main = (opts) => {
   const { formName } = opts
   const title = `Submitted ${formName} Forms`
@@ -53,7 +59,6 @@ const singleForm = (form, opts) => {
   const gutterbox = x('div.col-md-4.col-12')
   const box = x('div.bg-light.rounded.p-2.m-2')
   const abutton = x('a.btn.btn-primary')
-
   return gutterbox(box(
     h6(form[titleField] || "Untitled"),
     div(form[subtitleField] || "---"),

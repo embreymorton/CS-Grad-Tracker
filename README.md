@@ -228,18 +228,20 @@ will handle the request and serve the view file views/course/index.ejs.
 
 ## Testing
 
-### Basics
+### Run Locally
+1. Configure `.env.testing` similar to your development env.    
 
-- Configure the .env to have mode as testing and the database as ...-test
-- Run the command `npm run ci` to run the command inline.
-- To run the tests in a visible browser and not just in command line:
-- As in the first point, configure .env, then `npm run start-ci` to start the
-  server
-- To start cypress: `npx cypress open`
-- A cypress test window should appear (on mac and windows--not sure about
-  linux)
-- Run whichever tests are desired
+    By default it should have these values:
+    * `port=8080`
+    * `mode=testing`
+    * `databaseString='mongodb://127.0.0.1/cs_grad_data-test'`
 
+2. Run the command `npm run start-ci` to create a testing instance of the webserver.
+3. In another terminal run either of these commands:
+    * `npx cypress open` - for the UI
+    * `npm run test` - for command line only
+
+    The UI will let you choose a specific test to run while automatically saving screenshots and recording browser states for you to see where your tests are failing.
 
 # Deployment
 

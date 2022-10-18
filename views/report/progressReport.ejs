@@ -48,6 +48,8 @@
                   <th scope="col" class="col-progress-report-defense">Dis defense passed (DER form)</th>
                   <th scope="col" class="col-progress-report-dissertation">Dissertation submitted</th>
                   <th scope="col" class="col-progress-report-notes">Notes</th>
+                  <th scope="col" class="col-progress-report-academic-review">Academic Review per Semester<br> (4 is Excellent, 1 is Poor)</th>
+                  <th scope="col" class="col-progress-report-employment-review">Employment Review per Semester<br> (4 is Very Good, 1 is Poor, 0 is N/A)</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,6 +98,29 @@
                       <% } %>
                     </td>
 
+                    <td> <!-- academic reviews -->
+                      <%if (report[i].semesterProgress) { %>
+                        <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
+                          <p>
+                            <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].academicRating%>
+                            <br>
+                            <%= report[i].semesterProgress[j].academicComments%>
+                          </p>
+                        <% } %>
+                      <% } %>
+                    </td>
+
+                    <td> <!-- employment reviews -->
+                      <%if (report[i].semesterProgress) { %>
+                        <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
+                          <p>
+                            <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].rataRating%>
+                            <br>
+                            <%= report[i].semesterProgress[j].rataComments%>
+                          </p>
+                        <% } %>
+                      <% } %>
+                    </td>
 
                   </tr>
                 <% } %>

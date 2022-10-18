@@ -14,7 +14,6 @@ const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 
-
 const main = (opts) => {
   const { uploadSuccess, isComplete } = opts
   const title = 'CS13'
@@ -23,7 +22,7 @@ const main = (opts) => {
     uploadFeedback(uploadSuccess),
     studentBar(opts),
     mainContent(opts),
-    isComplete ? null : pageScript(opts.cspNonce),
+    pageScript(opts.cspNonce),
   )
 }
 
@@ -49,71 +48,54 @@ const mainContent = (opts) => {
 const cs13Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
   const editAccess = admin || isStudent
-  const { div, hr, strong, option, span, a, br } = x
+  const { div, hr, strong, option, span, a, br, button } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
-  const disabled = editAccess ? {} : { disabled: true }
+  const disabledForAdvisors = editAccess ? {} : { disabled: true }
+  const disabledForComplete = isComplete && !admin ? { disabled: true } : {}
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
 
-      x('h4.underline')('Comp 523'),
+      input('hidden', 'selectedSection', form.selectedSection),
+      button({type: 'button'}, {id: 'comp523col', class : 'comp523col', value: 'comp523', ...disabledForComplete} ,('Comp 523')),
+      div({id: 'comp523cont', class: 'comp523cont'},
       row(
-        colMd(2)(
-          isComplete ? pseudoInput(form.comp523) : select(
-            { name: 'comp523', required: true, ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.comp523 || null }, 'false'),
-            option({ value: 'true', selected: form.comp523 || null }, 'true'),
-          )
-        ),
-        colMd(10)('Or equivalent software engineering course. Syllabus must be provided.'),
+        colMd(12)(
+          'Student has taken COMP 523, or an equivalent software engineering course. Syllabus must be provided.',
+        )
       ), vert,
 
       div('COMP 523 Instructor Signature'),
-      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, false),
+      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, true)),
       hr(),
-
-      x('h4.underline')('Industry Experience'),
+      button({type: 'button'}, {id: 'indcol', class : 'indcol', value: 'industry', ...disabledForComplete}, ('Industry Experience')),
+      div({id: 'indcont', class: 'indcont'},
       row(
-        colMd(2)(
-          isComplete ? pseudoInput(form.hadJob) : select(
-            { name: 'hadJob', required: true, ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.hadJob || null }, 'false'),
-            option({ value: 'true', selected: form.hadJob || null }, 'true'),
-          )
-        ),
-        colMd(10)('Student has spent at least 3 months in a software development job in an organization with an established development process and participated substantively in the development of a program product.'),
+        colMd(12)('Student has spent at least 3 months in a software development job in an organization with an established development process and participated substantively in the development of a program product.'),
       ), vert,
 
       row(
         colMd(4)('Company, Development Experience, and Duration',),
         colMd(8)(
           isComplete ? pseudoInput(form.jobInfo) : x('textarea.form-control')(
-            { name: 'jobInfo', rows: 6, ...disabled },
+            { name: 'jobInfo', rows: 6, ...disabledForAdvisors },
             form.jobInfo
           )
         ),
       ), vert,
 
       div('Advisor signature:'),
-      approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
+      approvalCheckboxRow(!isStudent, 'advisor', opts)),
+       hr(), 
+      button({type: 'button'}, {id: 'altcol', class : 'altcol', value: 'alternative', ...disabledForComplete}, ('Alternative')),
 
-      x('h4.underline')('Alternative'),
+      div({id: 'altcont', class : 'altcont'} , 
       row(
-        colMd(2)(
-          isComplete ? pseudoInput(form.alternative) : select(
-            { name: 'alternative', required: true, ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.alternative || null }, 'false'),
-            option({ value: 'true', selected: form.alternative || null }, 'true'),
-          )
-        ),
-        colMd(10)(
+        colMd(12)(
           'Student has developed a program product, as defined above, and has met the expectations of the client, including product delivery and documentation for both users and other developers. ',
           br(),
           'Note: two signatures are required below.'
@@ -123,7 +105,7 @@ const cs13Form = (opts) => {
       row(colMd(12)('Product and Deliverables:')),
       isComplete ? pseudoInput(form.product) : row(colMd(12)(
         x('textarea.form-control')(
-          { name: 'product', rows: 6, ...disabled },
+          { name: 'product', rows: 6, ...disabledForAdvisors },
           form.product
         )
       )), vert,
@@ -144,11 +126,11 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Signature #1:'),
-      signatureDropDown(!isStudent, 'alt1', activeFaculty, opts, false), vert,
+      signatureDropDown(!isStudent, 'alt1', activeFaculty, opts, true), vert,
       // signatureRow(!isStudent, 'alt1', form), vert,
 
       div('Signature #2:'),
-      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, false), vert,
+      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, true), vert),
       // signatureRow(!isStudent, 'alt2', form),
 
       buttonBarWrapper(
@@ -194,48 +176,67 @@ const pageScript = (nonce) => {
 // (2) All fields within the selected section must be filled out.
 // We handle requirement (2) by toggling the required attribute of fields.
 
-const pageScriptText = () => (`
-  const getField = (name) => document.querySelector('[name=' + name + ']')
-  const fieldTrue = (name) => getField(name).value == 'true'
-  const maybeSetReq = (guard) => (field) => {
-    const el = getField(field)
-    if (el && !el.disabled) el.required = fieldTrue(guard)
+const pageScriptText = (form) => (`
+
+  let cols = [ // buttons
+    document.getElementById("comp523col"),
+    document.getElementById("indcol"),
+    document.getElementById("altcol")
+  ];
+
+  let conts = [ // contents
+    document.getElementById("comp523cont"),
+    document.getElementById("indcont"),
+    document.getElementById("altcont")
+  ]
+
+  const comp523Fields = ['comp523Signature', 'comp523DateSigned'].map(name => document.getElementsByName(name)[0]).concat(['comp523SignatureSelect']).map(name => document.getElementById(name)).filter(ele => ele)
+  const industryFields = ['jobInfo', 'advisorSignature', 'advisorDateSigned'].map(name => document.getElementsByName(name)[0]).filter(ele => ele)
+  const alternativeFields = ['client', 'position', 'product', 'alt1Signature', 'alt1DateSigned', 'alt2Signature', 'alt2DateSigned'].map(name => document.getElementsByName(name)[0]).map(name => document.getElementById(name)).filter(ele => ele).concat(['alt1SignatureSelect', 'alt2SignatureSelect'])
+
+  const updateRequiredValidation = (currentSelected) => {
+    switch (currentSelected) {
+      case 'comp523':
+        comp523Fields.forEach(field => field.required = true)
+        industryFields.forEach(field => field.required = false)
+        alternativeFields.forEach(field => field.required = false)
+      break
+      case 'industry':
+        comp523Fields.forEach(field => field.required = false)
+        industryFields.forEach(field => field.required = true)
+        alternativeFields.forEach(field => field.required = false)
+      break
+      case 'alternative':
+        comp523Fields.forEach(field => field.required = false)
+        industryFields.forEach(field => field.required = false)
+        alternativeFields.forEach(field => field.required = true)
+      break
+    }
   }
 
-  const comp523Fields = ['comp523Signature', 'comp523DateSigned']
-  const industryFields = ['jobInfo', 'advisorSignature', 'advisorDateSigned']
-  const altFields = ['client', 'position', 'product', 'alt1Signature',
-                     'alt1DateSigned', 'alt2Signature', 'alt2DateSigned']
+  let selectedSection = document.querySelector('[name="selectedSection"]')
 
-  const updateRequiredAttrs = () => {
-    comp523Fields.map(maybeSetReq('comp523'))
-    industryFields.map(maybeSetReq('hadJob'))
-    altFields.map(maybeSetReq('alternative'))
+  cols.forEach((button, i) => {
+    button.addEventListener("click", function() {
+      cols.forEach((button, j) => {
+        if (button.id == cols[i].id) {
+          button.classList.add("active")
+          conts[i].style.display = "block"
+          selectedSection.value = button.value
+          updateRequiredValidation(button.value)
+        } else {
+          button.classList.remove("active")
+          conts[j].style.display = "none"
+        }
+      });
+    })
+  })
+
+  const initialButton = cols.find(button => button.value == selectedSection.value)
+  if (initialButton) {
+    initialButton.disabled = false
+    initialButton.click()
   }
-
-  const oneSectionActive = () => {
-    const [a, b, c] = ['comp523', 'hadJob', 'alternative'].map(fieldTrue)
-    return ( a && !b && !c)
-        || (!a &&  b && !c)
-        || (!a && !b &&  c)
-  }
-
-  const ensureSectionActive = (event) => {
-    if (oneSectionActive()) return true
-    alert('Error: please set one section to true (and the rest to false)')
-    event.preventDefault()
-    setTimeout(()=>{
-      document.getElementById('submit-btn').disabled = false
-    },100)
-  }
-
-  const setListeners = () => {
-    document.querySelector('.cs-form [type=submit]').addEventListener('click', updateRequiredAttrs)
-    document.querySelector('.cs-form').addEventListener('submit', ensureSectionActive)
-    updateRequiredAttrs()
-  }
-
-  document.addEventListener('DOMContentLoaded', setListeners)
 `)
 
 module.exports = main

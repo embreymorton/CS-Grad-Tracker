@@ -65,6 +65,8 @@ router.use(function(req, res, next){
   next();
 });
 
+// note: all ':_id' parameters refer to the student.id, not form._id
+
 router.get('/', authorizeFaculty, setActiveStudentsQuery, student.get);
 
 router.get('/create', authorizeAdmin, student.create);

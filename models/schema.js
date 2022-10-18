@@ -37,6 +37,9 @@ var facultySchema = mongoose.Schema({
   active: Boolean,
   admin: Boolean
 })
+facultySchema.virtual('fullName').get(function() {
+  return this.lastName + ', ' + this.firstName
+})
 
 // Students
 var studentSchema = mongoose.Schema({
@@ -193,8 +196,16 @@ var semesterSchema = mongoose.Schema({
   season: {
     type: String,
     enum: ['FA', 'SP', 'S1', 'S2']
-  }
+  },
+  // visible: Boolean // whether a semester is visible from dropdowns
 })
+semesterSchema.virtual('semesterString').get(function() {
+  return this.season + ' ' + this.year
+})
+// const seasonToMonth = {SP: 2, S1: 3, S2: 4, FA: 9} // from https://ccinfo.unc.edu/wp-content/uploads/sites/219/2019/02/Decoding_the_Academic_Term_Codes.pdf
+// semesterSchema.virtual('value').get(function() {
+//   return this.year * 10 + seasonToMonth[this.season]
+// })
 
 // Courses
 var courseSchema = mongoose.Schema({
@@ -432,14 +443,15 @@ var CS08Schema = mongoose.Schema({
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   email: String, dateMet: String,
-  comp523: Boolean,
+  selectedSection: {
+    type: String,
+    enum: ['comp523', 'industry', 'alternative']
+  },
   comp523Signature: String,
   comp523DateSigned: String,
-  hadJob: Boolean,
   jobInfo: String,
   advisorSignature: Boolean,
   advisorDateSigned: String,
-  alternative: Boolean,
   product: String,
   client: String,
   position: String,
@@ -447,6 +459,70 @@ var CS13Schema = mongoose.Schema({
   alt1DateSigned: String,
   alt2Signature: String,
   alt2DateSigned: String,
+})
+
+const semesterProgressReportSchema = mongoose.Schema({
+  student: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Student', 
+    required: true
+  },
+  semester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Semester',
+    validate: {
+      validator: async function(v) {
+        if (this.student) {
+          const match = await schema.SemesterProgressReport.findOne({student: this.student, semester: v}).exec()
+          return !match
+        }
+        
+        // why so complicated?
+        // according to https://mongoosejs.com/docs/validation.html#update-validators-and-this, update validators (from functions like findOneAndUpdate with useValidators flag true)
+        // cannot use `this` to get the other values because they may not describe the entire object, therefore as an alternative we look at the Query object
+        const thisId = this._conditions._id
+        const studentId = this._update['$set'].student || (await schema.SemesterProgressReport.findOne({_id: thisId}, 'student').exec()).student // can technically be determined by fetching for thisId
+        const match = await schema.SemesterProgressReport.findOne({student: studentId, semester: v, _id: {$ne: thisId}}).exec()
+        return !match
+      },
+      message: props => `Progress report for this semester already exists.`
+    }
+  },
+  progressMade: String,
+  goals: String,
+  rataPreferences: String, // rata = RA or TA 
+  employmentAdvisor: { // if employmentAdvisor is same as regular advisor, please copy it over
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Faculty'
+  },
+
+  // you must ensure that students are not allowed to see the following fields!
+  hasDiscussed: Boolean,
+  academicRating: {
+    type: Number,
+    min: 1,
+    max: 4,
+    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+  },
+  academicComments: String,
+  rataRating: {
+    type: Number,
+    min: 0,
+    max: 4,
+    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+  },
+  rataComments : String,
+})
+semesterProgressReportSchema.virtual('semesterString', {
+  ref: 'Semester',
+  localField: 'semester',
+  foreignField: '_id',
+  justOne: true
+}).get(function () {
+  if (this.semester) {
+    return this.semester.semesterString
+  }
+  return 'Unspecified semester'
 })
 
 schema.Faculty = mongoose.model('Faculty', facultySchema)
@@ -466,6 +542,7 @@ schema.CS04 = mongoose.model('CS04', CS04Schema)
 schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
+schema.SemesterProgressReport = mongoose.model('SemesterProgressReport', semesterProgressReportSchema)
 
 module.exports = schema
 

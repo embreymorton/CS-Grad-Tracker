@@ -5,7 +5,7 @@ var path = require("path");
 var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
-const { validateFormData, checkFormCompletion, linkHeader } = require("./util.js");
+const { validateFormData, checkFormCompletion, linkHeader, isMultiform } = require("./util.js");
 const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
 
 var studentViewController = {};
@@ -68,7 +68,7 @@ studentViewController.forms = async function (req, res) {
 studentViewController.viewForm = async function (req, res) {
   const { params, session } = req
   const formName = params.title
-  if (formName == 'CS02') {
+  if (isMultiform(formName)) {
     return res.redirect(`/studentView/multiforms/${formName}`)
   }
   if (!schema[formName]) {
@@ -78,6 +78,7 @@ studentViewController.viewForm = async function (req, res) {
   if (formName != null && params.uploadSuccess != null) {
     const faculty = await schema.Faculty.find({}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
@@ -93,7 +94,7 @@ studentViewController.viewForm = async function (req, res) {
       const { cspNonce } = res.locals
       let locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
-        activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+        activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
       locals.form.cspNonce = cspNonce
       res.render(view, locals)
@@ -116,9 +117,10 @@ studentViewController.saveForm = async function (req, res) {
   }
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   res.redirect("/studentView/forms/" + formName + "/false")
@@ -141,9 +143,10 @@ studentViewController.updateForm = async function(req,res) {
 
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   
@@ -226,22 +229,32 @@ studentViewController.downloadCourses = async function (req, res) {
 
 studentViewController.formVersions = async function (req, res) {
   const formName = req.params.title
-  if (formName != 'CS02') { // currently only allow CS02 to have multiple copies
+  if (!isMultiform(formName)) { 
     res.render("../views/error.ejs", { string: "Not a valid form name or is not a form that allows multiple submissions." })
     return
   }
 
   const student = await schema.Student.findOne({ pid: req.session.userPID }).populate("advisor").populate("researchAdvisor").exec()
   if (student == null) {
-    res.render("../views/error.ejs", { string: "Student not found" })
+    res.render("../views/error.ejs", { string: "Student not found." })
     return
   }
   const studentId = student._id
 
-  // if adding more forms with multiple submissions, change the sort field, these are for CS02:
-  const titleField = 'courseNumber'
-  const subtitleField = 'dateSubmitted'
-  const forms = await schema[req.params.title].find({ student: studentId }).sort(titleField).exec()
+  let titleField
+  let subtitleField
+  let populateFields = ''
+  switch (formName) {
+    case 'CS02':
+      titleField = 'courseNumber'
+      subtitleField = 'dateSubmitted'
+      break;
+    case 'SemesterProgressReport':
+      titleField = 'semesterString'
+      subtitleField = null
+      populateFields = 'semester'
+  }
+  const forms = await schema[req.params.title].find({ student: studentId }).populate(populateFields).sort(titleField).exec()
 
   // generating opts
   const isStudent = true
@@ -263,15 +276,12 @@ studentViewController.viewFormVersion = async (req, res) => {
     res.render('../views/error.ejs', { string: `${formId} is not a valid form.` })
     return
   }
-  if (formName == null || !schema[formName] || formName != 'CS02') {
+  if (formName == null || !schema[formName] || !isMultiform(formName)) {
     res.render('../views/error.ejs', { string: `${formName} is not a real form or does not support multiple submissions.`})
     return
   }
   
   if (params.uploadSuccess != null) {
-    const faculty = await schema.Faculty.find({}).exec()
-    const activeFaculty = await schema.Faculty.find({active: true}).exec()
-    const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
     if (student == null) {
       res.render('../views/error.ejs', { string: 'Student id not specified.' })
@@ -280,12 +290,15 @@ studentViewController.viewFormVersion = async (req, res) => {
 
     if (formId === 'new') {
       const numberOfPrevSubmissions = (await schema[formName].find({ student: student._id })).length
-      if (numberOfPrevSubmissions > 25) {
+      if (numberOfPrevSubmissions > 50) {
         res.render('../views/error.js', { string: `Too many ${formName} forms found.` })
         return
       }
 
-      const newform = await upsertForm(student, formName, null, {})
+      const [newform, err] = await upsertForm(student, formName, null, {})
+      if (err) {
+        return res.render('../views/error.js', { string: err }) // potential error
+      }
       res.redirect(`/studentView/multiforms/${formName}/${newform._id}/false`)
       return
     }
@@ -296,6 +309,10 @@ studentViewController.viewFormVersion = async (req, res) => {
       return
     }
     const form = result || {}
+    const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const uploadSuccess = params.uploadSuccess == 'true'
+    const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const isStudent = true
     const hasAccess = true
     const postMethod = `/studentView/multiforms/update/${formName}/${formId}`
@@ -304,7 +321,7 @@ studentViewController.viewFormVersion = async (req, res) => {
     const { cspNonce } = res.locals
     const locals = {
       student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty,
-      activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+      activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
     }
     res.render(view, locals)
     return
@@ -332,9 +349,10 @@ studentViewController.updateFormVersion = async function (req, res) {
 
   const studentId = student._id
   let form = await schema[formName].findOne({ student: studentId, _id: formId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
 
@@ -367,9 +385,10 @@ studentViewController.saveFormVersion = async function (req, res) {
   
   const studentId = student._id
   let form = await schema[formName].findOne({ _id: formId, student: studentId }).exec()
-  form = await upsertForm(student, formName, form, formData)
-  if (!form) {
-    res.render("../views/error.ejs", { string: "Advisors have approved of form. No further edits are allowed."})
+  let err;
+  ;[form, err] = await upsertForm(student, formName, form, formData)
+  if (err) {
+    res.render("../views/error.ejs", { string: err })
     return
   }
   res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)
@@ -380,31 +399,37 @@ studentViewController.saveFormVersion = async function (req, res) {
   Helpers
 */
 
-// might be nice to have a `renderForm` helper
-const renderStudentViewForm = async () => {
-
-}
-
 /**
  * 
  * @param {schema[Student]} student 
  * @param {String} formName 
  * @param {schema[CSXX]} form if null, creates a new form
  * @param {Object} formData key-values that should be upserted
- * @returns null if form could not be updated (is complete); new/updated form object if successful
+ * @returns [form, err] where form is the updated form and err is an error message if an error occurred
  */
 const upsertForm = async (student, formName, form, formData) => {
-  if (form == null) { // form not created for student yet
+  // form not created case
+  if (form == null) {
     form = new schema[formName]({...formData, student: student._id });
-    await form.save()
-    return form
+    try {
+      form = await form.save()
+    } catch (err) {
+      return [null, err]
+    }
+    return [form, null]
   } 
   
+  // update form case
   if (checkFormCompletion(formName, form)) {
-    return null
+    return [null, "Advisors have approved of form. No further edits are allowed."]
   }
-  
-  return await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
+
+  try {
+    form = await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
+  } catch (err) {
+    return [null, err]
+  }
+  return [form, null]
 }
 
 /**
@@ -413,7 +438,7 @@ const upsertForm = async (student, formName, form, formData) => {
  * @param {String} formName 
  * @param {schema[CSXX]} form specific form you want the email data to come from
  * @param {Express.Request} req request sent to the object
- * @returns 
+ * @returns true if all emails have been sent successfully (or no emails need to be sent)
  */
 const sendEmails = async (student, formName, form, linkToForm) => {
   const advisors = ['advisor', 'researchAdvisor']
@@ -459,15 +484,25 @@ const sendEmails = async (student, formName, form, linkToForm) => {
       result = await send(primaryEmail, secondaryEmail)
       break
     case 'CS13':
-      if (form.comp523 && form.comp523Signature) {
+      if (form.selectedSection == 'comp523' && form.comp523Signature) {
         const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
         result = await send(comp523Email)
-      } else if (form.hadJob) {
+      } else if (form.selectedSection == 'industry') {
         result = await send(advisorEmail)
-      } else if (form.alternative) {
+      } else if (form.selectedSection == 'alternative' && form.alt1Signature && form.alt2Signature) {
         const alt1Email = await generateDropdownEmail("alt1Signature", "Alternative #1")
         const alt2Email = await generateDropdownEmail("alt2Signature", "Alternative #2")
         result = await send(alt1Email, alt2Email) 
+      }
+      break
+    case 'SemesterProgressReport':
+      await form.populate('employmentAdvisor')
+      if (student.advisor._id.equals(form.employmentAdvisor._id)) {
+        const academicAndEmploymentEmail = generateApprovalEmail(form.employmentAdvisor?.email, "Advisor", student, "Semester Progress Report", linkToForm)
+        result = await send(academicAndEmploymentEmail)
+      } else {
+        const employmentAdvisorEmail = generateApprovalEmail(form.employmentAdvisor?.email, "Employment Advisor", student, "Semester Progress Report", linkToForm)
+        result = await send(advisorEmail, employmentAdvisorEmail)
       }
       break
     default:
