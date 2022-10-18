@@ -56,12 +56,12 @@ _.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) 
     subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${formName}`,
     text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
         ${linkToForm}\n\n
-        If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.\n\n
+        If you do not approve, please work with your student on what needs to be done to correct the form, have them resubmit, and then approve it when you are satisfied.\n\n
         For questions about this app, contact ${_.managerInfo.name} <${_.managerInfo.email}>.`,
     html: `
       <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
       <a href="${linkToForm}">${linkToForm}</a>
-      <p>If you do not approve, please work with your student, iterate on the form, and approve it when you are satisfied.</p>
+      <p>If you do not approve, please work with your student on what needs to be done to correct the form, have them resubmit, and then approve it when you are satisfied.</p>
       <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
     `
   }

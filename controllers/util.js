@@ -190,9 +190,9 @@ _.checkFormCompletion = (name, form) => {
     case 'CS08': 
       return form.primaryDateSigned && form.secondaryDateSigned
     case 'CS13':
-      return (form.comp523 && form.comp523DateSigned) ||
-               (form.hadJob && form.advisorSignature) ||
-               (form.alternative && form.alt1DateSigned && form.alt2DateSigned)
+      return (form.selectedSection == 'comp523' && form.comp523DateSigned) ||
+               (form.selectedSection == 'industry' && form.advisorSignature) ||
+               (form.selectedSection == 'alternative' && form.alt1DateSigned && form.alt2DateSigned)
     case 'SemesterProgressReport':
       return form.hasDiscussed && form.academicRating && Number.isInteger(form.rataRating) // why in js is (null >= 0) ==> true
     default:

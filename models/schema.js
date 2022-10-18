@@ -443,14 +443,15 @@ var CS08Schema = mongoose.Schema({
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   email: String, dateMet: String,
-  comp523: Boolean,
+  selectedSection: {
+    type: String,
+    enum: ['comp523', 'industry', 'alternative']
+  },
   comp523Signature: String,
   comp523DateSigned: String,
-  hadJob: Boolean,
   jobInfo: String,
   advisorSignature: Boolean,
   advisorDateSigned: String,
-  alternative: Boolean,
   product: String,
   client: String,
   position: String,

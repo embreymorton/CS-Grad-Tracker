@@ -4,8 +4,6 @@ import util from './formUtil'
 const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
-const jobInfoMsg = `Hello everyone, I am checking to see if submission will retain data even if not approved in this section.`
-
 describe('Test CS13 Submissions', () => {
   before(() => {
     cy.request('/util/resetDatabaseToSnapshot')
@@ -18,7 +16,6 @@ describe('Test CS13 Submissions', () => {
   it('Give student student an advisor', () => {
     cy.visit('/changeUser/admin');
     cy.visit('/student');
-
     cy.get('.edit-student-button').click();
 
     cy.get('.student-navigation-edit-button').click()
@@ -33,7 +30,7 @@ describe('Test CS13 Submissions', () => {
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.get('select[name="alternative"]').select('true')
+    cy.get('#altcol').click()
     cy.get('textarea[name="product"]').type('Hey guys, this is the product I made.')
     cy.get('input[name="client"]').type('Moi')
     cy.get('input[name="position"]').type('Filling out required boxes that is what I do~~')
@@ -46,7 +43,6 @@ describe('Test CS13 Submissions', () => {
   })
 
   it('Edit and approve of CS13 form from the admin side.', () => {
-    cy.visit('/changeUser/student')
     cy.visit('/changeUser/admin')
     util.visitFormAsAdmin()
     cy.get('.CS13').click()
@@ -54,11 +50,14 @@ describe('Test CS13 Submissions', () => {
     cy.get('#alt1DateSignedCheckbox').click()
     cy.get('#alt2DateSignedCheckbox').click()
 
-    cy.get('textarea[name="jobInfo"]').type(jobInfoMsg)
-
     cy.get('.CS13-submit').click()
-    
-    cy.contains(jobInfoMsg)
+  })
+
+  it('Check that student fields were updated upon completion of the form.', () => {
+    cy.visit('/student')
+    cy.get('.edit-student-button').click()
+    let date = new Date()
+    cy.get('[name="programProductRequirement"]').should('have.value', `${date.getFullYear()}-${date.getMonth()+1 < 10 ? '0' + (date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`) // js dates suck
   })
 
   it('Go back to student side and checks that the submit button is gone.', () => {
@@ -68,7 +67,6 @@ describe('Test CS13 Submissions', () => {
     cy.contains(pid.toString())
 
     cy.get(`.CS13-submit`).should('not.exist')
-    cy.contains(jobInfoMsg) // boxes should be locked down, but the info should still be visible
-    cy.get('textarea[name="jobInfo"]').should('not.exist') 
+    cy.get('textarea[name="product"]').should('not.exist') 
   })
 })

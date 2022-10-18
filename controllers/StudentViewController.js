@@ -426,7 +426,6 @@ const upsertForm = async (student, formName, form, formData) => {
   try {
     form = await schema[formName].findOneAndUpdate({ _id: form._id, student: student._id  }, formData, {new: true, runValidators: true}).exec()
   } catch (err) {
-    console.log(err)
     return [null, err]
   }
   return [form, null]
@@ -438,7 +437,7 @@ const upsertForm = async (student, formName, form, formData) => {
  * @param {String} formName 
  * @param {schema[CSXX]} form specific form you want the email data to come from
  * @param {Express.Request} req request sent to the object
- * @returns 
+ * @returns true if all emails have been sent successfully (or no emails need to be sent)
  */
 const sendEmails = async (student, formName, form, linkToForm) => {
   const advisors = ['advisor', 'researchAdvisor']
@@ -484,12 +483,12 @@ const sendEmails = async (student, formName, form, linkToForm) => {
       result = await send(primaryEmail, secondaryEmail)
       break
     case 'CS13':
-      if (form.comp523 && form.comp523Signature) {
+      if (form.selectedSection == 'comp523' && form.comp523Signature) {
         const comp523Email = await generateDropdownEmail("comp523Signature", "COMP 523 Instructor")
         result = await send(comp523Email)
-      } else if (form.hadJob) {
+      } else if (form.selectedSection == 'industry') {
         result = await send(advisorEmail)
-      } else if (form.alternative) {
+      } else if (form.selectedSection == 'alternative' && form.alt1Signature && form.alt2Signature) {
         const alt1Email = await generateDropdownEmail("alt1Signature", "Alternative #1")
         const alt2Email = await generateDropdownEmail("alt2Signature", "Alternative #2")
         result = await send(alt1Email, alt2Email) 

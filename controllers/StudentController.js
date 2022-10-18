@@ -499,11 +499,11 @@ async function updateStudentFields(formName, form) {
       break
     case 'CS13':
       if (checkFormCompletion(formName, form) && !student.programProductRequirement) {
-        if (form.comp523) {
+        if (form.selectedSection == 'comp523') {
           const result = await schema.Student.findOneAndUpdate({_id: student._id}, {programProductRequirement: getYYYYMMDD(form.comp523DateSigned)}, {useValidators: true})
-        } else if (form.hadJob) {
+        } else if (form.selectedSection == 'industry') {
           const result = await schema.Student.findOneAndUpdate({_id: student._id}, {programProductRequirement: getYYYYMMDD(form.advisorDateSigned)}, {useValidators: true})
-        } else if (form.alternative) {
+        } else if (form.selectedSection == 'alternative') {
           const alt1Date = form.alt1DateSigned
           const alt2Date = form.alt2DateSigned
           const latestTime = new Date(Math.max(new Date(alt1Date).getTime(), new Date(alt2Date).getTime()))
