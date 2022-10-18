@@ -196,7 +196,7 @@ const approvalRow = (opts, modifier) => {
       !isStudent ?
       colMd(6)(
         x(`em#${dateField}Label`)(approvalLabel),
-        x(`input#${dateField}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+        x(`input#${dateField}Checkbox.pseudo-checkbox`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
         x(`input#${dateField}`)({type: "hidden", name: dateField, value: isApproved ? dateSigned.toString() : undefined}),
         x(`input#${sigField}`)({type: "hidden", name: sigField, value: form[sigField] ? form[sigField] : ""}),
         pageScript(opts, { dateField, readerName, })

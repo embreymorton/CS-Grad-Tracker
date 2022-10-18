@@ -91,10 +91,11 @@ studentViewController.viewForm = async function (req, res) {
       const postMethod = '/studentView/forms/update/' + formName
       const view = `../views/student/${formName}`
       const { cspNonce } = res.locals
-      const locals = {
+      let locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
         activeFaculty, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
+      locals.form.cspNonce = cspNonce
       res.render(view, locals)
       return
     }
