@@ -88,11 +88,11 @@ const cs01Form = (opts) => {
       ),
       hr(),
 
-      p('Student Signature:'),
+      p('Student Approval:'),
       signatureRow(admin || isStudent, 'student', form),
       x('.verticalSpace')(),
 
-      p('Advisor Signature:'),
+      p('Advisor Approval:'),
       // signatureRow(admin, 'advisor', form),
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
