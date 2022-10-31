@@ -12,7 +12,7 @@ const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
-const { checkbox, dropdown, makeOption, radioSet, textarea, input } = require('../common/baseComponents')
+const { checkbox, dropdown, makeOption, radioSet, textarea, input, frontendScript } = require('../common/baseComponents')
 let complete = null
 
 const vert = x('div.verticalSpace')()
@@ -91,6 +91,13 @@ const progressReportForm = (opts) => {
   if (student.advisor) { // default option that is identical to selecting their normal advisor
     employmentAdvisorChoices.unshift(makeOption(student.advisor?._id.toString(), 'I am employed by my advisor.', form.employmentAdvisor == undefined, true))
   }
+  const OTHER_TEXT = 'Other, please specify:'
+  employmentAdvisorChoices.push(makeOption( // other option for employment outside department
+    student.advisor?._id.toString(),
+    OTHER_TEXT,
+    Boolean(form.altEmploymentAdvisor),
+    false
+  ))
 
   return (
     x('form.cs-form#cs-form')(
@@ -130,6 +137,25 @@ const progressReportForm = (opts) => {
               isRequired: true
             }
           )
+        ),
+        colMd(6)(
+          input('altEmploymentAdvisor', form.altEmploymentAdvisor, {isDisabled: isComplete, isRequired: true, isHidden: !form.altEmploymentAdvisor})
+        ),
+        frontendScript(opts.cspNonce, 
+          `
+          document.getElementById('select-employmentAdvisor').addEventListener('change', (event) => {
+            console.log('executed')
+            const select = event.target
+            const otherBox = document.getElementById('input-altEmploymentAdvisor')
+            if (select.options[select.selectedIndex].text == "${OTHER_TEXT}") { // other was selected
+              otherBox.type = 'text'
+            } else {
+              otherBox.type = 'hidden'
+              otherBox.value = ''
+            }
+          })` 
+          ,
+          {defer: true}
         )
       ),
       vert,
@@ -205,7 +231,7 @@ const evaluationSection = (opts) => {
   const { form, admin, student, isStudent, cspNonce } = opts
   const editAccess = admin || isStudent
   const textFrow = formRow(form, editAccess || !isStudent, 'text')
-  const { hr, h2, h3, h4, div } = x
+  const { hr, h2, h3, h4, div, b } = x
   
   return [
     h4(),
@@ -253,6 +279,9 @@ const evaluationSection = (opts) => {
     vert,
     hr,
     h4('For the employment advisor:'),
+    rowCol(12,
+      b(form.altEmploymentAdvisor ? ` NOTE: You, ${student.advisor.fullName} must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
+    ),
     rowCol(12,
       "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",
       radioSet(

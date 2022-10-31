@@ -495,6 +495,7 @@ const semesterProgressReportSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Faculty'
   },
+  altEmploymentAdvisor: String, // if this field has a value, ignore `employmentAdvisor` field
 
   // you must ensure that students are not allowed to see the following fields!
   hasDiscussed: Boolean,

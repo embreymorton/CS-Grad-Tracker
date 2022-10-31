@@ -1,4 +1,5 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer')
+const htmlToText = require('nodemailer-html-to-text').htmlToText
 
 const _ = {}
 _._transporter = null
@@ -8,6 +9,10 @@ _.testAccount = {user: "ignatius.hegmann@ethereal.email", pass: "hVv9Jr7aGRxeKHx
 _.managerInfo = {
   name: "Kris Jordan",
   email: "kris@cs.unc.edu"
+}
+
+_.default = {
+  from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
 }
 
 /**
@@ -31,6 +36,10 @@ _.startTransporter = (forceProduction = false) => {
       pass: _.testAccount.pass
     }
   })
+  _._transporter.use('compile', htmlToText({
+    wordwrap: false,
+    hideLinkHrefIfSameAsText: true
+  }))
 }
 
 /**
@@ -51,15 +60,11 @@ _.closeTransporter = () => {
    */
 _.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) => {
   return {
-    from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
+    from: _.default.from,
     to,
     subject: `[UNC-CS] ${subjectTitle} Approval needed: ${studentInfo.firstName} ${studentInfo.lastName} - ${formName}`,
-    text: `Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:\n
-        ${linkToForm}\n\n
-        If you do not approve, please work with your student on what needs to be done to correct the form, have them resubmit, and then approve it when you are satisfied.\n\n
-        For questions about this app, contact ${_.managerInfo.name} <${_.managerInfo.email}>.`,
     html: `
-      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed. To view their submission, go here:</p>
+      <p>Your student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree. Your approval is needed for the following section(s): <b>${subjectTitle}</b>. To view their submission, go here:</p>
       <a href="${linkToForm}">${linkToForm}</a>
       <p>If you do not approve, please work with your student on what needs to be done to correct the form, have them resubmit, and then approve it when you are satisfied.</p>
       <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
@@ -69,13 +74,9 @@ _.generateApprovalEmail = (to, subjectTitle, studentInfo, formName, linkToForm) 
 
 _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
   return {
-    from: '"UNC CS Department Automated Email - NO REPLY" <noreply@cs.unc.edu>',
+    from: _.default.from,
     to: 'kenney@cs.unc.edu',
     subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} ${formName} form submission`,
-    text: `Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName} as part of the requirements for their graduate degree.\n\n
-          Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.\n\n
-          View the form here: ${linkToForm}\n\n
-          For questions about this app, contact ${_.managerInfo.name} <${_.managerInfo.email}>`,
     html: `
       <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form ${formName}. Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName}.</p>
       <p>View the form here:</p>
