@@ -127,12 +127,13 @@ const radioSet = (name, valueLabelList, {currentValue = null, isDisabled = false
  * @param {Boolean} isDisabled
  * @param {Boolean} isRequired defaults true 
  * @param {Boolean} isHidden defaults false
+ * @param {String} placeholder hint text for input
  */
-const input = (name, value, {isDisabled = false, isRequired = true, isHidden = false}) => {
+const input = (name, value, {isDisabled = false, isRequired = true, isHidden = false, placeholder = ''}) => {
   const disabled = isDisabled ? { disabled: '' } : {}
   const required = isRequired ? { required: '' } : {}
   const type = isHidden ? 'hidden' : 'text'
-  return x(`input.form-control#input-${name}`)({type, name, value, ...datacy(name), ...required, ...disabled})
+  return x(`input.form-control#input-${name}`)({type, name, value, ...datacy(name), ...required, ...disabled, placeholder})
 }
 
 /**

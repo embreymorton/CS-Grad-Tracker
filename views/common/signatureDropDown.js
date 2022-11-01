@@ -2,6 +2,9 @@ const x = require('hyperaxe')
 const input = require('./input')
 const pseudoInput = require('./pseudoInput')
 const pseudoCheckbox = require('./pseudoCheckbox')
+const { b } = x
+
+const otherkey = '_'
 
 /**
  * A component that lets you choose from a list of names for an approval signature. Automatically changes label
@@ -27,13 +30,17 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   let options = []
   options.push(x('option')({value: "", selected: "", disabled: "", hidden: ""}, "Select instructor to approve."))
   values = [...values].sort((a, b) => a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName)) // sort names by last, first name
+  let matchesDeptMember = false
   for (var i = 0; i < values.length; i++) {
     if (`${values[i].firstName} ${values[i].lastName}` === instructorSelected) {
       options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`, selected: ""}, `${values[i].lastName}, ${values[i].firstName}`))
+      matchesDeptMember = true
     } else {
       options.push(x('option')({value: `${values[i].firstName} ${values[i].lastName}`}, `${values[i].lastName}, ${values[i].firstName}`))
     }
   }
+  const isNonDeptMember = instructorSelected && !matchesDeptMember
+  options.push(x('option')({value: otherkey, selected: isNonDeptMember ? true : null }, b('Other, please specify:' )))
 
   // check if signer has approved yet; approval depends solely on whether the date field is filled
   const isApproved = opts.form[dateName] != undefined && opts.form[dateName] != "" 
@@ -56,19 +63,24 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
     )
   }
 
-  return (
-      x('.row')(
+  return [
+    x('.row')(
       col(5)(
         em('In place of your signature, please select your name:'),
         !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select.form-control`)({value: instructorSelected, required: required ? true : null},
             options
         ),
-        x(`input#${sigName}`)({type: "hidden", name: sigName, value: instructorSelected}),
       ),
+      col(5)(
+        em({ id: `${sigName}OtherLabel`, hidden: isNonDeptMember ? null : true }, 'Please type in their name:'),
+        x(`input#${sigName}.form-control`)({type: isNonDeptMember ? "text" : "hidden", name: sigName, value: instructorSelected, required: ''}),
+      )
+    ),
+    x('.row')(
       dateInput,
       pageScript(opts, {instructorSelected, sigName, dateName})
     )
-  )
+  ]
 }
 
 // TODO: if anyone touches the dropdown, unapprove the checkbox, unless someone reselects the original person
@@ -84,6 +96,7 @@ function pageScript(opts, initialState) {
       let checkboxLabel = document.getElementById('${dateName}Label')
       let instructorData = document.getElementById('${sigName}');
       let dateData = document.getElementById('${dateName}');
+      let otherBoxLabel = document.getElementById('${sigName}OtherLabel');
       let refreshCheckbox = () => {
         if (checkbox.checked) {
           const now = new Date();
@@ -102,6 +115,14 @@ function pageScript(opts, initialState) {
         if (instructorData.value != '${instructorSelected}' && checkbox) {
           checkbox.checked = false;
           refreshCheckbox();
+        }
+        if (select.value === '${otherkey}') {
+          instructorData.setAttribute("type", "text")
+          instructorData.setAttribute("value", "")
+          otherBoxLabel.removeAttribute("hidden")
+        } else {
+          instructorData.setAttribute("type", "hidden")
+          otherBoxLabel.setAttribute("hidden", true)
         }
       }
 
