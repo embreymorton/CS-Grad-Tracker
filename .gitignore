@@ -5,3 +5,4 @@ cypress/videos/
 node_modules
 .vs
 .env.development
+data/AdminInputScript.txt

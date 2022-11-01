@@ -434,7 +434,7 @@ const cs06Form = (opts) => {
 
       row(
         colMd(4)(
-          div('Director of Graduate Studies Signature:*'),
+          div('Director of Graduate Studies Approval:*'),
           signatureRow(admin, 'director', form),
         )
       ),

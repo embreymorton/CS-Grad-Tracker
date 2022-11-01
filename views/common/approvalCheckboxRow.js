@@ -25,8 +25,8 @@ const approvalCheckbox = (editAccess, signer, opts) => {
   const approvedDate =  isApproved ? new Date(opts.form.advisorDateSigned) : new Date();
   const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
   const approvalLabel = isApproved ? 
-    `Advisor ${advisorName} approved as of ${approvedDateMMDDYYYY}.` :
-    `Advisor ${advisorName} approves:`;
+    `Advisor ${advisorName} approved on ${approvedDateMMDDYYYY}.` :
+    `Advisor ${advisorName} Approval:`;
 
   if (editAccess) {
     return ( // advisor/faculty's view 
@@ -34,6 +34,9 @@ const approvalCheckbox = (editAccess, signer, opts) => {
         col(5)(
           x(`em#${signerName}Label`)(approvalLabel),
           x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+          x('em')(isApproved ? 
+            `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY})` :
+            `(Advisor ${advisorName} has not yet approved)`),
           // creates a hidden text box with the same value as the checkbox so that it will send on form submission
           x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.
           x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
@@ -46,9 +49,10 @@ const approvalCheckbox = (editAccess, signer, opts) => {
       x('.row')(
         col(5)(
           pseudoCheckbox(isApproved),
+          x('br')(),
           x('em')(isApproved ? 
-            `(Approved as of ${approvedDateMMDDYYYY})` :
-            '(Advisor has not yet approved)')
+            `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY})` :
+            `(Advisor ${advisorName} has not yet approved)`)
         )
       )
     );

@@ -208,6 +208,8 @@ form [name=dept] {
   height: 38px;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
+  margin: 0 auto;
+  width: 50%;
 }
 
 .pseudo-checked {

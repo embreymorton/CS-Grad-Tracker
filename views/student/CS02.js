@@ -67,10 +67,10 @@ const cs02Form = (opts) => {
       namePidDateRow(opts, editAccess), hr(),
       frow(div('Course Number:'), 'courseNumber'), vert,
       frow(basisForWaiverLabel, 'basisWaiver'), hr(),
-      div('Advisor Signature:'),
+      div('Advisor Approval:'),
       approvalCheckbox(!isStudent, 'advisor', opts),
       vert,
-      div('Designated Instructor Signature:'),
+      div('Designated Instructor Approval:'),
       signatureDropDown(!isStudent, 'instructor', activeFaculty, opts),
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS02-submit#submit-btn')('Submit'),

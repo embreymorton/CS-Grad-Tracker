@@ -69,7 +69,7 @@ const cs13Form = (opts) => {
         )
       ), vert,
 
-      div('COMP 523 Instructor Signature'),
+      div('COMP 523 Instructor Approval'),
       signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, true)),
       hr(),
       button({type: 'button'}, {id: 'indcol', class : 'indcol', value: 'industry', ...disabledForComplete}, ('Industry Experience')),
@@ -88,7 +88,7 @@ const cs13Form = (opts) => {
         ),
       ), vert,
 
-      div('Advisor signature:'),
+      div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts)),
        hr(), 
       button({type: 'button'}, {id: 'altcol', class : 'altcol', value: 'alternative', ...disabledForComplete}, ('Alternative')),
@@ -125,11 +125,11 @@ const cs13Form = (opts) => {
         ),
       ), vert,
 
-      div('Signature #1:'),
+      div('Approval #1:'),
       signatureDropDown(!isStudent, 'alt1', activeFaculty, opts, true), vert,
       // signatureRow(!isStudent, 'alt1', form), vert,
 
-      div('Signature #2:'),
+      div('Approval #2:'),
       signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, true), vert),
       // signatureRow(!isStudent, 'alt2', form),
 

@@ -84,7 +84,7 @@ const cs04Form = (opts) => {
       ),
       hr(),
 
-      div('Advisor signature:'),
+      div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       buttonBarWrapper(
         isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit#submit-btn')({ type: 'submit' }, 'Submit')],

@@ -79,10 +79,10 @@ const cs08Form = (opts) => {
 
       strong('Approval'),
       div('We have judged this paper in both substance and presentation to satisfy the writing requirement for the M.S. in Computer Science.'),
-      div('Primary Reader Signature'),
+      div('Primary Reader Approval'),
       approvalRow(opts, 'primary'),
 
-      div('Secondary Reader Signature'),
+      div('Secondary Reader Approval'),
       approvalRow(opts, 'secondary'),
 
       buttonBarWrapper(

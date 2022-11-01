@@ -7,6 +7,7 @@ const signatureRow = (editAccess, key, values) => {
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
   const signerName = `${key}Signature`
+  const studentName = key.charAt(0).toUpperCase() + key.slice(1);
   const dateName = `${key}DateSigned`
   const checkBoxName = `${key}Checkbox`
   //const roValue = (name, type) => (pseudoInput(values[name]))
@@ -21,8 +22,11 @@ const signatureRow = (editAccess, key, values) => {
     return (
       x('.row')(
         col(5)(
-          x(`em#${signerName}Label`)(approvalLabel),
           x(`input#${signerName}Checkbox.pseudo-checkbox`)({type: "checkbox", name: checkBoxName, checked: isApproved ? "checked" : undefined}),
+          x('br')(),
+          x('em')(isApproved ? 
+            `(${studentName} approved on ${approvedDateMMDDYYYY})` :
+            `(${studentName} has not yet approved)`),
           // creates a hidden text box with the same value as the checkbox so that it will send on form submission
           x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.
           x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
@@ -35,9 +39,10 @@ const signatureRow = (editAccess, key, values) => {
       x('.row')(
         col(5)(
           pseudoCheckbox(isApproved),
+          x('br')(),
           x('em')(isApproved ? 
-            `(Signed as of ${approvedDateMMDDYYYY})` :
-            `(${key} has not yet signed)`)
+            `(${studentName} approved on ${approvedDateMMDDYYYY})` :
+            `(${studentName} has not yet approved)`)
         )
       )
     )

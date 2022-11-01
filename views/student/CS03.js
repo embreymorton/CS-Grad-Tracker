@@ -316,10 +316,10 @@ const cs03Form = (opts) => {
       ),
       hr(),
 
-      strong('IV. Signatures'),
-      div('Student signature:'),
+      strong('IV. Approvals'),
+      div('Student Approval:'),
       signatureRow(admin || isStudent, 'student', form), vert,
-      div('Advisor signature:'),
+      div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       div('Approved:'),
@@ -349,7 +349,7 @@ const cs03Form = (opts) => {
       ),
       hr(),
 
-      div('Director signature:'),
+      div('Director Approval:'),
       signatureRow(admin, 'director', form),
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS03-submit#submit-btn')({ type: 'submit' }, 'Submit'),

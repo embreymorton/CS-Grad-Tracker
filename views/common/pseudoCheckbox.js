@@ -2,12 +2,12 @@ const x = require('hyperaxe');
 
 const pseudoCheckbox = (checked) => {
     if (checked) {
-        return x('div.pseudo-checkbox.pseudo-checked')(
-            {disabled: true},
+        return x('input.pseudo-checkbox.pseudo-checked')(
+            {disabled: true, type: "checkbox"},
             x('i.fas.fa-check')()
         );
     } else {
-        return x('div.pseudo-checkbox')({disabled: true});
+        return x('input.pseudo-checkbox')({disabled: true, type: "checkbox"});
     }
 }
 
