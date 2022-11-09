@@ -278,3 +278,8 @@ form [name=dept] {
 .form-radio label {
   padding-left: 3px;
 }
+
+.subSize{
+  font-size:xx-large;
+  font-weight: 600;
+}
