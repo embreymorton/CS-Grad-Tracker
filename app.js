@@ -200,7 +200,7 @@ if(process.env.mode == 'production' || process.env.mode == 'development'){
       })
     }
     else{
-      res.render('./error.ejs', {string: 'Please log in'})
+      res.render('./error.ejs', {string: 'Please log in', disableBack: true})
     }
   })
 }

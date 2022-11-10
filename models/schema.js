@@ -2,6 +2,11 @@
 var mongoose = require('mongoose')
 var schema = {}
 
+/* Additional mongoose options */
+mongoose.Schema.Types.Boolean.convertToFalse.add('')
+const castObjectId = mongoose.Schema.Types.ObjectId.cast()
+mongoose.Schema.Types.ObjectId.cast((v) => v ? castObjectId(v) : null)
+
 // date format regex
 //  /^0[1-9]|1[012]\/0[1-9]|[12][0-9]|3[01]\/[0-9]{4}$/  <-- MM/DD/YYYY regex
 const matchDate = [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form yyyy/mm/dd or mm/dd/yyyy']
@@ -37,7 +42,10 @@ var facultySchema = mongoose.Schema({
   active: Boolean,
   admin: Boolean
 })
-facultySchema.virtual('fullName').get(function() {
+facultySchema.virtual('fullName').get(function () {
+  return this.firstName + ' ' + this.lastName
+})
+facultySchema.virtual('lastFirst').get(function() {
   return this.lastName + ', ' + this.firstName
 })
 
@@ -188,6 +196,12 @@ var studentSchema = mongoose.Schema({
   researchAdvisor: { type: mongoose.Schema.Types.ObjectId, ref: 'Faculty' },
   otherResearchAdvisor: String,
   grades: [{type:mongoose.Schema.Types.ObjectId, ref: 'Grade'}]
+})
+studentSchema.virtual('fullName').get(function () {
+  return this.firstName + ' ' + this.lastName
+})
+studentSchema.virtual('lastFirst').get(function() {
+  return this.lastName + ', ' + this.firstName
 })
 
 // Semesters
@@ -356,7 +370,7 @@ var CS01Schema = mongoose.Schema({
   math547Covered: String, math547Date: String,
   math661Covered: String, math661Date: String,
   stat435Covered: String, stat435Date: String,
-  studentSignature: String, studentDateSigned: String,
+  studentSignature: Boolean, studentDateSigned: String,
   advisorSignature: Boolean, advisorDateSigned: String
 })
 
@@ -375,7 +389,10 @@ var CS03Schema = mongoose.Schema({
   dept: [String],
   course: [String],
   hours: [Number],
-  semester: [String],
+  semester: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Semester'
+  },
   title: [String], // this and above should be length 13
   grade: [String], // should be length 3
   gradeModifier: [String], // should also be length 3
@@ -385,7 +402,7 @@ var CS03Schema = mongoose.Schema({
   thesis: Boolean,
   outsideReview: Boolean,
   comprehensiveExam: String,
-  studentSignature: String, studentDateSigned: String,
+  studentSignature: Boolean, studentDateSigned: String,
   advisorSignature: Boolean, advisorDateSigned: String,
   approved: String,
   approvalReason: String,
@@ -407,11 +424,17 @@ var CS06Schema = mongoose.Schema({
   comp915: Boolean,
   breadthCourseCategory: [String],
   breadthCourseInfo: [String],
-  breadthCourseDate: [String],
+  breadthCourseDate: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Semester'
+  },
   breadthCourseGrade: [String],
   breadthCourseGradeModifier: [String],
   concentrationCourseInfo: [String],
-  concentrationCourseDate: [String],
+  concentrationCourseDate: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Semester'
+  },
   concentrationCourseHours: [Number],
   otherCourseInfo: [String],
   otherCourseHours: [Number],
@@ -544,6 +567,7 @@ schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
 schema.SemesterProgressReport = mongoose.model('SemesterProgressReport', semesterProgressReportSchema)
+
 
 module.exports = schema
 
