@@ -555,6 +555,7 @@ studentController.uploadCoursePage = function(req, res){
      uploadSuccess = true
     }
     res.render('../views/student/uploadCourses.ejs', {courses, uploadSuccess})
+    
   })
 }
 
@@ -752,6 +753,7 @@ studentController.uploadPage = function(req, res){
     uploadSuccess = true
   }
   res.render('../views/student/upload.ejs', {uploadSuccess: uploadSuccess})
+  redirect()
 }
 
 const requiredFieldMissing = ({onyen, csid, firstName, lastName, pid}) =>

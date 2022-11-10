@@ -2,7 +2,7 @@ const x = require('hyperaxe')
 
 const uploadFeedback = (uploadSuccess) => {
   if (!uploadSuccess) return null
-  const { span, strong } = x
+  const { span, strong, div } = x
   return (
     x('.alert.alert-success.alert-dismissible.fade.show')(
       { role: 'alert' },
@@ -10,7 +10,7 @@ const uploadFeedback = (uploadSuccess) => {
         { type: 'button', 'data-dismiss': 'alert', 'aria-label': 'Close' },
         span({ 'aria-hidden': 'true' }, '×')
       ),
-      strong('Submit success!'),
+      div({class: 'subSize'},'Submit Successful!'),  
     )
   )
 }
