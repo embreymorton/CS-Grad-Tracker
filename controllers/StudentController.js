@@ -286,6 +286,8 @@ studentController.viewForm = async (req, res) => {
   if (formName != null && _id != null && params.uploadSuccess != null && mongoose.isValidObjectId(_id)) {
     const faculty = await schema.Faculty.find({}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
+    const viewer = await schema.Faculty.findOne({pid: req.session.userPID}).exec() // person who is currently looking at the form
+    const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ _id }).populate('advisor').populate('researchAdvisor').exec()
 
@@ -302,13 +304,14 @@ studentController.viewForm = async (req, res) => {
     const isStudent = false
     const admin = req.session.accessLevel == 3
     const result2 = util.checkAdvisorAdmin(req.session.userPID, _id)
+    // ^ no idea what this is for since there's no await
     const hasAccess = !!result2 || admin
     const postMethod = `/student/forms/update/${student._id}/${formName}`
     const view = `../views/student/${formName}`
     const { cspNonce } = res.locals
     const locals = {
-      student, form, uploadSuccess, isStudent, admin, postMethod,
-      hasAccess, faculty, activeFaculty, formName, cspNonce
+      student, form, uploadSuccess, isStudent, viewer, admin, postMethod, 
+      hasAccess, faculty, activeFaculty, semesters, formName, cspNonce
     }
     return res.render(view, locals)
   }
@@ -421,6 +424,7 @@ studentController.viewMultiform = async (req, res) => {
   const result = await schema[formName].findOne({student: studentId, _id: formId }).exec()
   const form = result || {}
   const isStudent = false
+  const viewer = await schema.Faculty.findOne({pid: req.session.userPID}).exec() // person who is currently looking at the form
   const admin = req.session.accessLevel == 3
   const result2 = util.checkAdvisorAdmin(req.session.userPID, studentId)
   const hasAccess = !!result2 || admin
@@ -429,7 +433,7 @@ studentController.viewMultiform = async (req, res) => {
   const view = `../views/student/${formName}`
   const { cspNonce } = res.locals
   const locals = {
-    student, form, uploadSuccess, isStudent, admin, postMethod, seeAllSubmissions,
+    student, form, uploadSuccess, isStudent, admin, viewer, postMethod, seeAllSubmissions,
     hasAccess, faculty, activeFaculty, semesters, formName, cspNonce
   }
   return res.render(view, locals)
@@ -454,6 +458,7 @@ studentController.updateMultiform = async (req, res) => {
   try {
     var form = await schema[formName].findOneAndUpdate({student: studentId, _id: formId}, input, {runValidators: true, new: true}).populate('student').exec()
   } catch (e) {
+    console.dir(e)
     res.render('../views/error.ejs', { string: `Invalid form input, could not update database: ${e}`})
     return
   }

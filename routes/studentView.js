@@ -34,11 +34,11 @@ router.post("/forms/save/:title", student.saveForm);
 
 router.get("/multiforms/:title", student.formVersions);
 
-router.get("/multiforms/:title/:formId/:uploadSuccess", student.viewFormVersion);
+router.get("/multiforms/:title/:formId/:uploadSuccess", student.viewMultiform);
 // to create a new student form, use the route above but set formId parameter to 'new' rather than an actual id
 
-router.post("/multiforms/update/:title/:formId", student.updateFormVersion);
+router.post("/multiforms/update/:title/:formId", student.updateMultiform);
 
-router.post("/multiforms/save/:title/:formId", student.saveFormVersion);
+router.post("/multiforms/save/:title/:formId", student.saveMultiform);
 
 module.exports = router;

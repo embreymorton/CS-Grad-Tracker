@@ -2,6 +2,8 @@ const x = require('hyperaxe');
 const pseudoCheckbox = require('./pseudoCheckbox')
 
 /**
+ * Like `signatureRow`, except includes the student's advisor's name.
+ * 
  * A group of HTML elements that replace a signature box and a date box for
  * a checkbox and includes automated timestamping based on the time the checkbox was approved.
  * 
@@ -25,18 +27,15 @@ const approvalCheckbox = (editAccess, signer, opts) => {
   const approvedDate =  isApproved ? new Date(opts.form.advisorDateSigned) : new Date();
   const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
   const approvalLabel = isApproved ? 
-    `Advisor ${advisorName} approved on ${approvedDateMMDDYYYY}.` :
-    `Advisor ${advisorName} Approval:`;
+    `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY}.)` :
+    `(Advisor ${advisorName} has not yet approved.)`;
 
   if (editAccess) {
     return ( // advisor/faculty's view 
       x('.row')(
         col(5)(
-          x(`em#${signerName}Label`)(approvalLabel),
           x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
-          x('em')(isApproved ? 
-            `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY})` :
-            `(Advisor ${advisorName} has not yet approved)`),
+          x(`em#${signerName}Label`)(approvalLabel),
           // creates a hidden text box with the same value as the checkbox so that it will send on form submission
           x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.
           x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvedDate.toString() : undefined})
@@ -49,9 +48,8 @@ const approvalCheckbox = (editAccess, signer, opts) => {
       x('.row')(
         col(5)(
           pseudoCheckbox(isApproved),
-          x('br')(),
           x('em')(isApproved ? 
-            `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY})` :
+            `(Advisor ${advisorName} approved on ${approvedDateMMDDYYYY}.)` :
             `(Advisor ${advisorName} has not yet approved)`)
         )
       )
@@ -73,11 +71,11 @@ function pageScript(opts, initialState) {
       const changeHandler = () => {
         if (checkbox.checked) {
           const now = new Date();
-          label.innerText = "Advisor ${advisorName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ":";
+          label.innerText = "(Advisor ${advisorName} approved on " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ".)";
           approvalData.setAttribute("value", true);
           dateData.setAttribute("value", now.toString());
         } else {
-          label.innerText = "Advisor ${advisorName} approves:";
+          label.innerText = "(Advisor ${advisorName} has not yet approved.)";
           approvalData.setAttribute("value", false);
           dateData.removeAttribute("value");
         }

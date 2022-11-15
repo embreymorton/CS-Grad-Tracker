@@ -353,23 +353,24 @@ var noteSchema = mongoose.Schema({
 })
 
 //form schemas
+
 var CS01Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
-  comp283Covered: String, comp283Date: String,
-  comp410Covered: String, comp410Date: String,
-  comp411Covered: String, comp411Date: String,
-  comp455Covered: String, comp455Date: String,
-  comp521Covered: String, comp521Date: String,
-  comp520Covered: String, comp520Date: String,
-  comp530Covered: String, comp530Date: String,
-  comp524Covered: String, comp524Date: String,
-  comp541Covered: String, comp541Date: String,
-  comp550Covered: String, comp550Date: String,
-  math233Covered: String, math233Date: String,
-  math381Covered: String, math381Date: String,
-  math547Covered: String, math547Date: String,
-  math661Covered: String, math661Date: String,
-  stat435Covered: String, stat435Date: String,
+  comp283Covered: String, comp283Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp210Covered: String, comp210Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp311Covered: String, comp311Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp455Covered: String, comp455Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp421Covered: String, comp421Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp520Covered: String, comp520Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp530Covered: String, comp530Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp524Covered: String, comp524Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp541Covered: String, comp541Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp550Covered: String, comp550Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  math233Covered: String, math233Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  math381Covered: String, math381Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  math547Covered: String, math547Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  math661Covered: String, math661Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  stat435Covered: String, stat435Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
   studentSignature: Boolean, studentDateSigned: String,
   advisorSignature: Boolean, advisorDateSigned: String
 })
@@ -419,9 +420,13 @@ var CS04Schema = mongoose.Schema({
 
 var CS06Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
-  dateSubmitted: String, dateEntered: String,
+  dateSubmitted: String, dateEntered: String, 
   dissTitle: String,
-  comp915: Boolean,
+  // comp915: Boolean,
+  comp915: {
+    type: String,
+    enum: ['taken', 'waived', ''] // where empty string means 'not taken nor waived' (for falsiness)
+  },
   breadthCourseCategory: [String],
   breadthCourseInfo: [String],
   breadthCourseDate: {

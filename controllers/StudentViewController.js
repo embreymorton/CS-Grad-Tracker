@@ -27,15 +27,13 @@ studentViewController.put = async function (req, res) {
 }
 
 studentViewController.get = async function (req, res) {
-  let result = await schema.Student.findOne({ pid: req.session.userPID }).populate("semesterStarted").populate("advisor").exec();
-  if (result != null) {
-    result = result.toJSON();
-    var genders, ethnicities, student;
-    student = result;
-    genders = schema.Student.schema.path("gender").enumValues;
-    ethnicities = schema.Student.schema.path("ethnicity").enumValues;
-    const result2 = await schema.Faculty.find({}).sort({ lastName: 1, firstName: 1 }).exec()
-    res.render("../views/studentView/index.ejs", { student: student, faculty: result2, ethnicities: ethnicities, genders: genders });
+  let student = await schema.Student.findOne({ pid: req.session.userPID }).populate("semesterStarted").populate("advisor").exec();
+  if (student != null) {
+    student = student.toJSON();
+    const genders = schema.Student.schema.path("gender").enumValues;
+    const ethnicities = schema.Student.schema.path("ethnicity").enumValues;
+    const faculty = await schema.Faculty.find({}).sort({ lastName: 1, firstName: 1 }).exec()
+    res.render("../views/studentView/index.ejs", { student, faculty, ethnicities, genders });
   } else {
     res.render("../views/error.ejs", { string: "Student not found" });
   }
@@ -76,7 +74,7 @@ studentViewController.viewForm = async function (req, res) {
     return
   }
   if (formName != null && params.uploadSuccess != null) {
-    const faculty = await schema.Faculty.find({}).exec()
+    const faculty = await schema.Faculty.find({lastName: 1, firstName: 1}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).exec()
     const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
@@ -93,7 +91,7 @@ studentViewController.viewForm = async function (req, res) {
       const view = `../views/student/${formName}`
       const { cspNonce } = res.locals
       let locals = {
-        student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty,
+        student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty, viewer: student,
         activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
       }
       locals.form.cspNonce = cspNonce
@@ -268,7 +266,7 @@ studentViewController.formVersions = async function (req, res) {
   return
 }
 
-studentViewController.viewFormVersion = async (req, res) => {
+studentViewController.viewMultiform = async (req, res) => {
   const { params, session } = req
   const formName = params.title
   let formId = params.formId
@@ -309,7 +307,7 @@ studentViewController.viewFormVersion = async (req, res) => {
       return
     }
     const form = result || {}
-    const faculty = await schema.Faculty.find({}).exec()
+    const faculty = await schema.Faculty.find({lastName: 1, firstName: 1}).exec()
     const activeFaculty = await schema.Faculty.find({active: true}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
@@ -320,7 +318,7 @@ studentViewController.viewFormVersion = async (req, res) => {
     const view = `../views/student/${formName}`
     const { cspNonce } = res.locals
     const locals = {
-      student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty,
+      student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty, viewer: student,
       activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
     }
     res.render(view, locals)
@@ -328,7 +326,7 @@ studentViewController.viewFormVersion = async (req, res) => {
   }
 }
 
-studentViewController.updateFormVersion = async function (req, res) {
+studentViewController.updateMultiform = async function (req, res) {
   const formData = validateFormData(req.body)
   const formName = req.params.title
   const formId = req.params.formId
@@ -364,7 +362,7 @@ studentViewController.updateFormVersion = async function (req, res) {
   }
 }
 
-studentViewController.saveFormVersion = async function (req, res) {
+studentViewController.saveMultiform = async function (req, res) {
   const formData = validateFormData(req.body)
   const formName = req.params.title
   const formId = req.params.formId
@@ -388,6 +386,7 @@ studentViewController.saveFormVersion = async function (req, res) {
   let err;
   ;[form, err] = await upsertForm(student, formName, form, formData)
   if (err) {
+    console.dir(err)
     res.render("../views/error.ejs", { string: err })
     return
   }

@@ -12,15 +12,10 @@ let CS03 = {
   dept: ['COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP'],
   course: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   hours: ['1', '3', '4', '5', '2', '3', '5', '6', '7', '2'],
-  semester: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+  // semester: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   title: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-  studentSignature: 'true',
-  studentDateSigned: `${actualApproved}`,
-  studentCheckbox: 'on',
+  // studentDateSigned: `${actualApproved}`,
   approvalReason: 'ASDF',
-  directorSignature: 'true',
-  directorDateSigned: `${actualApproved}`,
-  directorCheckbox: 'on',
 }
 
 let CS03Dropdowns = {
@@ -33,6 +28,16 @@ let CS03Dropdowns = {
   outsideReview: 'true',
   comprehensiveExam: 'Comprehensive Paper',
   approved: 'Approved by Graduate Studies Committee'
+}
+
+let CS03cont = {
+  select: {
+    semester: ['FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022', 'FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022'],
+  },
+  check: {
+    studentSignature: true,
+    directorSignature: true,
+  }
 }
 
 describe('Test CS03 submissions', ()=>{
@@ -63,6 +68,7 @@ describe('Test CS03 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS03);
+    util.fillFormByDataCy(CS03cont)
     util.selectDropdowns(CS03Dropdowns);
     cy.get('.CS03-submit').click();
     util.checkFormAsAdmin(CS03);
@@ -77,7 +83,8 @@ describe('Test CS03 submissions', ()=>{
 
     cy.contains(CS03Dropdowns.approved)
     cy.contains(CS03.approvalReason);
-    cy.contains(CS03.directorSignature);
+    cy.contains('admin admin'); // the director's signature
+    cy.contains(approvedDateMMDDYYYY) // shows the correct date of approval
     //cy.contains(CS03.directorDateSigned);
 
     delete CS03.approved;

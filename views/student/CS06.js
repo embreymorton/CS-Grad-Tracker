@@ -10,6 +10,8 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
+const { semesterDropdown } = require('../common/semesterDropdown')
+const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -39,7 +41,7 @@ const mainContent = (opts) => {
 }
 
 const cs06Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
           breadthCourseDate, breadthCourseGrade, breadthCourseGradeModifier, concentrationCourseInfo,
@@ -48,7 +50,7 @@ const cs06Form = (opts) => {
           backgroundPrepWorkSheet, programProductRequirement,
           PHDWrittenExam, PHDOralExam, committee, advisor, chairman,
           approved, reasonApproved } = form
-  const { div, hr, strong, option, span, a } = x
+  const { div, hr, strong, option, span, a, output } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
@@ -96,9 +98,9 @@ const cs06Form = (opts) => {
         colMd(2)(
           isComplete ? pseudoInput(comp915) : select(
             { name: 'comp915', ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !comp915 || null }, 'false'),
-            option({ value: 'true', selected: comp915 || null }, 'true'),
+            option({ value: '', selected: !comp915 || null }, ''),
+            option({ value: 'taken', selected: comp915 == 'taken' || null }, 'Taken'),
+            option({ value: 'waived', selected: comp915 == 'waived' || null }, 'Waived'),
           )
         ),
       ),
@@ -110,7 +112,7 @@ const cs06Form = (opts) => {
       div(a(
         {
           target: '_blank',
-          href: 'https://cs.unc.edu/academics/graduate/ms-requirements/course-categories',
+          href: 'https://cs.unc.edu/graduate/phd/#CourseReqs',
         },
         '(click link for list of courses & categories)',
       )),
@@ -169,9 +171,10 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Semester/Year*'),
           range6.map((i) => (
-            editAccess && !isComplete
-              ? input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
-              : pseudoInput(breadthCourseDate && breadthCourseDate[i])
+            semesterDropdown('breadthCourseDate', breadthCourseDate && breadthCourseDate[i], semesters, !editAccess || isComplete, {placeholder: 'None selected.'})
+            // editAccess && !isComplete
+            //   ? input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
+            //   : pseudoInput(breadthCourseDate && breadthCourseDate[i])
           ))
         ),
 
@@ -199,7 +202,6 @@ const cs06Form = (opts) => {
 
       strong('B. Primary Concentration'),
       div('Three or four courses not listed in (A) of which at least two support in depth the specific dissertation topic and at least one that of which supports more generally the area of computer science in which the dissertation topic falls.  The courses do not need to be related to each other except in that they support the dissertation.  These courses may have been taken as an undergraduate and may have been counted toward an undergraduate degree.'),
-      div('Include the following information:'),
       hr(),
 
       row(
@@ -214,9 +216,10 @@ const cs06Form = (opts) => {
         colMd(3)(
           div('Semester/Year*'),
           range4.map((i) => (
-            editAccess && !isComplete
-              ? input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
-              : pseudoInput(concentrationCourseDate && concentrationCourseDate[i])
+            semesterDropdown('concentrationCourseDate', breadthCourseDate && breadthCourseDate[i], semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'})
+            // editAccess && !isComplete
+            //   ? input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
+            //   : pseudoInput(concentrationCourseDate && concentrationCourseDate[i])
           ))
         ),
         colMd(3)(
@@ -273,7 +276,7 @@ const cs06Form = (opts) => {
       ),
       hr(),
 
-      strong('D. Formal Minor(if applicable)'),
+      strong('D. Formal Minor (if applicable)'),
       row(
         colMd(4)(
           div(
@@ -350,7 +353,7 @@ const cs06Form = (opts) => {
               x('label.col-md-2')(`${i+1}.* `),
               colMd(10)(
                 editAccess && !isComplete
-                  ? input('text', 'committee', committee && committee[i], true)
+                  ? input('text', 'committee', committee && committee[i], true, null, 0, {'data-index': i})
                   : x('div.committee-name')(pseudoInput(committee && committee[i]))
               )
             )
@@ -361,8 +364,8 @@ const cs06Form = (opts) => {
           range6.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
-                x('button.btn.btn-outline-primary.advisor')(
-                  buttonAttrs,
+                x('button.btn.btn-outline-primary.advisor.advisor-btn')(
+                  {...buttonAttrs, 'data-index': i},
                   'A'
                 )
               )
@@ -374,8 +377,8 @@ const cs06Form = (opts) => {
           range6.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
-                x('button.btn.btn-outline-primary.chairman')(
-                  buttonAttrs,
+                x('button.btn.btn-outline-primary.chairman.chairman-btn')(
+                  {...buttonAttrs, 'data-index': i},
                   'C'
                 )
               )
@@ -389,7 +392,7 @@ const cs06Form = (opts) => {
         colMd(1)(div('Advisor:')),
         colMd(3)(
           input('hidden', 'advisor', advisor, true),
-          x('span.label.advisor')(advisor),
+          output({class: 'label advisor'}, advisor),
         )
       ),
 
@@ -397,14 +400,14 @@ const cs06Form = (opts) => {
         colMd(1)('Chair:'),
         colMd(3)(
           input('hidden', 'chairman', chairman, true),
-          x('span.label.chairman')(chairman),
+          output({class: 'label chairman'},chairman),
         )
       ),
       hr(),
 
       div(strong('Committee advisor'), ' (or Chair if different from advisor)*'),
       div('By signing here, the chair indicates that all items above have been approved by the majority of the committee.'),
-      signatureRow(admin, 'chair', form),
+      signatureRow(admin, 'chair', form, opts.cspNonce),
       hr(),
 
       strong('IV. Approval'),
@@ -432,12 +435,16 @@ const cs06Form = (opts) => {
       ),
       hr(),
 
+      // row(
+      //   colMd(4)(
+      //     )
+      //     ),
       row(
-        colMd(4)(
-          div('Director of Graduate Studies Approval:*'),
-          signatureRow(admin, 'director', form),
+        colMd(5)(
+          div('Director of Graduate Studies Approval:*')
         )
       ),
+      adminApprovalCheckboxRow(viewer, 'director', form, opts.cspNonce),
       vert,
 
       buttonBarWrapper(
@@ -504,7 +511,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
     if (editAccess) setRadioishButtonClickHandlers()
     if (committee) setRadioishButtonDefaults(committee, advisor, chairman)
     if (editAccess) setRadioishSelectionRequirement()
-    setNoCourseOverlapRequirement()
+    // setNoCourseOverlapRequirement() // currently broken, but needs to be checked manually anyways
     if (editAccess) setNameChangeListeners()
   })
   
@@ -621,7 +628,7 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   const updateValue = (name, value) => {
     const input = document.querySelector('[name=' + name + ']')
     if (input) input.value = value
-    document.querySelector('span.label.' + name).textContent = value
+    document.querySelector('output.label.' + name).textContent = value
   }
 
   const showError = (message) => {

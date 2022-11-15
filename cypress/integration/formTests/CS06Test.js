@@ -13,10 +13,8 @@ let CS06 = {
   dateEntered: `${yyyyMMDD}`,
   dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
   breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  breadthCourseDate: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   breadthCourseGrade: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   concentrationCourseInfo: ['YOU', 'WERE' , 'MY', 'BROTHER'],
-  concentrationCourseDate:  ['YOU', 'WERE' , 'MY', 'BROTHER'],
   concentrationCourseHours: ['6', '9' , '6', '9'],
   otherCourseInfo:  ['III', 'HATTTTEEE' , 'YOUUUUU', 'UUUUUU'],
   otherCourseHours:  ['6', '9' , '6', '9'],
@@ -24,25 +22,32 @@ let CS06 = {
   otherCourses: 'YOU WERE MY BROTHER',
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
   committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  chairSignature: 'AJ',
-  chairDateSigned: `${actualApproved}`,
-  chairCheckbox: 'on',
   reasonApproved: 'Your left arm',
-  directorSignature: 'LIAAAAR',
-  directorDateSigned: `${actualApproved}`,
-  directorCheckbox: 'on',
+}
+
+let CS06cont = {
+  check: {
+    chairSignature: true,
+    directorSignature: true,
+  },
+  select: {
+    breadthCourseDate: ['FA 2020', 'FA 2020' ,'FA 2020' , 'FA 2020', 'FA 2020', 'FA 2020'],
+    concentrationCourseDate:  ['FA 2020', 'FA 2020' , 'FA 2020', 'FA 2020'], 
+  }
 }
 
 let CS06Dropdowns = {
-  comp915: 'true',
-  breadthCourseCategory: ['S', 'A', 'O', 'T', 'T', 'T'],
-  breadthCourseGradeModifier: ['+', '-', '', '-', '+'],
   backgroundPrepWorkSheet: 'false',
   programProductRequirement: 'false',
   PHDWrittenExam: 'false',
   PHDOralExam: 'true',
   approved: '',
+  breadthCourseCategory: ['S', 'A', 'O', 'T', 'T', 'T'],
+  breadthCourseGradeModifier: ['+', '-', '', '-', '+'],   
+  comp915: 'taken',
 }
+
+
 
 describe('Test CS06 submissions', () => {
   before(() => {
@@ -79,15 +84,10 @@ describe('Test CS06 submissions', () => {
     cy.get('[name=advisor]').should('have.value', CS06.committee[5])
     cy.get('[name=chairman]').should('have.value', CS06.committee[2])
 
-    delete CS06.chairSignature
-    delete CS06.chairDateSigned
-    delete CS06.chairCheckbox
-    delete CS06.directorSignature
-    delete CS06.directorDateSigned
-    delete CS06.directorCheckbox
-
     util.checkFormAsAdmin(CS06)
     util.checkDropdowns(CS06Dropdowns)
+    util.fillFormByDataCy(CS06cont)
+    cy.get('#submit-btn').click()
   })
 
   it('Submit CS06 form from student side', ()=>{
@@ -99,12 +99,6 @@ describe('Test CS06 submissions', () => {
     cy.get('.advisor-buttons .btn').eq(3).click()
     cy.get('.chair-buttons .btn').eq(3).click()
 
-    delete CS06.chairSignature
-    delete CS06.chairDateSigned
-    delete CS06.chairCheckbox
-    delete CS06.directorSignature
-    delete CS06.directorDateSigned
-    delete CS06.directorCheckbox
     delete CS06.reasonApproved
 
     util.fillFormAsStudent(CS06)
@@ -112,5 +106,7 @@ describe('Test CS06 submissions', () => {
     util.checkFormAsStudent(CS06)
     cy.get('[name=advisor]').should('have.value', CS06.committee[3])
     cy.get('[name=chairman]').should('have.value', CS06.committee[3])
+    cy.get('#submit-btn').click()
+
   })
 })

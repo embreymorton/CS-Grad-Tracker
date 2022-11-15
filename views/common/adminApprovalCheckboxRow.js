@@ -2,15 +2,16 @@ const x = require('hyperaxe')
 const { checkbox, script, input } = require('../common/baseComponents')
 
 /**
- * Row for a checkbox signature with a label that updates the date signed. The 'Signature' field it updates should be a Boolean in the schema.
+ * Like `signatureRow` except can only be checked off by admins and will include the name of the admin checking off this form! This is for Director or Chair positions. In the schema, the signature field should be a string.
  * 
- * @param {Boolean} editAccess 
- * @param {String} name of schema field without the text 'Signature'. e.g. if schema field is `studentSignature`, then the argument passed should be 'student'.  
+ * @param {facultySchema | studentSchema} viewer from `opts`, a Faculty or Student profile of the person currently viewing the form
+ * @param {String} name of schema field without the text 'Signature'. e.g. if schema field is `directorSignature`, then the argument passed should be 'director'.  
  * @param {CSXX} form object with a schema field
  * @param {*} nonce 
  * @returns 
  */
-const signatureRow = (editAccess, name, form, nonce) => {
+
+const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
   const row = x('.row')
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
@@ -19,6 +20,8 @@ const signatureRow = (editAccess, name, form, nonce) => {
   const fieldSignature = `${name}Signature`
   const fieldDateSigned = `${name}DateSigned`
   const signerTitle = name.charAt(0).toUpperCase() + name.slice(1);
+  const signerName = form[fieldSignature] // has a value only if previously approved
+  const viewerName = viewer.fullName
 
   // initial values
   const isApproved = Boolean(form[fieldSignature]) && form[fieldSignature] !== 'false';
@@ -32,9 +35,10 @@ const signatureRow = (editAccess, name, form, nonce) => {
         isApproved,
         nonce,
         {
-          isDisabled: !editAccess,
+          isDisabled: !viewer.admin,
           isRequired: false,
-          overrideFalse: ""
+          overrideFalse: "",
+          overrideTrue: viewerName
         }
       ),
       input( // hidden input field for date's value
@@ -43,7 +47,7 @@ const signatureRow = (editAccess, name, form, nonce) => {
         {isHidden: true}
       ),
       x(`em#label-${fieldSignature}`)(isApproved ? 
-        `(${signerTitle} approved on ${approvedDateMMDDYYYY})` :
+        `(${signerTitle} ${signerName} approved on ${approvedDateMMDDYYYY})` :
         hasNotYetApprovedText
       ),
       script(nonce,
@@ -54,13 +58,18 @@ const signatureRow = (editAccess, name, form, nonce) => {
           const label = document.getElementById('label-${fieldSignature}');
           if (checkbox.checked) {
             const now = new Date();
-            label.innerText = "(${signerTitle} approved on " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ".)";
+            label.innerText = "(${signerTitle} ${viewerName} approved on " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ".)";
             dateSigned.value = now.toString();
           } else {
             label.innerText = "${hasNotYetApprovedText}";
             dateSigned.value = null
           }
         })
+        
+        // set initial value of checkbox's value to be whatever was originally in the db if already approved
+        if (${isApproved}) {
+          document.getElementById('checkboxValue-${fieldSignature}').value = "${signerName}";
+        }
         `,
         {defer: ''}
       )
@@ -68,4 +77,4 @@ const signatureRow = (editAccess, name, form, nonce) => {
   )
 }
 
-module.exports = signatureRow
+module.exports = adminApprovalCheckboxRow

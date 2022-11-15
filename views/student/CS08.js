@@ -141,7 +141,6 @@ const namePidRow = (student) => {
   )
 }
 
-// TODO: when form is complete, lock down dropdowns
 const readerDateRow = (opts, editAccess, modifier) => {
   const { form, isComplete, isStudent, activeFaculty } = opts
   const readerField = `${modifier}Reader`
@@ -185,29 +184,33 @@ const approvalRow = (opts, modifier) => {
   const isApproved = !isNaN(dateSigned)
   const sigField = `${modifier}Signature`
   const approvalLabel = isApproved ? 
-  `${readerName} approved as of ${dateSignedMMDDYYYY}.` :
-  `Not yet approved.`
+  `(${readerName} approved on ${dateSignedMMDDYYYY}.)` :
+  `(Not yet approved.)`
 
-  return (
+  return [
     row(
       colMd(6)(
         pseudoInput(readerName, `#${modifier}-pseudo`)
       ),
       !isStudent ?
       colMd(6)(
-        x(`em#${dateField}Label`)(approvalLabel),
         x(`input#${dateField}Checkbox.pseudo-checkbox`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
         x(`input#${dateField}`)({type: "hidden", name: dateField, value: isApproved ? dateSigned.toString() : undefined}),
         x(`input#${sigField}`)({type: "hidden", name: sigField, value: form[sigField] ? form[sigField] : ""}),
         pageScript(opts, { dateField, readerName, })
       ) :
       colMd(6)(
-        x(`em#${dateField}Label`)(approvalLabel),
         pseudoCheckbox(isApproved),
         x(`input#${sigField}`)({type: "hidden", name: sigField, value: form[sigField] ? form[sigField] : ""}),
       ),
+    ),
+    row(
+      colMd(6)(),
+      colMd(6)(
+        x(`em#${dateField}Label`)(approvalLabel),
+      )
     )
-  )
+  ]
 
 }
 
@@ -225,11 +228,11 @@ function pageScript(opts, initialState) {
       const changeHandler = () => {
         if (checkbox.checked) {
           const now = new Date();
-          label.innerText = "${readerName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ":";
+          label.innerText = "(${readerName} approved as of " + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + ".)";
           // approvalData.setAttribute("value", true);
           dateData.setAttribute("value", now.toString());
         } else {
-          label.innerText = "${readerName} approves:";
+          label.innerText = "(${readerName} has not yet approved.)";
           // approvalData.setAttribute("value", false);
           dateData.removeAttribute("value");
         }

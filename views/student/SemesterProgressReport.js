@@ -3,16 +3,13 @@ const page = require('../page')
 const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
 const { row, colMd } = require('../common/grid')
-const approvalCheckbox = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
-const signatureDropDown = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
-const { is } = require('bluebird')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const pseudoCheckbox = require('../common/pseudoCheckbox')
-const { checkbox, dropdown, makeOption, radioSet, textarea, input, frontendScript } = require('../common/baseComponents')
+const { checkbox, dropdown, makeOption, radioSet, textarea, input, script } = require('../common/baseComponents')
+const { semesterDropdown } = require('../common/semesterDropdown')
 let complete = null
 
 const vert = x('div.verticalSpace')()
@@ -108,13 +105,14 @@ const progressReportForm = (opts) => {
       div('Choose the semester you are filling this form for:'),
       row(
         colMd(6)(
-          dropdown('semester', 
-            semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, form.semester?._id.equals(semester._id))), 
-            {
-              isDisabled: isComplete, 
-              blankOption: 'Select a semester from the dropdown.',
-            }
-          )
+          semesterDropdown('semester', form.semester?._id, semesters, isComplete, {isRequired: isComplete})
+          // dropdown('semester', 
+          //   semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, form.semester?._id.equals(semester._id))), 
+          //   {
+          //     isDisabled: isComplete, 
+          //     blankOption: 'Select a semester from the dropdown.'
+          //   }
+          // )
         )
       ),
       hr(),
@@ -141,7 +139,7 @@ const progressReportForm = (opts) => {
         colMd(6)(
           input('altEmploymentAdvisor', form.altEmploymentAdvisor, {isDisabled: isComplete, isRequired: true, isHidden: !form.altEmploymentAdvisor})
         ),
-        frontendScript(opts.cspNonce, 
+        script(opts.cspNonce, 
           `
           document.getElementById('select-employmentAdvisor').addEventListener('change', (event) => {
             console.log('executed')
@@ -280,7 +278,7 @@ const evaluationSection = (opts) => {
     hr,
     h4('For the employment advisor:'),
     rowCol(12,
-      b(form.altEmploymentAdvisor ? ` NOTE: You, ${student.advisor.fullName} must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
+      b(form.altEmploymentAdvisor ? ` NOTE: You, ${student.advisor.fullName}, must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
     ),
     rowCol(12,
       "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",

@@ -7,38 +7,43 @@ const actualApproved = new Date(approvedDateMMDDYYYY);
 
 let CS01 = {
   comp283Covered: 'A',
-  comp283Date: '2021-01-01',
-  comp410Covered: 'B',
-  comp410Date: '2021-01-01',
-  comp411Covered: 'C',
-  comp411Date: '2021-01-01',
+  comp210Covered: 'B',
+  comp311Covered: 'C',
   comp455Covered: 'D',
-  comp455Date: '2021-01-01',
-  comp521Covered: 'E',
-  comp521Date: '2021-01-01',
+  comp421Covered: 'E',
   comp520Covered: 'F',
-  comp520Date: '2021-01-01',
   comp530Covered: 'G',
-  comp530Date: '2021-01-01',
   comp524Covered: 'H',
-  comp524Date: '2021-01-01',
   comp541Covered: 'I',
-  comp541Date: '2021-01-01',
   comp550Covered: 'J',
-  comp550Date: '2021-01-01',
   math233Covered: 'K',
-  math233Date: '2021-01-01',
   math381Covered: 'L',
-  math381Date: '2021-01-01',
   math547Covered: 'M',
-  math547Date: '2021-01-01',
   math661Covered: 'N',
-  math661Date: '2021-01-01',
   stat435Covered: 'O',
-  stat435Date: '2021-01-01',
-  studentSignature: 'true',
-  studentDateSigned: `${actualApproved}`,
-  studentCheckbox: 'on',
+}
+
+let CS01cont = {
+  select: {
+    comp283Date: 'FA 2022',
+    comp210Date: 'FA 2022',
+    comp311Date: 'FA 2022',
+    comp455Date: 'FA 2022',
+    comp421Date: 'FA 2022',
+    comp520Date: 'FA 2022',
+    comp530Date: 'FA 2022',
+    comp524Date: 'FA 2022',
+    comp541Date: 'FA 2022',
+    comp550Date: 'FA 2022',
+    math233Date: 'FA 2022',
+    math381Date: 'FA 2022',
+    math547Date: 'FA 2022',
+    math661Date: 'FA 2022',
+    stat435Date: 'FA 2022',
+  },
+  check: {
+    studentSignature: true
+  }
 }
 
 describe('Test CS01 submissions', ()=>{
@@ -73,8 +78,10 @@ describe('Test CS01 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS01);
+    util.fillFormByDataCy(CS01cont)
     cy.get('.CS01-submit').click();
     util.checkFormAsAdmin(CS01);
+    util.verifyFormByDataCy(CS01cont);
   })
 
   it('Submit CS01 form from student side, check to make sure values from admin submission are there', ()=>{

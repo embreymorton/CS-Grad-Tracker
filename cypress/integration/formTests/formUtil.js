@@ -58,6 +58,17 @@ util.selectDropdowns =
 util.checkDropdowns =
   makeFormDataHandler((sel, d) => sel.should('have.value', d))
 
+  /** calls cy.get(selector) and checks if there are multiple elements selected, if so, it will expect values to be an array of values
+   * @param {Function(*) : [*]} makeArgs should be a lambda function that create the arguments for the method being called
+   */
+const cyGetApply = (selector, values, method, makeArgs) => {
+  if (Array.isArray(values)) {
+    cy.get(selector).each(($el, i, $list) => i < values.length && cy.wrap($el)[method](...makeArgs(values[i]))) // quick ends loop when i >= value.length (by returning false)
+  } else {
+    cy.get(selector)[method](...makeArgs(values))
+  }
+}
+
 /**
  * fills form elements with a `data-cy` attribute (https://docs.cypress.io/guides/references/best-practices#Selecting-Elements)
  * It's best to make the `data-cy` attribute equivalent to the element's `name` attribute. But we use the `data-cy` attribute as 
@@ -81,7 +92,8 @@ text: {
  */
 util.fillFormByDataCy = (formData) => {
   Object.entries(formData.text || {}).forEach(([name, value]) => {
-    cy.get(`[data-cy="${name}"]`).clear().type(value)
+    cyGetApply(`[data-cy="${name}"]`, value, 'clear', () => [])
+    cyGetApply(`[data-cy="${name}"]`, value, 'type', (val) => [val])
   })
 
   Object.entries(formData.check || {}).forEach(([name, value]) => {
@@ -90,13 +102,13 @@ util.fillFormByDataCy = (formData) => {
       cy.get(datacy).uncheck()
     } else if (value === true) { // is a checkbox
       cy.get(datacy).check()
-    } else {
-      cy.get(datacy).check(value)
+    } else { // is a radio
+      cyGetApply(datacy, value, 'check', (val) => [val])
     }
   })
 
   Object.entries(formData.select || {}).forEach(([name, value]) => {
-    cy.get(`[data-cy="${name}"]`).select(value)
+    cyGetApply(`[data-cy="${name}"]`, value, 'select', (val) => [val])
   })
 }
 
@@ -107,7 +119,7 @@ util.fillFormByDataCy = (formData) => {
  */
 util.verifyFormByDataCy = (formData) => {
   Object.entries(formData.text || {}).forEach(([name, value]) => {
-    cy.get(`[data-cy="${name}"]`).should('have.value', value)
+    cyGetApply(`[data-cy="${name}"]`, value, 'should', (val) => ['have.value', val])
   })
 
   Object.entries(formData.check || {}).forEach(([name, value]) => {
@@ -122,8 +134,13 @@ util.verifyFormByDataCy = (formData) => {
   })
 
   Object.entries(formData.select || {}).forEach(([name, value]) => {
-    cy.get(`[data-cy="${name}"] option:selected`).should('have.text', value)
+    cyGetApply(`[data-cy="${name}"] option:selected`, value, 'should', (val) => ['have.text', val])
   })
 }
+
+util.By = {}
+util.By.datacy = (s) => `[data-cy="${s}"]`
+util.By.name = (s) => `[name="${s}"]`
+util.By.id = (s) => `#${s}`
 
 module.exports = util;

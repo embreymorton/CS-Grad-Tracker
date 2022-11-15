@@ -210,6 +210,7 @@ form [name=dept] {
   border-radius: 0.25rem;
   margin: 0 auto;
   width: 50%;
+  display: block;
 }
 
 .pseudo-checked {

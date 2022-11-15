@@ -11,6 +11,8 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
+const { semesterDropdown } = require('../common/semesterDropdown')
+const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -43,10 +45,10 @@ const mainContent = (opts) => {
 }
 
 const cs03Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
-  const { div, hr, strong, option, a } = x
+  const { div, hr, strong, option, a, p, span } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
   const vert = x('div.verticalSpace')()
@@ -91,9 +93,7 @@ const cs03Form = (opts) => {
         ),
         colMd(1)(
           div('Semester'),
-          editAccess && !isComplete
-            ? input('text', 'semester', form.semester && form.semester[i])
-            : pseudoInput(form.semester && form.semester[i])
+          semesterDropdown('semester', form.semester && form.semester[i]?._id, semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'})
         ),
         colMd(3)(
           div('Brief Title'),
@@ -212,11 +212,12 @@ const cs03Form = (opts) => {
           ),
           colMd(2)(
             div('Semester'),
-            range.map((i) => (
-              editAccess && !isComplete
-                ? input('text', 'semester', form.semester && form.semester[i])
-                : pseudoInput(form.semester && form.semester[i])
-            ))
+            range.map((i) => semesterDropdown('semester', form.semester && form.semester[i]?._id, semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'}))
+            // range.map((i) => (
+            //   editAccess && !isComplete
+            //     ? input('text', 'semester', form.semester && form.semester[i])
+            //     : pseudoInput(form.semester && form.semester[i])
+            // ))
           ),
           colMd(3)(
             div('Brief Title'),
@@ -318,15 +319,15 @@ const cs03Form = (opts) => {
 
       strong('IV. Approvals'),
       div('Student Approval:'),
-      signatureRow(admin || isStudent, 'student', form), vert,
+      signatureRow(admin || isStudent, 'student', form, opts.cspNonce), vert,
       div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
       div('Approved:'),
       row(
-        colMd(3)(
+        colMd(6)(
           isStudent
-            ? form.approved
+            ? span(form.approved)
             : select(
               { name: 'approved', required: 'true', ...disabled },
               option({ value: '' }, ''),
@@ -338,9 +339,9 @@ const cs03Form = (opts) => {
 
       div('Reason of Disapproval:'),
       row(
-        colMd(4)(
+        colMd(6)(
           isStudent
-            ? form.approvalReason
+            ? span(form.approvalReason)
             : x('textarea.form-control')(
               { rows: 6, name: 'approvalReason', ...disabled },
               form.approvalReason,
@@ -350,7 +351,7 @@ const cs03Form = (opts) => {
       hr(),
 
       div('Director Approval:'),
-      signatureRow(admin, 'director', form),
+      adminApprovalCheckboxRow(viewer, 'director', form, opts.cspNonce),
       buttonBarWrapper(
         isComplete ? null : x('button.btn.btn-primary.CS03-submit#submit-btn')({ type: 'submit' }, 'Submit'),
         disableSubmitScript(opts),

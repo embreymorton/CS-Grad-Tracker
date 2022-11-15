@@ -11,12 +11,10 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-
-let complete = false;
+const { semesterDropdown } = require('../common/semesterDropdown')
 
 const main = (opts) => {
-  const { uploadSuccess, formName, isComplete} = opts
-  complete = isComplete
+  const { uploadSuccess, formName} = opts
   const title = `${formName} Background Preparation Worksheet`
   const cs01 = formName === 'CS01'
   return page(
@@ -42,8 +40,9 @@ const mainContent = (opts) => {
     div(
       { class: 'text-left' },
       x('p.underline')('Instructions:'),
-      p('The following UNC courses define the background preparation assumed in the M.S. and PhD programs.  This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.'),
+      p('The following UNC courses define the background preparation assumed in the M.S. and PhD programs. This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.'),
       p('For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question.'),
+      p('If you mastered the materials through a method besides course work, please select the semester that includes the date of when you mastered the topic.'),
       p(strong('All fields required!')),
       hr(),
       form,
@@ -52,10 +51,10 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, admin, formName, isComplete } = opts
+  const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row = formRow(admin || isStudent, form)
+  const row = formRow(admin || (isStudent && !isComplete), form, semesters)
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
@@ -64,11 +63,11 @@ const cs01Form = (opts) => {
       h3('Background Course Information'), x('.verticalSpace')(),
 
       [ row('comp283'), hr() ],
-      [ row('comp410'), hr() ],
-      [ row('comp411'), hr() ],
+      [ row('comp210'), hr() ],
+      [ row('comp311'), hr() ],
       [ row('comp455'), hr() ],
 
-      row('comp521'), x('.verticalSpace')(),
+      row('comp421'), x('.verticalSpace')(),
       row('comp520'), x('.verticalSpace')(),
       row('comp530'), x('.verticalSpace')(),
       x('.text-center.bold')('(Any two of these three will suffice)'), hr(),
@@ -89,11 +88,11 @@ const cs01Form = (opts) => {
       hr(),
 
       p('Student Approval:'),
-      signatureRow(admin || isStudent, 'student', form),
+      signatureRow(admin || isStudent, 'student', form, opts.cspNonce),
       x('.verticalSpace')(),
 
       p('Advisor Approval:'),
-      // signatureRow(admin, 'advisor', form),
+      // signatureRow(admin, 'advisor', form, opts.cspNonce),
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       x('.verticalSpace')(),
 
@@ -127,14 +126,14 @@ const namePidRow = (student) => {
   )
 }
 
-const formRow = (admin, values) => (key) => {
+const formRow = (writeAccess, values, semesters) => (key) => {
   const { div } = x
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
-  const isRequired = !(['comp521', 'comp520', 'comp530'].includes(key))
+  const isRequired = !(['comp421', 'comp520', 'comp530'].includes(key))
   const roValue = (name, type) => (pseudoInput(values[name]))
   const rwValue = (name, type) => (input(`${type}`, name, values[name], isRequired))
-  const value = admin && !complete ? rwValue : roValue
+  const value = writeAccess ? rwValue : roValue
   return (
     row(
       colMd(4)(descriptions[key]),
@@ -143,8 +142,8 @@ const formRow = (admin, values) => (key) => {
         value(coveredFieldName, 'text'),
       ),
       colMd(4)(
-        div('Dates:'),
-        value(dateFieldName, 'date'),
+        div('Semester:'),
+        semesterDropdown(dateFieldName, values[dateFieldName], semesters, !writeAccess, {isRequired})
       ),
     )
   )
@@ -154,9 +153,9 @@ const pageScript = (opts) => {
   const script = x('script')({type: 'text/javascript'})
   const javascript = `
   document.addEventListener('DOMContentLoaded', () => {
-    const keys = ['comp521', 'comp520', 'comp530']
+    const keys = ['comp421', 'comp520', 'comp530']
     const coveredInputs = keys.map((key) => document.getElementsByName(key + 'Covered')[0])
-    const dateInputs = keys.map((key) => document.getElementsByName (key + 'Date')[0])
+    const dateInputs = keys.map((key) => document.getElementsByName(key + 'Date')[0])
     
     const inputChangeCheck = (event) => {
       if (event.submitter && event.submitter.id == "save-btn") {
@@ -190,13 +189,13 @@ const descriptions = {
     ' (see below)'
   ],
 
-  comp410: [
-    strong('COMP: 410:  Data Structures:'),
+  comp210: [
+    strong('COMP 210:  Data Structures:'),
     ' The analysis of data structures and their associated algorithms.  Abstract data types, lists, stacks, queues, trees, and graphs.'
   ],
 
-  comp411: [
-    strong('COMP 411: Computer Organization:'),
+  comp311: [
+    strong('COMP 311: Computer Organization:'),
     ' Data respresentation, computer architecture and implementation, assembly language programming.'
   ],
 
@@ -210,8 +209,8 @@ const descriptions = {
     ' Design and construction of compilers. Theory and pragmatics of lexical, syntactic, and semantic analysis. Interpretation. Code generation for a modern architecture. Run-time environments. Includes a large compiler implementation project.'
   ],
 
-  comp521: [
-    strong('*COMP 521:  Files & Databases:'),
+  comp421: [
+    strong('*COMP 421:  Files & Databases:'),
     ' Placement of data on secondary storage.  File organization.  Database history, practice, major models, system structure and design.'
   ],
 
