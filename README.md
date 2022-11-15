@@ -8,10 +8,10 @@ Work-Study program at The University of North Carolina at Chapel Hill.
 The clients of this project are all staff/administrators that work in Sitterson
 Hall as part of graduate program for computer science students.
 
-Kevin Chen, Elaine Dong, and Zain Khan are the students currently working on this
+Kevin Chen, Lia Abed, and Amin Zamani are the students currently working on this
 project.
 
-In the past, Shane Flannigan, Takoda Ren, and Sebastian Crowell worked on this project.
+In the past, Elaine Dong, Zain Khan, Shane Flannigan, Takoda Ren, and Sebastian Crowell worked on this project.
 
 # Contacts
 Jeff Terrell <terrell@cs.unc.edu>
