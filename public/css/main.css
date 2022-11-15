@@ -349,3 +349,8 @@ form [name=dept] {
   display: inline-block;
   text-align: center;
 }
+
+.subSize{
+  font-size:xx-large;
+  font-weight: 600;
+}

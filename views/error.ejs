@@ -21,6 +21,16 @@
           <div class="jumbotron">
             <h1><%=string%></h1>
           </div>
+          <!-- to get around cspNonce that doesn't work on <button> or <a> -->
+          <% if (!locals.disableBack) { %>
+            <script id="back-button-script" type="text/javascript" nonce="<%= cspNonce %>" defer> 
+              const back = document.createElement('button')
+              back.className = 'btn btn-primary'
+              back.addEventListener('click', () => history.back())
+              back.appendChild(document.createTextNode('Back'))
+              document.getElementById('back-button-script').insertAdjacentElement('afterend', back)
+            </script>
+          <% } %>
         </div>
       </div>
     </div>

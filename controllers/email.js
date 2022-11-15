@@ -4,7 +4,7 @@ const htmlToText = require('nodemailer-html-to-text').htmlToText
 const _ = {}
 _._transporter = null
 
-_.testAccount = {user: "ignatius.hegmann@ethereal.email", pass: "hVv9Jr7aGRxeKHxNxe"}
+_.testAccount = {user: "twila.schuppe@ethereal.email", pass: "pHj6reSvjuDsY4suFe"}
 
 _.managerInfo = {
   name: "Kris Jordan",
