@@ -20,7 +20,8 @@ describe('Test Checkbox on forms pages', ()=>{
         cy.get('[type="checkbox"]').uncheck()
         cy.get('.CS04-submit').click()
         cy.get('[type="checkbox"]').check()
-        cy.get("#advisorSignatureLabel").contains("as of")
+        const today = new Date()
+        cy.get("#advisorSignatureLabel").contains(`approved on ${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`)
     })
   })
   

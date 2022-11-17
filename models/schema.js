@@ -399,13 +399,14 @@ var CS03Schema = mongoose.Schema({
   gradeModifier: [String], // should also be length 3
   backgroundPrep: Boolean,
   programProduct: Boolean,
-  comprehensivePaper: Boolean,
-  thesis: Boolean,
-  outsideReview: Boolean,
+  writingRequirement: {
+    type: String,
+    enum: ['none', 'cs04', 'cs05', 'cs08']
+  },
   comprehensiveExam: String,
   studentSignature: Boolean, studentDateSigned: String,
   advisorSignature: Boolean, advisorDateSigned: String,
-  approved: String,
+  approved: Boolean,
   approvalReason: String,
   directorSignature: String, directorDateSigned: String
 })
