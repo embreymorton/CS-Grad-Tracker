@@ -22,7 +22,7 @@ router.get('/callback', (req, res, next) => {
 })
 
 router.get('/logout', (req, res) => {
-  req.logout()
+  req.logout(callback => {})
   const { AUTH0_DOMAIN, AUTH0_CLIENT_ID } = process.env
   const logoutURL = new URL('https://' + AUTH0_DOMAIN + '/logout')
   const client_id = AUTH0_CLIENT_ID

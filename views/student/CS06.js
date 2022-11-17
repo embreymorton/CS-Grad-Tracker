@@ -12,6 +12,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
+const {gradeDropdown} = require('../common/gradesDropdown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -181,20 +182,10 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Grade*'),
           range6.map((i) => (
-            editAccess && !isComplete
-              ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
-              : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
-          ))
-        ),
-        colMd(2)(
-          div('Grade Modifier'),
-          range6.map((i) => (
-            isComplete && !editAccess ? pseudoInput(breadthCourseGradeModifier && breadthCourseGradeModifier[i]) : select(
-              { name: 'breadthCourseGradeModifier', ...disabled },
-              option({ value: '' }, ''),
-              option({ value: '+', selected: breadthCourseGradeModifier && breadthCourseGradeModifier[i] == '+' || null }, '+'),
-              option({ value: '-', selected: breadthCourseGradeModifier && breadthCourseGradeModifier[i] == '-' || null }, '-'),
-            )
+            gradeDropdown('breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
+            //editAccess && !isComplete
+            //  ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
+            //  : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
           ))
         ),
       ),

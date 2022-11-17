@@ -13,6 +13,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
+const {gradeDropdown} = require('../common/gradesDropdown')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -47,7 +48,7 @@ const mainContent = (opts) => {
 const cs03Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
   const editAccess = admin || isStudent
-  const { courseNumber, basisWaiver } = form
+  const { courseNumber, basisWaiver, breadthCourseGrade } = form
   const { div, hr, strong, option, a, p, span } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
@@ -57,6 +58,7 @@ const cs03Form = (opts) => {
     div('Options: Prior course work, More Advanced Course Here, Other'),
   ]
   const range = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const range6 = [0]
   const disabled = editAccess && !isComplete ? {} : { disabled: true }
 
   const distRow = (label, form, i, {editAccess, isComplete}) => {
@@ -101,28 +103,16 @@ const cs03Form = (opts) => {
             ? input('text', 'title', form.title && form.title[i])
             : pseudoInput(form.title && form.title[i])
         ),
-        colMd(1)(
-          div('Grade'),
-          editAccess && !isComplete
-            ? select({ name: 'grade' },
-                option({ value: '', selected: form.grade && form.grade[i] || null }, ''),
-                option({ value: 'H', selected: form.grade && form.grade[i] == 'H' || null }, 'H'),
-                option({ value: 'P', selected: form.grade && form.grade[i] == 'P' || null }, 'P'),
-                option({ value: 'L', selected: form.grade && form.grade[i] == 'L' || null }, 'L'),
-                option({ value: 'F', selected: form.grade && form.grade[i] == 'F' || null }, 'F')
-              )
-            : pseudoInput(form.grade && form.grade[i])
+        colMd(2)(
+          div('Grade*'),
+          range6.map((i) => (
+            gradeDropdown('breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
+            //editAccess && !isComplete
+            //  ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
+            //  : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
+          ))
         ),
-        colMd(1)(
-          div('Modifier'),
-          admin
-            ? select({ name: 'gradeModifier' },
-                option({ value: '', selected: form.gradeModifier && form.gradeModifier[i] || null }, ''),
-                option({ value: '+', selected: form.gradeModifier && form.gradeModifier[i] == '+' || null }, '+'),
-                option({ value: '-', selected: form.gradeModifier && form.gradeModifier[i] == '-' || null }, '-')
-              )
-            : pseudoInput(form.gradeModifier && form.gradeModifier[i])
-        )
+        
       ), 
       hr]
     }
