@@ -142,7 +142,6 @@ const progressReportForm = (opts) => {
         script(opts.cspNonce, 
           `
           document.getElementById('select-employmentAdvisor').addEventListener('change', (event) => {
-            console.log('executed')
             const select = event.target
             const otherBox = document.getElementById('input-altEmploymentAdvisor')
             if (select.options[select.selectedIndex].text == "${OTHER_TEXT}") { // other was selected

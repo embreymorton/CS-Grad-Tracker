@@ -13,6 +13,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
+const { script } = require('../common/baseComponents')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -51,6 +52,7 @@ const cs03Form = (opts) => {
   const { div, hr, strong, option, a, p, span } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
+  const disapprovedGSCText = 'Disapproved'
   const vert = x('div.verticalSpace')()
   const basisForWaiverLabel = [
     div('Basis for Waiver'),
@@ -67,19 +69,19 @@ const cs03Form = (opts) => {
         )
       ),
       row(
-        colMd(2)(
+        colMd(1)(
           div('University'),
           editAccess && !isComplete
             ? input('text', 'university', form.university && form.university[i])
             : pseudoInput(form.university && form.university[i])
         ),
         colMd(1)(
-          div('Department'),
+          div('Dept'),
           editAccess && !isComplete
             ? input('text', 'dept', form.dept && form.dept[i])
             : pseudoInput(form.dept && form.dept[i])
         ),
-        colMd(1)(
+        colMd(2)(
           div('Course'),
           editAccess && !isComplete
             ? input('text', 'course', form.course && form.course[i])
@@ -91,7 +93,7 @@ const cs03Form = (opts) => {
             ? input('number', 'hours', form.hours && form.hours[i])
             : pseudoInput(form.hours && form.hours[i])
         ),
-        colMd(1)(
+        colMd(2)(
           div('Semester'),
           semesterDropdown('semester', form.semester && form.semester[i]?._id, semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'})
         ),
@@ -150,8 +152,9 @@ const cs03Form = (opts) => {
         div('The student’s mastery of content will be determined by the course grade in the set of three courses: a P- or better must be obtained in each course, and a Calingaert score of -3 or higher must be obtained on the three courses combined.',
             a(
               { href: 'https://cs.unc.edu/academics/graduate/ms-requirements/' },
-              ' MS-Requirements'
+              ' MS-Requirements '
               ),
+            'An administrator will add the modifiers.'
         ),
         div('Transfer of credit- Up to 6 semester hours of graduate credit may be transferred from another accredited institution, or from courses taken at UNC-CH before admission to the Graduate School.',
               a(
@@ -168,17 +171,13 @@ const cs03Form = (opts) => {
             'Graduate School Handbook'
           ),
           '.'),
-        div('List the courses you expect to use to meet the MS requirements.  Include Section Number for COMP 790 and COMP 990-993 courses.  Do NOT list research team meeting seminars.  Indicate courses used to satisfy the distribution requirement with a mark in the DR column.'),
-        row(
-          colMd(4)('A = Applications'),
-          colMd(4)('S = Systems & Hardware'),
-          colMd(4)('T = Theory & Formal Thinking'),
-        ), hr(),
+        div('List the courses you expect to use to meet the MS requirements.  Include Section Number for COMP 790 and COMP 990-993 courses.  Do NOT list research team meeting seminars.'),
+        hr(),
         distRow('Applications:', form, 0, {editAccess, isComplete}),
         distRow('Systems & Hardware:', form, 1, {editAccess, isComplete}),
         distRow('Theory & Formal Thinking:', form, 2, {editAccess, isComplete}),
         row(
-          colMd(2)(
+          colMd(1)(
             div('University'),
             range.map((i) => (
               editAccess && !isComplete
@@ -187,7 +186,7 @@ const cs03Form = (opts) => {
             ))
           ),
           colMd(1)(
-            div('Department'),
+            div('Dept'),
             range.map((i) => (
               editAccess && !isComplete
                 ? input('text', 'dept', form.dept && form.dept[i])
@@ -231,6 +230,7 @@ const cs03Form = (opts) => {
       hr(),
 
       strong('II. Additional Requirements'),
+      vert,
       div('A. Background Preparation'),
       row(
         colMd(3)(
@@ -243,11 +243,9 @@ const cs03Form = (opts) => {
         ),
         colMd(2)('File Form CS-01')
       ),
-
-      div('B. Distribution Requirements'),
-      div('Indicate the three courses in the Course List used to satisfy the breadth requirement (consult the official MS degree rule for eligible courses and grade requirements - http://www.cs.unc.edu/cms/academics/graduate-programs/master-of-science-official-degree-requirements ) '),
-
-      div('C. Program Product'),
+      
+      vert,
+      div('B. Program Product'),
       row(
         colMd(3)(
           select(
@@ -262,44 +260,17 @@ const cs03Form = (opts) => {
         ),
       ),
 
-      div('D. Writing Requirement(One of the following)'),
+      vert,
+      div('C. Writing Requirement'),
       row(
         colMd(3)(
           select(
-            { name: 'comprehensivePaper', required: 'true', ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.comprehensivePaper || null }, 'false'),
-            option({ value: 'true', selected: form.comprehensivePaper || null }, 'true'),
+            { name: 'writingRequirement', required: 'true', ...disabled },
+            option({ value: 'none' }, 'Did not complete.'),
+            option({ value: 'cs04', selected: form.writingRequirement === 'cs04' || null }, 'Outside Review (CS-04)'),
+            option({ value: 'cs05', selected: form.writingRequirement === 'cs05' || null }, 'Thesis (CS-05)'),
+            option({ value: 'cs08', selected: form.writingRequirement === 'cs09' || null }, 'Comprehensive Paper (CS-08)'),
           ),
-        ),
-        colMd(4)(
-          div('Comprehensive Paper (CS-08)')
-        ),
-      ),
-      row(
-        colMd(3)(
-          select(
-            { name: 'thesis', required: 'true', ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.thesis || null }, 'false'),
-            option({ value: 'true', selected: form.thesis || null }, 'true'),
-          ),
-        ),
-        colMd(2)(
-          div('Thesis (CS-05)')
-        ),
-      ),
-      row(
-        colMd(3)(
-          select(
-            { name: 'outsideReview', required: 'true', ...disabled },
-            option({ value: '' }, ''),
-            option({ value: 'false', selected: !form.outsideReview || null }, 'false'),
-            option({ value: 'true', selected: form.outsideReview || null }, 'true'),
-          ),
-        ),
-        colMd(2)(
-          div('Outside Review (CS-04)')
         ),
       ),
       hr(),
@@ -323,32 +294,47 @@ const cs03Form = (opts) => {
       div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts), hr(),
 
-      div('Approved:'),
+      div('Graduate Studies Approval:'),
       row(
         colMd(6)(
-          isStudent
-            ? span(form.approved)
-            : select(
-              { name: 'approved', required: 'true', ...disabled },
-              option({ value: '' }, ''),
-              option({ value: approvedGSCText, selected: form.approved == approvedGSCText || null }, approvedGSCText),
-              option({ value: 'Disapproved', selected: form.approved == 'Disapproved' || null }, 'Disapproved'),
-            )
+          select(
+            { name: 'approved', required: 'true', disabled: isStudent || !admin || null },
+            option({}, ''),
+            option({ value: false, selected: form.approved === false || null }, disapprovedGSCText),
+            option({ value: true, selected: form.approved === true || null }, approvedGSCText),
+          )
         )
       ),
 
-      div('Reason of Disapproval:'),
-      row(
-        colMd(6)(
-          isStudent
-            ? span(form.approvalReason)
-            : x('textarea.form-control')(
-              { rows: 6, name: 'approvalReason', ...disabled },
+      div(
+        {id: 'reason-section', hidden: form.approved || null},
+        div('Reason for Disapproval:'),
+        row(
+          colMd(6)(
+            x('textarea.form-control')(
+              { rows: 6, name: 'approvalReason', required: !form.approved || null, disabled: isStudent || !admin || null },
               form.approvalReason,
             )
-        )
+          )
+        ),
+        script(opts.cspNonce, 
+          `
+          document.querySelector('[name="approved"]').addEventListener('change', (e) => {
+            const reasonSection = document.getElementById('reason-section')
+            const approvalReason = document.querySelector('[name="approvalReason"]')
+            const value = e.target.value
+            console.log(value)
+            if (value == 'true') {
+              reasonSection.setAttribute('hidden', 'true')
+              approvalReason.removeAttribute('required')
+            } else {
+              reasonSection.removeAttribute('hidden')
+              approvalReason.setAttribute('required', 'true')
+            }
+          })
+          `,
+          {defer: ''})
       ),
-      hr(),
 
       div('Director Approval:'),
       adminApprovalCheckboxRow(viewer, 'director', form, opts.cspNonce),

@@ -12,6 +12,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
+const { script } = require('../common/baseComponents')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -50,7 +51,7 @@ const cs06Form = (opts) => {
           backgroundPrepWorkSheet, programProductRequirement,
           PHDWrittenExam, PHDOralExam, committee, advisor, chairman,
           approved, reasonApproved } = form
-  const { div, hr, strong, option, span, a, output } = x
+  const { div, hr, strong, option, span, a, output, ul, li } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
@@ -116,27 +117,18 @@ const cs06Form = (opts) => {
         },
         '(click link for list of courses & categories)',
       )),
-      div('T = Theory & Formal Thinking'),
-      div('S = Systems & Hardware'),
-      div('A = Applications'),
-      div('O = Outside of CS'),
-      div('-Include the sections numbers with any COMP 790 course listed.'),
-      div(
-        '-Courses taken outside UNC-CH must be graduate courses and not counted toward an undergraduate degree, and require submission of a ',
-        a(
-          {
-            target: '_blank',
-            href: 'https://cs.unc.edu/academics/graduate/ms-requirements/progress-forms',
-          },
-          'course waiver.',
-        )
+      ul(
+        li('Include the sections numbers with any COMP 790 course listed.'),
+        li(
+          'Courses taken outside UNC-CH must be graduate courses and not counted toward an undergraduate degree, and require submission of a course waiver (CS02).',
+        ),
       ),
       div(
         'Consult the official ',
         a(
           {
             target: '_blank',
-            href: 'https://cs.unc.edu/academics/graduate/phd-requirements',
+            href: 'https://cs.unc.edu/graduate/phd/',
           },
           'CS PhD Degree Requirements',
         ),
@@ -392,7 +384,7 @@ const cs06Form = (opts) => {
         colMd(1)(div('Advisor:')),
         colMd(3)(
           input('hidden', 'advisor', advisor, true),
-          output({class: 'label advisor'}, advisor),
+          output({class: 'label advisor', for: 'advisor'}, advisor),
         )
       ),
 
@@ -400,14 +392,29 @@ const cs06Form = (opts) => {
         colMd(1)('Chair:'),
         colMd(3)(
           input('hidden', 'chairman', chairman, true),
-          output({class: 'label chairman'},chairman),
+          output({class: 'label chairman', for: 'chairman'},chairman),
         )
       ),
       hr(),
 
       div(strong('Committee advisor'), ' (or Chair if different from advisor)*'),
       div('By signing here, the chair indicates that all items above have been approved by the majority of the committee.'),
-      signatureRow(admin, 'chair', form, opts.cspNonce),
+      signatureRow(!isStudent, 'chair', form, opts.cspNonce),
+      script(opts.cspNonce, // hacky way to add chair's name to label, relies on order of event listener attachment
+        `
+        document.getElementById('checkbox-chairSignature').addEventListener('change', (e) => {
+          // if (e.target.value) {
+            const label = document.getElementById('label-chairSignature')
+            const chair = document.querySelector('[name="chairman"]').value
+            const currentText = label.innerText.split('Chair')
+            currentText[0] = "(Chair " + chair
+            label.innerText = currentText.join('')
+          // }
+        })
+        
+        document.getElementById('checkbox-chairSignature').dispatchEvent(new Event('change'))
+        `,
+        {defer: ''}),
       hr(),
 
       strong('IV. Approval'),

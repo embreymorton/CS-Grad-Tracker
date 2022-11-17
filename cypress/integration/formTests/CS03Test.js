@@ -23,11 +23,9 @@ let CS03Dropdowns = {
   gradeModifier: ['+','-',''],
   backgroundPrep: 'true',
   programProduct: 'false',
-  comprehensivePaper: 'true',
-  thesis: 'true',
-  outsideReview: 'true',
+  writingRequirement: 'cs04',
   comprehensiveExam: 'Comprehensive Paper',
-  approved: 'Approved by Graduate Studies Committee'
+  approved: 'false'
 }
 
 let CS03cont = {
@@ -81,8 +79,8 @@ describe('Test CS03 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.contains(CS03Dropdowns.approved)
-    cy.contains(CS03.approvalReason);
+    cy.get('[name="approved"]').should('have.value', CS03Dropdowns.approved)
+    cy.get('[name="approvalReason"').contains(CS03.approvalReason);
     cy.contains('admin admin'); // the director's signature
     cy.contains(approvedDateMMDDYYYY) // shows the correct date of approval
     //cy.contains(CS03.directorDateSigned);

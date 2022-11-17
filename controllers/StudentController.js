@@ -458,7 +458,6 @@ studentController.updateMultiform = async (req, res) => {
   try {
     var form = await schema[formName].findOneAndUpdate({student: studentId, _id: formId}, input, {runValidators: true, new: true}).populate('student').exec()
   } catch (e) {
-    console.dir(e)
     res.render('../views/error.ejs', { string: `Invalid form input, could not update database: ${e}`})
     return
   }
@@ -758,7 +757,6 @@ studentController.uploadPage = function(req, res){
     uploadSuccess = true
   }
   res.render('../views/student/upload.ejs', {uploadSuccess: uploadSuccess})
-  redirect()
 }
 
 const requiredFieldMissing = ({onyen, csid, firstName, lastName, pid}) =>
@@ -791,12 +789,8 @@ const updateStudent = async (student) => {
 }
 
 const createStudent = async (student) => {
-  console.log("Student, straight from XLSX: ", student)
   const validated = util.validateModelData(student, schema.Student)
-  console.log("A")
   const model = new schema.Student(validated)
-  console.log(validated);
-  console.log("B")
   return await model.save()
 }
 

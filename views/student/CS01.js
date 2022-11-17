@@ -256,7 +256,7 @@ const descriptions = {
   ],
 
   stat435: [
-    strong('STAT 435:  Introduction to Probability (MATH 146):'),
+    strong('STAT 435:  Introduction to Probability (MATH 535):'),
     ' Introduction to mathematical theory of probability covering random variables, moments, binomial, Poisson, normal & related distributions, generating functions, sums & sequences of random variables, & statistical applications.'
   ],
 }

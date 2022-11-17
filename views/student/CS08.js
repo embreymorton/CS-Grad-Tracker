@@ -74,6 +74,7 @@ const cs08Form = (opts) => {
       div('The final draft to the primary reader must be delivered 4 weeks before the last day of classes of the semester in which the student plans to graduate.  We recommend that you work with the primary reader throughout the semester, first creating an outline, and then iterating over several drafts.'),
 
       readerDateRow(opts, editAccess, 'primary'),
+      vert,
       div('The final draft to the secondary reader must be delivered 2 weeks before the last day of classes of the semester in which the student plans to graduate.'),
       readerDateRow(opts, editAccess, 'secondary'), hr(),
 
@@ -176,6 +177,7 @@ const readerDateRow = (opts, editAccess, modifier) => {
 
 const approvalRow = (opts, modifier) => {
   const { form, isStudent } = opts
+  const vert = x('div.verticalSpace')()
   const readerField = `${modifier}Reader`
   const readerName = form[readerField]
   const dateField = `${modifier}DateSigned`
@@ -192,6 +194,9 @@ const approvalRow = (opts, modifier) => {
       colMd(6)(
         pseudoInput(readerName, `#${modifier}-pseudo`)
       ),
+    ),
+    vert,
+    row(
       !isStudent ?
       colMd(6)(
         x(`input#${dateField}Checkbox.pseudo-checkbox`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
@@ -205,8 +210,7 @@ const approvalRow = (opts, modifier) => {
       ),
     ),
     row(
-      colMd(6)(),
-      colMd(6)(
+      colMd(5)(
         x(`em#${dateField}Label`)(approvalLabel),
       )
     )

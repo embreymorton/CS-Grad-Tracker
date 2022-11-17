@@ -10,14 +10,14 @@ const otherkey = '_'
 /**
  * A component that lets you choose from a list of names for an approval signature. Automatically changes label
  * based on the date when the dropdown is changed.
- * @param {Boolean} editAccess whether user is an admin/faculty -> true, or a student -> false
+ * @param {Boolean} checkboxAccess whether user is an admin/faculty -> true, or a student -> false
  * @param {String} key represents the type of value being selected, also functions as an HTML element's `id` so it should be distinct
  * @param {[Object]} values a list of names to choose from, each object should be in form `{firstName: ..., lastName: ...}`
  * @param {Object} opts looks for {cspNone, form} where form is the query from the database
  * @param {Boolean} required whether the dropdown should be require or not to submit the form; true by default
  * @returns 
  */
-const signatureDropDown = (editAccess, key, values, opts, required = true) => {
+const signatureDropDown = (checkboxAccess, key, values, opts, required = true) => {
   const row = x('row')
   const col = (n) => (x(`div.col-md-${n}`))
   const vert = x('div.verticalSpace')()
@@ -26,7 +26,7 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   const dateName = `${key}DateSigned`
   const roValue = (name) => (pseudoInput(values[name]))
   const rwValue = (name) => (input('select', name, values[name], true))
-  const value = editAccess ? rwValue : roValue
+  const value = checkboxAccess ? rwValue : roValue
   const instructorSelected = opts.form[sigName]|| "";
   
   // list of dropdown options
@@ -53,7 +53,7 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
     `(${instructorSelected} approved on ${approvedDateMMDDYYYY}.)` :
     instructorSelected ? `(${instructorSelected || '(blank)'} has not yet approved.)` : '(None selected)'
   let dateInput
-  if (editAccess) {
+  if (checkboxAccess) {
     dateInput = col(5)(
       x(`input#${dateName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
       x(`input#${dateName}`)({type: "hidden", name: dateName, value: isApproved ? approvalDate.toString() : undefined}),
@@ -62,7 +62,7 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
   } else {
     dateInput = col(5)(
       pseudoCheckbox(isApproved),
-      x('em')(approvalLabel)
+      x(`em#${dateName}Label`)(approvalLabel),
     )
   }
 
@@ -70,7 +70,7 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
     x('.row')(
       col(6)(
         em('Please select the name of the approver:'),
-        !editAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select.form-control`)({value: instructorSelected, required: required ? true : null},
+        !checkboxAccess && isApproved ? pseudoInput(instructorSelected) : x(`select#${sigName}Select.form-control`)({value: instructorSelected, required: required ? true : null},
             options
         ),
       ),
@@ -82,67 +82,67 @@ const signatureDropDown = (editAccess, key, values, opts, required = true) => {
     vert,
     x('.row')(
       dateInput,
-      pageScript(opts, {editAccess, sigName, dateName})
+      pageScript(opts, {checkboxAccess, sigName, dateName})
     )
   ]
 }
 
 function pageScript(opts, initialState) { 
-    const { sigName, dateName, editAccess } = initialState;
+    const { sigName, dateName, checkboxAccess } = initialState;
     const el = x('script')({type: 'text/javascript'});
   
     el.innerHTML = //TODO: just remake this using new base components
     `
-    if (${editAccess}) {
-      // dropdown handler - updates the value in the value box and resets checkbox
-      document.getElementById('${sigName}Select')?.addEventListener('change', (e) => {
-        const instructorData = document.getElementById('${sigName}')
-        const otherLabel = document.getElementById('${sigName}OtherLabel')
-        const checkbox = document.getElementById('${dateName}Checkbox')
-        const dropdown = e.target
-  
-        if (checkbox) {
-          checkbox.checked = false
-        }
-  
-        if (dropdown.value === '${otherkey}') {
-          instructorData.type = 'text'
-          otherLabel.removeAttribute('hidden')
-        } else {
-          instructorData.type = 'hidden'
-          otherLabel.setAttribute('hidden', true)
-        }
-        
-        instructorData.value = dropdown.value === '${otherkey}' ? '' : dropdown.value
-        instructorData.dispatchEvent(new Event('change'))
-      })
-  
-      // checkbox handler
-      document.getElementById('${dateName}Checkbox')?.addEventListener('change', (e) => {
-        const instructorData = document.getElementById('${sigName}')
-        instructorData.dispatchEvent(new Event('change'))
-      })
-  
-      // value box handler
-      document.getElementById('${sigName}')?.addEventListener('change', (e) => {
-        const instructorData = e.target
-        const approvalLabel = document.getElementById('${dateName}Label')
-        const checkbox = document.getElementById('${dateName}Checkbox')
-        const checkboxLabel = document.getElementById('${dateName}Label')
-        const dateData = document.getElementById('${dateName}')
-  
-        instructorData.value = instructorData.value.trim()
-        const name = instructorData.value || '(blank)'
-        if (checkbox.checked) {
-          const now = new Date()
-          checkboxLabel.innerText = '(' + name + ' approved on ' + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + '.)';
-          dateData.setAttribute("value", now.toString());
-        } else {
-          checkboxLabel.innerText = '(' + name + ' has not yet approved.)';
-          dateData.removeAttribute("value");
-        }
-      })
-    }
+    // dropdown handler - updates the value in the value box and resets checkbox
+    document.getElementById('${sigName}Select')?.addEventListener('change', (e) => {
+      console.log('${sigName} changed')
+      const instructorData = document.getElementById('${sigName}')
+      const otherLabel = document.getElementById('${sigName}OtherLabel')
+      const checkbox = document.getElementById('${dateName}Checkbox')
+      const dropdown = e.target
+
+      if (checkbox) {
+        checkbox.checked = false
+      }
+
+      if (dropdown.value === '${otherkey}') {
+        instructorData.type = 'text'
+        otherLabel.removeAttribute('hidden')
+      } else {
+        instructorData.type = 'hidden'
+        otherLabel.setAttribute('hidden', true)
+      }
+      
+      instructorData.value = dropdown.value === '${otherkey}' ? '' : dropdown.value
+      instructorData.dispatchEvent(new Event('change'))
+    })
+
+    // checkbox handler
+    document.getElementById('${dateName}Checkbox')?.addEventListener('change', (e) => {
+      const instructorData = document.getElementById('${sigName}')
+      instructorData.dispatchEvent(new Event('change'))
+    })
+
+    // value box handler
+    document.getElementById('${sigName}')?.addEventListener('change', (e) => {
+      const instructorData = e.target
+      const approvalLabel = document.getElementById('${dateName}Label')
+      const checkbox = document.getElementById('${dateName}Checkbox')
+      const checkboxLabel = document.getElementById('${dateName}Label')
+      const dateData = document.getElementById('${dateName}')
+
+      instructorData.value = instructorData.value.trim()
+      const name = instructorData.value || '(blank)'
+      if (checkbox && checkbox.checked) {
+        const now = new Date()
+        checkboxLabel.innerText = '(' + name + ' approved on ' + (now.getMonth()+1) + "/" + now.getDate() + "/" + now.getFullYear() + '.)';
+        dateData.setAttribute("value", now.toString());
+      } else {
+        // student mode will always go through this
+        checkboxLabel.innerText = '(' + name + ' has not yet approved.)';
+        dateData?.removeAttribute("value");
+      }
+    })
     `;
     el.setAttribute('nonce', opts.cspNonce);
     return el
