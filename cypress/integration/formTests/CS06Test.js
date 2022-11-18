@@ -13,7 +13,6 @@ let CS06 = {
   dateEntered: `${yyyyMMDD}`,
   dissTitle: 'THE HISTORY OF A JEDI TURNED SITH',
   breadthCourseInfo: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  breadthCourseGrade: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
   concentrationCourseInfo: ['YOU', 'WERE' , 'MY', 'BROTHER'],
   concentrationCourseHours: ['6', '9' , '6', '9'],
   otherCourseInfo:  ['III', 'HATTTTEEE' , 'YOUUUUU', 'UUUUUU'],
@@ -42,8 +41,8 @@ let CS06Dropdowns = {
   PHDWrittenExam: 'false',
   PHDOralExam: 'true',
   approved: '',
+  breadthCourseGrade: ['A', 'F', 'D+', 'H', 'P+', 'L+'],
   breadthCourseCategory: ['S', 'A', 'O', 'T', 'T', 'T'],
-  breadthCourseGradeModifier: ['+', '-', '', '-', '+'],   
   comp915: 'taken',
 }
 

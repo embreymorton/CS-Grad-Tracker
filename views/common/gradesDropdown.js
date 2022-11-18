@@ -1,5 +1,5 @@
 const { dropdown, makeOption } = require('../common/baseComponents')
-const grades = ['H+','H-', 'P+','P-','L+','L-', 'F+', 'F-']
+const grades = ['H+', 'H', 'H-', 'P+', 'P', 'P-','L+', 'L', 'L-', 'F', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D']
 
 /**
  * 
@@ -14,7 +14,7 @@ const grades = ['H+','H-', 'P+','P-','L+','L-', 'F+', 'F-']
 const gradeDropdown = (name, value, isDisabled, {isRequired = true, placeholder = 'Select a grade from the dropdown'} = {}) => {
   return dropdown(
     name, 
-    grades.map((grade) => makeOption(grade, grade, value?.equals(grade))), 
+    grades.map((grade) => makeOption(grade, grade, value == grade)), 
     {
       isDisabled, 
       isRequired,

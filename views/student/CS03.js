@@ -13,11 +13,8 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
-<<<<<<< HEAD
 const {gradeDropdown} = require('../common/gradesDropdown')
-=======
 const { script } = require('../common/baseComponents')
->>>>>>> refs/remotes/origin/master
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -52,7 +49,7 @@ const mainContent = (opts) => {
 const cs03Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
   const editAccess = admin || isStudent
-  const { courseNumber, basisWaiver, breadthCourseGrade } = form
+  const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option, a, p, span } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
@@ -111,10 +108,7 @@ const cs03Form = (opts) => {
         colMd(2)(
           div('Grade*'),
           range6.map((i) => (
-            gradeDropdown('breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
-            //editAccess && !isComplete
-            //  ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
-            //  : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
+            gradeDropdown('grade', form.grade && form.grade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
           ))
         ),
         
