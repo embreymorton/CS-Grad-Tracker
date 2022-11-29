@@ -194,7 +194,7 @@ _.checkFormCompletion = (name, form) => {
                (form.selectedSection == 'industry' && form.advisorSignature) ||
                (form.selectedSection == 'alternative' && form.alt1DateSigned && form.alt2DateSigned)
     case 'SemesterProgressReport':
-      return form.hasDiscussed && form.academicRating && Number.isInteger(form.rataRating) // why in js is (null >= 0) ==> true
+      return form.academicDateSigned && form.academicRating && Number.isInteger(form.rataRating) && form.employmentDateSigned // why in js is (null >= 0) ==> true
     default:
       return false
   }
@@ -285,5 +285,7 @@ _.forceCrash = () => {
     });
   }
 }
+
+_.peer = (a, ...b) => {console.log(a, ...b); return a}
 
 module.exports = _
