@@ -13,7 +13,8 @@ const form1 = {
     // rataComments: '' // not required
   },
   check: {
-    hasDiscussed: true,
+    academicAdvisor: true,
+    employmentAdvisor: true,
     academicRating: '4',
     rataRating: '0'
   },

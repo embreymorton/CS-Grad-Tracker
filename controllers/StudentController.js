@@ -285,7 +285,7 @@ studentController.viewForm = async (req, res) => {
   }
   if (formName != null && _id != null && params.uploadSuccess != null && mongoose.isValidObjectId(_id)) {
     const faculty = await schema.Faculty.find({}).exec()
-    const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).sort('lastName firstName').exec()
     const viewer = await schema.Faculty.findOne({pid: req.session.userPID}).exec() // person who is currently looking at the form
     const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
@@ -418,7 +418,7 @@ studentController.viewMultiform = async (req, res) => {
 
   // building opts
   const faculty = await schema.Faculty.find({}).exec()
-  const activeFaculty = await schema.Faculty.find({active: true}).sort({lastName:1, firstName:1}).exec()
+  const activeFaculty = await schema.Faculty.find({active: true}).sort('lastName firstName').exec()
   const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
   const uploadSuccess = req.params.uploadSuccess === 'true'
   const result = await schema[formName].findOne({student: studentId, _id: formId }).exec()
@@ -800,41 +800,6 @@ const upsertStudent = async (student) => {
   return await upsert(student)
 }
 
-const syncValidateStudent = (element, index) => {
-  var semReg = /(SP|FA|S1|S2) \d{4}/
-  var commaReg = /\s*,\s*/
-
-  if (requiredFieldMissing(element)) {
-    return requiredFieldsMissingError(index, element)
-  }
-
-  if (element.advisor != null && element.otherAdvisor != null) {
-    return `${element.onyen} is incorrect. Must specify ONE advisor.`
-  }
-
-  if (element.researchAdvisor != null && element.otherResearchAdvisor != null) {
-    return `${element.onyen} is incorrect. Must specify ONE research advisor.`
-  }
-
-  if (element.semesterStarted != null && !semReg.test(element.semesterStarted.toUpperCase())) {
-    return `${element.semesterStarted} is incorrect. Semester must be in form SS YYYY.`
-  }
-
-  if (element.advisor && !commaReg.test(element.advisor)) {
-    return `${element.advisor} is incorrect. Advisor must be in form LASTNAME, FIRSTNAME (case does not matter).`
-  }
-
-  if (element.researchAdvisor && !commaReg.test(element.researchAdvisor)) {
-    return `${element.researchAdvisor} is incorrect. Research advisor must be in form LASTNAME, FIRSTNAME (case does not matter).`
-  }
-
-  return null
-}
-
-const syncFirstErrorString = (data) => (
-  data.map(syncValidateStudent).filter(string => string !== null)[0]
-)
-
 const lookupSemesterId = async (element) => {
   const [season1, year1] = element.semesterStarted.split(/\s+/)
   const season = season1.toUpperCase()
@@ -852,21 +817,14 @@ const lookupAllSemesterIds = async (data) =>
       ))
 
 const validateAdvisor = async (field, noun, element) => {
-  var commaReg = /\s*,\s*/
-  let lastName, firstName
-  if (commaReg.test(element[field])) {
-    const [lastName1, firstName1] = element[field].split(commaReg)
-    lastName = new RegExp(lastName1, 'i')
-    firstName = new RegExp(firstName1, 'i')
-  }
-
+  let [lastName, firstName] = element[field].split(', ')
   const advisor = await schema.Faculty.findOne({lastName, firstName}).exec()
 
   if (advisor != null) {
     element[field] = advisor._id
     return null
   } else {
-    return `${element[field]} is incorrect. ${noun} does not exist`
+    return `${element.firstName} ${element.lastName} has a(n) ${noun} that does not exist (${element[field]})`
   }
 }
 
@@ -874,10 +832,8 @@ const validateAdvisors = async (field, noun, data) =>
       (await Promise.all(
         data
           .filter((element) => element[field])
-          .map(async (element) => {
-            validateAdvisor(field, noun, element)
-          })
-      )).filter((string) => string !== null)[0]
+          .map((element) => validateAdvisor(field, noun, element))
+      )).filter((string) => string !== null)
 
 const validateOnyenAndPid = async (student) => {
   // should be either able to find somebody by BOTH onyen and pid or NEITHER,
@@ -887,16 +843,26 @@ const validateOnyenAndPid = async (student) => {
   const stud1 = await findStudentByOnyen(student)
   const stud2 = await findStudentByPid(student)
   if (stud1 == null && stud2 == null) return null // neither
-  return `${element.lastName} contains an onyen or pid that already exists.`
+  return `${element.firstName} ${element.lastName} contains an onyen or pid that is already used by another student.`
 }
 
 const validateOnyensAndPids = async (data) =>
       (await Promise.all(
         data.map(validateOnyenAndPid)
-      )).filter(string => string !== null)[0]
+      )).filter(string => string !== null)
 
 const validateUpload = async (data) => {
-  const expectedColumns = [
+  const requiredColumns = [ // fields all students are required to have
+    'onyen',
+    'csid',
+    'email',
+    'firstName',
+    'lastName',
+    'pid'
+  ]
+  const semReg = /(SP|FA|S1|S2) \d{4}/
+  const commaNameReg = /\s*,\s*/
+  const expectedColumns = [ // fields that can get pushed to the db
     'onyen',
     'csid',
     'email',
@@ -922,24 +888,49 @@ const validateUpload = async (data) => {
     'advisor',
     'researchAdvisor',
   ]
-  const actualColumns = Object.keys(data[0])
-  for (let i = 0; i < expectedColumns.length; i++) {
-    if (expectedColumns[i] !== actualColumns[i]) {
-      return `Column header #${i+1} should be named '${expectedColumns[i]}' but was named '${actualColumns[i]}'.`
+  const formatErrors = {} // note: the indexes are String(Number), not Number
+
+  // synchronous checks
+  data.forEach((student, i) => { // student = row of spreadsheet
+    const error = []
+    // make sure each student has every required fields
+    if (!requiredColumns.every((req_field) => Boolean(student[req_field]))) {
+      error.push(`Row ${i+1} is missing at least one of the required fields (${requiredColumns}).`)
     }
+
+    // check semesters
+    if (student.semesterStarted && !semReg.test(student.semesterStarted.toUpperCase())) {
+      error.push(`Row ${i+1}'s semesterStarted must be in the form "SS YYYY".`)
+    }
+
+    // check advisors
+    if (student.advisor && !commaNameReg.test(student.advisor)) {
+      error.push(`Row ${i+1}'s advisor must be in form "Lastname, Firstname".`)
+    }
+    if (student.researchAdvisor && !commaNameReg.test(student.researchAdvisor)) {
+      error.push(`Row ${i+1}'s researchAdvisor must be in form "Lastname, Firstname".`)
+    }
+
+    if (error.length > 0) {
+      formatErrors[i] = error
+    }
+  })
+
+  if (Object.keys(formatErrors).length > 0) {
+    const errorStrings = Object.entries(formatErrors).map(([row_i, error]) => error)
+    return {string: 'Formatting check failed. No changes have been made. The errors are listed below:', details: errorStrings.join('\n')}
   }
-  if (expectedColumns.length !== actualColumns.length) {
-    return `There should be ${expectedColumns.length} columns, but there were actually ${actualColumns.length}.`
+
+  // async checks and modifications
+  const lookupErrors = []
+  await lookupAllSemesterIds(data) // a side effect, oh well...
+  lookupErrors.push(...(await validateAdvisors('advisor', 'Advisor', data)))
+  lookupErrors.push(...(await validateAdvisors('researchAdvisor', 'Research advisor', data)))
+  lookupErrors.push(...(await validateOnyensAndPids(data)))
+
+  if (lookupErrors.length > 0) {
+    return {string: 'Validation failed: No changes have been made. The errors are listed below:', details: lookupErrors.join('\n')}
   }
-  let firstErrorString = syncFirstErrorString(data)
-  if (firstErrorString) return firstErrorString
-  lookupAllSemesterIds(data) // a side effect, oh well...
-  firstErrorString = await validateAdvisors('advisor', 'Advisor', data)
-  if (firstErrorString) return firstErrorString
-  firstErrorString = await validateAdvisors('researchAdvisor', 'Research advisor', data)
-  if (firstErrorString) return firstErrorString
-  firstErrorString = validateOnyensAndPids(data)
-  if (firstErrorString) return firstErrorString
   return null
 }
 
@@ -949,7 +940,7 @@ studentController.upload = (req, res) => {
     var workbook = XLSX.readFile(f.path, {cellDates: true, cellNF: true, cellText:false, raw: false})
     var worksheet = workbook.Sheets[workbook.SheetNames[0]]
     var data = XLSX.utils.sheet_to_json(worksheet, {raw: true, dateNF: 'YYYY-MM-DD', cellDates: true})
-        data.forEach(d => {
+    data.forEach(d => {
       Object.keys(d).forEach((key) => {
         if (d[key] instanceof Date) {
           d[key] = d[key].toISOString().split('T')[0]
@@ -957,10 +948,22 @@ studentController.upload = (req, res) => {
       })
     })
     const error = await validateUpload(data)
-    if (error) return res.render('../views/error.ejs', {string: error})
-    return Promise.all(data.map(upsertStudent))
-      .then(_ => res.redirect('/student/upload/true'))
-      .catch((string) => res.render('../views/error.ejs', {string}))
+    if (error) return res.render('../views/error.ejs', {...error})
+
+    const upsertStudentWithErrorStrings = async (student, i) => {
+      try {
+        await upsertStudent(student)
+        return null
+      } catch (err) {
+        return `${student.firstName} ${student.lastName} had ${err}`
+      }
+    }
+    const upsertErrors = (await Promise.all(data.map(upsertStudentWithErrorStrings))).filter(result => result !== null)
+    if (upsertErrors.length > 0) {
+      return res.render('../views/error.ejs', {string: 'Could not create/update the students below:', details: upsertErrors.join('\n')})
+    } else {
+      return res.redirect('/student/upload/true')
+    }
   })
 }
 

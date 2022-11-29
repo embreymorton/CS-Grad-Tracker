@@ -526,8 +526,10 @@ const semesterProgressReportSchema = mongoose.Schema({
   },
   altEmploymentAdvisor: String, // if this field has a value, ignore `employmentAdvisor` field
 
+  academicSignature: String, academicDateSigned: String,
+  employmentSignature: String, employmentDateSigned: String,
   // you must ensure that students are not allowed to see the following fields!
-  hasDiscussed: Boolean,
+  // hasDiscussed: Boolean,
   academicRating: {
     type: Number,
     min: 1,
