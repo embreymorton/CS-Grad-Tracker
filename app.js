@@ -211,6 +211,10 @@ else if (process.env.mode == 'testing') {
       }
     })
 
+    app.use(passport.initialize())
+    app.use(passport.session())
+  
+
     //add routes to allow user changes
     app.use('/changeUser', require('./routes/userChange'))
     app.use('/util/resetDatabaseToSnapshot', async (req, res) => {

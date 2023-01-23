@@ -46,7 +46,7 @@ const cs06Form = (opts) => {
   const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
-          breadthCourseDate, breadthCourseGrade, breadthCourseGradeModifier, concentrationCourseInfo,
+          breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
           concentrationCourseDate, concentrationCourseHours,
           otherCourseInfo, otherCourseHours, note, otherCourses, minor,
           backgroundPrepWorkSheet, programProductRequirement,
@@ -165,9 +165,6 @@ const cs06Form = (opts) => {
           div('Semester/Year*'),
           range6.map((i) => (
             semesterDropdown('breadthCourseDate', breadthCourseDate && breadthCourseDate[i], semesters, !editAccess || isComplete, {placeholder: 'None selected.'})
-            // editAccess && !isComplete
-            //   ? input('text', 'breadthCourseDate', breadthCourseDate && breadthCourseDate[i], true)
-            //   : pseudoInput(breadthCourseDate && breadthCourseDate[i])
           ))
         ),
 
@@ -175,9 +172,6 @@ const cs06Form = (opts) => {
           div('Grade*'),
           range6.map((i) => (
             gradeDropdown('breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
-            //editAccess && !isComplete
-            //  ? input('text', 'breadthCourseGrade', breadthCourseGrade && breadthCourseGrade[i], true)
-            //  : pseudoInput(breadthCourseGrade && breadthCourseGrade[i])
           ))
         ),
       ),

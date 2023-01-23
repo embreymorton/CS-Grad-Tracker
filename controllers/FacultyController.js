@@ -53,7 +53,7 @@ facultyController.post = async function (req, res) {
     if (student) {
       return res.render("../views/error.ejs", {string: "A student with this onyen, pid, or email address already exists."})
     }
-    input.onyen = input.onyen[0].toUpperCase()+input.onyen.toLowerCase().slice(1);
+    input.onyen = input.onyen.toLowerCase();
     input.firstName = input.firstName[0].toUpperCase()+input.firstName.toLowerCase().slice(1);
     input.lastName = input.lastName[0].toUpperCase()+input.lastName.toLowerCase().slice(1);
     var inputFaculty = new schema.Faculty(util.validateModelData(input, schema.Faculty))
@@ -64,7 +64,7 @@ facultyController.post = async function (req, res) {
     await inputFaculty.save()
       /*result of save function is the newly created faculty object, so
       access _id from result*/
-    res.redirect("/faculty/edit/"+result._id);
+    res.redirect("/faculty/edit/" + inputFaculty._id);
   }
   //if all of the fields are not provided throw this error
   else{

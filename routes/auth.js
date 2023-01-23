@@ -21,14 +21,20 @@ router.get('/callback', (req, res, next) => {
   })(req, res, next)
 })
 
-router.get('/logout', (req, res) => {
-  req.logout(callback => {})
-  const { AUTH0_DOMAIN, AUTH0_CLIENT_ID } = process.env
-  const logoutURL = new URL('https://' + AUTH0_DOMAIN + '/logout')
-  const client_id = AUTH0_CLIENT_ID
-  const returnTo = returnToURL(req)
-  logoutURL.search = querystring.stringify({client_id, returnTo})
-  res.redirect(logoutURL)
+router.get('/logout', (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      console.err('Logout had an error:', err)
+      return next(err)
+    } else {
+      const { AUTH0_DOMAIN, AUTH0_CLIENT_ID } = process.env
+      const logoutURL = new URL('https://' + AUTH0_DOMAIN + '/v2/logout')
+      const client_id = AUTH0_CLIENT_ID
+      const returnTo = returnToURL(req)
+      logoutURL.search = querystring.stringify({client_id, returnTo})
+      res.redirect(logoutURL)
+    }
+  })
 })
 
 const returnToURL = req => {

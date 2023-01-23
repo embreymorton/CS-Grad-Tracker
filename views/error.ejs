@@ -31,6 +31,13 @@
               document.getElementById('back-button-script').insertAdjacentElement('afterend', back)
             </script>
           <% } %>
+          <div>&nbsp;</div>
+          <% if (locals.details) { %>
+            <div class="jumbotron">
+              <h2>Detailed Log:</h2>
+              <pre><%=details%></pre>
+            </div>
+          <% } %>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { checkbox, dropdown, makeOption, radioSet, textarea, input, script } = require('../common/baseComponents')
 const { semesterDropdown } = require('../common/semesterDropdown')
+const viewerApprovalRow = require('../common/viewerApprovalRow')
 let complete = null
 
 const vert = x('div.verticalSpace')()
@@ -82,7 +83,7 @@ const progressReportForm = (opts) => {
   // making dropdown choices for the employment advisor
   const employmentAdvisorChoices = activeFaculty.map((faculty) => makeOption(
     faculty._id.toString(), 
-    faculty.fullName, 
+    faculty.lastFirst, 
     form.employmentAdvisor?._id.equals(faculty._id) // select from the faculty list the one with the corresponding id
   ))
   if (student.advisor) { // default option that is identical to selecting their normal advisor
@@ -105,7 +106,7 @@ const progressReportForm = (opts) => {
       div('Choose the semester you are filling this form for:'),
       row(
         colMd(6)(
-          semesterDropdown('semester', form.semester?._id, semesters, isComplete, {isRequired: isComplete})
+          semesterDropdown('semester', form.semester?._id, semesters, isComplete, {isRequired: true})
           // dropdown('semester', 
           //   semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, form.semester?._id.equals(semester._id))), 
           //   {
@@ -225,7 +226,7 @@ const textareaRow = (form, editAccess) => (label, name, width, required = true) 
 }
 
 const evaluationSection = (opts) => {
-  const { form, admin, student, isStudent, cspNonce } = opts
+  const { form, admin, student, isStudent, cspNonce, viewer } = opts
   const editAccess = admin || isStudent
   const textFrow = formRow(form, editAccess || !isStudent, 'text')
   const { hr, h2, h3, h4, div, b } = x
@@ -245,16 +246,7 @@ const evaluationSection = (opts) => {
     hr(),
     h4('For the academic advisor:'),
     rowCol(12,
-      'Q1. I have read the student progress report filled out by the student, and have discussed its contents with them.',
-      checkbox(
-        'hasDiscussed',
-        form.hasDiscussed,
-        cspNonce
-      )
-    ),
-    vert,
-    rowCol(12,
-      "Q2. How would you rate the student's progress on their 'academic' goals? Please refer to the recommended/typical timeline for major milestones.",
+      "Q1. How would you rate the student's progress on their 'academic' goals? Please refer to the recommended/typical timeline for major milestones.",
       radioSet(
         'academicRating',
         [
@@ -263,15 +255,28 @@ const evaluationSection = (opts) => {
           [2, '2: WEAK: The student made lower than expected progress, but the student and I have made a plan to remedy it.'],
           [1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.']
         ],
-        {currentValue: form.academicRating}
+        {currentValue: form.academicRating, isRequired: false, isDisabled: isStudent}
       ),
     ),
     vert,
     textFrow(
-      'Q3. Regarding your rating on the student\'s progress on their "academic" goals in the previous question, if you have additional comments, please enter them below.',
+      'Q2. Regarding your rating on the student\'s progress on their "academic" goals in the previous question, if you have additional comments, please enter them below.',
       'academicComments',
       8,
       false
+    ),
+    vert,
+    rowCol(12,
+      div('Academic Advisor Approval:'),
+      'Q3. I have read the student progress report filled out by the student, and have discussed its contents with them.',
+    ),
+    viewerApprovalRow(
+      'academicSignature',
+      'academicDateSigned',
+      form,
+      viewer,
+      cspNonce,
+      {signerTitle: 'Academic Advisor', isDisabled: isStudent}
     ),
     vert,
     hr,
@@ -290,7 +295,7 @@ const evaluationSection = (opts) => {
           [1, '1: Very Poor'],
           [0, 'N/A: Student did not work as an RA.']
         ],
-        {currentValue: form.rataRating}
+        {currentValue: form.rataRating, isRequired: false, isDisabled: isStudent}
       ),
     ),
     vert,
@@ -299,6 +304,19 @@ const evaluationSection = (opts) => {
       'rataComments',
       8,
       false
+    ),
+    vert,
+    rowCol(12,
+      div('Employment Advisor Approval:'),
+      'Q6. I have read the student progress report filled out by the student, and have discussed its contents with them.',
+    ),
+    viewerApprovalRow(
+      'employmentSignature',
+      'employmentDateSigned',
+      form,
+      viewer,
+      cspNonce,
+      {signerTitle: 'Employment Advisor', isDisabled: isStudent}
     ),
     vert,
     hr

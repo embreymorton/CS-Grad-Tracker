@@ -74,8 +74,8 @@ studentViewController.viewForm = async function (req, res) {
     return
   }
   if (formName != null && params.uploadSuccess != null) {
-    const faculty = await schema.Faculty.find({lastName: 1, firstName: 1}).exec()
-    const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const faculty = await schema.Faculty.find({}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).sort('lastName firstName').exec()
     const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const student = await schema.Student.findOne({ pid: session.userPID }).populate('advisor').populate('researchAdvisor').exec();
@@ -308,7 +308,7 @@ studentViewController.viewMultiform = async (req, res) => {
     }
     const form = result || {}
     const faculty = await schema.Faculty.find({lastName: 1, firstName: 1}).exec()
-    const activeFaculty = await schema.Faculty.find({active: true}).exec()
+    const activeFaculty = await schema.Faculty.find({active: true}).sort('lastName firstName').exec()
     const uploadSuccess = params.uploadSuccess == 'true'
     const semesters = await schema.Semester.find({}).sort({year: -1, season: 1}).exec()
     const isStudent = true
