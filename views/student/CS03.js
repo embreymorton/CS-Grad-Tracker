@@ -13,11 +13,8 @@ const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDropdown } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
-<<<<<<< HEAD
 const {gradeDropdown} = require('../common/gradesDropdown')
-=======
 const { script } = require('../common/baseComponents')
->>>>>>> refs/remotes/origin/master
 
 const main = (opts) => {
   const { uploadSuccess } = opts
