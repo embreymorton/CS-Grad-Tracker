@@ -294,7 +294,7 @@ const cs03Form = (opts) => {
       ),
 
       div(
-        {id: 'reason-section', hidden: form.approved || null},
+        {id: 'reason-section', hidden: hide(form.approve)},
         div('Reason for Disapproval:'),
         row(
           colMd(6)(
@@ -352,5 +352,11 @@ const namePidRow = (student) => {
     )
   )
 }
+
+function hide(arg) { 
+    if(arg === null || true){
+      return true;
+    }
+    else return false; }
 
 module.exports = main

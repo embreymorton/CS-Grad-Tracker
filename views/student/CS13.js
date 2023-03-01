@@ -38,7 +38,7 @@ const mainContent = (opts) => {
       { class: 'text-left' },
       div('Program Product Definition: A program product is a piece of software that is developed for the use of people other than the developer and that is expected to be used and maintained by other developers after the initial developer is no longer working on it.'),
       x('p.underline.text-center')(
-        br(), strong('Complete only the section that is most appropriate for your Program Product Requirement.'), br(),
+        br(), strong('Complete only the section that is most appropriate for your Program Product Requirement.'), br(),strong('You can expand the section relevant to you by clicking on the title.'),
       ),
       cs13Form(opts),
     )

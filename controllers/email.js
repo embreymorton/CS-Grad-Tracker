@@ -4,7 +4,7 @@ const htmlToText = require('nodemailer-html-to-text').htmlToText
 const _ = {}
 _._transporter = null
 
-_.testAccount = {user: "twila.schuppe@ethereal.email", pass: "pHj6reSvjuDsY4suFe"}
+_.testAccount = {user: "norris.ziemann@ethereal.email", pass: "v3tzrfwAcFM9Dzg4nq"}
 
 _.managerInfo = {
   name: "Kris Jordan",
@@ -84,6 +84,101 @@ _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
       <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
     `
   }
+}
+
+_.generatePhdAdvisorEmail = (studentInfo, advisorInfo, linkToForm, isApproved, reason) => {
+  if(isApproved == "Approved") {  return{
+    from: _.default.from,
+    to: `${advisorInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} PhD Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form CS06 (Ph.D. Program of Study). Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName} has approved their PhD Program of Study.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+  else {
+    return{
+    from: _.default.from,
+    to: `${advisorInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} PhD Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>Student ${studentInfo.firstName} ${studentInfo.lastName} submitted form CS06 (Ph.D. Program of Study). Their advisor is ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName} has disapproved their PhD Program of Study because of ${reason}.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+}
+_.generatePhdStudentEmail = (studentInfo, advisorInfo, linkToForm, isApproved, reason) => {
+  if(isApproved == "Approved") {  return{
+    from: _.default.from,
+    to: `${studentInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} PhD Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>Your advisor ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName} has approved your PhD Program of Study.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+  else {
+    return{
+    from: _.default.from,
+    to: `${studentInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} PhD Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>Your advisor ${studentInfo.advisor.firstName} ${studentInfo.advisor.lastName} has disapproved your PhD Program of Study because of ${reason}.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+}
+
+_.generatemsStudentEmail = (studentInfo, advisorInfo, linkToForm, isApproved, reason) => {
+  if(isApproved) {  return{
+    from: _.default.from,
+    to: `${studentInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>The Graduate Studies Committee has approved your M.S. Program of Study.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+  else {
+    return{
+    from: _.default.from,
+    to: `${studentInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study APPROVAL PROCESS Update `,
+    html: `
+    <p>The Graduate Studies Committee has disapproved your M.S. Program of Study because of ${reason}.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+}
+
+_.generatemsAdvisorEmail = (studentInfo, advisorInfo, linkToForm, isApproved, reason) => {
+  if(isApproved) {  return{
+    from: _.default.from,
+    to: `${advisorInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study APPROVAL PROCESS Update `,
+    html: `
+      <p>The Graduate Studies Committee has approved  ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
+  else {
+    return{
+    from: _.default.from,
+    to: `${advisorInfo.email}`,
+    subject: `[UNC-CS] ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study APPROVAL PROCESS Update `,
+    html: `
+    <p>The Graduate Studies Committee has disapproved  ${studentInfo.firstName} ${studentInfo.lastName} M.S. Program of Study because of ${reason}.</p>
+      <p>View the form here:</p>
+      <a href="${linkToForm}">${linkToForm}</a>
+    `
+    }}
 }
 
 const developerEmails = "kris@cs.unc.edu, pozefsky@cs.unc.edu, kekevi@live.unc.edu, abz@email.unc.edu, lamaab@email.unc.edu"

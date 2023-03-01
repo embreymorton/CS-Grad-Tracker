@@ -6,7 +6,7 @@ var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
 const { validateFormData, checkFormCompletion, linkHeader, isMultiform } = require("./util.js");
-const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
+const { send, generateApprovalEmail, generateSupervisorEmail, generatePhdAdvisorEmail } = require("./email");
 
 var studentViewController = {};
 
@@ -447,6 +447,7 @@ const sendEmails = async (student, formName, form, linkToForm) => {
     .join(', ')
   const advisorEmail = generateApprovalEmail(advisors, "Advisor", student, formName, linkToForm)
   const supervisorEmail = generateSupervisorEmail(student, formName, linkToForm)
+  const phpAdvisor = generatePhdAdvisorEmail(student, advisors[0], linkToForm, True)
   /**
    * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02
@@ -475,7 +476,7 @@ const sendEmails = async (student, formName, form, linkToForm) => {
       result = await send(advisorEmail)
       break
     case 'CS06':
-      result = await send(supervisorEmail) 
+      result = await send(phpAdvisor) 
       break
     case 'CS08': 
       const primaryEmail = await generateDropdownEmail("primarySignature", "Primary Reader")

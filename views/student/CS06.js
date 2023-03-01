@@ -57,6 +57,7 @@ const cs06Form = (opts) => {
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
   const range6 = [0, 1, 2, 3, 4, 5]
+  const hide = true
   const buttonAttrs = {
     type: 'button',
     'aria-pressed': 'false',
@@ -409,23 +410,40 @@ const cs06Form = (opts) => {
       colMd(4)(
         select(
           { name: 'approved', disabled: !admin || null },
-          option({ value: '' }, ''),
-          option({ value: 'Approved', selected: approved == 'Approved' || null }, 'Approved'),
-          option({ value: 'Disapproved', selected: approved == 'Disapproved' || null }, 'Disapproved'),
+          option({ value: ''}, ''),
+          option({ value: 'Approved', selected: approved == 'Approved' || null}, 'Approved'),
+          option({ value: 'Disapproved', selected: approved == 'Disapproved' || null}, 'Disapproved'),
         )
       ),
       hr(),
 
       row(
+        {id: 'reason-section', hidden: approved || null },
         colMd(4)(
           div('Reason for Disapproved and Needed Adjustments Stated Here '),
           x('textarea.form-control')(
             { rows: 6, name: 'reasonApproved', disabled: !admin || null },
             reasonApproved
-          )
-        )
-      ),
-      hr(),
+            ),hr(),)),
+      script(opts.cspNonce, 
+        `
+        document.querySelector('[name="approved"]').addEventListener('change', (e) => {
+          const reasonSection = document.getElementById('reason-section')
+          const reasonApproved = document.querySelector('[name="reasonApproved"]')
+          const value = e.target.value
+          console.log(value)
+          if (value != 'Disapproved') {
+            reasonSection.setAttribute('hidden', 'true')
+            reasonApproved.removeAttribute('required')
+          } else {
+            reasonSection.removeAttribute('hidden')
+            reasonApproved.setAttribute('required', 'true')
+          }
+        }) 
+        document.querySelector('[name="approved"]').dispatchEvent(new Event('change'))
+        `,
+        {defer: ''}),
+      
 
       // row(
       //   colMd(4)(
