@@ -360,8 +360,8 @@ studentController.updateForm = async function(req, res){
   if (req.params.title == 'CS03') {
     const advisorLink = `${linkHeader(req)}/student/forms/viewForm/${studentId}/CS03/false`
     const studentLink = `${linkHeader(req)}/studentView/forms/CS03/false`
-    const result = send(generatemsAdvisorEmail(student, student.advisor, advisorLink, form.approved, form.reasonApproved), 
-    generatemsStudentEmail(student, student.advisor, studentLink, form.approved, form.reasonApproved))
+    const result = send(generatemsAdvisorEmail(student, student.advisor, advisorLink, form.approved, form.approvalReason), 
+    generatemsStudentEmail(student, student.advisor, studentLink, form.approved, form.approvalReason))
     console.log(form.approved)
     if (result) {
       res.redirect(`/student/forms/viewForm/${studentId}/CS03/true`)
