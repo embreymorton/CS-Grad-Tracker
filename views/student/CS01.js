@@ -11,7 +11,10 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const { semesterDropdown } = require('../common/semesterDropdown')
+const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
+const baseComponents = require('../common/baseComponents')
+const { dropdown, makeOption, optionSet, script, dateInput, checkbox } = baseComponents
+const baseInput = baseComponents.input
 
 const main = (opts) => {
   const { uploadSuccess, formName} = opts
@@ -51,26 +54,29 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters } = opts
+  const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters, activeFaculty, cspNonce } = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row = formRow(admin || (isStudent && !isComplete), form, semesters)
+  const row = formRow(admin || (isStudent && !isComplete), form, activeFaculty, semesters, cspNonce)
+  const vert = x('div.verticalSpace')()
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', _id.toString()),
       namePidRow(student), hr(),
-      h3('Background Course Information'), x('.verticalSpace')(),
+      h3('Background Course Information'), x('.verticalSpace')(), semesterDatalist(8, 1),
 
       [ row('comp283'), hr() ],
       [ row('comp210'), hr() ],
       [ row('comp311'), hr() ],
       [ row('comp455'), hr() ],
 
+      x('.text-center.bold')('(Any two of the following three will suffice)'), 
+      vert,
       row('comp421'), x('.verticalSpace')(),
       row('comp520'), x('.verticalSpace')(),
       row('comp530'), x('.verticalSpace')(),
-      x('.text-center.bold')('(Any two of these three will suffice)'), hr(),
+      hr(),
 
       row('comp524'), hr(),
       row('comp541'), hr(),
@@ -126,27 +132,174 @@ const namePidRow = (student) => {
   )
 }
 
-const formRow = (writeAccess, values, semesters) => (key) => {
-  const { div } = x
+const formRow = (writeAccess, values, faculty, semesters, cspNonce) => (key) => {
+  const { div, label, hr } = x
+  const gRow = x('div.row.align-items-end') // a row with "gravity"
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
+  const descriptionFieldName = `${key}Description`
   const isRequired = !(['comp421', 'comp520', 'comp530'].includes(key))
-  const roValue = (name, type) => (pseudoInput(values[name]))
-  const rwValue = (name, type) => (input(`${type}`, name, values[name], isRequired))
-  const value = writeAccess ? rwValue : roValue
-  return (
+  return [
     row(
       colMd(4)(descriptions[key]),
-      colMd(4)(
+      colMd(8)(
         div('Covered by:'),
-        value(coveredFieldName, 'text'),
+        dropdown(coveredFieldName,
+          optionSet(
+            [
+              ['', 'Not covered'],
+              ['Course', 'Course'],
+              ['Independent Study', 'Independent Study'],
+              ['Work Experience', 'Work Experience'],
+              // ['Waiver', 'Waiver'], // used to have waiver
+            ], 
+            values[coveredFieldName]
+          ),
+          {
+            isRequired,
+          }
+        ),
+        row(
+          colMd(12)(
+            {id: 'coveredLine'},
+            hr()
+          )
+        ), 
+        // I think it might be better to generate all the input types rather than reactively generate them client-side
+        //      ---> it allows you to switch without having to retype too!
+        // instead, the script should just enable some types and disable the others
+        // NOTE: you can't en/disable divs, so you have to en/disable all the inputs within the div
+        //       however, you can hide divs! (through display: none)
+        gRow({id: `${key}CourseCovered`},
+          colMd(6)(
+            div('If not from UNC, list the school and course that covers this requirement:'),
+            baseInput(descriptionFieldName, values[descriptionFieldName], {
+              isDisabled: true,
+              isRequired: false,
+            })
+          ),
+          colMd(6)(
+            div('Semester Completed'),
+            // baseInput(dateFieldName, values[dateFieldName], {
+            //   isDisabled: true,
+            //   isRequired: false,
+            // })
+            semesterInput(dateFieldName, values[dateFieldName], {
+              isDisabled: true,
+              isRequired: false,
+              isSS_YYYY: false,
+              placeholder: 'Select or type semester/quarter.'
+            })
+          )
+        ),
+        gRow({id: `${key}IndependentCovered`},
+          colMd(6)(
+          div('Faculty Approval:'),
+            dropdown(descriptionFieldName, 
+              faculty.map((faculty) => makeOption(faculty.lastFirst, faculty.lastFirst, values[descriptionFieldName] == faculty.lastFirst)),
+              {
+                isDisabled: true,
+                isRequired: false,
+                blankOption: 'Select faculty that approved independent study.',
+              })
+          ),
+          colMd(6)(
+            div('Date'),
+            dateInput(dateFieldName, values[dateFieldName], {
+              isDisabled: true,
+              isRequired: false,
+            })
+          )
+        ),
+        gRow({id: `${key}WorkCovered`},
+          colMd(6)(
+            div('Company and Brief Description'),
+            baseInput(descriptionFieldName, values[descriptionFieldName], {
+              isDisabled: true,
+              isRequired: false,
+            })
+          ),
+          colMd(6)(
+            div('Dates'),
+            baseInput(dateFieldName, values[dateFieldName], {
+              isDisabled: true,
+              isRequired: false,
+            })
+          )
+        ),
+        gRow({id: `${key}WaiverCovered`},
+          colMd(12)(
+            div('Has CS-02 form been submitted?'),
+            checkbox(descriptionFieldName, values[descriptionFieldName] == 'CS-02 Is Submitted', cspNonce, 
+              {
+                isDisabled: writeAccess,
+                isInline: false,
+                isRequired: false,
+                overrideTrue: 'CS-02 Is Submitted',
+                overrideFalse: ''
+              })
+          )
+        ),
+        script(cspNonce, 
+          `
+          document.getElementById('select-${coveredFieldName}').addEventListener('change', (e) => {
+            const course = '${key}CourseCovered'
+            const independent = '${key}IndependentCovered'
+            const work = '${key}WorkCovered'
+            const waiver = '${key}WaiverCovered'
+            const disableSections = (...ids) => {
+              ids.forEach((id) => {
+                const section = document.getElementById(id)
+                if (!section) {console.log(id)}
+                else {
+                  section.style.display = 'none'
+                  section.querySelectorAll('input, select').forEach(input => input.setAttribute('disabled', ''))
+                }
+              })
+            }
+            const enableSection = (id) => {
+              const section = document.getElementById(id)
+              section.style.display = 'flex' // bootstrap rows are flexboxes
+              section.querySelectorAll('input, select').forEach(input => input.removeAttribute('disabled'))
+            }
+            switch (e.currentTarget.value) {
+              case 'Course': {
+                disableSections(independent, work, waiver)
+                enableSection(course)
+                document.getElementById('coveredLine').style.display = 'block'
+              }
+              break
+              case 'Independent Study': {
+                disableSections(course, work, waiver)
+                enableSection(independent)
+                document.getElementById('coveredLine').style.display = 'block'
+              }
+              break
+              case 'Work Experience': {
+                disableSections(course, independent, waiver)
+                enableSection(work)
+                document.getElementById('coveredLine').style.display = 'block'
+              }
+              break
+              case 'Waiver': {
+                disableSections(independent, work, course)
+                enableSection(waiver)
+                document.getElementById('coveredLine').style.display = 'block'
+              }
+              break
+              default: { // ie. ''
+                disableSections(course, independent, work, waiver)
+                document.getElementById('coveredLine').style.display = 'none'
+              }
+            }
+          })
+          document.getElementById('select-${coveredFieldName}').dispatchEvent(new Event('change'))
+          `,
+          {defer: ''}
+        )
       ),
-      colMd(4)(
-        div('Semester:'),
-        semesterDropdown(dateFieldName, values[dateFieldName], semesters, !writeAccess, {isRequired})
-      ),
-    )
-  )
+    ),
+  ]
 }
 
 const pageScript = (opts) => {
@@ -155,23 +308,22 @@ const pageScript = (opts) => {
   document.addEventListener('DOMContentLoaded', () => {
     const keys = ['comp421', 'comp520', 'comp530']
     const coveredInputs = keys.map((key) => document.getElementsByName(key + 'Covered')[0])
-    const dateInputs = keys.map((key) => document.getElementsByName(key + 'Date')[0])
     
     const inputChangeCheck = (event) => {
       if (event.submitter && event.submitter.id == "save-btn") {
         return
       }
 
-      const complete = coveredInputs.map((covered, i) => covered.value.length > 0 && dateInputs[i].value.length > 0)
+      const complete = coveredInputs.map((covered, i) => covered.value.length > 0)
       if (complete.reduce((prev, curr) => prev + (curr ? 1 : 0), 0) >= 2) { // number of completes
-        coveredInputs.concat(dateInputs).forEach((input) => input.required = false)
+        coveredInputs.forEach((input) => input.required = false)
         return true
       } else {
-        coveredInputs.concat(dateInputs).forEach((input) => input.required = true)
+        coveredInputs.forEach((input) => input.required = true)
         return false
       }
     }
-    coveredInputs.concat(dateInputs).forEach((input) => input.addEventListener('input', inputChangeCheck))
+    coveredInputs.forEach((input) => input.addEventListener('input', inputChangeCheck))
     document.getElementById('cs-form').onsubmit = inputChangeCheck
   })
   `

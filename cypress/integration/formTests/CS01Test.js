@@ -5,44 +5,65 @@ const approvedDate = new Date();
 const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;
 const actualApproved = new Date(approvedDateMMDDYYYY);
 
-let CS01 = {
-  comp283Covered: 'A',
-  comp210Covered: 'B',
-  comp311Covered: 'C',
-  comp455Covered: 'D',
-  comp421Covered: 'E',
-  comp520Covered: 'F',
-  comp530Covered: 'G',
-  comp524Covered: 'H',
-  comp541Covered: 'I',
-  comp550Covered: 'J',
-  math233Covered: 'K',
-  math381Covered: 'L',
-  math547Covered: 'M',
-  math661Covered: 'N',
-  stat435Covered: 'O',
-}
-
-let CS01cont = {
+const form1 = {
   select: {
-    comp283Date: 'FA 2022',
-    comp210Date: 'FA 2022',
-    comp311Date: 'FA 2022',
-    comp455Date: 'FA 2022',
-    comp421Date: 'FA 2022',
-    comp520Date: 'FA 2022',
-    comp530Date: 'FA 2022',
-    comp524Date: 'FA 2022',
-    comp541Date: 'FA 2022',
-    comp550Date: 'FA 2022',
-    math233Date: 'FA 2022',
-    math381Date: 'FA 2022',
-    math547Date: 'FA 2022',
-    math661Date: 'FA 2022',
-    stat435Date: 'FA 2022',
+    comp283Covered: 'Course',
+    comp210Covered: 'Independent Study',
+    comp311Covered: 'Work Experience',
+    comp455Covered: 'Course',
+    comp421Covered: 'Independent Study',
+    comp520Covered: 'Not covered',
+    comp530Covered: 'Work Experience',
+    comp524Covered: 'Course',
+    comp541Covered: 'Course',
+    comp550Covered: 'Course',
+    math233Covered: 'Course',
+    math381Covered: 'Course',
+    math547Covered: 'Course',
+    math661Covered: 'Course',
+    stat435Covered: 'Course',
   },
   check: {
-    studentSignature: true
+    studentSignature: true,
+    advisorSignature: true,
+  }
+}
+
+const form2 = {
+  text: {
+    comp283Description: 'NCSU - CSC 226',
+    comp283Date: '2001-01-01',
+
+    comp210Date: '2002-01-01',
+    comp311Description: 'Amazon - SDE 1',
+    comp311Date: '11/12/2022-12/20/2023',
+    comp455Description: 'COMP 455',
+    comp455Date: 'SP 2020',
+
+    comp421Date: '2003-01-01',
+    comp530Description: 'Apple - Hardware Engineer',
+    comp530Date: '1993-2004',
+    comp524Description: 'a course',
+    comp524Date: 'FA 2022',
+    comp541Description: 'a course',
+    comp541Date: 'FA 2022',
+    comp550Description: 'a course',
+    comp550Date: 'FA 2022',
+    math233Description: 'a course',
+    math233Date: 'FA 2022',
+    math381Description: 'a course',
+    math381Date: 'FA 2022',
+    math547Description: 'a course',
+    math547Date: 'FA 2022',
+    math661Description: 'a course',
+    math661Date: 'FA 2022',
+    stat435Description: 'a course',
+    stat435Date: 'FA 2022',
+  },
+  select: {
+    comp210Description: 'admin, admin',
+    comp421Description: 'admin, admin',
+
   }
 }
 
@@ -77,11 +98,11 @@ describe('Test CS01 submissions', ()=>{
     cy.get('.CS01').click();
     cy.contains(name)
     cy.contains(pid.toString())
-    util.fillCleanFormAsAdmin(CS01);
-    util.fillFormByDataCy(CS01cont)
+    util.fillFormByDataCy(form1)
+    util.fillFormByDataCy(form2)
     cy.get('.CS01-submit').click();
-    util.checkFormAsAdmin(CS01);
-    util.verifyFormByDataCy(CS01cont);
+    util.verifyFormByDataCy(form1);
+    util.verifyFormByDataCy(form2);
   })
 
   it('Submit CS01 form from student side, check to make sure values from admin submission are there', ()=>{
@@ -89,8 +110,11 @@ describe('Test CS01 submissions', ()=>{
     cy.visit('/studentView/forms/CS01/false')
     cy.contains(name)
     cy.contains(pid.toString())
-    util.fillFormAsStudent(CS01);
-    cy.get('.CS01-submit').click();
-    util.checkFormAsStudent(CS01);
+    delete form1.check.advisorSignature
+    util.fillFormByDataCy(form1)
+    util.fillFormByDataCy(form2)
+    cy.get('.CS01-submit').should('not.exist');
+    util.verifyFormByDataCy(form1);
+    util.verifyFormByDataCy(form2);
   });
 })

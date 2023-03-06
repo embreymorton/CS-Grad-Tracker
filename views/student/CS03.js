@@ -11,7 +11,7 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const { semesterDropdown } = require('../common/semesterDropdown')
+const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 const {gradeDropdown} = require('../common/gradesDropdown')
 const { script } = require('../common/baseComponents')
@@ -97,7 +97,14 @@ const cs03Form = (opts) => {
         ),
         colMd(2)(
           div('Semester'),
-          semesterDropdown('semester', form.semester && form.semester[i]?._id, semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'})
+          semesterInput(
+            'semester', 
+            form.semester && form.semester[i], {
+              isDisabled: !editAccess || isComplete, 
+              isRequired: false, 
+              isSS_YYYY: false,
+              placeholder: 'SS YYYY'
+          }),
         ),
         colMd(3)(
           div('Brief Title'),
@@ -121,6 +128,8 @@ const cs03Form = (opts) => {
         { action: postMethod, method: 'post' },
         input('hidden', 'student', student._id.toString()),
         namePidRow(student), hr(),
+        semesterDatalist(8),
+
         div(
           'Instructions:  This form details an individual program of study for the MS Degree.  It should be filed with the Student Services Manager when the program is substantially planned ',
           strong('(typically after two semesters)'),
@@ -198,12 +207,7 @@ const cs03Form = (opts) => {
           ),
           colMd(2)(
             div('Semester'),
-            range.map((i) => semesterDropdown('semester', form.semester && form.semester[i]?._id, semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'}))
-            // range.map((i) => (
-            //   editAccess && !isComplete
-            //     ? input('text', 'semester', form.semester && form.semester[i])
-            //     : pseudoInput(form.semester && form.semester[i])
-            // ))
+            range.map((i) => semesterInput('semester', form.semester && form.semester[i], {isDisabled: !editAccess || isComplete, isRequired: false, isSS_YYYY: false, placeholder: 'SS YYYY'})),
           ),
           colMd(3)(
             div('Brief Title'),

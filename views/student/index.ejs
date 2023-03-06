@@ -26,7 +26,7 @@
             <table align="center" border="1" class="table display-table table-striped table-bordered student-table">
               <thead>
                 <tr>
-                  <th scope="col" class="col-studentOnyen">Edit</th>
+                  <th scope="col" class="col-studentOnyen">View</th>
                   <th scope="col" class="col-studentOnyen">Onyen</th>
                   <th scope="col" class="col-studentFirstname">First name</th>
                   <th scope="col" class="col-studentLastname">Last Name</th>
@@ -40,10 +40,10 @@
                   <tr>
                     <td>
                       <div>
-                        <a href="/student/edit/<%=students[i]._id%>" class="fas fa-edit editColor edit-student-button">Edit</a>
+                        <a href="/student/edit/<%=students[i]._id%>" class="<%= admin ? 'fas fa-edit' : 'fas fa-solid fa-eye' %> editColor edit-student-button"><%= admin ? 'Edit' : 'View'%></a>
                       </div>
                     </td>
-                    <td >
+                    <td>
                         <%= students[i].onyen%>
                     </td>
 

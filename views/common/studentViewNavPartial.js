@@ -9,6 +9,7 @@ const studentViewNavPartial = (opts) => {
     li('student-jobs', '/studentView/jobs', 'Jobs'),
     li('student-forms', '/studentView/forms', 'Forms'),
     li('student-courses', '/studentView/courses', 'Courses'),
+    // li('student-documents', '/studentView/documents', 'Documents')
   )
 }
 

@@ -8,8 +8,8 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const { checkbox, dropdown, makeOption, radioSet, textarea, input, script } = require('../common/baseComponents')
-const { semesterDropdown } = require('../common/semesterDropdown')
+const { dropdown, makeOption, textarea, input, script, optionSet } = require('../common/baseComponents')
+const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
 const viewerApprovalRow = require('../common/viewerApprovalRow')
 let complete = null
 
@@ -102,11 +102,17 @@ const progressReportForm = (opts) => {
       { action: postMethod, method: 'post' },
       input('student', student._id.toString(), {isHidden: true}),
       namePidRow(opts, editAccess), 
+      semesterDatalist(5),
       hr(),
       div('Choose the semester you are filling this form for:'),
       row(
         colMd(6)(
-          semesterDropdown('semester', form.semester?._id, semesters, isComplete, {isRequired: true})
+          semesterInput('semester', form.semester, {
+            isDisabled: isComplete,
+            isRequired: true,
+            isSS_YYYY: true
+          }),
+          // semesterDropdown('semester', form.semester?._id, semesters, isComplete, {isRequired: true})
           // dropdown('semester', 
           //   semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, form.semester?._id.equals(semester._id))), 
           //   {
@@ -117,11 +123,11 @@ const progressReportForm = (opts) => {
         )
       ),
       hr(),
-      frow(div('Q1: What progress did you make this semester (or since your last progress report)? Please include any milestones completed, papers submitted, or other general progress made.'), 'progressMade', 8), 
+      frow(div('Q1: What progress did you make this semester (or since your last progress report)? Please include any milestones completed, papers submitted, or other general progress made.'), 'progressMade', 8, isStudent), 
       vert,
-      frow(div('Q2: What are your goals/plans for next semester (including summers)?'), 'goals', 8), 
+      frow(div('Q2: What are your goals/plans for next semester (including summers)?'), 'goals', 8, isStudent), 
       vert,
-      frow(div('Q3: List your prefrences for RA/TA positions next semester:'), 'rataPreferences', 8), 
+      frow(div('Q3: List your prefrences for RA/TA positions next semester:'), 'rataPreferences', 8, isStudent), 
       vert,
       row(colMd(6)(
         'Q4: If you are not employed by your main advisor for an RA/TA position, please select a different employment advisor from below:'
@@ -245,18 +251,21 @@ const evaluationSection = (opts) => {
     ),
     hr(),
     h4('For the academic advisor:'),
-    rowCol(12,
+    rowCol(8,
       "Q1. How would you rate the student's progress on their 'academic' goals? Please refer to the recommended/typical timeline for major milestones.",
-      radioSet(
+      dropdown(
         'academicRating',
-        [
-          [4, '4: EXCELLENT: The student\'s progress exceeds expectations.'],
-          [3, '3: FINE: The student made normal progress.'],
-          [2, '2: WEAK: The student made lower than expected progress, but the student and I have made a plan to remedy it.'],
-          [1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.']
-        ],
-        {currentValue: form.academicRating, isRequired: false, isDisabled: isStudent}
-      ),
+        optionSet([
+            ['NR', 'Not yet rated.'],
+            [4, '4: EXCELLENT: The student\'s progress exceeds expectations.'],
+            [3, '3: FINE: The student made normal progress.'],
+            [2, '2: WEAK: The student made lower than expected progress, but the student and I have made a plan to remedy it.'],
+            [1, '1: POOR: The student has not been making sufficient progress, and should be put on probation.']
+          ],
+          form.academicRating || -1
+        ),
+        {isRequired: false, isDisabled: isStudent}
+      )
     ),
     vert,
     textFrow(
@@ -282,20 +291,24 @@ const evaluationSection = (opts) => {
     hr,
     h4('For the employment advisor:'),
     rowCol(12,
-      b(form.altEmploymentAdvisor ? ` NOTE: You, ${student.advisor.fullName}, must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
+      b(form.altEmploymentAdvisor ? `⚠️ NOTE: You, ${student.advisor.fullName}, must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
     ),
-    rowCol(12,
+    rowCol(8,
       "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",
-      radioSet(
+      dropdown(
         'rataRating',
-        [
-          [4, '4: Very Good'],
-          [3, '3: Good'],
-          [2, '2: Poor'],
-          [1, '1: Very Poor'],
-          [0, 'N/A: Student did not work as an RA.']
-        ],
-        {currentValue: form.rataRating, isRequired: false, isDisabled: isStudent}
+        optionSet(
+          [
+            ['NR', 'Not yet rated.'],
+            [4, '4: Very Good'],
+            [3, '3: Good'],
+            [2, '2: Poor'],
+            [1, '1: Very Poor'],
+            ['NA', 'N/A: Student did not work as an RA.'],
+          ],
+          form.rataRating == 0 ? 0 : form.rataRating || -1
+        ),
+        {isRequired: false, isDisabled: isStudent}
       ),
     ),
     vert,

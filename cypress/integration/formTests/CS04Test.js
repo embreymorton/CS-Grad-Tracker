@@ -4,12 +4,29 @@ import util from './formUtil';
 const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
-let CS04 = {
-  projectDescription: 'ASDF',
+const form1a = {
+  check: {
+    majorityCompleted: true,
+    satisfiesComprehensiveWriting: false,
+  },
+  text: {
+    projectDescription: 'a project that is not great',
+  },
+  select: {
+    docProprietary: 'Yes. A non-disclosure agreement is attached.'
+  }
 }
 
-let CS04Dropdowns = {
-  docProprietary: 'false',
+const form1b = {
+  select: {
+    approved: 'Disapproved'
+  },
+  text: {
+    approvalReason: 'because it\'s bad.'
+  },
+  check: {
+    advisorSignature: true
+  }
 }
 
 describe('Test CS04 submissions', ()=>{
@@ -33,20 +50,6 @@ describe('Test CS04 submissions', ()=>{
     cy.get('.btn-success').click()
   })
   
-  it('Submit CS04 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
-    cy.visit('/changeUser/admin');
-    util.visitFormAsAdmin();
-    cy.get('.CS04').click();
-    cy.contains(name)
-    cy.contains(pid.toString())
-    util.fillCleanFormAsAdmin(CS04);
-    util.selectDropdowns(CS04Dropdowns);
-    cy.get('.CS04-submit').click();
-    util.checkFormAsAdmin(CS04);
-    util.checkDropdowns(CS04Dropdowns);
-  })
-
   it('Submit CS04 form from student side', ()=>{
     cy.visit('/changeUser/student');
     cy.visit('/studentView/forms/CS04/false')
@@ -54,8 +57,20 @@ describe('Test CS04 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
   
-    util.fillFormAsStudent(CS04);
+    util.fillFormByDataCy(form1a)
+    cy.get('.CS04-submit').click()
+  })
+
+  it('Submit CS04 form from administrator side', ()=>{
+    cy.visit('/changeUser/student');
+    cy.visit('/changeUser/admin');
+    util.visitFormAsAdmin();
+    cy.get('.CS04').click();
+    cy.contains(name)
+    cy.contains(pid.toString())
+    util.verifyFormByDataCy(form1a)
+    util.fillFormByDataCy(form1b)
     cy.get('.CS04-submit').click();
-    util.checkFormAsStudent(CS04);
-  });
+  })
+
 })

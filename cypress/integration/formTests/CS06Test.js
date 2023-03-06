@@ -29,7 +29,7 @@ let CS06cont = {
     chairSignature: true,
     directorSignature: true,
   },
-  select: {
+  text: {
     breadthCourseDate: ['FA 2020', 'FA 2020' ,'FA 2020' , 'FA 2020', 'FA 2020', 'FA 2020'],
     concentrationCourseDate:  ['FA 2020', 'FA 2020' , 'FA 2020', 'FA 2020'], 
   }

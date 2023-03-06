@@ -110,6 +110,23 @@ const makeOption = (value, text, isSelected = false, isHidden = false, attrs = {
 )
 
 /**
+ * Creates an array of option elements accepting a list of options as a value-label pair like radio set.
+ * @param {*} valueLabelList - a list in the form: [[value0, labelText0], [value1, labelText1], ...]
+ * @param {*} currentValue 
+ * @returns 
+ */
+const optionSet = (valueLabelList, currentValue) => valueLabelList.map((pair) => makeOption(pair[0], pair[1], pair[0] == currentValue))
+
+/**
+ * Creates a datalist object to be attached inputs to turn it into a combobox.
+ * Note: attach to an input of any type by adding attribute list, eg. `<input list="id-of-datalist-here">`
+ * @param {String} id of datalist
+ * @param {*} valueLabelList - a list in the form: [[value0, labelText0], [value1, labelText1], ...]
+ * @returns 
+ */
+const datalist = (id, valueLabelList) => x(`datalist#${id}`)(valueLabelList.map((pair) => makeOption(pair[0], pair[1])))
+
+/**
  * Creates a radio button with proper styling.
  * @param {String} name matches a field name on the form's schema
  * @param {*} value
@@ -132,6 +149,23 @@ const makeOption = (value, text, isSelected = false, isHidden = false, attrs = {
     x(`input.form-check-input.check-radio#radio-${name}-${value}`)({name, value, type: 'radio', ...datacy(name, subcomp), ...checked, ...disabled, ...required, ...attrs}),
     x(`label.form-check-label`)({for: `radio-${name}-${value}`}, label)
   )
+}
+
+/**
+ * A button that unchecks all the radio buttons with this `name` attribute.
+ * @param {*} name 
+ * @param {*} nonce
+ * @param {*} label 
+ */
+const radioReset = (name, nonce, label = 'Reset Selection') => {
+  return [x('div.form-check.form-radio')(
+    x(`button.btn.btn-secondary#reset-radio-${name}`)({type: 'button'}, label)
+  ),
+  script(nonce, 
+    `document.getElementById('reset-radio-${name}').addEventListener('click', () => {
+      document.querySelectorAll('input[name="${name}"]:checked').forEach((radio) => radio.checked = false)
+    })`  
+  )]
 }
 
 /**
@@ -162,6 +196,25 @@ const input = (name, value, {isDisabled = false, isRequired = true, isHidden = f
   if (subcomp) name = null
 
   return x(`input.form-control#input-${name}`)({type, name, value, ...datacy(name, subcomp), ...required, ...disabled, ...attrs, placeholder})
+}
+
+/**
+ * Create a date picker input formatted as ISO8601 (YYYY-MM-DD)
+ * @param {String} name matches a field name on the form's schema, an id of `input-${name}` will also be set
+ * @param {*} value - initial value the input should have
+ * @param {Boolean} isDisabled
+ * @param {Boolean} isRequired defaults true 
+ * @param {Boolean} isHidden defaults false
+ * @param {String} min earliest selectable date in ISO8601 format
+ * @param {String} max latest selectable date in ISO8601 format
+ * @param {String} placeholder hint text for input
+ * @param {Object} attrs addtional attributes
+ */
+const dateInput = (name, value, {isDisabled = false, isRequired = true, isHidden = false, min='', max='', placeholder = '', subcomp = false, attrs = {}} = {}) => {
+  const disabled = isDisabled ? { disabled: '' } : {}
+  const required = isRequired ? { required: '' } : {}
+  if (subcomp) name = null
+  return x(`input.form-control#dateInput-${name}`)({type: 'date', name, value, min, max, ...datacy(name, subcomp), ...required, ...disabled, ...attrs, placeholder})
 }
 
 /**
@@ -197,4 +250,4 @@ const script = (nonce, scriptBody, attributes = {}) => {
   return script
 }
 
-module.exports = { checkbox, script, dropdown, makeOption, radio, radioSet, input, textarea }
+module.exports = { checkbox, script, dropdown, makeOption, optionSet, datalist, radio, radioSet, radioReset, input, dateInput, textarea }

@@ -34,7 +34,7 @@ const approvalCheckbox = (editAccess, signer, opts) => {
     return ( // advisor/faculty's view 
       x('.row')(
         col(5)(
-          x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined}),
+          x(`input#${signerName}Checkbox.form-control`)({type: "checkbox", checked: isApproved ? "checked" : undefined, 'data-cy': signerName}),
           x(`em#${signerName}Label`)(approvalLabel),
           // creates a hidden text box with the same value as the checkbox so that it will send on form submission
           x(`input#${signerName}`)({type: "hidden", name: signerName, value: isApproved ? true : false}), // force true/false as cannot be undefined.

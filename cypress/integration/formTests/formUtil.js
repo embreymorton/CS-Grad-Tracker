@@ -65,7 +65,7 @@ const cyGetApply = (selector, values, method, makeArgs) => {
   if (Array.isArray(values)) {
     cy.get(selector).each(($el, i, $list) => i < values.length && cy.wrap($el)[method](...makeArgs(values[i]))) // quick ends loop when i >= value.length (by returning false)
   } else {
-    cy.get(selector)[method](...makeArgs(values))
+    cy.get(selector).filter(':visible')[method](...makeArgs(values))
   }
 }
 
@@ -89,13 +89,15 @@ text: {
   'name-2': 'hello'
 }
 ```
+If multiple elements have the same corresponding `data-cy` attribute, give an array of values in the order that the elements
+appear on the page, e.g.:
+```js
+text: {
+  'names': ['John', 'Jane', 'Judy']
+}
+```
  */
 util.fillFormByDataCy = (formData) => {
-  Object.entries(formData.text || {}).forEach(([name, value]) => {
-    cyGetApply(`[data-cy="${name}"]`, value, 'clear', () => [])
-    cyGetApply(`[data-cy="${name}"]`, value, 'type', (val) => [val])
-  })
-
   Object.entries(formData.check || {}).forEach(([name, value]) => {
     const datacy = `[data-cy="${name}"]`
     if (value === false) {
@@ -106,9 +108,14 @@ util.fillFormByDataCy = (formData) => {
       cyGetApply(datacy, value, 'check', (val) => [val])
     }
   })
-
+  
   Object.entries(formData.select || {}).forEach(([name, value]) => {
     cyGetApply(`[data-cy="${name}"]`, value, 'select', (val) => [val])
+  })
+  
+  Object.entries(formData.text || {}).forEach(([name, value]) => {
+    cyGetApply(`[data-cy="${name}"]`, value, 'clear', () => [])
+    cyGetApply(`[data-cy="${name}"]`, value, 'type', (val) => [val])
   })
 }
 

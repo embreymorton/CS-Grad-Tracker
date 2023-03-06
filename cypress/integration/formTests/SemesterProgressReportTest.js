@@ -10,16 +10,16 @@ const form1 = {
     goals: 'Not fail.',
     rataPreferences: 'COMP 110',
     academicComments: 'great grades',
+    semester: 'FA 2019'
     // rataComments: '' // not required
   },
   check: {
     academicSignature: true,
     employmentSignature: true,
-    academicRating: '4',
-    rataRating: '0'
   },
   select: {
-    semester: 'FA 2019'
+    academicRating: "4: EXCELLENT: The student's progress exceeds expectations.",
+    rataRating: 'N/A: Student did not work as an RA.'
   }
 }
 
@@ -27,9 +27,7 @@ const form2 = {
   text: {
     progressMade: 'I went to class at least once.',
     goals: 'Not fail again.',
-    rataPreferences: 'COMP 995'
-  },
-  select: {
+    rataPreferences: 'COMP 995',
     semester: 'FA 2019'
   }
 }
@@ -77,7 +75,7 @@ describe('Test Semester Progress Report Submissions', () => {
   it('Submit form from student side', () => {
     cy.visit('/changeUser/student')
     cy.visit('/studentView/forms/SemesterProgressReport/false')
-    cy.contains(form1.select.semester) 
+    cy.contains(form1.text.semester) 
     cy.contains('✅') // ensure the previously submitted form is marked as completed
     cy.contains('View').click()
 
@@ -97,7 +95,7 @@ describe('Test Semester Progress Report Submissions', () => {
     cy.get('#save-btn').click()
     cy.contains('already exists')
     cy.go('back')
-    cy.get('[data-cy="semester"]').select('SP 2019')
+    cy.get('[data-cy="semester"]').type('SP 2019')
     cy.get('#save-btn').click()
   })
 })

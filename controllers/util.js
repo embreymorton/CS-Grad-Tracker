@@ -194,7 +194,7 @@ _.checkFormCompletion = (name, form) => {
                (form.selectedSection == 'industry' && form.advisorSignature) ||
                (form.selectedSection == 'alternative' && form.alt1DateSigned && form.alt2DateSigned)
     case 'SemesterProgressReport':
-      return form.academicDateSigned && form.academicRating && Number.isInteger(form.rataRating) && form.employmentDateSigned // why in js is (null >= 0) ==> true
+      return form.academicDateSigned && form.employmentDateSigned // why in js is (null >= 0) ==> true
     default:
       return false
   }

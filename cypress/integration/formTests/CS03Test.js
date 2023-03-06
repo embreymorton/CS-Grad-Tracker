@@ -28,12 +28,14 @@ let CS03Dropdowns = {
 
 let CS03cont = {
   select: {
-    semester: ['FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022', 'FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022'],
     grade: ['P', 'L', 'F'],
   },
   check: {
     studentSignature: true,
     directorSignature: true,
+  },
+  text: {
+    semester: ['FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022', 'FA 2018', 'SP 2019', 'S1 2020', 'S2 2021', 'FA 2022'],
   }
 }
 

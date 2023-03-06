@@ -353,24 +353,24 @@ var noteSchema = mongoose.Schema({
 })
 
 //form schemas
-
+const CS01CoveredType = {type: String, enum: ['', 'Course', 'Independent Study', 'Work Experience'], default: ''}
 var CS01Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
-  comp283Covered: String, comp283Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp210Covered: String, comp210Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp311Covered: String, comp311Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp455Covered: String, comp455Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp421Covered: String, comp421Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp520Covered: String, comp520Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp530Covered: String, comp530Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp524Covered: String, comp524Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp541Covered: String, comp541Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  comp550Covered: String, comp550Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  math233Covered: String, math233Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  math381Covered: String, math381Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  math547Covered: String, math547Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  math661Covered: String, math661Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
-  stat435Covered: String, stat435Date: {type: mongoose.Schema.Types.ObjectId, ref: 'Semester'},
+  comp283Covered: CS01CoveredType, comp283Description: String, comp283Date: String,
+  comp210Covered: CS01CoveredType, comp210Description: String, comp210Date: String,
+  comp311Covered: CS01CoveredType, comp311Description: String, comp311Date: String,
+  comp455Covered: CS01CoveredType, comp455Description: String, comp455Date: String,
+  comp421Covered: CS01CoveredType, comp421Description: String, comp421Date: String,
+  comp520Covered: CS01CoveredType, comp520Description: String, comp520Date: String,
+  comp530Covered: CS01CoveredType, comp530Description: String, comp530Date: String,
+  comp524Covered: CS01CoveredType, comp524Description: String, comp524Date: String,
+  comp541Covered: CS01CoveredType, comp541Description: String, comp541Date: String,
+  comp550Covered: CS01CoveredType, comp550Description: String, comp550Date: String,
+  math233Covered: CS01CoveredType, math233Description: String, math233Date: String,
+  math381Covered: CS01CoveredType, math381Description: String, math381Date: String,
+  math547Covered: CS01CoveredType, math547Description: String, math547Date: String,
+  math661Covered: CS01CoveredType, math661Description: String, math661Date: String,
+  stat435Covered: CS01CoveredType, stat435Description: String, stat435Date: String,
   studentSignature: Boolean, studentDateSigned: String,
   advisorSignature: Boolean, advisorDateSigned: String
 })
@@ -390,10 +390,7 @@ var CS03Schema = mongoose.Schema({
   dept: [String],
   course: [String],
   hours: [Number],
-  semester: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Semester'
-  },
+  semester: [String],
   title: [String], // this and above should be length 13
   grade: [String], // should be length 3
   gradeModifier: [String], // should also be length 3
@@ -416,7 +413,10 @@ var CS04Schema = mongoose.Schema({
   projectDescription: String,
   docProprietary: Boolean,
   advisorSignature: Boolean, advisorDateSigned: String,
-  approved: Boolean
+  majorityCompleted: Boolean,
+  satisfiesComprehensiveWriting: Boolean,
+  approved: Boolean,
+  approvalReason: String
 })
 
 var CS06Schema = mongoose.Schema({
@@ -430,17 +430,11 @@ var CS06Schema = mongoose.Schema({
   },
   breadthCourseCategory: [String],
   breadthCourseInfo: [String],
-  breadthCourseDate: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Semester'
-  },
+  breadthCourseDate: [String],
   breadthCourseGrade: [String],
   breadthCourseGradeModifier: [String],
   concentrationCourseInfo: [String],
-  concentrationCourseDate: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Semester'
-  },
+  concentrationCourseDate: [String],
   concentrationCourseHours: [Number],
   otherCourseInfo: [String],
   otherCourseHours: [Number],
@@ -497,8 +491,7 @@ const semesterProgressReportSchema = mongoose.Schema({
     required: true
   },
   semester: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Semester',
+    type: String,
     validate: {
       validator: async function(v) {
         if (this.student) {
@@ -531,28 +524,21 @@ const semesterProgressReportSchema = mongoose.Schema({
   // you must ensure that students are not allowed to see the following fields!
   // hasDiscussed: Boolean,
   academicRating: {
-    type: Number,
-    min: 1,
-    max: 4,
-    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+    type: String,
+    default: 'NR', // Not Rated
+    enum: ['NR', 1, 2, 3, 4],
   },
   academicComments: String,
   rataRating: {
-    type: Number,
-    min: 0,
-    max: 4,
-    validator: (v) => Number.isInteger(v) ? false : 'Rating must be an integer.'
+    type: String,
+    default: 'NR',
+    enum: ['NR', 'NA', 1, 2, 3, 4],
   },
   rataComments : String,
 })
-semesterProgressReportSchema.virtual('semesterString', {
-  ref: 'Semester',
-  localField: 'semester',
-  foreignField: '_id',
-  justOne: true
-}).get(function () {
+semesterProgressReportSchema.virtual('semesterString').get(function () {
   if (this.semester) {
-    return this.semester.semesterString
+    return this.semester
   }
   return 'Unspecified semester'
 })
