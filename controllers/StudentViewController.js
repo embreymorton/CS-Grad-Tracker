@@ -6,7 +6,7 @@ var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
 const { validateFormData, checkFormCompletion, linkHeader, isMultiform } = require("./util.js");
-const { send, generateApprovalEmail, generateSupervisorEmail } = require("./email");
+const { send, generateApprovalEmail, generateSupervisorEmail, generatePhdAdvisorEmail } = require("./email");
 
 var studentViewController = {};
 
@@ -472,7 +472,7 @@ const sendEmails = async (student, formName, form, linkToForm) => {
       result = await send(advisorEmail, supervisorEmail) 
       break
     case 'CS04':
-      result = await send(advisorEmail)
+      result = await send(advisorEmail, supervisorEmail)
       break
     case 'CS06':
       result = await send(supervisorEmail) 

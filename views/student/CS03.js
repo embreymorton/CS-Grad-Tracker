@@ -84,7 +84,7 @@ const cs03Form = (opts) => {
             : pseudoInput(form.dept && form.dept[i])
         ),
         colMd(2)(
-          div('Course'),
+          div('Course Number'),
           editAccess && !isComplete
             ? input('text', 'course', form.course && form.course[i])
             : pseudoInput(form.course && form.course[i])
@@ -298,7 +298,7 @@ const cs03Form = (opts) => {
       ),
 
       div(
-        {id: 'reason-section', hidden: form.approved || null},
+        {id: 'reason-section', hidden: hide(form.approve)},
         div('Reason for Disapproval:'),
         row(
           colMd(6)(
@@ -323,6 +323,7 @@ const cs03Form = (opts) => {
               approvalReason.setAttribute('required', 'true')
             }
           })
+          document.querySelector('[name="approved"]').dispatchEvent(new Event('change'))
           `,
           {defer: ''})
       ),
@@ -356,5 +357,11 @@ const namePidRow = (student) => {
     )
   )
 }
+
+function hide(arg) { 
+    if(arg === null || true){
+      return true;
+    }
+    else return false; }
 
 module.exports = main

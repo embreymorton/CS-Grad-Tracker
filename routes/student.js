@@ -19,7 +19,7 @@ function authorizeFaculty(req, res, next){
   if(req.session.accessLevel >= 2){
     next();
   }
-  else{
+  else {
     res.render("../views/error.ejs", {string: "Not faculty"});
   }
 }
@@ -47,6 +47,14 @@ function setActiveStudentsQuery(req, res, next) {
     const originalQueries = req.query
     const queries = Object.keys(originalQueries).map(key => `${key}=${originalQueries[key]}`).join('&')
     res.redirect("/student?" + queries + "&status=Active")
+  }
+}
+
+function redirectStudents(req, res, next) {
+  if (req.session.accessLevel <= 1) {
+    res.redirect(`/studentView/${req.url.split('/')[1]}/${req.params.title}/false`)
+  } else {
+    next()
   }
 }
 
@@ -94,7 +102,7 @@ router.get("/courses/:_id", authorizeAdvisor, student.courses);
 
 router.get("/uploadCourses/:uploadSuccess", authorizeAdmin, student.uploadCoursePage);
 
-router.get("/forms/viewForm/:_id/:title/:uploadSuccess", authorizeFaculty, student.viewForm);
+router.get("/forms/viewForm/:_id/:title/:uploadSuccess", redirectStudents, authorizeFaculty, student.viewForm);
 
 /*
 It is "bad" practice to theoretically allow any faculty to update any students'
@@ -107,7 +115,7 @@ router.post("/forms/update/:_id/:title", authorizeFaculty, student.updateForm);
 router.post("/forms/save/:_id/:title", authorizeFaculty, student.updateForm); // submit button is currently same as save button for faculty
 
 // multiforms
-router.get("/multiforms/:_id/:formName", authorizeAdvisor, student.formVersions);
+router.get("/multiforms/:_id/:formName", redirectStudents, authorizeAdvisor, student.formVersions);
 
 router.get("/multiforms/view/:_id/:formName/:formId/:uploadSuccess", authorizeFaculty, student.viewMultiform);
 

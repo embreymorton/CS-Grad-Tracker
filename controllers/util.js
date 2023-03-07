@@ -186,7 +186,7 @@ _.checkFormCompletion = (name, form) => {
     case 'CS04':
       return form.advisorSignature // according to trello #268
     case 'CS06':
-      return form.approved
+      return form.directorSignature
     case 'CS08': 
       return form.primaryDateSigned && form.secondaryDateSigned
     case 'CS13':
@@ -246,7 +246,6 @@ _.validateFormData = (formData, formName) => { // TODO: divide this by formName 
     'approvalReason',
     'chairSignature',
     'chairDateSigned',
-    'reasonApproved',
     'primaryDateSigned',
     'secondaryDateSigned',
     'comp523DateSigned',

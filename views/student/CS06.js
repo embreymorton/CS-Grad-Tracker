@@ -10,10 +10,10 @@ const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
-const { semesterDropdown } = require('../common/semesterDropdown')
+const { semesterInput, semesterDatalist } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 const {gradeDropdown} = require('../common/gradesDropdown')
-const { script } = require('../common/baseComponents')
+const { script, dropdown, makeOption, textarea } = require('../common/baseComponents')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -43,7 +43,7 @@ const mainContent = (opts) => {
 }
 
 const cs06Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer, cspNonce} = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
           breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
@@ -51,7 +51,7 @@ const cs06Form = (opts) => {
           otherCourseInfo, otherCourseHours, note, otherCourses, minor,
           backgroundPrepWorkSheet, programProductRequirement,
           PHDWrittenExam, PHDOralExam, committee, advisor, chairman,
-          approved, reasonApproved } = form
+          approved, approvalReason } = form
   const { div, hr, strong, option, span, a, output, ul, li } = x
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
@@ -63,12 +63,15 @@ const cs06Form = (opts) => {
     autocomplete: 'off',
   }
   const disabled = editAccess ? {} : { disabled: true }
+  const approvedGSCText = 'Approved by Graduate Studies Committee'
+  const disapprovedGSCText = 'Disapproved'
 
   return (
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
       input('hidden', 'student', student._id.toString()),
       namePidRow(opts, editAccess), hr(),
+      semesterDatalist(8),
 
       strong('Instructions:'),
       div(
@@ -164,7 +167,12 @@ const cs06Form = (opts) => {
         colMd(2)(
           div('Semester/Year*'),
           range6.map((i) => (
-            semesterDropdown('breadthCourseDate', breadthCourseDate && breadthCourseDate[i], semesters, !editAccess || isComplete, {placeholder: 'None selected.'})
+            semesterInput('breadthCourseDate', breadthCourseDate && breadthCourseDate[i], {
+              isDisabled: !editAccess || isComplete,
+              isSS_YYYY: false,
+              placeholder: "SS YYYY",
+              isRequired: true
+            })
           ))
         ),
 
@@ -192,12 +200,14 @@ const cs06Form = (opts) => {
         ),
         colMd(3)(
           div('Semester/Year*'),
-          range4.map((i) => (
-            semesterDropdown('concentrationCourseDate', breadthCourseDate && breadthCourseDate[i], semesters, !editAccess || isComplete, {isRequired: false, placeholder: 'None selected.'})
-            // editAccess && !isComplete
-            //   ? input('text', 'concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i])
-            //   : pseudoInput(concentrationCourseDate && concentrationCourseDate[i])
-          ))
+          range4.map((i) => 
+            semesterInput('concentrationCourseDate', concentrationCourseDate && concentrationCourseDate[i], {
+              isDisabled: !editAccess || isComplete,
+              isSS_YYYY: false,
+              placeholder: "SS YYYY",
+              isRequired: true
+            }),
+          )
         ),
         colMd(3)(
           div('Credit/Hours*'),
@@ -406,31 +416,55 @@ const cs06Form = (opts) => {
       div(strong('PhD Program of Study APPROVAL PROCESS*')),
       div('The PhD Program of Study will be reviewed by the GCS (Graduate Studies Committee).  GSC meets a number of times during each semester.  In order for your Program of Study to be reviewed in a timely manner, it is highly recommended to submit it early, preferably in your 6th semester or around the time you have your proposal meeting'),
 
-      colMd(4)(
-        select(
-          { name: 'approved', disabled: !admin || null },
-          option({ value: '' }, ''),
-          option({ value: 'Approved', selected: approved == 'Approved' || null }, 'Approved'),
-          option({ value: 'Disapproved', selected: approved == 'Disapproved' || null }, 'Disapproved'),
-        )
-      ),
-      hr(),
-
       row(
-        colMd(4)(
-          div('Reason for Disapproved and Needed Adjustments Stated Here '),
-          x('textarea.form-control')(
-            { rows: 6, name: 'reasonApproved', disabled: !admin || null },
-            reasonApproved
+        colMd(6)(
+          dropdown(
+            'approved',
+            [
+              makeOption('', '', form.approved === '' || form.approved === undefined),
+              makeOption(false, disapprovedGSCText, form.approved === false),
+              makeOption(true, approvedGSCText, form.approved === true)
+            ],
+            {isDisabled: isStudent}
           )
         )
       ),
+      div(
+        {id: 'reason-section', hidden: form.approved || null},
+        div('Reason for Disapproval:'),
+        row(
+          colMd(6)(
+            textarea(
+              'approvalReason',
+              form.approvalReason,
+              {
+                isDisabled: isStudent || !admin,
+                required: !form.approved,
+                rows: 6
+              }
+            )
+          )
+        ),
+        script(cspNonce, 
+          `
+          document.querySelector('[name="approved"]').addEventListener('change', (e) => {
+            const reasonSection = document.getElementById('reason-section')
+            const approvalReason = document.querySelector('[name="approvalReason"]')
+            const value = e.target.value
+            if (value == 'false') {
+              reasonSection.removeAttribute('hidden')
+              approvalReason.setAttribute('required', 'true')
+            } else {
+              reasonSection.setAttribute('hidden', 'true')
+              approvalReason.removeAttribute('required')
+            }
+          })
+          document.querySelector('[name="approved"]').dispatchEvent(new Event('change'))
+          `,
+          {defer: ''})
+      ),
       hr(),
-
-      // row(
-      //   colMd(4)(
-      //     )
-      //     ),
+      
       row(
         colMd(5)(
           div('Director of Graduate Studies Approval:*')

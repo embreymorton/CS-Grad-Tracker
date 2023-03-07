@@ -213,7 +213,7 @@ const formRow = (writeAccess, values, faculty, semesters, cspNonce) => (key) => 
         ),
         gRow({id: `${key}WorkCovered`},
           colMd(6)(
-            div('Company and Brief Description'),
+            div('Company and Task/Job Description'),
             baseInput(descriptionFieldName, values[descriptionFieldName], {
               isDisabled: true,
               isRequired: false,

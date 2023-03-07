@@ -5,10 +5,6 @@ const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
 const form1a = {
-  check: {
-    majorityCompleted: true,
-    satisfiesComprehensiveWriting: false,
-  },
   text: {
     projectDescription: 'a project that is not great',
   },
@@ -25,7 +21,9 @@ const form1b = {
     approvalReason: 'because it\'s bad.'
   },
   check: {
-    advisorSignature: true
+    advisorSignature: true,
+    majorityCompleted: true,
+    satisfiesComprehensiveWriting: false,
   }
 }
 

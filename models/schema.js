@@ -448,8 +448,8 @@ var CS06Schema = mongoose.Schema({
   committee: [String],
   advisor: String, chairman: String,
   chairSignature: String, chairDateSigned: String,
-  approved: String,
-  reasonApproved: String,
+  approved: Boolean,
+  approvalReason: String,
   directorSignature: String, directorDateSigned: String,
 })
 

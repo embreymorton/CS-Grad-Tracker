@@ -102,7 +102,7 @@ const progressReportForm = (opts) => {
       { action: postMethod, method: 'post' },
       input('student', student._id.toString(), {isHidden: true}),
       namePidRow(opts, editAccess), 
-      semesterDatalist(5),
+      semesterDatalist(1),
       hr(),
       div('Choose the semester you are filling this form for:'),
       row(
@@ -294,7 +294,7 @@ const evaluationSection = (opts) => {
       b(form.altEmploymentAdvisor ? `⚠️ NOTE: You, ${student.advisor.fullName}, must complete this section for ${form.altEmploymentAdvisor} as well.` : '')  
     ),
     rowCol(8,
-      "Q4. If you hired the student as an RA/TA this semester, please rate their RA work performance.",
+      "Q4. If you hired the student as an RA/TA this semester, please rate their RA/TA work performance.",
       dropdown(
         'rataRating',
         optionSet(
@@ -304,7 +304,7 @@ const evaluationSection = (opts) => {
             [3, '3: Good'],
             [2, '2: Poor'],
             [1, '1: Very Poor'],
-            ['NA', 'N/A: Student did not work as an RA.'],
+            ['NA', 'N/A: Student did not work as an RA/TA.'],
           ],
           form.rataRating == 0 ? 0 : form.rataRating || -1
         ),

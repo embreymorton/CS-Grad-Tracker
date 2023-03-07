@@ -19,7 +19,7 @@ const form1 = {
   },
   select: {
     academicRating: "4: EXCELLENT: The student's progress exceeds expectations.",
-    rataRating: 'N/A: Student did not work as an RA.'
+    rataRating: 'N/A: Student did not work as an RA/TA.'
   }
 }
 

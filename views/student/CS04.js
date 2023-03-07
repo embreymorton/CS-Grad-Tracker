@@ -100,7 +100,7 @@ const cs04Form = (opts) => {
             form.majorityCompleted,
             cspNonce,
             {
-              isDisabled: disabled.disabled,
+              isDisabled: isStudent,
               isRequired: false,
             }
           )
@@ -116,7 +116,7 @@ const cs04Form = (opts) => {
             form.satisfiesComprehensiveWriting,
             cspNonce,
             {
-              isDisabled: disabled.disabled,
+              isDisabled: isStudent,
               isRequired: false,
             }
           )

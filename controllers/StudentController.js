@@ -5,8 +5,10 @@ var fs = require('fs')
 var path = require('path')
 var XLSX = require('xlsx')
 var mongoose = require('mongoose')
-const { getYYYYMMDD, checkFormCompletion, isMultiform } = require('./util.js')
+const { getYYYYMMDD, checkFormCompletion, isMultiform, linkHeader } = require('./util.js')
 var studentController = {}
+const { generateGraduateStudiesEmail, generateDeveloperEmail, send} = require("./email");
+
 
 studentController.post = function (req, res) {
   var input = req.body
@@ -320,29 +322,50 @@ studentController.viewForm = async (req, res) => {
 
 studentController.updateForm = async function(req, res){
   const input = req.body
-  if (req.params.title == null || req.params._id == null || !mongoose.isValidObjectId(req.params._id)) {
+  const formName = req.params.title
+  if (formName == null || req.params._id == null || !mongoose.isValidObjectId(req.params._id)) {
     res.render('../views/error.ejs', {string: 'Did not include valid student ID or title of form'})
     return
   }
-  const student = await schema.Student.findOne({_id: req.params._id}).exec()
+  const student = await schema.Student.findOne({_id: req.params._id}).populate('advisor').exec()
   if (!student) {
     res.render('../views/error.ejs', {string: 'Student not found'})
     return
   }
   const studentId = student._id
-  const form = await schema[req.params.title].findOneAndUpdate({student: studentId}, input, { new: true, runValidators: true }).exec().catch(err => res.render('../views/error.ejs', {string: err}))
+  let form = await schema[formName].findOneAndUpdate({student: studentId}, input, { new: true, runValidators: true }).exec().catch(err => res.render('../views/error.ejs', {string: err}))
   if (form) {
-    await updateStudentFields(req.params.title, form)
-    res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
-    return
+    await updateStudentFields(formName, form)
+  } else {
+    // form doesn't exist
+    const inputModel = await (new schema[formName](input)).save()
+    const newform = await inputModel.save()
+    await updateStudentFields(formName, newform)
+    form = newform
   }
 
-  // form doesn't exist
-  const inputModel = await (new schema[req.params.title](input)).save()
-  const newform = await inputModel.save()
-  await updateStudentFields(req.params.title, newform)
-  res.redirect('/student/forms/viewForm/' + studentId + '/' + req.params.title + '/true')
-  return
+  let result
+  switch (formName) {
+    case 'CS03':
+    case 'CS04':
+    case 'CS06': {
+      const advisorLink = `${linkHeader(req)}/student/forms/viewForm/${studentId}/${formName}/false`
+      if (form.approved === true || form.approved === false) { // only send if explicit approval/disapproval is given (only admins can change GSC approval)
+        const graduateStudiesEmail = generateGraduateStudiesEmail(formName, student, student.advisor, advisorLink, form.approved, form.approvalReason)
+        result = await send(graduateStudiesEmail)
+      } else {
+        result = true
+      }
+    }
+    default: 
+      result = true
+      break
+  }
+
+  if (!result) {
+    return res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact each of your advisors to ensure they will help complete your form." })
+  }
+  return res.redirect(`/student/forms/viewForm/${studentId}/${formName}/true`)
 }
 
 // multiforms
@@ -827,6 +850,8 @@ const validateAdvisor = async (field, noun, element) => {
     return `${element.firstName} ${element.lastName} has a(n) ${noun} that does not exist (${element[field]})`
   }
 }
+
+
 
 const validateAdvisors = async (field, noun, data) =>
       (await Promise.all(

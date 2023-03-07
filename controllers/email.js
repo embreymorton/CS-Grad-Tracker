@@ -4,7 +4,7 @@ const htmlToText = require('nodemailer-html-to-text').htmlToText
 const _ = {}
 _._transporter = null
 
-_.testAccount = {user: "twila.schuppe@ethereal.email", pass: "pHj6reSvjuDsY4suFe"}
+_.testAccount = {user: "norris.ziemann@ethereal.email", pass: "v3tzrfwAcFM9Dzg4nq"}
 
 _.managerInfo = {
   name: "Kris Jordan",
@@ -82,6 +82,24 @@ _.generateSupervisorEmail = (studentInfo, formName, linkToForm) => {
       <p>View the form here:</p>
       <a href="${linkToForm}">${linkToForm}</a>
       <p>For questions about this app, contact ${_.managerInfo.name} &lt;${_.managerInfo.email}&gt;.</p>
+    `
+  }
+}
+
+_.generateGraduateStudiesEmail = (formName, student, advisor, linkToForm, approved, reason) => {
+  const formDescriptions = {
+    CS03: `CS03 M.S. Program of Study`,
+    CS04: `CS04 Outside Review Option`,
+    CS06: `CS06 Ph.D. Program of Study`
+  }
+  return {
+    from: _.default.from,
+    to: `${advisor.email}, ${student.email}`,
+    subject: `[UNC-CS] ${student.fullName} ${formDescriptions[formName]} GSC Approval Update`,
+    html: `
+      <p>The Graduate Student Committee has examined student ${student.fullName}'s submission of ${formDescriptions[formName]} and has <b>${approved ? 'APPROVED' : 'DISAPPROVED'}</b>.</p>
+      ${approved ? '' : `<p>The reason for the disapproval is as follows: ${reason}</p>`}
+      <p>View the form here: <a href=${linkToForm}>${linkToForm}</a></p>
     `
   }
 }

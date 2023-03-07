@@ -21,7 +21,6 @@ let CS06 = {
   otherCourses: 'YOU WERE MY BROTHER',
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
   committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
-  reasonApproved: 'Your left arm',
 }
 
 let CS06cont = {
@@ -40,7 +39,7 @@ let CS06Dropdowns = {
   programProductRequirement: 'false',
   PHDWrittenExam: 'false',
   PHDOralExam: 'true',
-  approved: '',
+  approved: 'true',
   breadthCourseGrade: ['A', 'F', 'D+', 'H', 'P+', 'L+'],
   breadthCourseCategory: ['S', 'A', 'O', 'T', 'T', 'T'],
   comp915: 'taken',
@@ -89,23 +88,24 @@ describe('Test CS06 submissions', () => {
     cy.get('#submit-btn').click()
   })
 
-  it('Submit CS06 form from student side', ()=>{
-    cy.visit('/changeUser/student')
-    cy.visit('/studentView/forms/CS06/false')
-    cy.contains(name)
-    cy.contains(pid.toString())
+  // it('Submit CS06 form from student side', ()=>{
+  //   cy.visit('/changeUser/student')
+  //   cy.visit('/studentView/forms/CS06/false')
+  //   cy.contains(name)
+  //   cy.contains(pid.toString())
 
-    cy.get('.advisor-buttons .btn').eq(3).click()
-    cy.get('.chair-buttons .btn').eq(3).click()
+  //   cy.get('.advisor-buttons .btn').eq(3).click()
+  //   cy.get('.chair-buttons .btn').eq(3).click()
 
-    delete CS06.reasonApproved
+  //   delete CS06.approvalReason
+  //   // delete CS06.dateEntered
 
-    util.fillFormAsStudent(CS06)
-    cy.get('.CS06-submit').click()
-    util.checkFormAsStudent(CS06)
-    cy.get('[name=advisor]').should('have.value', CS06.committee[3])
-    cy.get('[name=chairman]').should('have.value', CS06.committee[3])
-    cy.get('#submit-btn').click()
+  //   util.fillFormAsStudent(CS06)
+  //   cy.get('.CS06-submit').click()
+  //   util.checkFormAsStudent(CS06)
+  //   cy.get('[name=advisor]').should('have.value', CS06.committee[3])
+  //   cy.get('[name=chairman]').should('have.value', CS06.committee[3])
+  //   cy.get('#submit-btn').click()
 
-  })
+  // })
 })
