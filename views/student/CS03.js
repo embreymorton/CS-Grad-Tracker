@@ -14,7 +14,7 @@ const saveEditButton = require('../common/saveEditsButton')
 const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 const {gradeDropdown} = require('../common/gradesDropdown')
-const { script } = require('../common/baseComponents')
+const { script, dropdown, makeOption } = require('../common/baseComponents')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -288,11 +288,14 @@ const cs03Form = (opts) => {
       div('Graduate Studies Approval:'),
       row(
         colMd(6)(
-          select(
-            { name: 'approved', required: 'true', disabled: isStudent || !admin || null },
-            option({}, ''),
-            option({ value: false, selected: form.approved === false || null }, disapprovedGSCText),
-            option({ value: true, selected: form.approved === true || null }, approvedGSCText),
+          dropdown(
+            'approved',
+            [
+              makeOption('', '', form.approved === '' || form.approved === undefined),
+              makeOption(false, disapprovedGSCText, form.approved === false),
+              makeOption(true, approvedGSCText, form.approved === true)
+            ],
+            {isDisabled: isStudent || !admin}
           )
         )
       ),

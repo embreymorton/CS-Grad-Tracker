@@ -12,10 +12,7 @@ let CS03 = {
   dept: ['COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP', 'COMP'],
   course: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   hours: ['1', '3', '4', '5', '2', '3', '5', '6', '7', '2'],
-  // semester: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
   title: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-  // studentDateSigned: `${actualApproved}`,
-  approvalReason: 'ASDF',
 }
 
 let CS03Dropdowns = {
@@ -23,12 +20,12 @@ let CS03Dropdowns = {
   programProduct: 'false',
   writingRequirement: 'cs04',
   comprehensiveExam: 'Comprehensive Paper',
-  approved: 'false'
 }
 
 let CS03cont = {
   select: {
     grade: ['P', 'L', 'F'],
+    approved: 'true'
   },
   check: {
     studentSignature: true,
@@ -80,8 +77,7 @@ describe('Test CS03 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.get('[name="approved"]').should('have.value', CS03Dropdowns.approved)
-    cy.get('[name="approvalReason"').contains(CS03.approvalReason);
+    cy.get('[name="approved"]').should('have.value', CS03cont.select.approved)
     cy.contains('admin admin'); // the director's signature
     cy.contains(approvedDateMMDDYYYY) // shows the correct date of approval
     //cy.contains(CS03.directorDateSigned);

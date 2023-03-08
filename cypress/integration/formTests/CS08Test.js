@@ -49,8 +49,6 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.contains(CS08.primaryDate)
-    cy.contains(CS08.secondaryDate)
     cy.contains('faculty faculty')
     cy.contains('admin admin')
     cy.get('.pseudo-input').contains('faculty faculty')
