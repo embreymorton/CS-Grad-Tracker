@@ -86,7 +86,7 @@ const prepareProgressReport = async (students, filetype) => { // assigns spreads
   var output = [];
   for (var i = 0; i < students.length; i++) {
     var report = {};
-    report.semestersEnrolled = students[i].activeSemesters;
+    report.semestersEnrolled = students[i].activeSemesters == -1 ? '' : students[i].activeSemesters;
     report.lastName = students[i].lastName;
     report.firstName = students[i].firstName;
     if (students[i].advisor != null) {

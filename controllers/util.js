@@ -170,7 +170,8 @@ _.listObjectToString = function (input) {
 }
 
 /**
- * **must ensure form is not null!**
+ * **must ensure form is not null!** This function essentially checks if a student should be able to edit a form.
+ * TODO: rename this function and add a new isComplete(form) function that verifies all faculty have done what they needed
  * @param {String} name - name of form being checked e.g. "CS02"
  * @param {FormSchema} form - the CSXX Form object returned by a Mongoose query
  * @returns true if form is complete for student (*any* signatures filled), false otherwise
@@ -186,7 +187,7 @@ _.checkFormCompletion = (name, form) => {
     case 'CS04':
       return form.advisorSignature // according to trello #268
     case 'CS06':
-      return form.directorSignature
+      return form.directorSignature || form.chairSignature
     case 'CS08': 
       return form.primaryDateSigned && form.secondaryDateSigned
     case 'CS13':
@@ -249,6 +250,8 @@ _.validateFormData = (formData, formName) => { // TODO: divide this by formName 
     'primaryDateSigned',
     'secondaryDateSigned',
     'comp523DateSigned',
+    'majorityCompleted',
+    'satisfiesComprehensiveWriting',
     // 'alt1Signature', CS13 changed to dropdowns
     'alt1DateSigned',
     // 'alt2Signature',
@@ -256,8 +259,12 @@ _.validateFormData = (formData, formName) => { // TODO: divide this by formName 
     'hasDicussed',
     'academicRating',
     'academicComments',
+    'academicSignature',
+    'academicDateSigned',
     'rataRating',
-    'rataComments'
+    'rataComments',
+    'employmentSignature',
+    'employmentDateSigned'
   ].forEach((key) => delete formData[key])
   return formData
 }

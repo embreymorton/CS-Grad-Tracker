@@ -46,7 +46,7 @@ const semesterDropdown = (name, value, semesters, isDisabled, {isRequired = true
  * @param {String} list id of datalist to include
  * @returns 
  */
-const semesterInput = (name, value, {isDisabled = false, isRequired = true, placeholder = 'Select a semester or type one in SS YYYY format', isSS_YYYY = true, list = 'semestersDatalist'} = {}) => {
+const semesterInput = (name, value, {isDisabled = false, isRequired = true, placeholder = 'Select a semester or type one in (FA|SP|S1|S2) YYYY format', isSS_YYYY = true, list = 'semestersDatalist'} = {}) => {
   return input(
     name,
     value,
@@ -54,7 +54,7 @@ const semesterInput = (name, value, {isDisabled = false, isRequired = true, plac
       isDisabled,
       isRequired,
       placeholder,
-      attrs: {list, ...(isSS_YYYY ? {pattern: /^(FA|SP|S1|S2) \d\d\d\d$/} : {})}
+      attrs: {list, ...(isSS_YYYY ? {pattern: "^(FA|SP|S1|S2) \\d\\d\\d\\d$"} : {})}
     }
   )
 }

@@ -315,12 +315,12 @@ const cs03Form = (opts) => {
             const approvalReason = document.querySelector('[name="approvalReason"]')
             const value = e.target.value
             console.log(value)
-            if (value == 'true') {
-              reasonSection.setAttribute('hidden', 'true')
-              approvalReason.removeAttribute('required')
-            } else {
+            if (value == 'false') {
               reasonSection.removeAttribute('hidden')
               approvalReason.setAttribute('required', 'true')
+            } else {
+              reasonSection.setAttribute('hidden', 'true')
+              approvalReason.removeAttribute('required')
             }
           })
           document.querySelector('[name="approved"]').dispatchEvent(new Event('change'))

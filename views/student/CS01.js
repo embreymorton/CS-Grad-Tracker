@@ -45,7 +45,6 @@ const mainContent = (opts) => {
       x('p.underline')('Instructions:'),
       p('The following UNC courses define the background preparation assumed in the M.S. and PhD programs. This worksheet is intended to help identify possible missing areas in your preparation; it is entirely normal to include one or more background courses in the MS or PhD Program of Study in order to satisfy the background preparation requirement.'),
       p('For each course, indicate how (e.g. course work, independent study, or work experience) and when you mastered the materials as defined by the list of principal topics.  For additional information on UNC course content, consult the online syllabi.  In case you are uncertain about the adequacy of your preparation for a given course, consult a course instructor or the instructor(s) of graduate courses that depend on the course in question.'),
-      p('If you mastered the materials through a method besides course work, please select the semester that includes the date of when you mastered the topic.'),
       p(strong('All fields required!')),
       hr(),
       form,
@@ -94,7 +93,7 @@ const cs01Form = (opts) => {
       hr(),
 
       p('Student Approval:'),
-      signatureRow(admin || isStudent, 'student', form, opts.cspNonce),
+      signatureRow(admin || isStudent, 'student', form, opts.cspNonce, {isRequired: isStudent}),
       x('.verticalSpace')(),
 
       p('Advisor Approval:'),

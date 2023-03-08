@@ -1129,4 +1129,18 @@ studentController.deleteNotes = function(req, res){
   })
 }
 
+studentController.documents = async function (req, res){
+  const studentId = req.params._id
+  if (!mongoose.isValidObjectId(studentId)) {
+    return res.render('../views/error.ejs', {string: 'Invalid student id.'})
+  }
+
+  const student = await schema.Student.findById(studentId).exec()
+  if (!student) {
+    return res.render('../views/error.ejs', {string: 'Student does not exist.'})
+  }
+
+  res.render('../views/student/documents.js', {student})
+}
+
 module.exports = studentController

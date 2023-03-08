@@ -10,6 +10,7 @@ mongoose.Schema.Types.ObjectId.cast((v) => v ? castObjectId(v) : null)
 // date format regex
 //  /^0[1-9]|1[012]\/0[1-9]|[12][0-9]|3[01]\/[0-9]{4}$/  <-- MM/DD/YYYY regex
 const matchDate = [/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, '{VALUE} must be in form yyyy/mm/dd or mm/dd/yyyy']
+const matchSemester = [/^(FA|SP|S1|S2) \d\d\d\d$/]
 
 // Faculty
 var facultySchema = mongoose.Schema({
@@ -492,6 +493,7 @@ const semesterProgressReportSchema = mongoose.Schema({
   },
   semester: {
     type: String,
+    match: matchSemester,
     validate: {
       validator: async function(v) {
         if (this.student) {

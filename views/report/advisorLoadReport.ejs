@@ -47,7 +47,7 @@
                     <tr>
                       <td></td>
                       <td></td>
-                      <td><%= report[i].students[j].activeSemesters%></td>
+                      <td><%= report[i].students[j].activeSemesters == -1 ? '' : report[i].students[j].activeSemesters%></td>
                       <td><%= report[i].students[j].lastName%></td>
                       <td><%= report[i].students[j].firstName%></td>
                     </tr>
@@ -67,7 +67,7 @@
               <tbody>
                 <% for(let k=0; k<report[last].students.length; k++) { %>
                   <tr>
-                    <td><%= report[last].students[k].activeSemesters%></td>
+                    <td><%= report[last].students[k].activeSemesters == -1 ? '' : report[last].students[k].activeSemesters%></td>
                     <td><%= report[last].students[k].lastName%></td>
                     <td><%= report[last].students[k].firstName%></td>
                   </tr>

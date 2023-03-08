@@ -55,7 +55,7 @@
               <tbody>
                 <% for(var i=0; i<report.length; i++) { %>
                   <tr>
-                    <td><%= report[i].activeSemesters%></td>
+                    <td><%= report[i].activeSemesters == -1 ? '' : report[i].activeSemesters %></td>
                     <td><%= report[i].lastName%></td>
                     <td><%= report[i].firstName%></td>
                     <td>

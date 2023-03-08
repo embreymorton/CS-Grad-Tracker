@@ -138,7 +138,7 @@ const cs04Form = (opts) => {
               makeOption(false, disapprovedGSCText, form.approved === false),
               makeOption(true, approvedGSCText, form.approved === true)
             ],
-            {isDisabled: isStudent}
+            {isDisabled: isStudent || !admin}
           )
         )
       ),

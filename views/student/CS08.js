@@ -11,6 +11,7 @@ const dropdown = require('../common/facultyDropdown')
 const pseudoCheckbox = require('../common/pseudoCheckbox')
 const disableSubmitScript = require('../common/disableSubmitScript')
 const saveEditButton = require('../common/saveEditsButton')
+const { dateInput } = require('../common/baseComponents')
 
 const main = (opts) => {
   const { uploadSuccess } = opts
@@ -150,9 +151,6 @@ const readerDateRow = (opts, editAccess, modifier) => {
   const dateValue = form[dateField]
   const { div } = x
   const modifierLabel = modifier.toUpperCase()[0] + modifier.substr(1)
-  const date = !isStudent
-        ? (type, name, val) => (input(type, name, val))
-        : (type, name, val) => (pseudoInput(val))
   return (
     row(
       isComplete ?
@@ -169,10 +167,13 @@ const readerDateRow = (opts, editAccess, modifier) => {
       ),
       colMd(6)(
         div('Date Draft Received'),
-        date('date', dateField, dateValue)
+        dateInput(dateField, dateValue, {
+          isDisabled: isStudent,
+          isRequired: false
+        }
       ),
     )
-  )
+  ))
 }
 
 const approvalRow = (opts, modifier) => {

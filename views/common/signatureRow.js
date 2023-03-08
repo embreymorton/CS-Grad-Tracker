@@ -8,9 +8,10 @@ const { checkbox, script, input } = require('../common/baseComponents')
  * @param {String} name of schema field without the text 'Signature'. e.g. if schema field is `studentSignature`, then the argument passed should be 'student'.  
  * @param {CSXX} form object with a schema field
  * @param {*} nonce 
+ * @param {Boolean} isRequired
  * @returns 
  */
-const signatureRow = (editAccess, name, form, nonce) => {
+const signatureRow = (editAccess, name, form, nonce, {isRequired = false} = {}) => {
   const row = x('.row')
   const col = (n) => (x(`div.col-md-${n}`))
   const { em, div } = x
@@ -33,7 +34,7 @@ const signatureRow = (editAccess, name, form, nonce) => {
         nonce,
         {
           isDisabled: !editAccess,
-          isRequired: false,
+          isRequired,
           overrideFalse: ""
         }
       ),

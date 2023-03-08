@@ -143,4 +143,8 @@ router.post("/notes/upload/:_id/:noteId", authorizeAdvisor, student.updateNote);
 
 router.post("/notes/delete/:_id", authorizeAdvisor, student.deleteNotes);
 
+
+// Uploaded Documents
+router.get("/documents/:_id", authorizeFaculty, student.documents)
+
 module.exports = router;
