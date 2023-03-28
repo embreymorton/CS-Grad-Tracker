@@ -7,6 +7,10 @@ var report = require("../controllers/ReportsController.js");
 
 router.use(function(req, res, next){
   res.locals.userPID = req.session.userPID;
+  res.locals.accessLevel = 3;
+  res.locals.admin = true;
+  next();
+  /*
   if(req.session.accessLevel >= 2){                   // letting faculty see reports temporarily 
     res.locals.accessLevel = req.session.accessLevel;
     res.locals.admin = req.session.accessLevel === 3;
@@ -16,6 +20,7 @@ router.use(function(req, res, next){
     res.locals.admin = false;
     res.render("../views/error.ejs", {string: "Not admin"});
   }
+  */
 });
 
 router.get("/", report.get);
