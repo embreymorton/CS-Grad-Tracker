@@ -17,6 +17,7 @@ html, body {
 
 table {
   table-layout: fixed;
+  /* margin-left: 20px; */
 }
 
 /* faculty table column widths*/
@@ -103,6 +104,7 @@ table {
 .editTag:hover {
   text-decoration: none;
   color: green;
+
 }
 
 .editTag {
@@ -176,6 +178,7 @@ form [name=dept] {
   display: block;
   table-layout: fixed;
   width: 100%;
+  overflow: scroll;
 }
 
 .col-progress-report-notes {
@@ -285,7 +288,7 @@ form [name=dept] {
 .tooltip-text {
   visibility: hidden;
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   width: 100px;
   color: white;
   font-size: 12px;
@@ -300,11 +303,12 @@ form [name=dept] {
   transform: rotate(45deg);
   background-color: #192733;
   padding: 5px;
-  z-index: 1;
+  z-index: 10;
 }
 
 .hover-text:hover .tooltip-text {
   visibility: visible;
+  z-index: 10;
 }
 
 #top {
@@ -351,6 +355,7 @@ form [name=dept] {
   position: relative;
   display: inline-block;
   text-align: center;
+  z-index: 10;
 }
 
 .subSize{
@@ -361,9 +366,9 @@ form [name=dept] {
 
 .div1 {
   width: 100%;
-  height: 100%;
-  overflow: scroll;
-  border: 1px solid #777777;
+  height: 80vh;
+  overflow-y: auto;
+  border: none;
 }
 
 .div1 table {
@@ -415,7 +420,7 @@ form [name=dept] {
   position: sticky;
   /* 1st cell left/right padding + 1st cell width + 1st cell left/right border width */
   /* 0 + 5 + 150 + 5 + 1 */
-  left: 182px;
+  left: 180px;
   width: 100px;
   min-width: 100px;
 }
@@ -425,8 +430,8 @@ form [name=dept] {
   position: sticky;
   /* 1st cell left/right padding + 1st cell width + 1st cell left/right border width */
   /* 0 + 5 + 150 + 5 + 1 */
-  left: 296px;
-  width: 100px;
+  left: 278px;
+  width: 120px;
   min-width: 100px;
 }
 
@@ -435,11 +440,80 @@ form [name=dept] {
 .div1 td:nth-child(3),
 .div1 td:nth-child(4) {
   background: #ffebb5;
+  z-index: 1;
 }
 
 .div1 th:nth-child(1),
 .div1 th:nth-child(2),
 .div1 th:nth-child(3),
 .div1 th:nth-child(4) {
-  z-index: 2;
+  z-index: 99999999999999999 !important;
+}
+
+
+.col-progress-report-notes .tooltip-text {
+  visibility: hidden;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 8px;
+  position: absolute;
+  /* z-index: 9999; */
+  top: 50%;
+  right: 100%;
+  margin-top: -12px;
+  margin-right: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.col-progress-report-notes:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+/* experement */
+
+ th[title] {
+  position: relative;
+  cursor: help;
+}
+
+th[title]:hover:after {
+  content: attr(title);
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 5px);
+  padding: 5px;
+  background-color: gray;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.div1 th {
+  position: sticky;
+  top: 0;
+}
+
+
+td {
+  max-width: 250px; /* Change this to the desired fixed size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td.expanded {
+  white-space: pre-wrap;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: fit-content;
 }
