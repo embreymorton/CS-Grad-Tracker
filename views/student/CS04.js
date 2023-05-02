@@ -53,6 +53,10 @@ const cs04Form = (opts) => {
   const disabled = editAccess && !isComplete ? {} : { disabled: true }
   const approvedGSCText = 'Approved by Graduate Studies Committee'
   const disapprovedGSCText = 'Disapproved'
+  const { dateEntered } = form
+  const value = editAccess && !isComplete
+        ? (type, name, val) => (input(type, name, val, true))
+        : (type, name, val) => (pseudoInput(val))
 
   return [
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
@@ -65,12 +69,36 @@ const cs04Form = (opts) => {
 
       row(
         colMd(6)(
-          div(strong('Brief Description of project:')),
+          div(strong('Name of project:')),
           textarea(
             'projectDescription', 
             form.projectDescription,
-            {isRequired: true, isDisabled: disabled.disabled, rows: 6})
+            {isRequired: true, isDisabled: disabled.disabled, rows: 1})
         ),
+      ),
+      row(
+        colMd(6)(
+          div(strong('Publication: (journal or conference)')),
+          textarea(
+            'publication', 
+            form.publication,
+            {isRequired: true, isDisabled: disabled.disabled, rows: 1})
+        ),
+      ),
+      row(
+        colMd(6)(
+          div(strong('Author(s)')),
+          textarea(
+            'authors', 
+            form.authors,
+            {isRequired: true, isDisabled: disabled.disabled, rows: 1})
+        ),
+      ),
+      row(
+      colMd(4)(
+        div(strong('Publication Date')),
+        value('date', 'pub_date', dateEntered)
+      ),
       ),
       hr(),
 
@@ -110,7 +138,7 @@ const cs04Form = (opts) => {
 
       row(
         colMd(12)(
-          div('The student has revised the externally reviewed publication such that it also satisfies the Comprehensive Writing requirement:'),
+          div('The student has revised the externally reviewed publication such that it also satisfies the Comprehensive Writing requirement (e.g., extending the related work section to be broad and detailed):'),
           checkbox(
             'satisfiesComprehensiveWriting',
             form.satisfiesComprehensiveWriting,
@@ -128,6 +156,7 @@ const cs04Form = (opts) => {
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       hr(),
 
+      /*
       div('Graduate Studies Approval:'),
       row(
         colMd(6)(
@@ -142,7 +171,7 @@ const cs04Form = (opts) => {
           )
         )
       ),
-
+      
       div(
         {id: 'reason-section', hidden: form.approved || null},
         div('Reason for Disapproval:'),
@@ -178,7 +207,7 @@ const cs04Form = (opts) => {
           {defer: ''})
       ),
       hr(),
-
+      */
       buttonBarWrapper(
         isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit#submit-btn')({ type: 'submit' }, 'Submit')],
         disableSubmitScript(opts),

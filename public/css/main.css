@@ -248,6 +248,7 @@ form [name=dept] {
 }
 
 .comp523cont, 
+.comp523Othercont,
 .indcont,
 .altcont {
   display: none;
@@ -260,7 +261,8 @@ form [name=dept] {
   color : white;
 }
 
-.comp523col, 
+.comp523col,
+.comp523Othercol,
 .indcol,
 .altcol {
   border: none;
