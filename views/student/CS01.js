@@ -9,7 +9,7 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
 const baseComponents = require('../common/baseComponents')
@@ -17,14 +17,13 @@ const { dropdown, makeOption, optionSet, script, dateInput, checkbox } = baseCom
 const baseInput = baseComponents.input
 
 const main = (opts) => {
-  const { uploadSuccess, formName} = opts
+  const { uploadSuccess, formName, VA } = opts
   const title = `${formName} Background Preparation Worksheet`
-  const cs01 = formName === 'CS01'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    VA.allow('student advisor') ? mainContent(opts) : 'Error: You are not authorized to view this page.',
     pageScript(opts)
   )
 }
@@ -53,10 +52,10 @@ const mainContent = (opts) => {
 }
 
 const cs01Form = (opts) => {
-  const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters, activeFaculty, cspNonce } = opts
+  const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters, activeFaculty, cspNonce, VA} = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x
-  const row = formRow(admin || (isStudent && !isComplete), form, activeFaculty, semesters, cspNonce)
+  const row = formRow(admin || (isStudent && !isComplete), form, activeFaculty, semesters, opts)
   const vert = x('div.verticalSpace')()
   return (
     x('form.cs-form#cs-form')(
@@ -102,10 +101,7 @@ const cs01Form = (opts) => {
       x('.verticalSpace')(),
 
       buttonBarWrapper(
-        isComplete ? null : x('button.btn.btn-primary.CS01-submit#submit-btn')(
-          { type: 'submit' },
-          'Submit'),
-          disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
@@ -131,13 +127,16 @@ const namePidRow = (student) => {
   )
 }
 
-const formRow = (writeAccess, values, faculty, semesters, cspNonce) => (key) => {
+const formRow = (writeAccess, values, faculty, semesters, opts) => (key) => {
+  const { cspNonce, VA, isComplete } = opts
   const { div, label, hr } = x
   const gRow = x('div.row.align-items-end') // a row with "gravity"
   const coveredFieldName = `${key}Covered`
   const dateFieldName = `${key}Date`
   const descriptionFieldName = `${key}Description`
   const isRequired = !(['comp421', 'comp520', 'comp530'].includes(key))
+  const isAlwaysDisabled = VA.not('admin student') || isComplete
+
   return [
     row(
       colMd(4)(descriptions[key]),
@@ -156,6 +155,7 @@ const formRow = (writeAccess, values, faculty, semesters, cspNonce) => (key) => 
           ),
           {
             isRequired,
+            isDisabled: isAlwaysDisabled
           }
         ),
         row(
@@ -257,6 +257,9 @@ const formRow = (writeAccess, values, faculty, semesters, cspNonce) => (key) => 
               })
             }
             const enableSection = (id) => {
+              if (${isAlwaysDisabled}) {
+                return
+              }
               const section = document.getElementById(id)
               section.style.display = 'flex' // bootstrap rows are flexboxes
               section.querySelectorAll('input, select').forEach(input => input.removeAttribute('disabled'))

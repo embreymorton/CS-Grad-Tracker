@@ -16,6 +16,15 @@ const secondCS02 = {
   basisWaiver: 'By examination'
 }
 
+const baseCS02 = {
+  select: {
+    instructorSignature: 'faculty, faculty'
+  },
+  check: {
+    instructorDateSigned: true
+  }
+}
+
 describe('Test CS02 submissions', () => {
   before(() => {
     cy.request('/util/resetDatabaseToSnapshot')
@@ -45,8 +54,8 @@ describe('Test CS02 submissions', () => {
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS02)
-    cy.get('#instructorSignatureSelect').select('faculty faculty')
-    cy.get('.CS02-submit').click()
+    util.fillFormByDataCy(baseCS02)
+    util.submitForm()
     util.fillFormAsStudent(CS02)
   })
 
@@ -59,7 +68,7 @@ describe('Test CS02 submissions', () => {
     cy.contains('faculty faculty')
 
     util.fillFormAsStudent(CS02)
-    cy.get('.CS02-submit').click()
+    util.submitForm()
     util.checkFormAsStudent(CS02)
   })
 

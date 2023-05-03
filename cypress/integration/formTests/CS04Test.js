@@ -7,6 +7,9 @@ const name = `${lastName}, ${firstName}`
 const form1a = {
   text: {
     projectDescription: 'a project that is not great',
+    publication: 'The Journal of Meds',
+    authors: 'Me, myself, and I, et. al',
+    publicationDate: '2001-01-01'
   },
   select: {
     docProprietary: 'Yes. A non-disclosure agreement is attached.'
@@ -15,10 +18,8 @@ const form1a = {
 
 const form1b = {
   select: {
-    approved: 'Disapproved'
   },
   text: {
-    approvalReason: 'because it\'s bad.'
   },
   check: {
     advisorSignature: true,
@@ -56,7 +57,7 @@ describe('Test CS04 submissions', ()=>{
     cy.contains(pid.toString())
   
     util.fillFormByDataCy(form1a)
-    cy.get('.CS04-submit').click()
+    util.submitForm()
   })
 
   it('Submit CS04 form from administrator side', ()=>{
@@ -68,7 +69,7 @@ describe('Test CS04 submissions', ()=>{
     cy.contains(pid.toString())
     util.verifyFormByDataCy(form1a)
     util.fillFormByDataCy(form1b)
-    cy.get('.CS04-submit').click();
+    util.submitForm()
   })
 
 })

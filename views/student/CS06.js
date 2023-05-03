@@ -8,21 +8,22 @@ const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterInput, semesterDatalist } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
 const {gradeDropdown} = require('../common/gradesDropdown')
 const { script, dropdown, makeOption, textarea } = require('../common/baseComponents')
+const {facultyDropdown} = require('../common/facultyDropdown')
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
+  const { uploadSuccess, VA, form } = opts
   const title = 'CS06 PhD Program of Study'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    VA.allow('student advisor', ['fullName', form.chairman]) ? mainContent(opts) : 'You are not authorized to view this page.',
     pageScript(opts),
   )
 }
@@ -43,7 +44,7 @@ const mainContent = (opts) => {
 }
 
 const cs06Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, isComplete, semesters, viewer, cspNonce} = opts
+  const { postMethod, student, form, admin, isStudent, isComplete, faculty, viewer, cspNonce, VA } = opts
   const editAccess = admin || isStudent
   const { dissTitle, comp915, breadthCourseCategory, breadthCourseInfo,
           breadthCourseDate, breadthCourseGrade, concentrationCourseInfo,
@@ -56,6 +57,7 @@ const cs06Form = (opts) => {
   const select = x('select.form-control')
   const vert = x('div.verticalSpace')()
   const range4 = [0, 1, 2, 3]
+  const range5 = [0, 1, 2, 3, 4]
   const range6 = [0, 1, 2, 3, 4, 5]
   const buttonAttrs = {
     type: 'button',
@@ -64,7 +66,7 @@ const cs06Form = (opts) => {
   }
   const disabled = editAccess ? {} : { disabled: true }
   const approvedGSCText = 'Approved by Graduate Studies Committee'
-  const disapprovedGSCText = 'Disapproved'
+  const disapprovedGSCText = 'Not Approved'
 
   return (
     x('form.cs-form#cs-form')(
@@ -323,28 +325,30 @@ const cs06Form = (opts) => {
       hr(),
 
       div(
-        strong('III. Committe Members -'),
+        strong('III. Committee Members -'),
         'List the names of your PhD Committee members. (5 minimum, majority must be Dept. of Computer Science faculty.)'
       ),
       div('Each committee member should review the program of study.  The Chair is requested to check off or initial beside each member who has reviewed this program of study. '),
-      row(
-        colMd(6)(strong('Committee Member')),
-        colMd(2)('Select Research Advisor'),
-        colMd(2)('Select Chair'),
-      ),
 
       row(
+        colMd(6)(strong('Committee Members')),
+        colMd(2)('Select Research Advisor'),
+      ),
+      row(
         colMd(6)(
-          range6.map((i) => (
-            x('div.form-group.row')(
+          x('div.form-group.row')(
+            x('label.col-md-2')(`Chairman: `), colMd(10)(facultyDropdown('chairman', chairman, faculty, {isDisabled: isComplete || !editAccess, isRequired: true, blankOption: 'Select chair member.'})),
+          ),
+          range5.map((i) => (
+              x('div.form-group.row')(
               x('label.col-md-2')(`${i+1}.* `),
               colMd(10)(
                 editAccess && !isComplete
-                  ? input('text', 'committee', committee && committee[i], true, null, 0, {'data-index': i})
+                  ? input('text', 'committee', committee && committee[i], true, null, 0, {'data-index': i+1})
                   : x('div.committee-name')(pseudoInput(committee && committee[i]))
               )
-            )
-          ))
+            ))
+          )
         ),
 
         x('div.col-md-2.advisor-buttons')(
@@ -354,19 +358,6 @@ const cs06Form = (opts) => {
                 x('button.btn.btn-outline-primary.advisor.advisor-btn')(
                   {...buttonAttrs, 'data-index': i},
                   'A'
-                )
-              )
-            )
-          ))
-        ),
-
-        x('div.col-md-2.chair-buttons')(
-          range6.map((i) => (
-            x('div.form-group.row')(
-              colMd(12)(
-                x('button.btn.btn-outline-primary.chairman.chairman-btn')(
-                  {...buttonAttrs, 'data-index': i},
-                  'C'
                 )
               )
             )
@@ -382,19 +373,11 @@ const cs06Form = (opts) => {
           output({class: 'label advisor', for: 'advisor'}, advisor),
         )
       ),
-
-      row(
-        colMd(1)('Chair:'),
-        colMd(3)(
-          input('hidden', 'chairman', chairman, true),
-          output({class: 'label chairman', for: 'chairman'},chairman),
-        )
-      ),
       hr(),
 
       div(strong('Committee advisor'), ' (or Chair if different from advisor)*'),
       div('By signing here, the chair indicates that all items above have been approved by the majority of the committee.'),
-      signatureRow(!isStudent, 'chair', form, opts.cspNonce),
+      signatureRow(VA.allow('admin', ['fullName', chairman]), 'chair', form, opts.cspNonce),
       script(opts.cspNonce, // hacky way to add chair's name to label, relies on order of event listener attachment
         `
         document.getElementById('checkbox-chairSignature').addEventListener('change', (e) => {
@@ -414,8 +397,8 @@ const cs06Form = (opts) => {
 
       strong('IV. Approval'),
       div(strong('PhD Program of Study APPROVAL PROCESS*')),
-      div('The PhD Program of Study will be reviewed by the GCS (Graduate Studies Committee).  GSC meets a number of times during each semester.  In order for your Program of Study to be reviewed in a timely manner, it is highly recommended to submit it early, preferably in your 6th semester or around the time you have your proposal meeting'),
-
+      div('The PhD Program of Study will be reviewed by the GSC (Graduate Studies Committee). The GSC meets a number of times during each semester. In order for your Program of Study to be reviewed in a timely manner, it is highly recommended to submit it early, preferably in your 6th semester or around the time you have your proposal meeting.'),
+      vert,
       row(
         colMd(6)(
           dropdown(
@@ -478,10 +461,9 @@ const cs06Form = (opts) => {
           ? [
             vert,
             x('div.hidden')({ id: 'errorMessage' }),
-            x('button.btn.btn-primary.CS06-submit#submit-btn')({ type: 'submit' }, 'Submit')
           ]
         : null,
-        disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
@@ -529,28 +511,30 @@ const pageScript = (opts) => {
 }
 
 const pageScriptText = (committee, advisor, chairman, editAccess) => (`
+  const regularCommittee = Array.from(document.querySelectorAll('[name="committee"]'))
+  const chairmanElement = document.getElementsByName('chairman')[0]
+  const committeeElements = [chairmanElement].concat(regularCommittee)
+  const getCommitteeValues = () => committeeElements.map(element => element.value)
+
   document.addEventListener('DOMContentLoaded', () => {
-    const committee = ${JSON.stringify(committee)}
     const advisor = '${advisor}'
-    const chairman = '${chairman}'
     const editAccess = ${editAccess}
+
     if (editAccess) setRadioishButtonClickHandlers()
-    if (committee) setRadioishButtonDefaults(committee, advisor, chairman)
     if (editAccess) setRadioishSelectionRequirement()
-    // setNoCourseOverlapRequirement() // currently broken, but needs to be checked manually anyways
     if (editAccess) setNameChangeListeners()
+    if (editAccess) setRadioishButtonDefaults(advisor)
   })
   
   const setRadioishButtonClickHandlers = () => {
     // can't use onclick attribute because of content security policy
-    ['advisor', 'chairman'].forEach((key) => {
+    ['advisor'].forEach((key) => {
       document.querySelectorAll('.btn.' + key).forEach(setClickHandler(key))
     })
   }
 
-  const setRadioishButtonDefaults = (committee, advisor, chairman) => {
-    updatePage('advisor', committee.indexOf(advisor))
-    updatePage('chairman', committee.indexOf(chairman))
+  const setRadioishButtonDefaults = (advisor) => {
+    updatePage('advisor', getCommitteeValues().indexOf(advisor))
   }
 
   const setRadioishSelectionRequirement = () => {
@@ -559,12 +543,9 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
         return
       }
       const advsr = document.querySelector('[name=advisor]').value
-      const chair = document.querySelector('[name=chairman]').value
-      if (!advsr && !chair) showError('you must set both an advisor and a chair')
-      else if (!advsr) showError('you must set an advisor')
-      else if (!chair) showError('you must set a chair')
+      if (!advsr) showError('you must set a research advisor')
       else hideError()
-      if (!advsr || !chair) event.preventDefault()
+      if (!advsr) event.preventDefault()
     })
   }
 
@@ -613,11 +594,13 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
   }
 
   const setNameChangeListeners = () => {
-    document.querySelectorAll('[name=committee]').forEach((input, index) => {
+    chairmanElement.addEventListener('change', ({target}) => {
+      if (selectedAdvisorIndex() == 0) updateValue('advisor', target.value)
+    })
+    regularCommittee.forEach((input, index) => {
       input.addEventListener('input', ({ target }) => {
         const { value } = target
-        if (selectedAdvisorIndex() == index) updateValue('advisor', value)
-        if (selectedChairIndex() == index) updateValue('chairman', value)
+        if (selectedAdvisorIndex() == index+1) updateValue('advisor', value)
       })
     })
   }
@@ -635,8 +618,11 @@ const pageScriptText = (committee, advisor, chairman, editAccess) => (`
 
   const updatePage = (key, index) => {
     const buttons = document.querySelectorAll('.btn.' + key)
+    if (!buttons[index]) {
+      return
+    }
     const isActive = buttons[index].ariaPressed === 'true'
-    const name = getValue(key, index)
+    const name = getCommitteeValues()[index]
     unselectElements(buttons)
     if (!isActive) setButtonActiveState(buttons[index], true)
     updateValue(key, name)

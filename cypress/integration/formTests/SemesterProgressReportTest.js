@@ -68,7 +68,7 @@ describe('Test Semester Progress Report Submissions', () => {
     cy.contains(pid.toString())
     
     util.fillFormByDataCy(form1)
-    cy.get('#submit-btn').click()
+    util.submitForm()
     util.verifyFormByDataCy(form1)
   })
 

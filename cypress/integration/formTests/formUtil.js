@@ -145,6 +145,16 @@ util.verifyFormByDataCy = (formData) => {
   })
 }
 
+/** will submit the form, even if there is a modal pop-up */
+util.submitForm = () => {
+  cy.get('#cs-form').then(($form => {
+    if ($form.find('#submit-btn-modal').length) { // has modal
+      cy.get('#submit-btn-modal').click();
+    }
+    cy.get('#submit-btn').click()
+  }))
+}
+
 util.By = {}
 util.By.datacy = (s) => `[data-cy="${s}"]`
 util.By.name = (s) => `[name="${s}"]`

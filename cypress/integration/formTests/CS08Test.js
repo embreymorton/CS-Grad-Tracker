@@ -10,6 +10,13 @@ let CS08 = {
   secondaryDate : '2019-09-20'
 }
 
+const CS08a = {
+  select: {
+    primaryReader: 'faculty, faculty',
+    secondaryReader: 'admin, admin'
+  }
+}
+
 describe('Test CS08 submissions', ()=>{
   before(() => {
     cy.request('/util/resetDatabaseToSnapshot')
@@ -36,10 +43,9 @@ describe('Test CS08 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS08);
-    cy.get('#primaryReaderSelect').select('faculty faculty')
-    cy.get('#primaryDateSignedCheckbox').check()
-    cy.get('#secondaryReaderSelect').select('admin admin')
-    cy.get('.CS08-submit').click();
+    util.fillFormByDataCy(CS08a)
+    cy.get('#primaryDateSignedCheckbox').click()
+    util.submitForm()
     util.checkFormAsAdmin(CS08);
   })
 
@@ -54,13 +60,11 @@ describe('Test CS08 submissions', ()=>{
     cy.get('.pseudo-input').contains('faculty faculty')
     cy.get('.pseudo-checked')
 
-    delete CS08.primaryReader;
     delete CS08.primaryDate;
-    delete CS08.secondaryReader;
     delete CS08.secondaryDate;
 
     util.fillFormAsStudent(CS08);
-    cy.get('.CS08-submit').click();
+    util.submitForm()
     util.checkFormAsStudent(CS08);
   });
 })

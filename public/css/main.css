@@ -517,3 +517,15 @@ td.expanded {
   text-overflow: unset;
   max-width: fit-content;
 }
+.center-modal-parent { /* include with bootstrap's modals bc. for some reason doesn't like our forms setup */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.center-modal-child {
+  position: fixed;
+  width: 100%;
+}

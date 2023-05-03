@@ -100,7 +100,7 @@ describe('Test CS01 submissions', ()=>{
     cy.contains(pid.toString())
     util.fillFormByDataCy(form1)
     util.fillFormByDataCy(form2)
-    cy.get('.CS01-submit').click();
+    util.submitForm();
     util.verifyFormByDataCy(form1);
     util.verifyFormByDataCy(form2);
   })
@@ -111,9 +111,7 @@ describe('Test CS01 submissions', ()=>{
     cy.contains(name)
     cy.contains(pid.toString())
     delete form1.check.advisorSignature
-    util.fillFormByDataCy(form1)
-    util.fillFormByDataCy(form2)
-    cy.get('.CS01-submit').should('not.exist');
+    cy.get('#submit-btn').should('not.exist');
     util.verifyFormByDataCy(form1);
     util.verifyFormByDataCy(form2);
   });

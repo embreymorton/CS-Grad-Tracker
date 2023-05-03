@@ -9,7 +9,7 @@ const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
 const adminApprovalCheckboxRow = require('../common/adminApprovalCheckboxRow')
@@ -17,13 +17,13 @@ const {gradeDropdown} = require('../common/gradesDropdown')
 const { script, dropdown, makeOption } = require('../common/baseComponents')
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
+  const { uploadSuccess, VA } = opts
   const title = 'CS03 M.S. Program of Study'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    VA.allow('student advisor') ? mainContent(opts) : 'You are not authorized to view this page.'
   )
 }
 
@@ -53,7 +53,7 @@ const cs03Form = (opts) => {
   const { div, hr, strong, option, a, p, span } = x
   const select = x('select.form-control')
   const approvedGSCText = 'Approved by Graduate Studies Committee'
-  const disapprovedGSCText = 'Disapproved'
+  const disapprovedGSCText = 'Not Approved'
   const vert = x('div.verticalSpace')()
   const basisForWaiverLabel = [
     div('Basis for Waiver'),
@@ -334,8 +334,7 @@ const cs03Form = (opts) => {
       div('Director Approval:'),
       adminApprovalCheckboxRow(viewer, 'director', form, opts.cspNonce),
       buttonBarWrapper(
-        isComplete ? null : x('button.btn.btn-primary.CS03-submit#submit-btn')({ type: 'submit' }, 'Submit'),
-        disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )

@@ -4,6 +4,20 @@ import util from './formUtil'
 const { lastName, firstName, pid } = student
 const name = `${lastName}, ${firstName}`
 
+const alternativeCS13_S = {
+  select: {
+    alt1Signature: 'admin, admin',
+    alt2Signature: 'faculty, faculty'
+  }
+}
+
+const alternativeCS13_A = {
+  check: {
+    alt1DateSigned: true,
+    alt2DateSigned: true,
+  }
+}
+
 describe('Test CS13 Submissions', () => {
   before(() => {
     cy.request('/util/resetDatabaseToSnapshot')
@@ -34,12 +48,9 @@ describe('Test CS13 Submissions', () => {
     cy.get('textarea[name="product"]').type('Hey guys, this is the product I made.')
     cy.get('input[name="client"]').type('Moi')
     cy.get('input[name="position"]').type('Filling out required boxes that is what I do~~')
-    cy.get('#alt1SignatureSelect').select('admin, admin')
-    cy.get('#alt2SignatureSelect').select('faculty, faculty')
-    cy.get('.CS13-submit').click()
-
-    cy.get('#alt1SignatureSelect').contains('admin, admin')
-    cy.get('#alt2SignatureSelect').contains('faculty, faculty')    
+    util.fillFormByDataCy(alternativeCS13_S)
+    util.submitForm()
+    util.verifyFormByDataCy(alternativeCS13_S) 
   })
 
   it('Edit and approve of CS13 form from the admin side.', () => {
@@ -47,10 +58,9 @@ describe('Test CS13 Submissions', () => {
     util.visitFormAsAdmin()
     cy.get('.CS13').click()
 
-    cy.get('#alt1DateSignedCheckbox').click()
-    cy.get('#alt2DateSignedCheckbox').click()
+    util.fillFormByDataCy(alternativeCS13_A)
 
-    cy.get('.CS13-submit').click()
+    util.submitForm()
   })
 
   it('Check that student fields were updated upon completion of the form.', () => {
@@ -66,7 +76,7 @@ describe('Test CS13 Submissions', () => {
     cy.contains(name)
     cy.contains(pid.toString())
 
-    cy.get(`.CS13-submit`).should('not.exist')
+    cy.get(`#submit-btn`).should('not.exist')
     cy.get('textarea[name="product"]').should('not.exist') 
   })
 })

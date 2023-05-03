@@ -5,9 +5,10 @@ var fs = require('fs')
 var path = require('path')
 var XLSX = require('xlsx')
 var mongoose = require('mongoose')
-const { getYYYYMMDD, checkFormCompletion, isMultiform, linkHeader } = require('./util.js')
+const { getYYYYMMDD, checkFormCompletion, isMultiform, linkHeader, checkAdvisor } = require('./util.js')
 var studentController = {}
-const { generateGraduateStudiesEmail, generateDeveloperEmail, send} = require("./email");
+const { generateGraduateStudiesEmail, generateDeveloperEmail, generateStudentServicesEmail, send} = require("./email");
+const { ViewAuthorizer } = require('./ViewAuthorizer.js')
 
 
 studentController.post = function (req, res) {
@@ -311,8 +312,9 @@ studentController.viewForm = async (req, res) => {
     const postMethod = `/student/forms/update/${student._id}/${formName}`
     const view = `../views/student/${formName}`
     const { cspNonce } = res.locals
+    const VA = new ViewAuthorizer(viewer, await checkAdvisor(req.session.userPID, _id))
     const locals = {
-      student, form, uploadSuccess, isStudent, viewer, admin, postMethod, 
+      student, form, uploadSuccess, isStudent, viewer, VA, admin, postMethod, 
       hasAccess, faculty, activeFaculty, semesters, formName, cspNonce
     }
     return res.render(view, locals)
@@ -320,17 +322,16 @@ studentController.viewForm = async (req, res) => {
   return res.render("../views/error.ejs", { string: "Invalid URL parameters." })
 }
 
-studentController.updateForm = async function(req, res){
+/** helper function that returns the upserted form and useful variables, if an error occurs, returns false and an error string */
+async function saveForm(req, res) {
   const input = req.body
   const formName = req.params.title
   if (formName == null || req.params._id == null || !mongoose.isValidObjectId(req.params._id)) {
-    res.render('../views/error.ejs', {string: 'Did not include valid student ID or title of form'})
-    return
+    return [false, 'Did not include valid student ID or title of form']
   }
   const student = await schema.Student.findOne({_id: req.params._id}).populate('advisor').exec()
   if (!student) {
-    res.render('../views/error.ejs', {string: 'Student not found'})
-    return
+    return [false, 'Student not found']
   }
   const studentId = student._id
   let form = await schema[formName].findOneAndUpdate({student: studentId}, input, { new: true, runValidators: true }).exec().catch(err => res.render('../views/error.ejs', {string: err}))
@@ -344,28 +345,54 @@ studentController.updateForm = async function(req, res){
     form = newform
   }
 
+  return [form, {input, formName, student, studentId, form}]
+}
+
+/** helper function to send emails when submit button is pressed */
+async function submitEmails(args) {
+  const {req, res, studentId, formName, form, student} = args
+  const advisorLink = `${linkHeader(req)}/student/forms/viewForm/${studentId}/${formName}/false`
+
   let result
   switch (formName) {
     case 'CS03':
-    case 'CS04':
     case 'CS06': {
-      const advisorLink = `${linkHeader(req)}/student/forms/viewForm/${studentId}/${formName}/false`
       if (form.approved === true || form.approved === false) { // only send if explicit approval/disapproval is given (only admins can change GSC approval)
         const graduateStudiesEmail = generateGraduateStudiesEmail(formName, student, student.advisor, advisorLink, form.approved, form.approvalReason)
         result = await send(graduateStudiesEmail)
       } else {
         result = true
       }
+      break
     }
     default: 
-      result = true
+      const ssEmail = generateStudentServicesEmail(student, formName, advisorLink, 'faculty')
+      result = await send(ssEmail)
       break
   }
+  return result
+}
 
-  if (!result) {
-    return res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact each of your advisors to ensure they will help complete your form." })
+studentController.saveForm = async function(req, res) {
+  const [form, args] = await saveForm(req, res)
+  if (form == false) {
+    return res.render('../views/error.ejs', {string: args})
   }
-  return res.redirect(`/student/forms/viewForm/${studentId}/${formName}/true`)
+  return res.redirect(`/student/forms/viewForm/${args.studentId}/${args.formName}/true`)
+}
+
+studentController.updateForm = async function(req, res){
+  const [form, args] = await saveForm(req, res)
+  if (form == false) {
+    return res.render('../views/error.ejs', {string: 'args'})
+  }
+  await updateStudentFields(args.formName, form)
+
+  const result = await submitEmails({req, res, ...args})
+  if (!result) {
+    return res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact the student services manager to ensure they know you've submitted this form." })
+  }
+  return res.redirect(`/student/forms/viewForm/${args.studentId}/${args.formName}/true`)
 }
 
 // multiforms
@@ -450,45 +477,67 @@ studentController.viewMultiform = async (req, res) => {
   const viewer = await schema.Faculty.findOne({pid: req.session.userPID}).exec() // person who is currently looking at the form
   const admin = req.session.accessLevel == 3
   const result2 = util.checkAdvisorAdmin(req.session.userPID, studentId)
+  const VA = new ViewAuthorizer(viewer, await checkAdvisor(req.session.userPID, studentId))
   const hasAccess = !!result2 || admin
   const postMethod = `/student/multiforms/update/${studentId}/${formName}/${formId}`
   const seeAllSubmissions = `/student/multiforms/${studentId}/${formName}`
   const view = `../views/student/${formName}`
   const { cspNonce } = res.locals
   const locals = {
-    student, form, uploadSuccess, isStudent, admin, viewer, postMethod, seeAllSubmissions,
+    student, form, uploadSuccess, isStudent, admin, viewer, VA, postMethod, seeAllSubmissions,
     hasAccess, faculty, activeFaculty, semesters, formName, cspNonce
   }
   return res.render(view, locals)
 }
 
-studentController.updateMultiform = async (req, res) => {
+/** helper function that returns the upserted form and its variables, if an error occurs, returns false and an error string */
+async function saveMultiform(req, res) {
   const input = req.body
   const studentId = req.params._id
   const { formName, formId } = req.params
   if (!schema[formName] || !isMultiform(formName)) {
-    return res.render("../views/error.ejs", { string: `${formName} is not a valid form or does not allow multiple submissions.` })
+    return [false, `${formName} is not a valid form or does not allow multiple submissions.`]
   }
   if (!mongoose.isValidObjectId(studentId) || !mongoose.isValidObjectId(formId)) {
-    return res.render("../views/error.ejs", { string: "Internal student id or form id is invalid." })
+    return [false, "Internal student id or form id is invalid."]
   }
 
-  const student = await schema.Student.findOne({_id: studentId}).exec()
+  const student = await schema.Student.findOne({_id: studentId}).populate('advisor').exec()
   if (!student) {
-    return res.render("../views/error.ejs", { string: "Student could not be found." })
+    return [false, "Student could not be found."]
   }
   
   try {
     var form = await schema[formName].findOneAndUpdate({student: studentId, _id: formId}, input, {runValidators: true, new: true}).populate('student').exec()
   } catch (e) {
-    res.render('../views/error.ejs', { string: `Invalid form input, could not update database: ${e}`})
-    return
+    return [false, `Invalid form input, could not update database: ${e}`]
   }
   if (form == null) {
-    return res.render("../views/error.ejs", { string: `Form id invalid, please create a new submission through the index for ${formName}.`})
+    return [false, `Form id invalid, please create a new submission through the index for ${formName}.`]
   }
-  await updateStudentFields(formName, form)
-  return res.redirect(`/student/multiforms/view/${studentId}/${formName}/${formId}/true`)
+  return [form, {form, formName, studentId, input, formId, student}]
+}
+
+studentController.saveMultiform = async (req, res) => {
+  const [form, args] = await saveMultiform(req, res)
+  if (form == false) {
+    return res.render("../views/error.ejs", { string: args })
+  }
+  return res.redirect(`/student/multiforms/view/${args.studentId}/${args.formName}/${args.formId}/true`)
+}
+
+studentController.updateMultiform = async (req, res) => {
+  const [form, args] = await saveMultiform(req, res)
+  if (form == false) {
+    return res.render("../views/error.ejs", { string: args })
+  }
+  await updateStudentFields(args.formName, form)
+
+  const result = await submitEmails({req, res, ...args})
+  if (!result) {
+    return res.render("../views/error.ejs", { string: "At least one email was unable to be sent. Please contact the student services manager to ensure they know you've submitted this form." })
+  }
+  return res.redirect(`/student/multiforms/view/${args.studentId}/${args.formName}/${args.formId}/true`)
 }
 
 /**

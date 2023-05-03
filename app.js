@@ -236,6 +236,11 @@ else if (process.env.mode == 'testing') {
         res.render('./error.ejs', {string: 'U are not logged in'})
       }
     })
+
+    const email = require('./controllers/email.js')
+    app.get('/etherealEmail', (req, res) => { // special testing-only route that returns a JSON of testAccount credentials
+      res.json({user: email.testAccount.user, pass: email.testAccount.pass})
+    })
 }
 
 app.use((req, res, next) => {

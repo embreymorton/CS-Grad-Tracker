@@ -412,6 +412,10 @@ var CS03Schema = mongoose.Schema({
 var CS04Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   projectDescription: String,
+  publication: String,
+  authors: String,
+  publicationDate: String,
+  attachmentURL: String,
   docProprietary: Boolean,
   advisorSignature: Boolean, advisorDateSigned: String,
   majorityCompleted: Boolean,
@@ -458,6 +462,7 @@ var CS08Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   semester: String, year: Number,
   title: String,
+  attachmentURL: String,
   primaryReader: String, primaryDate: String,
   secondaryReader: String, secondaryDate: String,
   primarySignature: String, primaryDateSigned: String,

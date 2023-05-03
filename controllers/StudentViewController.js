@@ -6,7 +6,8 @@ var XLSX = require("xlsx");
 var mongoose = require("mongoose");
 var nodemailer = require('nodemailer');
 const { validateFormData, checkFormCompletion, linkHeader, isMultiform } = require("./util.js");
-const { send, generateApprovalEmail, generateSupervisorEmail, generatePhdAdvisorEmail } = require("./email");
+const { send, generateApprovalEmail, generateStudentServicesEmail } = require("./email");
+const { ViewAuthorizer } = require("./ViewAuthorizer.js");
 
 var studentViewController = {};
 
@@ -89,10 +90,11 @@ studentViewController.viewForm = async function (req, res) {
       const hasAccess = true
       const postMethod = '/studentView/forms/update/' + formName
       const view = `../views/student/${formName}`
+      const VA = new ViewAuthorizer(student)
       const { cspNonce } = res.locals
       let locals = {
         student, form, uploadSuccess, isStudent, postMethod, hasAccess, faculty, viewer: student,
-        activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+        activeFaculty, semesters, formName, cspNonce, VA, isComplete: checkFormCompletion(formName, form)
       }
       locals.form.cspNonce = cspNonce
       res.render(view, locals)
@@ -316,10 +318,11 @@ studentViewController.viewMultiform = async (req, res) => {
     const postMethod = `/studentView/multiforms/update/${formName}/${formId}`
     const seeAllSubmissions = `/studentView/multiforms/${formName}`
     const view = `../views/student/${formName}`
+    const VA = new ViewAuthorizer(student)
     const { cspNonce } = res.locals
     const locals = {
       student, form, uploadSuccess, isStudent, postMethod, seeAllSubmissions, hasAccess, faculty, viewer: student,
-      activeFaculty, semesters, formName, cspNonce, isComplete: checkFormCompletion(formName, form)
+      activeFaculty, semesters, formName, cspNonce, VA, isComplete: checkFormCompletion(formName, form)
     }
     res.render(view, locals)
     return
@@ -446,7 +449,7 @@ const sendEmails = async (student, formName, form, linkToForm) => {
     .map(advisor => advisor.email)
     .join(', ')
   const advisorEmail = generateApprovalEmail(advisors, "Advisor", student, formName, linkToForm)
-  const supervisorEmail = generateSupervisorEmail(student, formName, linkToForm)
+  const supervisorEmail = generateStudentServicesEmail(student, formName, linkToForm)
   /**
    * Generate an email based on what's selected in a dropdown. NOTE: async because must lookup in database
    * @param {String} key - the form's field that includes the selected faculty eg. "instructorSignature" for form CS02

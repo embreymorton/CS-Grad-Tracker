@@ -2,26 +2,26 @@ const x = require('hyperaxe')
 const page = require('../page')
 const uploadFeedback = require('../common/uploadFeedback')
 const studentBar = require('../common/studentBar')
-const input = require('../common/input')
+const oldInput = require('../common/input')
 const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const pseudoInput = require('../common/pseudoInput')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
-const { checkbox, script, textarea, dropdown, makeOption } = require('../common/baseComponents')
+const { checkbox, input, textarea, dropdown, makeOption, dateInput } = require('../common/baseComponents')
 
 
 const main = (opts) => {
-  const { uploadSuccess } = opts
+  const { uploadSuccess, VA } = opts
   const title = 'CS04 Outside Review Option'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    VA.allow('student advisor') ? mainContent(opts) : 'You are not authorized to view this page.'
   )
 }
 
@@ -44,7 +44,7 @@ const mainContent = (opts) => {
 }
 
 const cs04Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, isComplete, cspNonce } = opts
+  const { postMethod, student, form, admin, isStudent, isComplete, cspNonce, VA } = opts
   const editAccess = admin || isStudent
   const { courseNumber, basisWaiver } = form
   const { div, hr, strong, option, b } = x
@@ -54,9 +54,6 @@ const cs04Form = (opts) => {
   const approvedGSCText = 'Approved by Graduate Studies Committee'
   const disapprovedGSCText = 'Disapproved'
   const { dateEntered } = form
-  const value = editAccess && !isComplete
-        ? (type, name, val) => (input(type, name, val, true))
-        : (type, name, val) => (pseudoInput(val))
 
   return [
     div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
@@ -64,7 +61,7 @@ const cs04Form = (opts) => {
     hr(),
     x('form.cs-form#cs-form')(
       { action: postMethod, method: 'post' },
-      input('hidden', 'student', student._id.toString()),
+      oldInput('hidden', 'student', student._id.toString()),
       namePidRow(student), hr(),
 
       row(
@@ -97,9 +94,27 @@ const cs04Form = (opts) => {
       row(
       colMd(4)(
         div(strong('Publication Date')),
-        value('date', 'pub_date', dateEntered)
+        dateInput(
+          'publicationDate', 
+          form.publicationDate,
+          {
+            isDisabled: VA.not('admin student'),
+            isRequired: VA.hasLevel('student'),
+          })
       ),
       ),
+      row(colMd(6)(
+        div(strong('Link to Project')),
+        input(
+          'attachmentURL', 
+          form.attachmentURL,
+          {
+            isDisabled: isComplete || VA.not('admin student'),
+            isRequired: false,
+            placeholder: 'URL starting with https://',
+            attrs: {pattern: "^($)|(https?:\\/\\/.*)"}
+          }),
+      )),
       hr(),
 
       row(
@@ -155,62 +170,8 @@ const cs04Form = (opts) => {
       div('Advisor Approval:'),
       approvalCheckboxRow(!isStudent, 'advisor', opts),
       hr(),
-
-      /*
-      div('Graduate Studies Approval:'),
-      row(
-        colMd(6)(
-          dropdown(
-            'approved',
-            [
-              makeOption('', '', form.approved === '' || form.approved === undefined),
-              makeOption(false, disapprovedGSCText, form.approved === false),
-              makeOption(true, approvedGSCText, form.approved === true)
-            ],
-            {isDisabled: isStudent || !admin}
-          )
-        )
-      ),
-      
-      div(
-        {id: 'reason-section', hidden: form.approved || null},
-        div('Reason for Disapproval:'),
-        row(
-          colMd(6)(
-            textarea(
-              'approvalReason',
-              form.approvalReason,
-              {
-                isDisabled: isStudent || !admin,
-                required: !form.approved,
-                rows: 6
-              }
-            )
-          )
-        ),
-        script(cspNonce, 
-          `
-          document.querySelector('[name="approved"]').addEventListener('change', (e) => {
-            const reasonSection = document.getElementById('reason-section')
-            const approvalReason = document.querySelector('[name="approvalReason"]')
-            const value = e.target.value
-            if (value == 'false') {
-              reasonSection.removeAttribute('hidden')
-              approvalReason.setAttribute('required', 'true')
-            } else {
-              reasonSection.setAttribute('hidden', 'true')
-              approvalReason.removeAttribute('required')
-            }
-          })
-          document.querySelector('[name="approved"]').dispatchEvent(new Event('change'))
-          `,
-          {defer: ''})
-      ),
-      hr(),
-      */
       buttonBarWrapper(
-        isComplete ? null : [vert, x('button.btn.btn-primary.CS04-submit#submit-btn')({ type: 'submit' }, 'Submit')],
-        disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       ),

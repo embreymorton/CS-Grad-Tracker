@@ -66,7 +66,7 @@ describe('Test CS03 submissions', ()=>{
     util.fillCleanFormAsAdmin(CS03);
     util.fillFormByDataCy(CS03cont)
     util.selectDropdowns(CS03Dropdowns);
-    cy.get('.CS03-submit').click();
+    util.submitForm()
     util.checkFormAsAdmin(CS03);
     util.checkDropdowns(CS03Dropdowns);
   })
@@ -93,7 +93,7 @@ describe('Test CS03 submissions', ()=>{
     delete CS03.dept;
 
     util.fillFormAsStudent(CS03);
-    cy.get('.CS03-submit').click();
+    util.submitForm()
     util.checkFormAsStudent(CS03);
   });
 })

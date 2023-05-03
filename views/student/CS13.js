@@ -7,11 +7,11 @@ const { row, colMd } = require('../common/grid')
 const signatureRow = require('../common/signatureRow')
 const approvalCheckboxRow = require('../common/approvalCheckboxRow')
 const pseudoInput = require('../common/pseudoInput')
-const signatureDropDown = require('../common/signatureDropDown')
+const {signatureDropdown} = require('../common/signatureDropDown')
 const cancelEditButton = require('../common/cancelEditButton')
 const { checkFormCompletion } = require('../../controllers/util')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 
 const main = (opts) => {
@@ -46,7 +46,7 @@ const mainContent = (opts) => {
 }
 
 const cs13Form = (opts) => {
-  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete } = opts
+  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete, VA, cspNonce, viewer } = opts
   const editAccess = admin || isStudent
   const { div, hr, strong, option, span, a, br, button } = x
   const select = x('select.form-control')
@@ -70,7 +70,20 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('COMP 523 Instructor Approval'),
-      signatureDropDown(!isStudent, 'comp523', activeFaculty, opts, true)),
+      signatureDropdown(
+        'comp523Signature',
+        form.comp523Signature,
+        'comp523DateSigned',
+        form.comp523DateSigned,
+        activeFaculty,
+        cspNonce,
+        {
+          isRequired: false,
+          selectAccess: VA.allow('admin student'),
+          checkboxAccess: VA.allow('admin advisor', ['fullName', form.comp523Signature]),
+          allowOther: false,
+        }
+      )),
       hr(),
       button({type: 'button'}, {id: 'indcol', class : 'indcol', value: 'industry', ...disabledForComplete}, ('Industry Experience')),
       div({id: 'indcont', class: 'indcont'},
@@ -126,19 +139,48 @@ const cs13Form = (opts) => {
       ), vert,
 
       div('Approval #1:'),
-      signatureDropDown(!isStudent, 'alt1', activeFaculty, opts, true), vert,
+      // signatureDropdown(!isStudent, 'alt1', activeFaculty, opts, true), vert,
+      signatureDropdown(
+        'alt1Signature',
+        form.alt1Signature,
+        'alt1DateSigned',
+        form.alt1DateSigned,
+        activeFaculty,
+        cspNonce,
+        {
+          isRequired: false,
+          selectAccess: VA.allow('admin student'),
+          checkboxAccess: VA.allow('admin advisor', ['fullName', form.alt1Signature]),
+          allowOther: true,
+          viewer,
+        }
+      ), vert,
       // signatureRow(!isStudent, 'alt1', form), vert,
 
       div('Approval #2:'),
-      signatureDropDown(!isStudent, 'alt2', activeFaculty, opts, true), vert),
-      // signatureRow(!isStudent, 'alt2', form),
+      signatureDropdown(
+        'alt2Signature',
+        form.alt2Signature,
+        'alt2DateSigned',
+        form.alt2DateSigned,
+        activeFaculty,
+        cspNonce,
+        {
+          isRequired: false,
+          selectAccess: VA.allow('admin student'),
+          checkboxAccess: VA.allow('admin advisor', ['fullName', form.alt2Signature]),
+          allowOther: true,
+          viewer,
+
+        }
+      ), vert,
 
       buttonBarWrapper(
-        [vert, isComplete ? null : x('button.btn.btn-primary.CS13-submit#submit-btn')({ type: 'submit' }, 'Submit')],
-        disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
+    )
     )
   )
 }

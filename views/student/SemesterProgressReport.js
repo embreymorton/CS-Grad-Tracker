@@ -6,7 +6,7 @@ const { row, colMd } = require('../common/grid')
 const pseudoInput = require('../common/pseudoInput')
 const cancelEditButton = require('../common/cancelEditButton')
 const buttonBarWrapper = require('../common/buttonBarWrapper')
-const disableSubmitScript = require('../common/disableSubmitScript')
+const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 const { dropdown, makeOption, textarea, input, script, optionSet } = require('../common/baseComponents')
 const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
@@ -14,16 +14,15 @@ const viewerApprovalRow = require('../common/viewerApprovalRow')
 let complete = null
 
 const vert = x('div.verticalSpace')()
-
 const main = (opts) => {
-  const { uploadSuccess, isComplete} = opts
+  const { uploadSuccess, isComplete, VA, form } = opts
   complete = isComplete
   const title = 'Semesterly Progress Report'
   return page(
     { ...opts, title },
     uploadFeedback(uploadSuccess),
     studentBar(opts),
-    mainContent(opts),
+    VA.allow('admin student advisor', ['_id', form.employmentAdvisor?._id]) ? mainContent(opts) : 'You are not authorized to view this page.',
   )
 }
 
@@ -74,7 +73,7 @@ const milestoneBullets = (title, listOfBullets) => {
 }
 
 const progressReportForm = (opts) => {
-  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete, semesters } = opts
+  const { postMethod, student, form, admin, isStudent, activeFaculty, isComplete, semesters, VA } = opts
   const editAccess = admin || isStudent
   const frow = textareaRow(form, editAccess)
   const { courseNumber, basisWaiver } = form
@@ -137,7 +136,7 @@ const progressReportForm = (opts) => {
           dropdown('employmentAdvisor',
             employmentAdvisorChoices,
             {
-              isDisabled: isComplete,
+              isDisabled: isComplete || VA.not('admin student'),
               blankOption: 'You do not have an advisor specified and so you must select from the dropdown.', // overriden above if student has an advisor
               isRequired: true
             }
@@ -168,8 +167,7 @@ const progressReportForm = (opts) => {
       hr(),
       !isStudent ? evaluationSection(opts) : null, // IMPORTANT: Do not allow students to see the evaluation sections!
       buttonBarWrapper(
-        isComplete ? null : x('button.btn.btn-primary.SemesterProgressReport-submit#submit-btn')('Submit'),
-        disableSubmitScript(opts),
+        submitButton(opts),
         isComplete ? null : saveEditButton(postMethod),
         cancelEditButton(isStudent ? null : student._id),
       )
@@ -232,9 +230,9 @@ const textareaRow = (form, editAccess) => (label, name, width, required = true) 
 }
 
 const evaluationSection = (opts) => {
-  const { form, admin, student, isStudent, cspNonce, viewer } = opts
+  const { form, admin, student, isStudent, cspNonce, viewer, VA } = opts
   const editAccess = admin || isStudent
-  const textFrow = formRow(form, editAccess || !isStudent, 'text')
+  const textFrow = (access) => formRow(form, access, 'text')
   const { hr, h2, h3, h4, div, b } = x
   
   return [
@@ -264,11 +262,11 @@ const evaluationSection = (opts) => {
           ],
           form.academicRating || -1
         ),
-        {isRequired: false, isDisabled: isStudent}
+        {isRequired: false, isDisabled: VA.not('admin advisor')}
       )
     ),
     vert,
-    textFrow(
+    textFrow(VA.allow('admin advisor'))(
       'Q2. Regarding your rating on the student\'s progress on their "academic" goals in the previous question, if you have additional comments, please enter them below.',
       'academicComments',
       8,
@@ -285,7 +283,7 @@ const evaluationSection = (opts) => {
       form,
       viewer,
       cspNonce,
-      {signerTitle: 'Academic Advisor', isDisabled: isStudent}
+      {signerTitle: 'Academic Advisor', isDisabled: VA.not('admin advisor')}
     ),
     vert,
     hr,
@@ -308,11 +306,11 @@ const evaluationSection = (opts) => {
           ],
           form.rataRating == 0 ? 0 : form.rataRating || -1
         ),
-        {isRequired: false, isDisabled: isStudent}
+        {isRequired: false, isDisabled: VA.not('admin', ['_id', form.employmentAdvisor?._id]) && !form.altEmploymentAdvisor}
       ),
     ),
     vert,
-    textFrow(
+    textFrow(VA.allow('admin', ['_id', form.employmentAdvisor?._id]) || form.altEmploymentAdvisor)(
       'Q5. Regarding your rating on the student\'s performance as an RA/TA in the previous question, if you have additional comments, please enter them below.',
       'rataComments',
       8,
@@ -321,7 +319,7 @@ const evaluationSection = (opts) => {
     vert,
     rowCol(12,
       div('Employment Advisor Approval:'),
-      'Q6. I have read the student progress report filled out by the student, and have discussed its contents with them.',
+      'Q6. I have evaluated the student\'s performance.',
     ),
     viewerApprovalRow(
       'employmentSignature',
@@ -329,7 +327,24 @@ const evaluationSection = (opts) => {
       form,
       viewer,
       cspNonce,
-      {signerTitle: 'Employment Advisor', isDisabled: isStudent}
+      {signerTitle: 'Employment Advisor', isDisabled: VA.not('admin', ['_id', form.employmentAdvisor?._id])}
+    ),
+    script(cspNonce, // hacky way to add "on behalf of"
+        `
+        document.getElementById('checkbox-employmentSignature').addEventListener('change', (e) => {
+          const altEmploymentAdvisor = document.querySelector('[name="altEmploymentAdvisor"]')
+          if (e.target.checked && altEmploymentAdvisor.value) {
+            const label = document.getElementById('label-employmentSignature')
+            const alt_employer = altEmploymentAdvisor.value
+            const currentText = label.innerText.split(')')
+            currentText[1] = ' on behalf of ' + alt_employer + ')'
+            label.innerText = currentText.join('')
+          }
+        })
+        
+        document.getElementById('checkbox-employmentSignature').dispatchEvent(new Event('change'))
+        `,
+      {defer: ''}
     ),
     vert,
     hr

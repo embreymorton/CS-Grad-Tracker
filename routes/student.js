@@ -104,15 +104,9 @@ router.get("/uploadCourses/:uploadSuccess", authorizeAdmin, student.uploadCourse
 
 router.get("/forms/viewForm/:_id/:title/:uploadSuccess", redirectStudents, authorizeFaculty, student.viewForm);
 
-/*
-It is "bad" practice to theoretically allow any faculty to update any students'
-form. On a form by form basis, the form will be hidden depending on who
-is required to fill out the form. (If only student/advisor, hidden to everyone else)
-(if student/advisor/otherFaculty the form will show to otherFaculty)
-*/
 router.post("/forms/update/:_id/:title", authorizeFaculty, student.updateForm);
 
-router.post("/forms/save/:_id/:title", authorizeFaculty, student.updateForm); // submit button is currently same as save button for faculty
+router.post("/forms/save/:_id/:title", authorizeFaculty, student.saveForm); 
 
 // multiforms
 router.get("/multiforms/:_id/:formName", redirectStudents, authorizeAdvisor, student.formVersions);
@@ -121,7 +115,7 @@ router.get("/multiforms/view/:_id/:formName/:formId/:uploadSuccess", authorizeFa
 
 router.post("/multiforms/update/:_id/:formName/:formId", authorizeFaculty, student.updateMultiform);
 
-router.post("/multiforms/save/:_id/:formName/:formId", authorizeFaculty, student.updateMultiform); // submit button is currently same as save button for faculty
+router.post("/multiforms/save/:_id/:formName/:formId", authorizeFaculty, student.saveMultiform); 
 
 router.post('/post', authorizeAdmin, student.post);
 

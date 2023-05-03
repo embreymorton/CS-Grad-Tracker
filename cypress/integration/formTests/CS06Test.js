@@ -20,7 +20,7 @@ let CS06 = {
   note: 'I HATTTTE YOUUUUU',
   otherCourses: 'YOU WERE MY BROTHER',
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
-  committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'NOOOOOOOOOOOOOOO'],
+  committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...'],
 }
 
 let CS06cont = {
@@ -31,6 +31,9 @@ let CS06cont = {
   text: {
     breadthCourseDate: ['FA 2020', 'FA 2020' ,'FA 2020' , 'FA 2020', 'FA 2020', 'FA 2020'],
     concentrationCourseDate:  ['FA 2020', 'FA 2020' , 'FA 2020', 'FA 2020'], 
+  },
+  select: {
+    chairman: 'admin, admin'
   }
 }
 
@@ -76,16 +79,14 @@ describe('Test CS06 submissions', () => {
     cy.contains(pid.toString())
     util.fillCleanFormAsAdmin(CS06)
     util.selectDropdowns(CS06Dropdowns)
-    cy.get('.advisor-buttons .btn').eq(5).click()
-    cy.get('.chair-buttons .btn').eq(2).click()
-    cy.get('.CS06-submit').click()
-    cy.get('[name=advisor]').should('have.value', CS06.committee[5])
-    cy.get('[name=chairman]').should('have.value', CS06.committee[2])
+    cy.get('.advisor-buttons .btn').eq(4).click()
+    util.fillFormByDataCy(CS06cont)
+    util.submitForm()
 
+    cy.get('[name=advisor]').should('have.value', CS06.committee[4-1])
     util.checkFormAsAdmin(CS06)
     util.checkDropdowns(CS06Dropdowns)
-    util.fillFormByDataCy(CS06cont)
-    cy.get('#submit-btn').click()
+    util.submitForm()
   })
 
   // it('Submit CS06 form from student side', ()=>{
