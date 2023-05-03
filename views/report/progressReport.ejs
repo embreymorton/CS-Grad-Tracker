@@ -87,6 +87,10 @@
                       <% } else { %>
                         N/A
                       <% } %>
+                      <br>
+                      <br>
+                      Other Research Advisor:
+                      <%= otherResearchAdvs %>
                     </td>
                     <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>>
                          <%= report[i].prpPassed%>
@@ -144,6 +148,7 @@
                 <% } %>
               </tbody>
             </table>
+            </div>
 
             </div>
           <% } else { %>
