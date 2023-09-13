@@ -347,3 +347,9 @@ is how we currently have it set up:
   users in the database to authenticate.
 - The app is configured as server rendered html, rather than a framework like
   react.
+
+## Setting up the ssh key:
+to set up the key to be able to pull / push and deploy 
+generate a new key and copy the content from the new generated file that has an extention of .pub and past it.
+Dont copy the one from the terminal, look for the generated file.
+This should get you all set.
