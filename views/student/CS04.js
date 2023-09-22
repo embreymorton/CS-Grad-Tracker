@@ -104,7 +104,7 @@ const cs04Form = (opts) => {
       ),
       ),
       row(colMd(6)(
-        div(strong('Link to Project')),
+        div(strong('Link to Paper')),
         input(
           'attachmentURL', 
           form.attachmentURL,
