@@ -154,9 +154,9 @@ const cs04Form = (opts) => {
       row(
         colMd(12)(
           <div>
-  This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science. <br/>
+  This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science. 
 
-  In order to complete this review, the student is to upload it to the Carolina Digital Repository. Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department. <br/>
+  In order to complete this review, the student is to upload it to the Carolina Digital Repository. Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.
 
   Instructions for uploading:
 
@@ -169,7 +169,7 @@ const cs04Form = (opts) => {
     <li>Submit the URL on this form.</li>
   </ol>
 
-  The Student Services Manager will be notified when you have completed the upload. <br/>
+  The Student Services Manager will be notified when you have completed the upload. 
 
   In addition, the student is required to give a copy of all external reviews to their adviser.
         </div>,
