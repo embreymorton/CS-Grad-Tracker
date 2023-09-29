@@ -150,7 +150,7 @@ const cs04Form = (opts) => {
       ),
       hr(),
 
-      div({class: 'text-center'}, b('(Below is to be completed by the advisor and faculty members.)')),
+      div({class: 'text-center'}, b('(Below is to be completed by the advisor.)')),
       hr(),
 
       row(
@@ -175,6 +175,22 @@ const cs04Form = (opts) => {
           checkbox(
             'satisfiesComprehensiveWriting',
             form.satisfiesComprehensiveWriting,
+            cspNonce,
+            {
+              isDisabled: isStudent,
+              isRequired: false,
+            }
+          )
+        )
+      ),
+      hr(),
+
+      row(
+        colMd(12)(
+          div('The student has provided me with copies of external reviews.'),
+          checkbox(
+            'providedCopiesExternalReviews',
+            form.providedCopiesExternalReviews,
             cspNonce,
             {
               isDisabled: isStudent,
