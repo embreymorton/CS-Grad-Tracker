@@ -56,17 +56,22 @@ const cs04Form = (opts) => {
   const { dateEntered } = form
 
   return [
-    div(`This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.<br><br>
-      In order to complete this review, the student is to upload it to the Carolina Digital Repository. Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.<br><br>
-      Instructions for uploading:<br>
-      1. Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.<br>
-      2. Select Student Papers<br>
-      3. Select Master's Papers and then “Create Work”<br>
-      4. Select “Department of Computer Science”<br>
-      5. Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.<br>
-      6. Submit the URL on this form.<br><br>
-      The Student Services Manager will be notified when you have completed the upload.<br><br>
-      In addition, the student is required to give a copy of all external reviews to their adviser.`),
+    div({ style: 'white-space: pre-line;' })(`This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.
+
+In order to complete this review, the student is to upload it to the Carolina Digital Repository.  Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.
+
+Instructions for uploading:
+
+1. Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.
+2. Select Student Papers
+3. Select Master's Papers and then “Create Work”
+4. Select “Department of Computer Science”
+5. Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.
+6. Submit the URL on this form.
+
+The Student Services Manager will be notified when you have completed the upload.
+
+In addition, the student is required to give a copy of all external reviews to their adviser.`),
     strong('All fields required!'),
     hr(),
     x('form.cs-form#cs-form')(
