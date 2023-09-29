@@ -62,14 +62,13 @@ const cs04Form = (opts) => {
       
       Instructions for uploading:
       
-      <ol>
-        <li>Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.</li>
-        <li>Select Student Papers</li>
-        <li>Select Master's Papers and then “Create Work”</li>
-        <li>Select “Department of Computer Science”</li>
-        <li>Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.</li>
-        <li>Submit the URL on this form.</li>
-      </ol>
+        1. Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.
+        2. Select Student Papers
+        3. Select Master's Papers and then “Create Work”
+        4. Select “Department of Computer Science”
+        5. Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.
+        6. Submit the URL on this form.
+      
       
       The Student Services Manager will be notified when you have completed the upload.
       
