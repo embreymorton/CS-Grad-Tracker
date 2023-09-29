@@ -59,6 +59,7 @@ const cs06Form = (opts) => {
   const range4 = [0, 1, 2, 3]
   const range5 = [0, 1, 2, 3, 4]
   const range6 = [0, 1, 2, 3, 4, 5]
+  const range7 = [0, 1, 2, 3, 4, 5, 6]
   const buttonAttrs = {
     type: 'button',
     'aria-pressed': 'false',
@@ -337,11 +338,11 @@ const cs06Form = (opts) => {
       row(
         colMd(6)(
           x('div.form-group.row')(
-            x('label.col-md-2')(`Chairman: `), colMd(10)(facultyDropdown('chairman', chairman, faculty, {isDisabled: isComplete || !editAccess, isRequired: true, blankOption: 'Select chair member.'})),
+            x('label.col-md-2')(`Chair: `), colMd(10)(facultyDropdown('chairman', chairman, faculty, {isDisabled: isComplete || !editAccess, isRequired: true, blankOption: 'Select chair member.'})),
           ),
-          range5.map((i) => (
+          range7.map((i) => (
               x('div.form-group.row')(
-              x('label.col-md-2')(`${i+1}.* `),
+              x('label.col-md-2')(i < 5 ? `${i+1}.* ` : `${i+1}. `),
               colMd(10)(
                 editAccess && !isComplete
                   ? input('text', 'committee', committee && committee[i], true, null, 0, {'data-index': i+1})
