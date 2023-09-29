@@ -41,7 +41,7 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
-    "cypress": "^8.7.0",
+    "cypress": "^13.2.0",
     "cypress-file-upload": "^5.0.8",
     "standard": "^16.0.4",
     "start-server-and-test": "^1.12.0"

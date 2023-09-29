@@ -7,12 +7,12 @@ mongoose.connection
   .once('open', function () {
 
     const admin = new db.Student ({
-        onyen: "abz1",
+        onyen: "chandle",
         csid: "person",
-        email: "azamani@unc.edu",
+        email: "chandle@email.unc.edu",
         firstName: "student_person",
         lastName: "person",
-        pid: 000000000,
+        pid: 730403454,
         sectionNumber: 001,
         active: true,
         admin: false
