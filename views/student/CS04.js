@@ -56,7 +56,25 @@ const cs04Form = (opts) => {
   const { dateEntered } = form
 
   return [
-    div('This student has successfully completed a project as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
+    div(`This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.
+
+      In order to complete this review, the student is to upload it to the Carolina Digital Repository.  Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.
+      
+      Instructions for uploading:
+      
+      <ol>
+        <li>Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.</li>
+        <li>Select Student Papers</li>
+        <li>Select Master's Papers and then “Create Work”</li>
+        <li>Select “Department of Computer Science”</li>
+        <li>Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.</li>
+        <li>Submit the URL on this form.</li>
+      </ol>
+      
+      The Student Services Manager will be notified when you have completed the upload.
+      
+      In addition, the student is required to give a copy of all external reviews to their adviser.
+      `),
     strong('All fields required!'),
     hr(),
     x('form.cs-form#cs-form')(
@@ -153,26 +171,7 @@ const cs04Form = (opts) => {
 
       row(
         colMd(12)(
-          <div>
-  This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science. 
-
-  In order to complete this review, the student is to upload it to the Carolina Digital Repository. Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.
-
-  Instructions for uploading:
-
-  <ol>
-    <li>Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.</li>
-    <li>Select Student Papers</li>
-    <li>Select Master's Papers and then “Create Work”</li>
-    <li>Select “Department of Computer Science”</li>
-    <li>Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.</li>
-    <li>Submit the URL on this form.</li>
-  </ol>
-
-  The Student Services Manager will be notified when you have completed the upload. 
-
-  In addition, the student is required to give a copy of all external reviews to their adviser.
-        </div>,
+          div('The student has revised the externally reviewed publication such that it also satisfies the Comprehensive Writing requirement (e.g., extending the related work section to be broad and detailed):'),
           checkbox(
             'satisfiesComprehensiveWriting',
             form.satisfiesComprehensiveWriting,
