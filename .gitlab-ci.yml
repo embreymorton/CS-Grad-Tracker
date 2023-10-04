@@ -42,7 +42,7 @@ before_script:
   - git config --global user.name "takoda1"
 
 services:
-    - mongo:6.0.10
+    - mongo:latest
 
 stages:
   - build
