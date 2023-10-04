@@ -56,22 +56,22 @@ const cs04Form = (opts) => {
   const { dateEntered } = form
 
   return [
-    div(`This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.
+    div("This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science."),
 
-In order to complete this review, the student is to upload it to the Carolina Digital Repository.  Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.
+div("In order to complete this review, the student is to upload it to the Carolina Digital Repository.  Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department."),
 
-Instructions for uploading:
+div("Instructions for uploading:"),
 
-1. Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen.
-2. Select Student Papers
-3. Select Master's Papers and then “Create Work”
-4. Select “Department of Computer Science”
-5. Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save.
-6. Submit the URL on this form.
+div("1. Go to Carolina Digital Repository (cdr.lib.unc.edu) and login with your onyen."),
+div("2. Select Student Papers"),
+div("3. Select Master's Papers and then “Create Work”"),
+div("4. Select “Department of Computer Science”"),
+div("5. Fill in the “Work Deposit Form.” You do not need an ORCID. Check the deposit agreement and save."),
+div("6. Submit the URL on this form."),
 
-The Student Services Manager will be notified when you have completed the upload.
+div("The Student Services Manager will be notified when you have completed the upload."),
 
-In addition, the student is required to give a copy of all external reviews to their adviser.`),
+div("In addition, the student is required to give a copy of all external reviews to their adviser."),
     strong('All fields required!'),
     hr(),
     x('form.cs-form#cs-form')(
