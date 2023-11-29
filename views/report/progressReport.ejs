@@ -31,125 +31,125 @@
 
 
           <% if(report != undefined && report.length>0) { %>
+            
             <div class = "div1">
-            <table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
-              <thead>
-                <tr>
-                  <th scope="col" class="col-progress-report-last" title="Number of Semesters Enrolled">Semesters Enrolled</th>
-                  <th scope="col" class="col-progress-report-last" title="Last name of The Student">Last Name</th>
-                  <th scope="col" class="col-progress-report-first" title="First name of The Student">First Name</th>
-                  <th scope="col" class="col-progress-report-advisor" title="Name of Faculty Advisor">Advisor</th>
-                  <th scope="col" class="col-progress-report-notes" title="Name of Non-Faculty Advisor">Other Advisor</th>
-                  <th scope="col" class="col-progress-report-prp" title="PRP Passed">PRP Passed</th>
-                  <th scope="col" class="col-progress-report-technical" title="Technical writing approved CS08">Technical writing</th>
-                  <th scope="col" class="col-progress-report-background" title="approved?">Background Prep wksht</th>
-                  <th scope="col" class="col-progress-report-research" title="Research discussion 3 Faculty CS12">Research discussion</th>
-                  <th scope="col" class="col-progress-report-prog" title="Prog prod Requirement CS13">Prog prod Requirement</th>
-                  <th scope="col" class="col-progress-report-ms-program" title="M.S. Program of study approved CS03">M.S. CS03</th>
-                  <th scope="col" class="col-progress-report-phd-program" title="Ph.D. Program of study approved CS06">Ph.D. CS06</th>
-                  <th scope="col" class="col-progress-report-committee" title="Committee Comp Approved (COMM form)">Committee Comp</th>
-                  <th scope="col" class="col-progress-report-phd" title="PhD Proposal Approved (COMM form)">PhD Proposal</th>
-                  <th scope="col" class="col-progress-report-oral" title="Oral Exam passed (DER form)">Oral Exam</th>
-                  <th scope="col" class="col-progress-report-defense" title="Dis defense passed (DER form)">Dis defense</th>
-                  <th scope="col" class="col-progress-report-dissertation" title="Dissertation submitted">Dissertation submitted</th>
-                  <th scope="col" class="col-progress-report-notes" title="Notes">Notes</th>
-                  <th scope="col" class="col-progress-report-academic-review" title="per Semester (4 is Excellent, 1 is Poor)">Academic Review</th>
-                  <th scope="col" class="col-progress-report-employment-review" title="per Semester (4 is Very Good, 1 is Poor, 0 is N/A)">Employment Review</th>
-                </tr>
-              </thead>
-              <tbody>
-                <%
-                  report.sort(function(x, y) {
-                    return y.activeSemesters - x.activeSemesters;
-                  })
-                %>
-                <% for(var i=0; i<report.length; i++) { %>
+              
+              <table id="progress-report-table" align="center" border="1" class="table display-table table-striped table-bordered progress-report-table">
+                <thead  class="header1">
                   <tr>
-                    <td><%= (report[i].activeSemesters == -1 ? "" : report[i].activeSemesters)%></td>
-                    <td><%= report[i].lastName%></td>
-                    <td><%= report[i].firstName%></td>
-                    <td>
-                      <% if(report[i].advisor != null){ %>
-                      <%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
-                      <% } %>
-                      </td>
-                    <td>
-                      <% var otherAdvs = report[i].otherAdvisor == null || report[i].otherAdvisor.trim().length == 0 ? "N/A" : report[i].otherAdvisor.trim() %>
-                      <% var otherResearchAdvs = report[i].otherResearchAdvisor == null || report[i].otherResearchAdvisor.trim().length() == 0 ? "N/A" : report[i].otherResearchAdvisor.trim() %>
-                      
-                      Other Advisor:
-                      <%= otherAdvs %>
-                      <br>
-                      <br>
-                      Research Advisor:
-                      <% if(report[i].researchAdvisor != null){ %>
-                        <%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
-                      <% } else { %>
-                        N/A
-                      <% } %>
-                      <br>
-                      <br>
-                      Other Research Advisor:
-                      <%= otherResearchAdvs %>
-                    </td>
-                    <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>>
-                         <%= report[i].prpPassed%>
-                         </td>
-                    <td><%= report[i].technicalWritingApproved%></td>
-                    <td><%= report[i].backgroundApproved%></td>
-                    <td><%= report[i].researchPlanningMeeting%></td>
-                    <td><%= report[i].programProductRequirement%></td>
-                    <td><%= report[i].msProgramOfStudyApproved%></td>
-                    <td><%= report[i].phdProgramOfStudyApproved%></td>
-                    <td><%= report[i].committeeCompApproved%></td>
-                    <td><%= report[i].phdProposalApproved%></td>
-                    <td><%= report[i].oralExamPassed%></td>
-                    <td><%= report[i].dissertationDefencePassed%></td>
-                    <td><%= report[i].dissertationSubmitted%></td>
-
-                    <td title="Click to learn more" style="cursor: pointer;">
-                      <%if (report[i].notes) { %>
-                        <% for(var j=report[i].notes.length - 1; j>=0; j--) { %>
-                          <p>
-                            <strong>Note #<%= j+1%>:</strong> <%= report[i].notes[j].title%> (<%= report[i].notes[j].date%>)
-                            <br>
-                            <%= report[i].notes[j].note%>
-                          </p>
-                        <% } %>
-                      <% } %>
-                    </td>
-
-                    <td> <!-- academic reviews -->
-                      <%if (report[i].semesterProgress) { %>
-                        <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
-                          <p>
-                            <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].academicRating%>
-                            <br>
-                            <%= report[i].semesterProgress[j].academicComments%>
-                          </p>
-                        <% } %>
-                      <% } %>
-                    </td>
-
-                    <td> <!-- employment reviews -->
-                      <%if (report[i].semesterProgress) { %>
-                        <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
-                          <p>
-                            <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].rataRating%>
-                            <br>
-                            <%= report[i].semesterProgress[j].rataComments%>
-                          </p>
-                        <% } %>
-                      <% } %>
-                    </td>
-                    
-
+                    <th scope="col" class="col-progress-report-last" title="Number of Semesters Enrolled">Semesters Enrolled</th>
+                    <th scope="col" class="col-progress-report-last" title="Last name of The Student">Last Name</th>
+                    <th scope="col" class="col-progress-report-first" title="First name of The Student">First Name</th>
+                    <th scope="col" class="col-progress-report-advisor" title="Name of Faculty Advisor">Advisor</th>
+                    <th scope="col" class="col-progress-report-notes" title="Name of Non-Faculty Advisor">Other Advisor</th>
+                    <th scope="col" class="col-progress-report-prp" title="PRP Passed">PRP Passed</th>
+                    <th scope="col" class="col-progress-report-technical" title="Technical writing approved CS08">Technical writing</th>
+                    <th scope="col" class="col-progress-report-background" title="approved?">Background Prep wksht</th>
+                    <th scope="col" class="col-progress-report-research" title="Research discussion 3 Faculty CS12">Research discussion</th>
+                    <th scope="col" class="col-progress-report-prog" title="Prog prod Requirement CS13">Prog prod Requirement</th>
+                    <th scope="col" class="col-progress-report-ms-program" title="M.S. Program of study approved CS03">M.S. CS03</th>
+                    <th scope="col" class="col-progress-report-phd-program" title="Ph.D. Program of study approved CS06">Ph.D. CS06</th>
+                    <th scope="col" class="col-progress-report-committee" title="Committee Comp Approved (COMM form)">Committee Comp</th>
+                    <th scope="col" class="col-progress-report-phd" title="PhD Proposal Approved (COMM form)">PhD Proposal</th>
+                    <th scope="col" class="col-progress-report-oral" title="Oral Exam passed (DER form)">Oral Exam</th>
+                    <th scope="col" class="col-progress-report-defense" title="Dis defense passed (DER form)">Dis defense</th>
+                    <th scope="col" class="col-progress-report-dissertation" title="Dissertation submitted">Dissertation submitted</th>
+                    <th scope="col" class="col-progress-report-notes" title="Notes">Notes</th>
+                    <th scope="col" class="col-progress-report-academic-review" title="per Semester (4 is Excellent, 1 is Poor)">Academic Review</th>
+                    <th scope="col" class="col-progress-report-employment-review" title="per Semester (4 is Very Good, 1 is Poor, 0 is N/A)">Employment Review</th>
                   </tr>
-                <% } %>
-              </tbody>
-            </table>
-            </div>
+                </thead>
+                <tbody>
+                  <%
+                    report.sort(function(x, y) {
+                      return y.activeSemesters - x.activeSemesters;
+                    })
+                  %>
+                  <% for(var i=0; i<report.length; i++) { %>
+                    <tr>
+                      <td><%= (report[i].activeSemesters == -1 ? "" : report[i].activeSemesters)%></td>
+                      <td><%= report[i].lastName%></td>
+                      <td><%= report[i].firstName%></td>
+                      <td>
+                        <% if(report[i].advisor != null){ %>
+                        <%= report[i].advisor.lastName%>, <%= report[i].advisor.firstName%>
+                        <% } %>
+                        </td>
+                      <td>
+                        <% var otherAdvs = report[i].otherAdvisor == null || report[i].otherAdvisor.trim().length == 0 ? "N/A" : report[i].otherAdvisor.trim() %>
+                        <% var otherResearchAdvs = report[i].otherResearchAdvisor == null || report[i].otherResearchAdvisor.trim().length() == 0 ? "N/A" : report[i].otherResearchAdvisor.trim() %>
+                        
+                        Other Advisor:
+                        <%= otherAdvs %>
+                        <br>
+                        <br>
+                        Research Advisor:
+                        <% if(report[i].researchAdvisor != null){ %>
+                          <%= report[i].researchAdvisor.lastName%>, <%= report[i].researchAdvisor.firstName%>
+                        <% } else { %>
+                          N/A
+                        <% } %>
+                        <br>
+                        <br>
+                        Other Research Advisor:
+                        <%= otherResearchAdvs %>
+                      </td>
+                      <td <% if(report[i].activeSemesters > 8 && (report[i].prpPassed == undefined || report[i].prpPassed == '')) { %> class="red" <% } %>>
+                          <%= report[i].prpPassed%>
+                          </td>
+                      <td><%= report[i].technicalWritingApproved%></td>
+                      <td><%= report[i].backgroundApproved%></td>
+                      <td><%= report[i].researchPlanningMeeting%></td>
+                      <td><%= report[i].programProductRequirement%></td>
+                      <td><%= report[i].msProgramOfStudyApproved%></td>
+                      <td><%= report[i].phdProgramOfStudyApproved%></td>
+                      <td><%= report[i].committeeCompApproved%></td>
+                      <td><%= report[i].phdProposalApproved%></td>
+                      <td><%= report[i].oralExamPassed%></td>
+                      <td><%= report[i].dissertationDefencePassed%></td>
+                      <td><%= report[i].dissertationSubmitted%></td>
 
+                      <td title="Click to learn more" style="cursor: pointer;">
+                        <%if (report[i].notes) { %>
+                          <% for(var j=report[i].notes.length - 1; j>=0; j--) { %>
+                            <p>
+                              <strong>Note #<%= j+1%>:</strong> <%= report[i].notes[j].title%> (<%= report[i].notes[j].date%>)
+                              <br>
+                              <%= report[i].notes[j].note%>
+                            </p>
+                          <% } %>
+                        <% } %>
+                      </td>
+
+                      <td> <!-- academic reviews -->
+                        <%if (report[i].semesterProgress) { %>
+                          <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
+                            <p>
+                              <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].academicRating%>
+                              <br>
+                              <%= report[i].semesterProgress[j].academicComments%>
+                            </p>
+                          <% } %>
+                        <% } %>
+                      </td>
+
+                      <td> <!-- employment reviews -->
+                        <%if (report[i].semesterProgress) { %>
+                          <% for(var j = 0; j < report[i].semesterProgress.length; j++) { %>
+                            <p>
+                              <strong><%=report[i].semesterProgress[j].semesterString%>:</strong> <%= report[i].semesterProgress[j].rataRating%>
+                              <br>
+                              <%= report[i].semesterProgress[j].rataComments%>
+                            </p>
+                          <% } %>
+                        <% } %>
+                      </td>
+                      
+
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
             </div>
           <% } else { %>
             <div>No students found.</div>

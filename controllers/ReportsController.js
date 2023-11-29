@@ -174,6 +174,7 @@ reportController.get = function (req, res) {
 
 reportController.getProgressReport = async (req, res) => {
   const [ report, string ] = await aggregateData(res.locals.userPID, res.locals.admin) 
+  // const deadline = 
   if (!string) return res.render('../views/report/progressReport.ejs', { report })
   else return res.render('../views/error.ejs', { string })
 }

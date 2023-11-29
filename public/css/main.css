@@ -16,9 +16,13 @@ html, body {
 }
 
 table {
-  table-layout: fixed;
+  /* table-layout: fixed; */
+  border-collapse: collapse;
+  width: 100%;
   /* margin-left: 20px; */
 }
+
+
 
 /* faculty table column widths*/
 .col-facultyOnyen {
@@ -174,7 +178,7 @@ form [name=dept] {
   height:38px;
 }
 
-.progress-report-table, tuition-report-table {
+.progress-report-table, .tuition-report-table {
   display: block;
   table-layout: fixed;
   width: 100%;
@@ -183,6 +187,11 @@ form [name=dept] {
 
 .col-progress-report-notes {
   min-width: 300px;
+}
+
+.header1{
+  position: sticky;
+  top: 0;
 }
 
 .download-progress-csv-button {
@@ -365,9 +374,8 @@ form [name=dept] {
 
 
 .div1 {
-  width: 100%;
   height: 80vh;
-  overflow-y: auto;
+  overflow: auto;
   border: none;
 }
 
