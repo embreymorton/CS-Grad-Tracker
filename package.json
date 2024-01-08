@@ -53,7 +53,7 @@
     ]
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node bin/www",
+    "start": "cross-env NODE_ENV=development node bin/www",
     "start-ci": "npm run db:reset & cross-env NODE_ENV=testing node bin/www",
     "cypress": "cypress open",
     "db:reset": "cross-env NODE_ENV=testing node dbReset.js",
