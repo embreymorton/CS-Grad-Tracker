@@ -9,6 +9,7 @@ module.exports = defineConfig({
     },
     baseUrl: "http://localhost:8080",
   },
+  projectId: 'oxsfuu',
 
   component: {
     devServer: {

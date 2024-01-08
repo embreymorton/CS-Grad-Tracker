@@ -215,17 +215,19 @@ else if (process.env.mode == 'testing') {
     app.use(passport.session())
   
 
-    //add routes to allow user changes
+   //add routes to allow user changes
     app.use('/changeUser', require('./routes/userChange'))
     app.use('/util/resetDatabaseToSnapshot', async (req, res) => {
       try {
+        console.log("this try catch block is working\n")
         const result = await require('./cypress/fixtures')()
-        res.status(200).json(result)
+        res.status(200).json({result})
       } catch (error) {
         res.status(500).json({error})
       }
     })
     app.get('/', (req, res) => {
+      
       if(req.session.accessLevel >= 2){
         res.redirect('/student')
       }

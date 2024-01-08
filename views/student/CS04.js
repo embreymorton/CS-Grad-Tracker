@@ -56,7 +56,7 @@ const cs04Form = (opts) => {
   const { dateEntered } = form
 
   return [
-    //div("This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science."),
+    div('This student has successfully written a paper as a thesis substitute in partial fulfillment of the requirements for the degree of Master of Science in Computer Science.'),
 
     div('In order to complete this review, the student is to upload it to the Carolina Digital Repository.  Even if the paper is available in the public domain, it must be uploaded to the Carolina Digital Repository in order to assure that it will remain available to the department.'),
 
