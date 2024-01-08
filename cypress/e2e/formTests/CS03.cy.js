@@ -1,5 +1,5 @@
 import data from '../../../data/testRoles'
-import util from './formUtil';
+import util from './formUtil.cy';
 
 const { lastName, firstName, pid } = data.student
 const name = `${lastName}, ${firstName}`

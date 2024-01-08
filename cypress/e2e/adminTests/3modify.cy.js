@@ -1,4 +1,4 @@
-var data = require('./data.js');
+var data = require('./data.cy');
 
 const studentTextFields = data.studentTextFields;
 const job = data.job;

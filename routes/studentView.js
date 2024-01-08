@@ -15,13 +15,10 @@ router.use((req, res, next)=>{
 
 router.get("/", student.get);
 
-router.get("/courses", student.courses);
-
 router.get("/forms", student.forms);
 
 router.get("/forms/:title/:uploadSuccess", student.viewForm);
 
-router.get("/jobs", student.jobs);
 
 router.get("/downloadCourses", student.downloadCourses);
 

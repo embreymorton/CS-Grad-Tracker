@@ -60,6 +60,8 @@ const cs06Form = (opts) => {
   const range5 = [0, 1, 2, 3, 4]
   const range6 = [0, 1, 2, 3, 4, 5]
   const range7 = [0, 1, 2, 3, 4, 5, 6]
+  const range8 = [0, 1, 2, 3, 4, 5, 6, 7]
+  
   const buttonAttrs = {
     type: 'button',
     'aria-pressed': 'false',
@@ -353,7 +355,7 @@ const cs06Form = (opts) => {
         ),
 
         x('div.col-md-2.advisor-buttons')(
-          range6.map((i) => (
+          range8.map((i) => (
             x('div.form-group.row')(
               colMd(12)(
                 x('button.btn.btn-outline-primary.advisor.advisor-btn')(

@@ -1,5 +1,5 @@
 import data from '../../../data/testRoles';
-import util from './formUtil';
+import util from './formUtil.cy';
 
 const approvedDate = new Date();
 const approvedDateMMDDYYYY = `${approvedDate.getMonth()+1}/${approvedDate.getDate()}/${approvedDate.getFullYear()}`;

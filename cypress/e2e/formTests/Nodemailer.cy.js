@@ -1,6 +1,7 @@
 
 describe('Checking Email Receival', ()=>{
   before(() => {
+    console.log("testing, testing.")
     cy.request('/etherealEmail').then(res => {
       cy.wrap(res.body.user).as('user')
       cy.wrap(res.body.pass).as('pass')
