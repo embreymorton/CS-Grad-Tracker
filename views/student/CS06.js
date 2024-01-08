@@ -375,7 +375,7 @@ const cs06Form = (opts) => {
         )
       ),
       hr(),
-
+      
       div(strong('Committee advisor'), ' (or Chair if different from advisor)*'),
       div('By signing here, the chair indicates that all items above have been approved by the majority of the committee.'),
       signatureRow(VA.allow('admin', ['fullName', chairman]), 'chair', form, opts.cspNonce),
@@ -448,7 +448,6 @@ const cs06Form = (opts) => {
           {defer: ''})
       ),
       hr(),
-      
       row(
         colMd(5)(
           div('Director of Graduate Studies Approval:*')

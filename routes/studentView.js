@@ -5,15 +5,12 @@ var router = express.Router();
 var student = require("../controllers/StudentViewController.js");
 
 router.use((req, res, next)=>{
-    next()
-    /*
     if(req.session.accessLevel == 1){
         next();
     }
     else{
         res.render("../views/error.ejs", {string: "You are not a student or have incorrectly authenticated."})
     }
-    */
 })
 
 router.get("/", student.get);

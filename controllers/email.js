@@ -157,6 +157,7 @@ _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
 * @returns true if all emails sent, false if any failed
 */
 _.send = async (...toSend) => {
+  
  const email = async (email) => {
    const response = await _._transporter.sendMail(email).catch(console.error)
    if (!response) {
@@ -165,6 +166,7 @@ _.send = async (...toSend) => {
      console.log(`Emailed: ${response.accepted} | failed to send: ${response.rejected} | preview at: ${nodemailer.getTestMessageUrl(response)}`)
      return true
    }
+   
  }
 
  const result = await Promise.all(toSend.map(letter => email(letter)))

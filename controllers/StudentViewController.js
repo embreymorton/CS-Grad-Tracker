@@ -61,7 +61,14 @@ studentViewController.jobs = async function (req, res) {
 
 studentViewController.forms = async function (req, res) {
   const student = await schema.Student.findOne({ pid: req.session.userPID }).exec();
-  res.render("../views/studentView/forms.ejs", { student });
+  var formNames = ['CS01', 'CS02', 'CS03', 'CS04', 'CS06', 'CS08', 'CS13', 'SemesterProgressReport'];
+  var results = new Object();
+  for (let formName of formNames) {
+    const result = await schema[formName].findOne({ student: student._id }).exec();
+    const form = result || {};
+    results[formName] = checkFormCompletion(formName, form);
+  }
+  res.render("../views/studentView/forms.ejs", { student , results});
 }
 
 studentViewController.viewForm = async function (req, res) {
@@ -356,7 +363,6 @@ studentViewController.updateMultiform = async function (req, res) {
     res.render("../views/error.ejs", { string: err })
     return
   }
-
   const result = await sendEmails(student, formName, form, `${linkHeader(req)}/student/multiforms/view/${studentId}/${formName}/${formId}/false`)
   if (result) {
     res.redirect(`/studentView/multiforms/${formName}/${formId}/true`)

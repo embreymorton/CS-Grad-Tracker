@@ -41,7 +41,8 @@ var facultySchema = mongoose.Schema({
   },
   sectionNumber: Number,
   active: Boolean,
-  admin: Boolean
+  admin: Boolean,
+  directorOfGraduateStudies: {type: Boolean, default: false}
 })
 facultySchema.virtual('fullName').get(function () {
   return this.firstName + ' ' + this.lastName
@@ -452,7 +453,7 @@ var CS06Schema = mongoose.Schema({
   PHDOralExam: Boolean,
   committee: [String],
   advisor: String, chairman: String,
-  chairSignature: String, chairDateSigned: String,
+  chairSignature: {type: String, default: "true"}, chairDateSigned: String, //we do not require chairSignature anymore
   approved: Boolean,
   approvalReason: String,
   directorSignature: String, directorDateSigned: String,

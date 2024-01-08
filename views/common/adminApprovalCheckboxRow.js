@@ -35,7 +35,8 @@ const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
         isApproved,
         nonce,
         {
-          isDisabled: !viewer.admin,
+          isDisabled: !((name === 'director' && viewer.directorOfGraduateStudies) || 
+                         ((name !== 'director') && viewer.admin)),
           isRequired: false,
           overrideFalse: "",
           overrideTrue: viewerName

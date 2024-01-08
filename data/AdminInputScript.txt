@@ -7,15 +7,15 @@ mongoose.connection
   .once('open', function () {
 
     const admin = new db.Student ({
-        onyen: "chandle",
+        onyen: "abz1",
         csid: "person",
-        email: "chandle@email.unc.edu",
+        email: "azamani@unc.edu",
         firstName: "student_person",
         lastName: "person",
-        pid: 730403454,
+        pid: 000000000,
         sectionNumber: 001,
         active: true,
-        admin: false
+        admin: true
     })
 
     admin.save(function (err, admin) {

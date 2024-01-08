@@ -36,6 +36,7 @@ facultyController.post = async function (req, res) {
   so input.active should be assigned the value false*/
   input.active == null ? input.active = false : input.active = true;
   input.admin == null ? input.admin = false : input.admin = true;
+  input.directorOfGraduateStudies == null ? input.directorOfGraduateStudies = false : input.directorOfGraduateStudies = true;
   //Verify that all fields exist. Should be though if front end is done correctly.
   if (!util.allFieldsExist(input, schema.Faculty)) {
     return res.render
@@ -128,6 +129,7 @@ facultyController.put = function (req, res) {
   var input = req.body;
   input.active == null ? input.active = false : input.active = true;
   input.admin == null ? input.admin = false : input.admin = true;
+  input.directorOfGraduateStudies == null ? input.directorOfGraduateStudies = false : input.directorOfGraduateStudies = true;
   var input = util.validateModelData(input, schema.Faculty);
   if (util.allFieldsExist(input, schema.Faculty)) {
     schema.Faculty.findOneAndUpdate({_id: input._id}, input, { runValidators: true }).exec().then(function (result) {
