@@ -1,4 +1,4 @@
-var data = require('./data.js')
+var data = require('./data.cy')
 
 describe('Upload data', ()=>{
   const filePath = '../../data/InOrderUploadTests/'

@@ -1,4 +1,4 @@
-var data = require('./data');
+var data = require('./data.cy');
 
 describe('Page visit and page javascript', ()=>{
   before(() => {
