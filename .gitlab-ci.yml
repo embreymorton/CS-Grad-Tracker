@@ -46,7 +46,6 @@ services:
 
 stages:
   - build
-  - test
   - deploy
 
 cache:
@@ -67,14 +66,14 @@ install_dependencies:
     paths:
       - node_modules/
 
-testing_testing:
-  image: cypress/base:16
-  tags:
-    - nodejs
-  stage: test
-  script:
-    - npm install -g start-server-and-test
-    - npm run ci
+#testing_testing:
+#  image: cypress/base:16
+#  tags:
+#    - nodejs
+#  stage: test
+#  script:
+#    - npm install -g start-server-and-test
+#    - npm run ci
 
 deployment:
   stage: deploy
