@@ -91,13 +91,13 @@ var studentSchema = mongoose.Schema({
   alternativeName: String,
   gender: {
     type: String,
-    enum: ['MALE', 'FEMALE', 'OTHER'],
-    default: 'OTHER'
+    enum: ['MALE', 'FEMALE', 'OTHER', 'Prefer Not To Say'],
+    default: 'Prefer Not To Say'
   },
   ethnicity: {
     type: String,
-    enum: ['ASIAN', 'BLACK', 'HISPANIC', 'PACIFIC', 'WHITE', 'OTHER'],
-    default: 'OTHER'
+    enum: ['ASIAN', 'BLACK', 'HISPANIC', 'PACIFIC', 'WHITE', 'OTHER', 'Prefer Not To Say'],
+    default: 'Prefer Not To Say'
   },
   stateResidency: {
     type: String,
