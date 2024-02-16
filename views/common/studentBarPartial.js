@@ -9,9 +9,9 @@ const studentBarPartial = (opts) => (
       ' Back to Students '
     ),
     navItem(opts, 'edit', 'Profile'),
-    navItem(opts, 'jobs', 'Jobs'),
+    /* navItem(opts, 'jobs', 'Jobs'), */
     navItem(opts, 'forms', 'Forms'),
-    navItem(opts, 'courses', 'Courses'),
+    /* navItem(opts, 'courses', 'Courses'), */
     navItem(opts, 'notes', 'Notes'),
     // navItem(opts, 'documents', 'Documents')
   )
