@@ -173,8 +173,10 @@ reportController.get = function (req, res) {
 }
 
 reportController.getProgressReport = async (req, res) => {
+  if (!res.locals.admin) {
+    res.render('../views/error.ejs', {string: "Non-admin faculty cannot view progress reports."}) 
+  }
   const [ report, string ] = await aggregateData(res.locals.userPID, res.locals.admin) 
-  // const deadline = 
   if (!string) return res.render('../views/report/progressReport.ejs', { report })
   else return res.render('../views/error.ejs', { string })
 }
