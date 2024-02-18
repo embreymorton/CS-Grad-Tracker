@@ -76,8 +76,8 @@
                         <% } %>
                         </td>
                       <td>
-                        <% var otherAdvs = report[i].otherAdvisor == null || report[i].otherAdvisor.trim().length == 0 ? "N/A" : report[i].otherAdvisor.trim() %>
-                        <% var otherResearchAdvs = report[i].otherResearchAdvisor == null || report[i].otherResearchAdvisor.trim().length() == 0 ? "N/A" : report[i].otherResearchAdvisor.trim() %>
+                        <% var otherAdvs = report[i].otherAdvisor == null || typeof report[i].otherAdvisor.trim !== 'function' || report[i].otherAdvisor.trim().length == 0 ? "N/A" : report[i].otherAdvisor.trim() %>
+                        <% var otherResearchAdvs = report[i].otherResearchAdvisor == null || typeof report[i].otherResearchAdvisor.trim !== 'function' || report[i].otherResearchAdvisor.trim().length() == 0 ? "N/A" : report[i].otherResearchAdvisor.trim() %>
                         
                         Other Advisor:
                         <%= otherAdvs %>
