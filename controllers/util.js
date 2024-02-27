@@ -136,16 +136,34 @@ _.checkAdvisor = function(facultyID, studentID) {
   return new Promise((resolve, reject) => {
     schema.Student.findOne({_id: studentID}).exec().then(function(student) {
       if (student == null) {
-        resolve(false)
+        resolve(false);
       } else if (student.advisor == null && student.researchAdvisor == null) {
-        resolve(false)
+        resolve(false);
       } else {
-        const query =
-              student.researchAdvisor == null ? {_id: student.advisor} :
-              student.advisor == null ? {_id: student.researchAdvisor} :
-              {$or: [{_id: student.advisor}, {_id: student.researchAdvisor}]}
-        schema.Faculty.findOne(query).exec().then(function(faculty) {
-          resolve(faculty.pid == facultyID)})}})})}
+        const advisorQuery = student.advisor ? {_id: student.advisor} : null;
+        const researchAdvisorQuery = student.researchAdvisor ? {_id: student.researchAdvisor} : null;
+        
+        const advisorCheck = advisorQuery ? schema.Faculty.findOne(advisorQuery).exec() : Promise.resolve(null);
+        const researchAdvisorCheck = researchAdvisorQuery ? schema.Faculty.findOne(researchAdvisorQuery).exec() : Promise.resolve(null);
+
+        Promise.all([advisorCheck, researchAdvisorCheck]).then(([advisor, researchAdvisor]) => {
+          if (advisor && advisor.pid == facultyID) {
+            resolve(true);
+          } else if (researchAdvisor && researchAdvisor.pid == facultyID) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }).catch(err => {
+          reject(err);
+        });
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  });
+};
+
 
 /*
   checkAdvisorAdmin is a promise that resolves as true if the user is
