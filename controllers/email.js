@@ -141,7 +141,7 @@ _.generateGraduateStudiesEmail = (formName, student, advisor, linkToForm, approv
   }
 }
 
-const developerEmails = "kris@cs.unc.edu, pozefsky@cs.unc.edu, kekevi@live.unc.edu, abz@email.unc.edu, lamaab@email.unc.edu"
+const developerEmails = "kris@cs.unc.edu, pozefsky@cs.unc.edu, abz@email.unc.edu, lamaab@email.unc.edu, elaine13@email.unc.edu"
 _.generateDeveloperEmail = (subjectText, bodyText, to = developerEmails) => {
   return {
     from: '"CS-GradTracking" <noreply@cs.unc.edu>',
