@@ -21,8 +21,8 @@ _._transporter = null
 _.testAccount = {user: "", pass: ""}
 
 _.managerInfo = {
-  name: "Kris Jordan",
-  email: "kris@cs.unc.edu"
+  name: "CS Help",
+  email: "help@cs.unc.edu"
 }
 
 _.studentServicesManager = {
