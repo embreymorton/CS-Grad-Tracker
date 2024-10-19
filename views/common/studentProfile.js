@@ -20,38 +20,51 @@ const profileFields = (opts) => {
   const facAdvisorField_ = admin ? facAdvisorField : displayFacAdvisor
 
   return (
-    x('.row')(
-      x('.col-md-4')(
-        createOnlyField('onyen'),
-        !student && admin ?
-        x('.row')(
-          x('.col-md-4')('CSID *'),
-          x('.col-md-8')(
-            x('.row.form-group')(
-              x('input.form-control.col-md-4.left-15')({required: true, name: 'csid'}),
-              x('label.col-md-8')('@cs.unc.edu')
+    x('.container')(
+      //personal info
+      x('.card.mb-4')(
+        x('.card-header') ('Personal Information'),
+        x('.card-body')( // card body start
+          x('.row')(
+            //first column
+            x('.col-md-6')(
+              createOnlyField('onyen'),
+              !student && admin 
+              ? x('.row.mb-3')(
+                x('.col-md-4')('CSID *'),
+                x('.col-md-8')(
+                  x('.row.form-group')(
+                    x('input.form-control.col-md-4.left-15')({required: true, name: 'csid'}),
+                    x('label.col-md-8')('@cs.unc.edu')
+                  )
+                )
+              ) : fieldDiv(
+                label['csid'],
+                `${student['csid']} (@cs.unc.edu)`,
+                x('input.form-control')({type: 'hidden', name: 'csid', value: student['csid']})
+              ),
+              input('email', { required: true }),
+              input('firstName', { required: true }),
+              input('lastName', { required: true }),
+              selectField_('pronouns', pronouns, student),
+              createOnlyField('pid'),
+              student && (student.phdAwarded != '' && student.phdAwarded != undefined) ? fieldDiv(label['status'], "Graduated") : selectField_('status', statuses, student),
+          
+            ), 
+            x('.col-md-6')( // second column
+              input('alternativeName'),
+              selectField_('gender', genders, student),
+              selectField_('ethnicity', ethnicities, student),
+              selectField_('stateResidency', stateResidencies, student),
+              selectField_('USResidency', USResidencies, student),
+              input('enteringStatus'),
+              input('researchArea'),
             )
-          )
-        ) : fieldDiv(
-          label['csid'],
-          `${student['csid']} (@cs.unc.edu)`,
-          x('input.form-control')({type: 'hidden', name: 'csid', value: student['csid']})
-        ),
-        input('email', { required: true }),
-        input('firstName', { required: true }),
-        input('lastName', { required: true }),
-        selectField_('pronouns', pronouns, student),
-        createOnlyField('pid'),
-        student && (student.phdAwarded != '' && student.phdAwarded != undefined) ? fieldDiv(label['status'], "Graduated") : selectField_('status', statuses, student),
-        input('alternativeName'),
-        selectField_('gender', genders, student),
-        selectField_('ethnicity', ethnicities, student),
-        selectField_('stateResidency', stateResidencies, student),
-        selectField_('USResidency', USResidencies, student),
-        input('enteringStatus'),
-        input('researchArea'),
-      ),
+        ) 
+      ) // card body end
+    ),
 
+      //  the remaining fields below still needed to be formatted. they will follow the same structure as above //
       x('.col-md-4')(
         input('leaveExtension'),
         selectField_('intendedDegree', degrees, student),

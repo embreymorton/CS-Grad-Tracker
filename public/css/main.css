@@ -1,3 +1,44 @@
+/* main.css */
+
+/* Ensure Bootstrap is properly linked in your project */
+
+/* Customize card headers */
+.card-header {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Style form fields */
+.form-control {
+  margin-bottom: 15px;
+}
+
+/* Style submit button */
+button.btn-primary {
+  width: 100%;
+}
+
+/* Optional: Add hover effects to cards */
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Adjust margins for better spacing */
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-4 {
+  margin-top: 1.5rem !important;
+}
+
+
+
+
 .sidebar {
   background-color: lightblue;
 }
