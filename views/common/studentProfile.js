@@ -2,6 +2,8 @@ const x = require('hyperaxe')
 const select = require('../common/select')
 const input = require('../common/input')
 const fieldDiv = require('./fieldDiv')
+const { row, colMd } = require('./grid');
+const { renderCard } = require('./layoutComponents');
 
 const profileFields = (opts) => {
   const { student, pronouns, statuses, genders, ethnicities } = opts
@@ -10,8 +12,8 @@ const profileFields = (opts) => {
   const { citizenship } = student || {}
   const input_ = (name, attrs) => inputField({ name, student, ...attrs })
   const createOnlyField_ = student
-        ? (name) => uneditableTextFieldWithHiddenInput(name, student[name])
-        : (name) => input(name, { required: true })
+    ? (name) => uneditableTextFieldWithHiddenInput(name, student[name])
+    : (name) => input(name, { required: true })
   const displayField = (name) => nameValueDisplay(name, student[name])
   const createOnlyField = admin ? createOnlyField_ : displayField
   const input = admin ? input_ : displayField
@@ -19,85 +21,86 @@ const profileFields = (opts) => {
   const semestersField_ = admin ? semestersField : displaySemestersField
   const facAdvisorField_ = admin ? facAdvisorField : displayFacAdvisor
 
-  return (
+  return ( //start of card creation using profileFields
     x('.container')(
-      //personal info
-      x('.card.mb-4')(
-        x('.card-header') ('Personal Information'),
-        x('.card-body')( // card body start
-          x('.row')(
-            //first column
-            x('.col-md-6')(
-              createOnlyField('onyen'),
-              !student && admin 
-              ? x('.row.mb-3')(
-                x('.col-md-4')('CSID *'),
-                x('.col-md-8')(
-                  x('.row.form-group')(
-                    x('input.form-control.col-md-4.left-15')({required: true, name: 'csid'}),
-                    x('label.col-md-8')('@cs.unc.edu')
-                  )
-                )
-              ) : fieldDiv(
-                label['csid'],
-                `${student['csid']} (@cs.unc.edu)`,
-                x('input.form-control')({type: 'hidden', name: 'csid', value: student['csid']})
-              ),
-              input('email', { required: true }),
-              input('firstName', { required: true }),
-              input('lastName', { required: true }),
-              createOnlyField('pid'),
-              selectField_('pronouns', pronouns, student),
-              student && (student.phdAwarded != '' && student.phdAwarded != undefined) ? fieldDiv(label['status'], "Graduated") : selectField_('status', statuses, student),
-          
-            ), 
-            x('.col-md-6')( // second column
-              input('alternativeName'),
-              selectField_('gender', genders, student),
-              selectField_('ethnicity', ethnicities, student),
-              selectField_('stateResidency', stateResidencies, student),
-              selectField_('USResidency', USResidencies, student),
-              input('enteringStatus'),
-              input('researchArea'),
-            )
-        ) 
-      ) // card body end
-    ),
+      // Start of first card creation using renderCard from layoutComponents and grid.js
+      renderCard('Personal Information', row(
+        // Creates first column
+        colMd(6)(
+          createOnlyField('pid'),
+          createOnlyField('onyen'),
+          !student && admin
+            ? fieldDiv(
+              'CSID *',
+              x('.d-flex.align-items-center')( // Flexbox to keep input and label side by side
+                x('input.form-control.col-md-6')({ required: true, name: 'csid' }),
+                x('span.ml-2')('@cs.unc.edu') // Inline text with left margin
+              )
+            ) : fieldDiv(
+              label['csid'],
+              `${student['csid']} (@cs.unc.edu)`,
+              x('input.form-control')({ type: 'hidden', name: 'csid', value: student['csid'] })
+            ),
+          input('email', { required: true }),
+          input('firstName', { required: true }),
+          input('lastName', { required: true }),
+          input('alternativeName'),
+        ),
+        // Second column
+        colMd(6)(
+          selectField_('pronouns', pronouns, student),
+          selectField_('gender', genders, student),
+          selectField_('ethnicity', ethnicities, student),
+          input('citizenship', { checked: citizenship === true ? true : null }),
+          selectField_('USResidency', USResidencies, student),
+          selectField_('stateResidency', stateResidencies, student),
+        )
+      )),
+      // End of first card creation using renderCard
 
-      //  the remaining fields below still needed to be formatted. they will follow the same structure as above //
-      x('.col-md-4')(
-        input('leaveExtension'),
-        selectField_('intendedDegree', degrees, student),
-        input('hoursCompleted'),
-        input('citizenship', { checked: citizenship === true ? true : null }),
-        selectField_('fundingEligibility', eligibility, student),
-        input('semestersOnLeave'),
-        input('backgroundApproved'),
-        input('mastersAwarded'),
-        input('prpPassed'),
-        input('technicalWritingApproved'),
-        input('proceedToPhdFormSubmitted'),
-        input('msProgramOfStudyApproved'),
-        input('phdProgramOfStudyApproved'),
-      ),
+      renderCard('Academic Information', row(
+        colMd(6)(
+          selectField_('intendedDegree', degrees, student),
+          student && (student.phdAwarded != '' && student.phdAwarded != undefined) ? fieldDiv(label['status'], "Graduated") : selectField_('status', statuses, student),
+          input('enteringStatus'),
+          selectField_('fundingEligibility', eligibility, student),
+          semestersField_('semesterStarted', semesters, student),
+          input('semestersOnLeave'),
+          input('leaveExtension'),
+        ),
+        colMd(6)(
+          facAdvisorField_('advisor', faculty, student),
+          input('otherAdvisor'),
+          facAdvisorField_('researchAdvisor', faculty, student),
+          input('otherResearchAdvisor'),
+          input('researchArea'),
+        )
+      )),
 
-      x('.col-md-4')(
-        input('researchPlanningMeeting'),
-        input('programProductRequirement'),
-        input('committeeCompApproved'),
-        input('phdProposalApproved'),
-        input('oralExamPassed'),
-        input('dissertationDefencePassed'),
-        input('dissertationSubmitted'),
-        input('phdAwarded'),
-        semestersField_('semesterStarted', semesters, student),
-        facAdvisorField_('advisor', faculty, student),
-        input('otherAdvisor'),
-        facAdvisorField_('researchAdvisor', faculty, student),
-        input('otherResearchAdvisor'),
-      ),
+      renderCard("Academic Progress", row(
+        colMd(6)(
+          input('hoursCompleted'),
+          input('backgroundApproved'),
+          input('programProductRequirement'),
+          input('technicalWritingApproved'),
+          input('msProgramOfStudyApproved'),
+          input('mastersAwarded'),
+          input('prpPassed'),
+          input('researchPlanningMeeting'),
+        ),
+        colMd(6)(
+          input('proceedToPhdFormSubmitted'),
+          input('phdProgramOfStudyApproved'),
+          input('committeeCompApproved'),
+          input('phdProposalApproved'),
+          input('oralExamPassed'),
+          input('dissertationDefencePassed'),
+          input('dissertationSubmitted'),
+          input('phdAwarded'),
+        )
+      )),
     )
-  )
+  ) //end of card creation 
 }
 
 const label = {
@@ -154,7 +157,7 @@ const type = {
   email: 'email',
   enteringStatus: 'text',
   firstName: 'text',
-  hoursCompleted: 'number', 
+  hoursCompleted: 'number',
   lastName: 'text',
   leaveExtension: 'text',
   mastersAwarded: 'date',
@@ -205,7 +208,7 @@ const displaySemestersField = (name, semester, student) => {
 }
 
 const facultyName = (faculty, id) => {
-  const name = ({ lastName, firstName}) => `${lastName}, ${firstName}`
+  const name = ({ lastName, firstName }) => `${lastName}, ${firstName}`
   const sameFaculty = ({ _id }) => _id.equals(id)
   const fac = faculty.filter(sameFaculty)[0]
   return fac ? name(fac) : '(unassigned)'
@@ -214,13 +217,13 @@ const facultyName = (faculty, id) => {
 const uneditableTextFieldWithHiddenInput = (name, value) => fieldDiv(
   label[name],
   value,
-  x('input.form-control')({type: 'hidden', name, value})
+  x('input.form-control')({ type: 'hidden', name, value })
 )
 
 const inputField = ({ name, student, required, checked, min }) => (
   fieldDiv(
     label[name],
-    input(type[name], name, (student || {})[name], required, checked, min )
+    input(type[name], name, (student || {})[name], required, checked, min)
   )
 )
 
