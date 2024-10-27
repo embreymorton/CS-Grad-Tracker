@@ -64,25 +64,29 @@ const cs01Form = (opts) => {
       namePidRow(student), hr(),
       h3('Background Course Information'), x('.verticalSpace')(), semesterDatalist(8, 1),
 
-      [ row('comp283'), hr() ],
       [ row('comp210'), hr() ],
       [ row('comp311'), hr() ],
       [ row('comp455'), hr() ],
+      [ row('comp550'), hr() ],
 
-      x('.text-center.bold')('(Any two of the following three will suffice)'), 
+      x('.text-center.bold')('(Any two of the following nine will suffice)'), 
       vert,
       row('comp421'), x('.verticalSpace')(),
+      row('comp431'), x('.verticalSpace')(),
+      row('comp433'), x('.verticalSpace')(),
       row('comp520'), x('.verticalSpace')(),
+      row('comp524'), x('.verticalSpace')(),
       row('comp530'), x('.verticalSpace')(),
+      row('comp533'), x('.verticalSpace')(),
+      row('comp541'), x('.verticalSpace')(),
+      row('comp590'), x('.verticalSpace')(),
       hr(),
 
-      row('comp524'), hr(),
-      row('comp541'), hr(),
-      [ row('comp550'), hr() ],
+      x('.text-center.bold')('Mathematics and Statistics'), 
+      vert,
       [ row('math233'), hr() ],
-      [ row('math381'), hr() ],
-      [ row('math547'), hr() ],
-      row('math661'), hr(),
+      [ row('comp283'), hr() ],
+      [ row('math347'), hr() ],
       [ row('stat435'), hr() ],
 
       x('.text-center')(
@@ -404,14 +408,35 @@ const descriptions = {
     ' Algebra of matrices with applications; determinants; solution of linear systems by Gaussian elimination; Gram-Schmidt procedure; eigenvalues.  Math 116 may not be taken for credit after credit has been granted for Math 147.'
   ],
 
-  math661: [
-    strong('MATH 661:  Introduction to Numerical Analysis:'),
-    " Error in computation; solution of nonlinear equations; interpolation; approximation of functions; Fourier methods; numerical integration & differentiation; introduction to numerical solution of ODE's; introductions to numerical linear algebra."
-  ],
+  // math661: [
+  //   strong('MATH 661:  Introduction to Numerical Analysis:'),
+  //   " Error in computation; solution of nonlinear equations; interpolation; approximation of functions; Fourier methods; numerical integration & differentiation; introduction to numerical solution of ODE's; introductions to numerical linear algebra."
+  // ],
 
   stat435: [
     strong('STAT 435:  Introduction to Probability (MATH 535):'),
     ' Introduction to mathematical theory of probability covering random variables, moments, binomial, Poisson, normal & related distributions, generating functions, sums & sequences of random variables, & statistical applications.'
+  ],
+
+  //New Additions
+  comp431: [
+    strong('*COMP 431: Internet Services and Protocols:'),
+    'Application-level protocols HTTP, SMTP, FTP, transport protocols TCP and UDP, and the network-level protocol IP. Internet architecture, naming, addressing, routing, and DNS. Sockets programming. Physical-layer technologies. Ethernet, ATM, and wireless.'
+  ],
+
+  comp433: [
+    strong('*COMP 433: Mobile Computing Systems:'),
+    'Principles of mobile applications, mobile OS, mobile networks, and embedded sensor systems. Coursework includes programming assignments, reading from recent research literature, and a semester long project on a mobile computing platform (e.g., Android, Arduino, iOS, etc.).'
+  ],
+
+  comp533: [
+    strong('*COMP 533: Distributed Systems:'),
+    'Distributed systems and their goals; resource naming, synchronization of distributed processes; consistency and replication; fault tolerance; security and trust; distributed object-based systems; distributed file systems; distributed Web-based systems; and peer-to-peer systems.'
+  ],
+  
+  comp590: [
+    strong('*COMP 590: Undergraduate Computer Architecture:'),
+    ''
   ],
 }
 
