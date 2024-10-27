@@ -6,6 +6,7 @@
     <title>Search students</title>
     <%- include('../partials/head.ejs') %>
   </head>
+  
 
   <body>
     <div class="container-fluid h-100">
@@ -14,8 +15,6 @@
         <div class='col-lg-2 sidebar text-center'>
 
           <%- include('../partials/admin-sidebar.ejs') %>
-
-          <%- include('./search-student.ejs') %>
 
         </div>
 
@@ -58,8 +57,10 @@
           <% } else { %>
             <div>No student found.</div>
           <% } %>
+          <%- include('./search-student.ejs') %>
         </div>
       </div>
     </div>
+    <!-- <script src="./navigateScript.js"></script> -->
   </body>
 </html>

@@ -15,12 +15,12 @@
 
           <%- include('../partials/admin-sidebar.ejs') %>
 
-          <%- include('./search-faculty.ejs') %>
-
         </div>
 
         <div class='col-lg-10 panelbg text-center'>
           <h1>Faculty</h1>
+          <%- include('./search-faculty.ejs') %>
+
           <h3 class="searchTextColor"><%=search%></h3>
            <% if(faculty.length>0) { %>
             <table align="center" border="1" class="table display-table table-striped table-bordered faculty-table">

@@ -24,12 +24,14 @@
         <div align ="center" class="col-lg-10 panelbg text-center">
 
           <h3 class="space">Progress Report</h3>
-          <span>
-            <p><a href="/report/progressReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
-            <p><a href="/report/progressReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
-          </span>
+          
+          <div class="button-section">
+            <a href="/report/progressReport/downloadXLSX" class="btn btn-secondary download-progress-xlsx-button">Download as XLSX</a>
+            <a href="/report/progressReport/downloadCSV" class="btn btn-secondary download-progress-csv-button">Download as CSV</a>
+          </div>
+          <br>
 
-
+  
           <% if(report != undefined && report.length>0) { %>
             
             <div class = "div1">

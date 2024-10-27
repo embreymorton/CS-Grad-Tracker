@@ -19,11 +19,12 @@
         <div align ="center" class="col-lg-10 panelbg text-center">
 
           <h3 class="space">Advisor Report</h3>
-          <span>
-            <p><a href="/report/advisorReport/downloadXLSX" class="btn btn-primary download-progress-xlsx-button">Download as XLSX</a></p>
-            <p><a href="/report/advisorReport/downloadCSV" class="btn btn-primary download-progress-csv-button">Download as CSV</a></p>
-          </span>
-
+          <div class="button-section">
+            <a href="/report/advisorReport/downloadXLSX" class="btn btn-secondary download-progress-xlsx-button">Download as XLSX</a>
+            <a href="/report/advisorReport/downloadCSV" class="btn btn-secondary download-progress-csv-button">Download as CSV</a>
+          </div>
+          <br>
+  
           <% if(report != undefined && report.length>0) { %>
             <table id="advisor-report-table" align="center" border="1" class="table display-table table-striped table-bordered advisor-report-table">
               <thead>
