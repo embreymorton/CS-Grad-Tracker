@@ -25,58 +25,76 @@
           <h3 class="space">View a form</h3>
 
           <% 
-          var forms = [
+          const forms = [
             {
               className: 'CS01',
               name: 'CS01-Background Preparation Worksheet',
               href: '/student/forms/viewForm/' + student._id + '/CS01/false',
+              complete: 'backgroundApproved',
             },
             {
               className: 'CS02',
               name: 'CS02-Course Waiver',
               href: '/student/multiforms/' + student._id + '/CS02',
+              complete: null, // need further info on how to handle 
             },
             {
               className: 'CS03',
               name: 'CS03-M.S. Program of Study',
               href: '/student/forms/viewForm/' + student._id + '/CS03/false',
+              complete: 'msProgramOfStudyApproved',
             },
-
             {
               className: 'CS04',
               name: 'CS04-Outside Review Option',
               href: '/student/forms/viewForm/' + student._id + '/CS04/false',
+              complete: null, // need further info on how to handle  
             },
             {
               className: 'CS06',
               name: 'CS06-Ph.D. Program of Study',
               href: '/student/forms/viewForm/' + student._id + '/CS06/false',
+              complete: 'phdProgramOfStudyApproved',
             },
             {
               className: 'CS08',
               name: 'CS08-Technical Writing Requirement',
               href: '/student/forms/viewForm/' + student._id + '/CS08/false',
+              complete: 'technicalWritingApproved',
             },
             {
               className: 'CS13',
               name: 'CS13-Program Product Requirement',
               href: '/student/forms/viewForm/' + student._id + '/CS13/false',
+              complete: 'programProductRequirement',
             },
             {
               className: 'SemesterProgressReport',
               name: 'Semesterly Progress Report Form',
               href: '/student/multiforms/' + student._id + '/SemesterProgressReport',
+              complete: null, // need further info on how to handle 
             },
           ];
         %>
 
         <% forms.forEach(function(form) { %>
-          <div class="col-md-4 offset-md-4">
-            <a href="<%= form.href %>" class="btn btn-primary btn-block <%= form.className %>">
+          <% 
+            let linkClass = 'btn btn-light btn-block'; // Default color for forms without approval field in student schema
+            let isCompleted = false;
+        
+            if (form.complete) {
+              // Check if form approval field is in the student schema && if approved (has a date string)
+              isCompleted = student[form.complete] && student[form.complete].trim().length > 0;
+              linkClass = isCompleted ? 'btn btn-success btn-block' : 'btn btn-warning btn-block';
+            }
+          %>
+          <div class="col-md-4 offset-md-4 mb-1">
+            <a href="<%= form.href %>" class="<%= linkClass %> <%= form.className %>">
               <%= form.name %>
             </a>
           </div>
         <% }); %>
+        
 
         </div>
       </div>
