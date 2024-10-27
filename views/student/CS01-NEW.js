@@ -34,7 +34,7 @@ const mainContent = (opts) => {
   const { h4, h3, div, p, strong, hr } = x
   const form = !hasAccess
         ? div('You do not have access')
-        : cs01Form(opts)
+        : cs01FormNEW(opts)
   return [
     h4(lastName, ', ', firstName),
     h3('Background preparation worksheet'),
@@ -51,7 +51,7 @@ const mainContent = (opts) => {
   ]
 }
 
-const cs01Form = (opts) => {
+const cs01FormNEW = (opts) => {
   const { postMethod, student, form, isStudent, admin, formName, isComplete, semesters, activeFaculty, cspNonce, VA} = opts
   const { _id, lastName, firstName, pid } = student
   const { hr, div, h3, p, strong } = x

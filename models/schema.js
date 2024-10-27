@@ -377,6 +377,29 @@ var CS01Schema = mongoose.Schema({
   advisorSignature: Boolean, advisorDateSigned: String
 })
 
+var CS01SchemaNEW = mongoose.Schema({
+  student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
+  comp283Covered: CS01CoveredType, comp283Description: String, comp283Date: String,
+  comp210Covered: CS01CoveredType, comp210Description: String, comp210Date: String,
+  comp311Covered: CS01CoveredType, comp311Description: String, comp311Date: String,
+  comp455Covered: CS01CoveredType, comp455Description: String, comp455Date: String,
+  comp421Covered: CS01CoveredType, comp421Description: String, comp421Date: String,
+  comp431Covered: CS01CoveredType, comp431Description: String, comp431Date: String,
+  comp433Covered: CS01CoveredType, comp433Description: String, comp433Date: String,
+  comp520Covered: CS01CoveredType, comp520Description: String, comp520Date: String,
+  comp530Covered: CS01CoveredType, comp530Description: String, comp530Date: String,
+  comp524Covered: CS01CoveredType, comp524Description: String, comp524Date: String,
+  comp533Covered: CS01CoveredType, comp533Description: String, comp533Date: String,
+  comp541Covered: CS01CoveredType, comp541Description: String, comp541Date: String,
+  comp550Covered: CS01CoveredType, comp550Description: String, comp550Date: String,
+  comp590Covered: CS01CoveredType, comp590Description: String, comp590Date: String,
+  math233Covered: CS01CoveredType, math233Description: String, math233Date: String,
+  stat435Covered: CS01CoveredType, stat435Description: String, stat435Date: String,
+  studentSignature: Boolean, studentDateSigned: String,
+  advisorSignature: Boolean, advisorDateSigned: String
+})
+
+
 var CS02Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: false},
   dateSubmitted: String,
@@ -562,6 +585,7 @@ schema.Grant = mongoose.model('Grant', grantSchema)
 schema.SemesterReference = mongoose.model('SemesterReference', semesterReferenceSchema)
 schema.Note = mongoose.model('Note', noteSchema)
 schema.CS01 = mongoose.model('CS01', CS01Schema)
+schema.CS01NEW = mongoose.model('CS01-NEW', CS01SchemaNEW)
 schema.CS02 = mongoose.model('CS02', CS02Schema)
 schema.CS03 = mongoose.model('CS03', CS03Schema)
 schema.CS04 = mongoose.model('CS04', CS04Schema)
