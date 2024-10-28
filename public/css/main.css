@@ -22,7 +22,7 @@ button.btn-primary {
 
 /* Optional: Add hover effects to cards */
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
   transition: all 0.3s ease;
 }
@@ -36,14 +36,12 @@ button.btn-primary {
   margin-top: 1.5rem !important;
 }
 
-
-
-
 .sidebar {
   background-color: lightblue;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   background-color: lightgrey;
 }
@@ -53,7 +51,7 @@ html, body {
 }
 
 .column-padding td {
-  padding:0 30px 0 30px;
+  padding: 0 30px 0 30px;
 }
 
 table {
@@ -62,8 +60,6 @@ table {
   width: 100%;
   /* margin-left: 20px; */
 }
-
-
 
 /* faculty table column widths*/
 .col-facultyOnyen {
@@ -86,7 +82,7 @@ table {
   width: 15%;
 }
 
-.col-facultySectionNumber{
+.col-facultySectionNumber {
   width: 10%;
 }
 
@@ -98,58 +94,55 @@ table {
   width: 10%;
 }
 
-.col-jobPosition{
-  width:10%;
+.col-jobPosition {
+  width: 10%;
 }
-
-
 
 /*course table column widths */
 
 .col-course-topic {
-  width:10%;
+  width: 10%;
 }
 
 .col-course-number {
-  width:7.5%;
+  width: 7.5%;
 }
 
-.col-course-univNumber{
-  width:10%;
+.col-course-univNumber {
+  width: 10%;
 }
 
 .col-course-name {
-  width:20%;
+  width: 20%;
 }
 
 .col-course-category {
-  width:10%;
+  width: 10%;
 }
 
 .col-course-hours {
-  width:5%;
+  width: 5%;
 }
 
-.col-course-section{
-  width:7.5%;
+.col-course-section {
+  width: 7.5%;
 }
 
 .col-course-faculty {
-  width:10%;
+  width: 10%;
 }
 
 .col-course-semester {
-  width:10%;
+  width: 10%;
 }
 
 .col-course-delete {
-  width:10%;
+  width: 10%;
 }
 
 .editTag:hover {
   text-decoration: none;
   color: green;
-
 }
 
 .editTag {
@@ -157,36 +150,36 @@ table {
 }
 
 .space {
-  margin:10px;
+  margin: 10px;
 }
 
 .verticalSpace {
-  margin-top:10px;
-  margin-bottom:10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .fabutton {
   background: none;
-  padding:0px;
-  border:none;
+  padding: 0px;
+  border: none;
 }
 
 .colJobModify {
-  width:10%;
+  width: 10%;
 }
 
 .whiteBg {
   background: white;
 }
 
-.editRow{
-  display:flex;
+.editRow {
+  display: flex;
   flex-direction: row;
-  justify-content:center;
+  justify-content: center;
 }
 
-.editColumn{
-  margin:5px;
+.editColumn {
+  margin: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -203,23 +196,24 @@ label.autoHyphen {
 This is for highlighting search text on index pages
 */
 .searchTextColor {
-  color:#73a073;
+  color: #73a073;
 }
 
 .underline {
   text-decoration: underline;
 }
 
-.slider{
-  background-image:url("../../images/slider.png");
+.slider {
+  background-image: url("../../images/slider.png");
 }
 
-form [name=dept] {
-  font-size:10px;
-  height:38px;
+form [name="dept"] {
+  font-size: 10px;
+  height: 38px;
 }
 
-.progress-report-table, .tuition-report-table {
+.progress-report-table,
+.tuition-report-table {
   display: block;
   table-layout: fixed;
   width: 100%;
@@ -230,7 +224,7 @@ form [name=dept] {
   min-width: 300px;
 }
 
-.header1{
+.header1 {
   position: sticky;
   top: 0;
 }
@@ -279,7 +273,7 @@ form [name=dept] {
   margin: 0;
 }
 
-.no-spinner[type=number] {
+.no-spinner[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -300,7 +294,7 @@ form [name=dept] {
   margin-right: 5px;
 }
 
-.comp523cont, 
+.comp523cont,
 .comp523Othercont,
 .indcont,
 .altcont {
@@ -310,8 +304,8 @@ form [name=dept] {
 }
 
 .active {
-  background-color: #6495ED;
-  color : white;
+  background-color: #6495ed;
+  color: white;
 }
 
 .comp523col,
@@ -408,11 +402,10 @@ form [name=dept] {
   z-index: 10;
 }
 
-.subSize{
-  font-size:xx-large;
+.subSize {
+  font-size: xx-large;
   font-weight: 600;
 }
-
 
 .div1 {
   height: 80vh;
@@ -499,7 +492,6 @@ form [name=dept] {
   z-index: 99999999999999999 !important;
 }
 
-
 .col-progress-report-notes .tooltip-text {
   visibility: hidden;
   background-color: #000;
@@ -522,11 +514,9 @@ form [name=dept] {
   opacity: 1;
 }
 
-
-
 /* experement */
 
- th[title] {
+th[title] {
   position: relative;
   cursor: help;
 }
@@ -552,7 +542,6 @@ th[title]:hover:after {
   top: 0;
 }
 
-
 td {
   max-width: 250px; /* Change this to the desired fixed size */
   white-space: nowrap;
@@ -566,7 +555,8 @@ td.expanded {
   text-overflow: unset;
   max-width: fit-content;
 }
-.center-modal-parent { /* include with bootstrap's modals bc. for some reason doesn't like our forms setup */
+.center-modal-parent {
+  /* include with bootstrap's modals bc. for some reason doesn't like our forms setup */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -577,4 +567,22 @@ td.expanded {
 .center-modal-child {
   position: fixed;
   width: 100%;
+}
+
+/* sidebar button format */
+.sidebar a.btn-primary,
+.sidebar a.btn-danger {
+  /* background-color: #007bff; */
+  color: white;
+  border: none;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.sidebar a.btn-primary:hover {
+  background-color: #0056b3;
 }

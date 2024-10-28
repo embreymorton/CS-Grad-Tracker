@@ -41,7 +41,8 @@ const body = (opts, ...children) =>
     x(".container-fluid.h-100")(
       x(".row.h-100")(
         x(".col-lg-2.sidebar.text-center")(
-          opts.isStudent ? logout(opts) : [sidebar(opts), searchStudent(opts)]
+          // opts.isStudent ? logout(opts) : [sidebar(opts), searchStudent(opts)]
+          opts.isStudent ? logout(opts) : [sidebar(opts)]
         ),
         x(".col-lg-10.text-center")({ align: "center" }, ...children)
       )
@@ -54,9 +55,15 @@ const navLink = (href, label, klass) => {
   return x("p")(x(tagStr)({ href }, label));
 };
 
+const navLinkRed = (href, label, klass) => {
+  const suffix = klass ? `.${klass}` : "";
+  const tagStr = `a.btn.btn-danger.btn-block${suffix}`;
+  return x("p")(x(tagStr)({ href }, label));
+};
+
 const sidebar = ({ user, isAuthenticated, admin }) => {
   const authLink = isAuthenticated
-    ? navLink("/logout", "Logout")
+    ? navLinkRed("/logout", "Logout")
     : navLink("/login", "Login");
   const adminLinks = [
     navLink("/report", "Reports", "report-button"),
@@ -73,78 +80,78 @@ const sidebar = ({ user, isAuthenticated, admin }) => {
   ];
 };
 
-const searchStudent = ({ admin, status }) => {
-  if (!admin) return null;
-  const row = x(".form-group.row");
-  const label = (id, text) =>
-    x("label.col-md-4 autoHyphen")({ lang: "en", for: id }, text);
-  const divCol8 = x(".col-md-8");
-  const { p, form, option, div } = x;
-  return [
-    p("Search students"),
-    x(".search-bar")(
-      form(
-        { action: "/student", method: "get" },
-        row(
-          label("searchLastName", "Last Name:"),
-          divCol8(
-            x("input.form-control.search-last-name")({
-              type: "text",
-              id: "searchLastName",
-              name: "lastName",
-            })
-          )
-        ),
-        row(
-          label("searchPid", "PID:"),
-          divCol8(
-            x("input.form-control.search-pid")({
-              type: "number",
-              pattern: ".{9,9}",
-              id: "searchPid",
-              name: "pid",
-            })
-          )
-        ),
-        row(
-          label("searchStatus", "Status:"),
-          divCol8(
-            x("select.form-control.search-status")(
-              { name: "status" },
-              option({ value: "" }),
-              status.map((value) => option({ value }, value))
-            )
-          )
-        ),
-        row(
-          divCol8(
-            x("button.btn.btn-primary.search-student-submit")(
-              { type: "submit" },
-              "Search"
-            )
-          )
-        )
-      )
-    ),
-    div(
-      navLink("/student/create", "Create student", "create-student-button"),
-      navLink(
-        "/student/upload/false",
-        "Upload students",
-        "upload-student-button"
-      ),
-      navLink(
-        "/student/download",
-        "Download students",
-        "download-student-button"
-      ),
-      navLink(
-        "/student/uploadCourses/false",
-        "Upload courses",
-        "upload-courses-button"
-      )
-    ),
-  ];
-};
+// const searchStudent = ({ admin, status }) => {
+//   if (!admin) return null;
+//   const row = x(".form-group.row");
+//   const label = (id, text) =>
+//     x("label.col-md-4 autoHyphen")({ lang: "en", for: id }, text);
+//   const divCol8 = x(".col-md-8");
+//   const { p, form, option, div } = x;
+//   return [
+//     p("Search students"),
+//     x(".search-bar")(
+//       form(
+//         { action: "/student", method: "get" },
+//         row(
+//           label("searchLastName", "Last Name:"),
+//           divCol8(
+//             x("input.form-control.search-last-name")({
+//               type: "text",
+//               id: "searchLastName",
+//               name: "lastName",
+//             })
+//           )
+//         ),
+//         row(
+//           label("searchPid", "PID:"),
+//           divCol8(
+//             x("input.form-control.search-pid")({
+//               type: "number",
+//               pattern: ".{9,9}",
+//               id: "searchPid",
+//               name: "pid",
+//             })
+//           )
+//         ),
+//         row(
+//           label("searchStatus", "Status:"),
+//           divCol8(
+//             x("select.form-control.search-status")(
+//               { name: "status" },
+//               option({ value: "" }),
+//               status.map((value) => option({ value }, value))
+//             )
+//           )
+//         ),
+//         row(
+//           divCol8(
+//             x("button.btn.btn-primary.search-student-submit")(
+//               { type: "submit" },
+//               "Search"
+//             )
+//           )
+//         )
+//       )
+//     ),
+//     div(
+//       navLink("/student/create", "Create student", "create-student-button"),
+//       navLink(
+//         "/student/upload/false",
+//         "Upload students",
+//         "upload-student-button"
+//       ),
+//       navLink(
+//         "/student/download",
+//         "Download students",
+//         "download-student-button"
+//       ),
+//       navLink(
+//         "/student/uploadCourses/false",
+//         "Upload courses",
+//         "upload-courses-button"
+//       )
+//     ),
+//   ];
+// };
 
 module.exports = page;

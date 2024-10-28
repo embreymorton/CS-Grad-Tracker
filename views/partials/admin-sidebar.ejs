@@ -6,14 +6,6 @@
 
 <% if(locals.admin) { %>
 
-<!-- <select id="dropdownMenu" class="form-control">
-  <option value="" disabled selected>Select an option</option>
-  <option value="reports">Reports</option>
-  <option value="faculty">Faculty</option>
-  <option value="semester">Semester</option>
-  <option value="student">Student</option>
-</select> -->
-
 <p>
   <a href="/report" class="btn btn-primary btn-block faculty-button">Reports</a>
 </p>
@@ -36,24 +28,3 @@
     >Student</a
   >
 </p>
-
-<!-- <script src="./navigateScript.js"></script> -->
-<script>
-  var dropdown = document.getElementById("dropdownMenu");
-  if (dropdown) {
-    dropdown.addEventListener("change", function () {
-      var selectedValue = this.value;
-      if (selectedValue === "reports") {
-        window.location.href = "/report";
-      } else if (selectedValue === "faculty") {
-        window.location.href = "/faculty";
-      } else if (selectedValue === "semester") {
-        window.location.href = "/semester";
-      } else if (selectedValue === "student") {
-        window.location.href = "/student";
-      }
-    });
-  } else {
-    console.log("Dropdown not found");
-  }
-</script>
