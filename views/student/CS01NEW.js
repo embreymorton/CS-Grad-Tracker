@@ -87,7 +87,7 @@ const cs01FormNEW = (opts) => {
       [ row('math233'), hr() ],
       [ row('comp283'), hr() ],
       [ row('math347'), hr() ],
-      [ row('stat435'), hr() ],
+      [ row('stor435'), hr() ],
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
@@ -403,9 +403,9 @@ const descriptions = {
     strong('COMP 283:  Discrete Structures'),
   ],
 
-  math547: [
-    strong('MATH 547:  Linear Algebra for Applications:'),
-    ' Algebra of matrices with applications; determinants; solution of linear systems by Gaussian elimination; Gram-Schmidt procedure; eigenvalues.  Math 116 may not be taken for credit after credit has been granted for Math 147.'
+  math347: [
+    strong('MATH 347:  Linear Algebra for Applications:'),
+    ' Algebra of matrices with applications: determinants, solution of linear systems by Gaussian elimination, Gram-Schmidt procedure, and eigenvalues. Previously offered as MATH 547.'
   ],
 
   // math661: [
@@ -413,8 +413,8 @@ const descriptions = {
   //   " Error in computation; solution of nonlinear equations; interpolation; approximation of functions; Fourier methods; numerical integration & differentiation; introduction to numerical solution of ODE's; introductions to numerical linear algebra."
   // ],
 
-  stat435: [
-    strong('STAT 435:  Introduction to Probability (MATH 535):'),
+  stor435: [
+    strong('STOR 435:  Introduction to Probability (MATH 535):'),
     ' Introduction to mathematical theory of probability covering random variables, moments, binomial, Poisson, normal & related distributions, generating functions, sums & sequences of random variables, & statistical applications.'
   ],
 
@@ -436,8 +436,9 @@ const descriptions = {
   
   comp590: [
     strong('*COMP 590: Undergraduate Computer Architecture:'),
-    ''
+    'Enter Description' //TODO: Add description
   ],
+
 }
 
 module.exports = main
