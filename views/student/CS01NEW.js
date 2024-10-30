@@ -64,10 +64,10 @@ const cs01FormNEW = (opts) => {
       namePidRow(student), hr(),
       h3('Background Course Information'), x('.verticalSpace')(), semesterDatalist(8, 1),
 
-      [ row('comp210'), hr() ],
-      [ row('comp311'), hr() ],
-      [ row('comp455'), hr() ],
-      [ row('comp550'), hr() ],
+      row('comp210'), x('.verticalSpace')(),
+      row('comp311'), x('.verticalSpace')(),
+      row('comp455'), x('.verticalSpace')(),
+      row('comp550'), x('.verticalSpace')(),
 
       x('.text-center.bold')('(Any two of the following nine will suffice)'), 
       vert,
@@ -84,10 +84,12 @@ const cs01FormNEW = (opts) => {
 
       x('.text-center.bold')('Mathematics and Statistics'), 
       vert,
-      [ row('math233'), hr() ],
-      [ row('comp283'), hr() ],
-      [ row('math347'), hr() ],
-      [ row('stor435'), hr() ],
+
+      row('math233'), x('.verticalSpace')(),
+      row('comp283'), x('.verticalSpace')(),
+      row('math347'), x('.verticalSpace')(),
+      row('stor435'), x('.verticalSpace')(),
+      hr(),
 
       x('.text-center')(
         'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
