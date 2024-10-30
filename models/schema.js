@@ -493,6 +493,28 @@ var CS08Schema = mongoose.Schema({
   secondarySignature: String, secondaryDateSigned: String
 })
 
+var CS12Schema = new mongoose.Schema({
+  student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', unique: true, required: true },
+  discussionDate: {type: String, required: true, match: [/^\d{4}-\d{2}-\d{2}$/, '{VALUE} must be in the format YYYY-MM-DD']},
+  committeeMember1Name: String,
+  committeeMember1Signature: String,
+  committeeMember2Name: String,
+  committeeMember2Signature: String,
+  committeeMember3Name: String,
+  committeeMember3Signature: String,
+  committeeMember4Name: String,
+  committeeMember4Signature: String,
+  committeeMember5Name: String,
+  committeeMember5Signature: String,
+  committeeMember6Name: String,
+  committeeMember6Signature: String,
+  
+  studentSignature: Boolean,
+  studentDateSigned: { type: String, match: [/^\d{4}-\d{2}-\d{2}$/, '{VALUE} must be in the format YYYY-MM-DD'] },
+  advisorSignature: Boolean,
+  advisorDateSigned: { type: String, match: [/^\d{4}-\d{2}-\d{2}$/, '{VALUE} must be in the format YYYY-MM-DD'] }
+});
+
 var CS13Schema = mongoose.Schema({
   student: {type: mongoose.Schema.Types.ObjectId, ref:'Student', unique: true},
   email: String, dateMet: String,
@@ -591,6 +613,7 @@ schema.CS03 = mongoose.model('CS03', CS03Schema)
 schema.CS04 = mongoose.model('CS04', CS04Schema)
 schema.CS06 = mongoose.model('CS06', CS06Schema)
 schema.CS08 = mongoose.model('CS08', CS08Schema)
+schema.CS12 = mongoose.model('CS12', CS12Schema)
 schema.CS13 = mongoose.model('CS13', CS13Schema)
 schema.SemesterProgressReport = mongoose.model('SemesterProgressReport', semesterProgressReportSchema)
 
