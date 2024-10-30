@@ -373,7 +373,7 @@ const descriptions = {
   ],
 
   comp524: [
-    strong('COMP: 524:  Programming Language Concepts:'),
+    strong('*COMP: 524:  Programming Language Concepts:'),
     ' Concepts of high-level programming & their realization in specific languages.  Data types, scope, control structures, procedural abstraction, classes, concurrency.  Run-time implementation.'
   ],
 
