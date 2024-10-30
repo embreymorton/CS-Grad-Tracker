@@ -383,7 +383,7 @@ const descriptions = {
   ],
 
   comp541: [
-    strong('COMP 541:  Digital Logic & Computer Design:'),
+    strong('*COMP 541:  Digital Logic & Computer Design:'),
     ' Digital logic, both combinational & sequential. State machines.  The structure & electronic design of modern processors.'
   ],
 
