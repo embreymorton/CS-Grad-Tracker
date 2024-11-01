@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>Edit student</title>
+        
         <%- include("../partials/head.ejs") %>
     </head>
 
@@ -23,342 +24,552 @@
                     <h1>Edit student</h1>
                     <form action="/studentView/put" method="post">
                         <input type="hidden" name="_id" value=<%=student._id%>></input>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="col-md-4">Onyen</label>
-                                    <div class="col-md-8">
-                                        <div><%=student.onyen%></div>
-                                        <input type="hidden" class="form-control input-onyen" name="onyen" value="<%=student.onyen%>" required/>
+
+                        <div class="card bg-light">
+                            <div class="card-header">Personal Information</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4 mb-0">Onyen:</label>
+                                                <div class="col-md-4">
+                                                    <div><%=student.onyen%></div>
+                                                    <input type="hidden" class="form-control input-onyen" name="onyen" value="<%=student.onyen%>" required/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div id="hidecsid" class="form-group row">
-                                    <label class="col-md-4">CSID *</label>
-                                    <div class="col-md-8">
-                                        <div><%=student.csid%> (@cs.unc.edu)</div>
-                                        <input type="hidden" class="form-control input-csid" name="csid" value="<%=student.csid%>" required/>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4">CSID *:</label>
+                                                <div class="col-md-8">
+                                                    <div><%=student.csid%> (@cs.unc.edu)</div>
+                                                    <input type="hidden" class="form-control input-csid" name="csid" value="<%=student.csid%>" required/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-4">Email *</label>
-                                    <div class="col-md-8">
-                                        <%=student.email%>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4">Email *:</label>
+                                                <div class="col-md-8">
+                                                    <%=student.email%>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputFirstname" class="col-md-4">First name *</label>
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control input-first-name" id="inputFirstname" name="firstName" value="<%=student.firstName%>" required/>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputFirstname" class="col-md-4">First name *:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control input-first-name" id="inputFirstname" name="firstName" placeholder="First name required" value="<%=student.firstName%>" required/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputLastname" class="col-md-4">Last name *</label>
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control input-last-name" id="inputLastname" name="lastName" value="<%=student.lastName%>" required/>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputLastname" class="col-md-4">Last name *:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control input-last-name" id="inputLastname" name="lastName" placeholder="Last name required" value="<%=student.lastName%>" required/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputPronouns" class="col-md-4">Pronouns</label>
-                                    <div class="col-md-8">
-                                        <%=student.pronouns%>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputPronouns" class="col-md-4">Pronouns:</label>
+                                                <div class="col-md-8">
+                                                    <%=student.pronouns%>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-4">PID</label>
-                                    <div class="col-md-8">
-                                        <div><%=student.pid%></div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4">PID:</label>
+                                                <div class="col-md-4">
+                                                    <div><%=student.pid%></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputStatus" class="col-md-4">Status</label>
-                                    <div class="col-md-8">
-                                        <%=student.status%>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputAltname" class="col-md-4">Alternative name: </label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control input-alt-name" id="inputAltname" placeholder="Type here" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputAltname" class="col-md-4">Alternative name</label>
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control input-alt-name" id="inputAltname" name="alternativeName" <% if(student.alternativeName != null) { %> value="<%=student.alternativeName%>" <% } %>/>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputGender" class="col-md-4">Gender</label>
+                                                <div class="col-md-8">
+                                                    <select name="gender" class="form-control  input-gender" id="inputGender">
+                                                        <% for(var i=0; i<genders.length; i++) { %>
+                                                            <option value=<%= genders[i]%> <% if(student.gender === genders[i]) { %> selected <% } %>><%=genders[i]%></option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputGender" class="col-md-4">Gender</label>
-                                    <div class="col-md-8">
-                                        <select name="gender" class="form-control  input-gender" id="inputGender">
-                                            <% for(var i=0; i<genders.length; i++) { %>
-                                                <option value=<%= genders[i]%> <% if(student.gender === genders[i]) { %> selected <% } %>><%=genders[i]%></option>
-                                            <% } %>
-                                        </select>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputEthnicity" class="col-md-4">Ethnicity</label>
+                                                <div class="col-md-8">
+                                                    <select name="ethnicity" class="form-control input-ethnicity" id="inputEthnicity">
+                                                        <% for(var i=0; i<ethnicities.length; i++) { %>
+                                                            <option value=<%= ethnicities[i]%> <% if(student.ethnicity === ethnicities[i]) { %> selected <% } %>><%=ethnicities[i]%></option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputEthnicity" class="col-md-4">Ethnicity</label>
-                                    <div class="col-md-8">
-                                        <select name="ethnicity" class="form-control input-ethnicity" id="inputEthnicity">
-                                            <% for(var i=0; i<ethnicities.length; i++) { %>
-                                                <option value=<%= ethnicities[i]%> <% if(student.ethnicity === ethnicities[i]) { %> selected <% } %>><%=ethnicities[i]%></option>
-                                            <% } %>
-                                        </select>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputEthnicity" class="col-md-4">Ethnicity</label>
+                                                <div class="col-md-8">
+                                                    <select name="ethnicity" class="form-control input-ethnicity" id="inputEthnicity">
+                                                        <% for(var i=0; i<ethnicities.length; i++) { %>
+                                                            <option value=<%= ethnicities[i]%> <% if(student.ethnicity === ethnicities[i]) { %> selected <% } %>><%=ethnicities[i]%></option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputStateResidency" class="col-md-4">State Residency</label>
-                                    <div class="col-md-8">
-                                        <%=student.stateResidency%>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputStateResidency" class="col-md-4">State Residency:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.stateResidency%>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputUSResidency" class="col-md-4">US Residency</label>
-                                    <div class="col-md-8">
-                                        <%=student.USResidency%>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputUSResidency" class="col-md-4">US Residency:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.USResidency%>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputCitizenship" class="col-md-4">US Citizenship:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.citizenship%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                        
                                 </div>
-
-                                <div class="form-group row">
-                                    <label for="inputEnteringStatus" class="col-md-4">Entering status</label>
-                                    <div class="col-md-8">
-                                        <%=student.enteringStatus%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputResearchArea" class="col-md-4">Research area</label>
-                                    <div class="col-md-8">
-                                        <%=student.researchArea%>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-4">
-
-                                <div class="form-group row">
-                                    <label for="inputLeaveExtension" class="col-md-4">Leave extension</label>
-                                    <div class="col-md-8">
-                                        <%=student.leaveExtension%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputIntendedDegree" class="col-md-4">Intended degree</label>
-                                    <div class="col-md-8">
-                                        <%=student.intendedDegree%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputHoursCompleted" class="col-md-4">Hours completed</label>
-                                    <div class="col-md-8">
-                                        <%=student.hoursCompleted%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputCitizenship" class="col-md-4">US Citizenship</label>
-                                    <div class="col-md-8">
-                                        <%=student.citizenship%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputFundingEligibility" class="col-md-4">Funding eligibility</label>
-                                    <div class="col-md-8">
-                                        <%=student.fundingDeligibility%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputSemestersOnLeave" class="col-md-4">Semesters on Leave</label>
-                                    <div class="col-md-8">
-                                        <%=student.semestersOnLeave%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputBackgroundApproved" class="col-md-4">Background approved</label>
-                                    <div class="col-md-8">
-                                        <%=student.backgroundApproved%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputMastersAwarded" class="col-md-4">Masters awarded</label>
-                                    <div class="col-md-8">
-                                        <%=student.mastersAwarded%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputPrpPassed" class="col-md-4">prp passed</label>
-                                    <div class="col-md-8">
-                                        <%=student.prpPassed%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputTechnicalWritingApproved" class="col-md-4">Technical writing approved</label>
-                                    <div class="col-md-8">
-                                        <%=student.technicalWritingApproved%>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="form-group row">
-                                    <label for="inputProceedToPhdSubmitted" class="col-md-4">Proceed to phD Submitted</label>
-                                    <div class="col-md-8">
-                                        <%=student.proceedToPhdFormSubmitted%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                  <label for="inputMsProgramOfStudyApproved" class="col-md-4">M.S. Program of study approved</label>
-                                  <div class="col-md-8">
-                                    <%=student.msProgramOfStudyApproved%>
-                                  </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputPhdProgramOfStudyApproved" class="col-md-4">Ph.D. Program of study approved</label>
-                                    <div class="col-md-8">
-                                        <%=student.phdProgramOfStudyApproved%>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-4">
-
-
-                                <div class="form-group row">
-                                    <label for="inputResearchPlanningMeeting" class="col-md-4">Research planning meeting</label>
-                                    <div class="col-md-8">
-                                        <%=student.researchPlanningMeeting%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputprogramProductRequirement" class="col-md-4">Program product requirement</label>
-                                    <div class="col-md-8">
-                                        <%=student.programProductRequirement%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputCommitteeCompApproved" class="col-md-4">Committee comp approved</label>
-                                    <div class="col-md-8">
-                                        <%=student.committeeCompApproved%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputPhdProposalApproved" class="col-md-4">PhD proposal approved</label>
-                                    <div class="col-md-8">
-                                        <%=student.phdProposalApproved%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputOralExamPassed" class="col-md-4">Oral exam passed</label>
-                                    <div class="col-md-8">
-                                        <%=student.oralExamPassed%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputDissertationDefencePassed" class="col-md-4">Dissertation defence passed</label>
-                                    <div class="col-md-8">
-                                        <%=student.dissertationDefencePassed%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputDissertationSubmitted" class="col-md-4">Dissertation submitted</label>
-                                    <div class="col-md-8">
-                                        <%=student.dissertationSubmitted%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputPHDAwarded" class="col-md-4">PhD. Awarded</label>
-                                    <div class="col-md-8">
-                                        <%=student.phdAwarded%>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputSemesterStarted" class="col-md-4">Semester started</label>
-                                    <div class="col-md-8">
-
-                                        <%{
-                                            if (student.semesterStarted != null) { %>
-                                                <%=student.semesterStarted.season%> <%=student.semesterStarted.year%>
-                                            <%}
-                                        }%>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputAdvisor" class="col-md-4">Advisor *</label>
-                                    <div class="col-md-8">
-                                        <% for(var i=0; i<faculty.length; i++) {
-                                            if (student.advisor != null && student.advisor._id.equals(faculty[i]._id)) { %>
-                                                <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
-                                            <%}
-                                         } %>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                  <label class="col-md-4">Other Advisor (If not faculty member)</label>
-                  <div class="col-md-8">
-                                        <%=student.otherAdvisor%>
-                  </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="inputResearchAdvisor" class="col-md-4">Research Advisor</label>
-                                    <div class="col-md-8">
-                                        <% for(var i=0; i<faculty.length; i++) {
-                                            if (student.researchAdvisor != null && student.researchAdvisor._id.equals(faculty[i]._id)) { %>
-                                                <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
-                                            <%}
-
-                                         } %>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                  <label class="col-md-4">Other Research Advisor (If not faculty member)</label>
-                  <div class="col-md-8">
-                                        <%=student.otherResearchAdvisor%>
-                  </div>
-                                </div>
-
-                                <!-- no courseHistory field, have a dedicated page for adding courseHistory to students -->
-
                             </div>
                         </div>
 
-                    <div class="col-md-8 offset-md-2">
-                        <button type="submit" class="btn btn-success update-button-submit">Update</button>
-                    </div>
+                        <div class="card bg-light">
+                            <div class="card-header">General Academic Information</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputIntendedDegree" class="col-md-4">Intended degree:</label>
+                                                <div class="col-md-4">
+                                                    <% if (student.intendedDegree === "BOTH") { %>
+                                                        MASTERS & PHD
+                                                    <% } else { %>
+                                                        <%=student.intendedDegree%>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputEnteringStatus" class="col-md-4">Entering status:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.enteringStatus%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputStatus" class="col-md-4">Status:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.status%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputResearchArea" class="col-md-4">Research area:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.researchArea%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputLeaveExtension" class="col-md-4">Leave extension:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.leaveExtension%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputHoursCompleted" class="col-md-4">Hours completed:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.hoursCompleted%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputFundingEligibility" class="col-md-4">Funding eligibility:</label>
+                                            <div class="col-md-4">
+                                                <%=student.fundingDeligibility%>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputSemestersOnLeave" class="col-md-4">Semesters on Leave:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.semestersOnLeave%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputBackgroundApproved" class="col-md-4">Background approved:</label>
+                                                <div class="col-md-4">
+                                                    <%=student.backgroundApproved%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputSemesterStarted" class="col-md-4">Semester started</label>
+                                                <div class="col-md-8">
+
+                                                    <%{
+                                                        if (student.semesterStarted != null) { %>
+                                                            <%=student.semesterStarted.season%> <%=student.semesterStarted.year%>
+                                                        <%}
+                                                    }%>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <% if (student.intendedDegree === "MASTERS" || student.intendedDegree === "BOTH") { %> 
+                            <div class="card bg-light">
+                                <div class="card-header">Masters Information</div>
+                                <div class="card-body" >
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputMastersAwarded" class="col-md-4">Masters awarded:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.mastersAwarded%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputMsProgramOfStudyApproved" class="col-md-4">M.S. Program of study approved:</label>
+                                                    <div class="col-md-8">
+                                                        <%=student.msProgramOfStudyApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputPrpPassed" class="col-md-4">prp passed:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.prpPassed%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputTechnicalWritingApproved" class="col-md-4">Technical writing approved:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.technicalWritingApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputprogramProductRequirement" class="col-md-4">Program product requirement:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.programProductRequirement%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>         
+                        <% } %>  
+
+                        <% if (student.intendedDegree === "PHD" || student.intendedDegree === "BOTH") { %> 
+                            <div class="card bg-light">
+                                <div class="card-header">Ph.D. Information</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputPhdProgramOfStudyApproved" class="col-md-4">Ph.D. Program of study approved:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.phdProgramOfStudyApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputProceedToPhdSubmitted" class="col-md-4">Proceed to Ph.D Submitted:</label>
+                                                    <div class="col-md-8">
+                                                        <%=student.proceedToPhdFormSubmitted%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputPhdProposalApproved" class="col-md-4">Ph.D. proposal approved:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.phdProposalApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputPHDAwarded" class="col-md-4">Ph.D. Awarded:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.phdAwarded%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputPrpPassed" class="col-md-4">prp passed:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.prpPassed%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputTechnicalWritingApproved" class="col-md-4">Technical writing approved:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.technicalWritingApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputprogramProductRequirement" class="col-md-4">Program product requirement:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.programProductRequirement%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputResearchPlanningMeeting" class="col-md-4">Research planning meeting:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.researchPlanningMeeting%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputprogramProductRequirement" class="col-md-4">Program product requirement:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.programProductRequirement%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputCommitteeCompApproved" class="col-md-4">Committee comp approved:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.committeeCompApproved%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputOralExamPassed" class="col-md-4">Oral exam passed:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.oralExamPassed%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputDissertationDefencePassed" class="col-md-4">Dissertation defence passed:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.dissertationDefencePassed%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body d-flex">
+                                                    <label for="inputDissertationSubmitted" class="col-md-4">Dissertation submitted:</label>
+                                                    <div class="col-md-4">
+                                                        <%=student.dissertationSubmitted%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <div class="card bg-light">
+                            <div class="card-header">Advisor Information</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputAdvisor" class="col-md-4">Advisor *:</label>
+                                                <div class="col-md-4">
+                                                    <% for(var i=0; i<faculty.length; i++) {
+                                                        if (student.advisor != null && student.advisor._id.equals(faculty[i]._id)) { %>
+                                                            <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
+                                                        <%}
+                                                    } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4">Other Advisor (If not faculty member):</label>
+                                                <div class="col-md-4">
+                                                    <%=student.otherAdvisor%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label for="inputResearchAdvisor" class="col-md-4">Research Advisor:</label>
+                                                <div class="col-md-4">
+                                                    <% for(var i=0; i<faculty.length; i++) {
+                                                        if (student.researchAdvisor != null && student.researchAdvisor._id.equals(faculty[i]._id)) { %>
+                                                            <%=faculty[i].lastName%>, <%=faculty[i].firstName%>
+                                                        <%}
+
+                                                    } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body d-flex">
+                                                <label class="col-md-4">Other Research Advisor (If not faculty member):</label>
+                                                <div class="col-md-8">
+                                                        <%=student.otherResearchAdvisor%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+
+                        <div class="col-md-8 offset-md-2">
+                            <button type="submit" class="btn btn-success update-button-submit">Update</button>
+                        </div>
                     </form>
-                    <div class="space"></div>
-                </div>
+                <div class="space"></div>
             </div>
         </div>
+    </div>
     </body>
     <script type="text/javascript" nonce="<%= cspNonce %>">
         let handleChange = ()=>{
