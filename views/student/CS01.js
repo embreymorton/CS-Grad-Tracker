@@ -12,9 +12,12 @@ const buttonBarWrapper = require('../common/buttonBarWrapper')
 const submitButton = require('../common/submitButton')
 const saveEditButton = require('../common/saveEditsButton')
 const { semesterDatalist, semesterInput } = require('../common/semesterDropdown')
+const { renderCard }= require('/Users/work/CS-Grad-Tracking/views/common/layoutComponents.js')
 const baseComponents = require('../common/baseComponents')
+const { render } = require('ejs')
 const { dropdown, makeOption, optionSet, script, dateInput, checkbox } = baseComponents
 const baseInput = baseComponents.input
+
 
 const main = (opts) => {
   const { uploadSuccess, formName, VA } = opts
@@ -58,54 +61,54 @@ const cs01Form = (opts) => {
   const row = formRow(admin || (isStudent && !isComplete), form, activeFaculty, semesters, opts)
   const vert = x('div.verticalSpace')()
   return (
-    x('form.cs-form#cs-form')(
-      { action: postMethod, method: 'post' },
-      input('hidden', 'student', _id.toString()),
-      namePidRow(student), hr(),
-      h3('Background Course Information'), x('.verticalSpace')(), semesterDatalist(8, 1),
+renderCard('CS01 Test',     x('form.cs-form#cs-form')(
+  { action: postMethod, method: 'post' },
+  input('hidden', 'student', _id.toString()),
+  namePidRow(student), hr(),
+  h3('Background Course Information'), x('.verticalSpace')(), semesterDatalist(8, 1),
 
-      [ row('comp283'), hr() ],
-      [ row('comp210'), hr() ],
-      [ row('comp311'), hr() ],
-      [ row('comp455'), hr() ],
+  [ row('comp283'), hr() ],
+  [ row('comp210'), hr() ],
+  [ row('comp311'), hr() ],
+  [ row('comp455'), hr() ],
 
-      x('.text-center.bold')('(Any two of the following three will suffice)'), 
-      vert,
-      row('comp421'), x('.verticalSpace')(),
-      row('comp520'), x('.verticalSpace')(),
-      row('comp530'), x('.verticalSpace')(),
-      hr(),
+  x('.text-center.bold')('(Any two of the following three will suffice)'), 
+  vert,
+  row('comp421'), x('.verticalSpace')(),
+  row('comp520'), x('.verticalSpace')(),
+  row('comp530'), x('.verticalSpace')(),
+  hr(),
 
-      row('comp524'), hr(),
-      row('comp541'), hr(),
-      [ row('comp550'), hr() ],
-      [ row('math233'), hr() ],
-      [ row('math381'), hr() ],
-      [ row('math547'), hr() ],
-      row('math661'), hr(),
-      [ row('stat435'), hr() ],
+  row('comp524'), hr(),
+  row('comp541'), hr(),
+  [ row('comp550'), hr() ],
+  [ row('math233'), hr() ],
+  [ row('math381'), hr() ],
+  [ row('math547'), hr() ],
+  row('math661'), hr(),
+  [ row('stat435'), hr() ],
 
-      x('.text-center')(
-        'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
-        strong('The worksheet is a component of the Program of Study for MS (CS-03) and/or PhD (CS-06).')
-      ),
-      hr(),
+  x('.text-center')(
+    'Review this worksheet with your advisor and submit the completed worksheet to the Student Services Coordinator preferably in electronic form.  Hard copies also accepted.',
+    strong('The worksheet is a component of the Program of Study for MS (CS-03) and/or PhD (CS-06).')
+  ),
+  hr(),
 
-      p('Student Approval:'),
-      signatureRow(admin || isStudent, 'student', form, opts.cspNonce, {isRequired: isStudent}),
-      x('.verticalSpace')(),
+  p('Student Approval:'),
+  signatureRow(admin || isStudent, 'student', form, opts.cspNonce, {isRequired: isStudent}),
+  x('.verticalSpace')(),
 
-      p('Advisor Approval:'),
-      // signatureRow(admin, 'advisor', form, opts.cspNonce),
-      approvalCheckboxRow(!isStudent, 'advisor', opts),
-      x('.verticalSpace')(),
+  p('Advisor Approval:'),
+  // signatureRow(admin, 'advisor', form, opts.cspNonce),
+  approvalCheckboxRow(!isStudent, 'advisor', opts),
+  x('.verticalSpace')(),
 
-      buttonBarWrapper(
-        submitButton(opts),
-        isComplete ? null : saveEditButton(postMethod),
-        cancelEditButton(isStudent ? null : student._id),
-      )
-    )
+  buttonBarWrapper(
+    submitButton(opts),
+    isComplete ? null : saveEditButton(postMethod),
+    cancelEditButton(isStudent ? null : student._id),
+  )
+))
   )
 }
 
