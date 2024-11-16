@@ -86,7 +86,7 @@ const cs01Form = (opts) => {
   );
   const vert = x("div.verticalSpace")();
   return renderCard(
-    "CS01 Test",
+    "CS01 Form",
     x("form.cs-form#cs-form")(
       { action: postMethod, method: "post" },
       input("hidden", "student", _id.toString()),
