@@ -5,7 +5,8 @@
   margin-top: 20px;
 }
 
-.student-table th, .student-table td {
+.student-table th,
+.student-table td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -61,7 +62,6 @@
     text-align: left;
   }
 }
-
 
 /* main.css */
 
@@ -668,4 +668,33 @@ td.expanded {
   display: none; /* Hidden by default */
   padding: 15px;
   border: 1px solid #dee2e6;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.button-container a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 50px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.button-container a:hover {
+  background-color: #0056b3;
+}
+
+.button-container a .status-icon {
+  margin-right: 10px; /* Space between emoji and text */
+  font-size: 1.2em; /* Adjust emoji size */
 }
