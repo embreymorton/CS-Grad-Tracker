@@ -18,14 +18,16 @@
           <br></br>
           <% 
           const forms = [
-            { className: 'CS01', name: 'Background Preparation Worksheet', href: '/student/forms/viewForm/' + student._id + '/CS01/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
-            { className: 'CS02', name: 'Course Waiver', href: '/student/multiforms/' + student._id + '/CS02', complete: null, category: 'both', note: 'Required for all MS and PhD students requesting a breadth course waiver; complete by 3rd semester' },
+            { className: 'CS01', name: 'Background Preparation', href: '/student/forms/viewForm/' + student._id + '/CS01/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: 'CS01', name: 'Background Preparation (NEW)', href: '/student/forms/viewForm/' + student._id + '/CS01NEW/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: 'CS02', name: 'Course Waiver', href: '/student/multiforms/' + student._id + '/CS02', complete: null, category: 'both', note: 'Optional for MS and PhD students requesting a breadth course waiver; complete by 3rd semester' },
             { className: 'CS03', name: 'M.S. Program of Study', href: '/student/forms/viewForm/' + student._id + '/CS03/false', complete: 'msProgramOfStudyApproved', category: 'ms', note: 'Required for MS students; complete prior to FDOC in the semester planned to graduate' },
             { className: 'CS04', name: 'Outside Review Option', href: '/student/forms/viewForm/' + student._id + '/CS04/false', complete: null, category: 'ms', note: 'Optional for MS students instead of CS08; for those using this option, complete in order to graduate' },
             { className: 'CS06', name: 'Ph.D. Program of Study', href: '/student/forms/viewForm/' + student._id + '/CS06/false', complete: 'phdProgramOfStudyApproved', category: 'phd', note: 'Required for PhD students; complete by 6th semester, GSC highly encourages to submit CS06 pages 1-2 prior to finalization of committee; submit CS06 page 3 at a later date when committee is finalized' },
             { className: 'CS08', name: 'Technical Writing Requirement', href: '/student/forms/viewForm/' + student._id + '/CS08/false', complete: 'technicalWritingApproved', category: 'both', note: 'Required for MS and PhD students; PHD: complete by 4th semester, MS: complete in order to graduate' },
             { className: 'CS12', name: 'Report of Research Discussion', href: '/student/forms/viewForm/' + student._id + '/CS12/false', complete: 'reportOfResearchDiscussion', category: 'phd', note: 'Required for PhD students; complete by 6th semester' },
             { className: 'CS13', name: 'Program Product Requirement', href: '/student/forms/viewForm/' + student._id + '/CS13/false', complete: 'programProductRequirement', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: '', name: 'Semester Progress Report Form', href: '/student/multiforms/' + student._id + '/SemesterProgressReport', complete: null, category: 'both', note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
           ];
           %>
           <div class="form-table-container">
@@ -49,7 +51,7 @@
                     <td>
                       <% if (form.complete && student[form.complete]) { %>
                         <%= student[form.complete] %>
-                        <% } else { %>
+                        <% } else if (form.complete) { %>
                           Not Approved
                         <% } %>
                     </td>

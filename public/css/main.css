@@ -698,3 +698,29 @@ td.expanded {
   margin-right: 10px; /* Space between emoji and text */
   font-size: 1.2em; /* Adjust emoji size */
 }
+
+/* Styling for form pages */
+
+.form-table-container {
+  margin: 0 auto; /* Centers the table horizontally */
+  max-width: 85%; /* Restricts table width */
+}
+
+.number-column {
+  width: 76px; /* Adjust this percentage or use a fixed width, e.g., 100px */
+}
+
+
+.title-column {
+  width: 20%; /* Adjust this percentage or use a fixed width, e.g., 100px */
+}
+
+.form-table thead {
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.date-column {
+  width: 160px; /* Fix the width of the Date Approved column */
+}

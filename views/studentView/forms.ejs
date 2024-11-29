@@ -13,129 +13,54 @@
         <div class="col-lg-2 sidebar text-center">
           <%- include("../partials/logout.ejs") %>
         </div>
-        <div align="center" class="col-lg-10 panelbg text-center">
+        <div align="left" class="col-lg-10 panelbg">
           <%- include("../partials/studentBarPartial.ejs") %>
-
-          <h4><%=student.lastName%>, <%=student.firstName%></h4>
-
-          <h3 class="space">View a form</h3>
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS01/false"
-              class="CS01"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS01' in results && results.CS01) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS01" in results && results.CS01) ? "✅" : "❗" %>
-              CS01-Background Preparation Worksheet
-            </a>
-          </div>
-
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS01NEW/false"
-              class="CS01"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS01' in results && results.CS01) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS01" in results && results.CS01) ? "✅" : "❗" %>
-              CS01-Background Preparation Worksheet (NEW)
-            </a>
-          </div>
-
-          <div class="button-container">
-            <a href="/studentView/multiforms/CS02" class="CS02">
-              CS02-Course Waiver
-            </a>
-          </div>
-
-          <% if (student.intendedDegree === "MASTERS" || student.intendedDegree
-          === "BOTH") { %>
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS03/false"
-              class="CS03"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS03' in results && results.CS03) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS03" in results && results.CS03) ? "✅" : "❗" %> CS03-M.S.
-              Program of Study
-            </a>
-          </div>
-          <% } %> <% if (student.intendedDegree === "MASTERS" ||
-          student.intendedDegree === "BOTH") { %>
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS04/false"
-              class="CS04"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS04' in results && results.CS04) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS04" in results && results.CS04) ? "✅" : "❗" %>
-              CS04-Outside Review Option
-            </a>
-          </div>
-          <% } %> <% if (student.intendedDegree === "PHD" ||
-          student.intendedDegree === "BOTH") { %>
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS06/false"
-              class="CS06"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS06' in results && results.CS06) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS06" in results && results.CS06) ? "✅" : "❗" %>
-              CS06-Ph.D. Program of Study
-            </a>
-          </div>
-          <% } %>
-
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS08/false"
-              class="CS08"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS08' in results && results.CS08) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS08" in results && results.CS08) ? "✅" : "❗" %>
-              CS08-Technical Writing Requirement
-            </a>
-          </div>
-          <% if (student.intendedDegree === "PHD" || student.intendedDegree ===
-          "BOTH") { %>
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS12/false"
-              class="CS12"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS12' in results && results.CS12) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS12" in results && results.CS12) ? "✅" : "❗" %>
-              CS12-Report of Research Discussion
-            </a>
-          </div>
-          <% } %>
-
-          <div class="button-container">
-            <a
-              href="/studentView/forms/CS13/false"
-              class="CS13"
-              data-bs-toggle="tooltip"
-              title="<%= ('CS13' in results && results.CS13) ? 'This form is complete' : 'This form is incomplete' %>"
-            >
-              <%= ("CS13" in results && results.CS13) ? "✅" : "❗" %>
-              CS13-Program Product Requirement
-            </a>
-          </div>
-
-          <div class="button-container">
-            <a
-              href="/studentView/multiforms/SemesterProgressReport"
-              class="SemesterProgressReport"
-            >
-              Semesterly Progress Report
-            </a>
-          </div>
+          <br></br>
+          <% 
+          const forms = [
+            { className: 'CS01', name: 'Background Preparation', href: '/studentView/forms/CS01/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: 'CS01', name: 'Background Preparation (NEW)', href: '/studentView/forms/CS01NEW/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: 'CS02', name: 'Course Waiver', href: '/studentView/multiforms/CS02', complete: null, category: 'both', note: 'Optional for MS and PhD students requesting a breadth course waiver; complete by 3rd semester' },
+            { className: 'CS03', name: 'M.S. Program of Study', href: '/studentView/forms/CS03/false', complete: 'msProgramOfStudyApproved', category: 'ms', note: 'Required for MS students; complete prior to FDOC in the semester planned to graduate' },
+            { className: 'CS04', name: 'Outside Review Option', href: '/studentView/forms/CS04/false', complete: null, category: 'ms', note: 'Optional for MS students instead of CS08; for those using this option, complete in order to graduate' },
+            { className: 'CS06', name: 'Ph.D. Program of Study', href: '/studentView/forms/CS06/false', complete: 'phdProgramOfStudyApproved', category: 'phd', note: 'Required for PhD students; complete by 6th semester, GSC highly encourages to submit CS06 pages 1-2 prior to finalization of committee; submit CS06 page 3 at a later date when committee is finalized' },
+            { className: 'CS08', name: 'Technical Writing Requirement', href: '/studentView/forms/CS08/false', complete: 'technicalWritingApproved', category: 'both', note: 'Required for MS and PhD students; PHD: complete by 4th semester, MS: complete in order to graduate' },
+            { className: 'CS12', name: 'Report of Research Discussion', href: '/studentView/forms/CS12/false', complete: 'reportOfResearchDiscussion', category: 'phd', note: 'Required for PhD students; complete by 6th semester' },
+            { className: 'CS13', name: 'Program Product Requirement', href: '/studentView/forms/CS13/false', complete: 'programProductRequirement', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
+            { className: '', name: 'Semester Progress Report Form', href: '/studentView/multiforms/SemesterProgressReport', complete: null, category: 'both', note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
+          ];
+          %>
+          <div class="form-table-container">
+            <h4><%=student.lastName%>, <%=student.firstName%></h4>
+          <table class="table table-striped table-light table-bordered table-responsive-sm form-table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="number-column">Number</th>
+                <th scope="col" class="title-column">Title</th>
+                <th scope="col">Note</th>
+                <th scope="col" class="date-column">Date Approved</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% forms.forEach(form => { %>
+                <% if ((form.category === 'both') || (form.category === 'ms' && student.intendedDegree === 'MASTERS') || (form.category === 'phd' && student.intendedDegree === 'PHD') || (student.intendedDegree === 'BOTH')) { %>
+                  <tr>
+                    <th scope="row"><%= form.className %></th>
+                    <td><a href="<%= form.href %>"><%= form.name %></a></td>
+                    <td class="text-wrap"> <%= form.note %> </td>
+                    <td>
+                      <% if (form.complete && student[form.complete]) { %>
+                        <%= student[form.complete] %>
+                        <% } else if (form.complete) { %>
+                          Not Approved
+                        <% } %>
+                    </td>
+                  </tr>
+              <%  } %>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
         </div>
       </div>
     </div>
