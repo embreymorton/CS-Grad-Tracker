@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <title>Upload grades </title>
+    <title>Upload grades</title>
     <%- include("../partials/head.ejs") %>
   </head>
 
@@ -11,17 +11,20 @@
     <div class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-lg-2 sidebar text-center">
-
           <%- include("../partials/admin-sidebar.ejs") %>
-
-          <%- include("./search-student.ejs") %>
-
         </div>
-        <div align ="center" class="col-lg-10 panelbg text-center">
-
+        <div align="center" class="col-lg-10 panelbg text-center">
           <% if(uploadSuccess == true) { %>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
             <strong>Upload success!</strong>
@@ -29,11 +32,24 @@
           <% } %>
 
           <h1>Upload grades (CHANGES PENDING -- WILL BREAK)</h1>
-          <form action="/student/uploadCourses" enctype="multipart/form-data" method="post">
+          <form
+            action="/student/uploadCourses"
+            enctype="multipart/form-data"
+            method="post"
+          >
             <div class="form-group row">
-              <label for="inputSheet" class="col-md-3 offset-md-3">Spreadsheet</label>
+              <label for="inputSheet" class="col-md-3 offset-md-3"
+                >Spreadsheet</label
+              >
               <div class="col-md-4">
-                <input type="file" name="upload" class="form-control-file" id="inputSheet" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required/>
+                <input
+                  type="file"
+                  name="upload"
+                  class="form-control-file"
+                  id="inputSheet"
+                  accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  required
+                />
               </div>
             </div>
 
@@ -41,15 +57,23 @@
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
             <h3>Upload format</h3>
-            <img src="/images/gradeUploadFormat.png">
+            <img src="/images/gradeUploadFormat.png" />
 
             <div class="col-md-4 offset-md-4">
               <h2>Requirements</h2>
               <ul class="list-group">
-                <li class="list-group-item">Columns must be in order displayed above, headers don't have to be what is displayed.</li>
+                <li class="list-group-item">
+                  Columns must be in order displayed above, headers don't have
+                  to be what is displayed.
+                </li>
                 <li class="list-group-item">Only grade is not required</li>
-                <li class="list-group-item">Semester must be SS YYYY (case for season does not matter, can be FA, SP, S1, S2).</li>
-                <li class="list-group-item">Faculty must be LASTNAME, FIRSTNAME (case does not matter).</li>
+                <li class="list-group-item">
+                  Semester must be SS YYYY (case for season does not matter, can
+                  be FA, SP, S1, S2).
+                </li>
+                <li class="list-group-item">
+                  Faculty must be LASTNAME, FIRSTNAME (case does not matter).
+                </li>
               </ul>
             </div>
           </form>
