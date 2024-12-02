@@ -13,7 +13,7 @@
 }
 
 .student-table th {
-  background-color: #007bff;
+  background-color: #4B9CD3;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
@@ -69,7 +69,7 @@
 
 /* Customize card headers */
 .card-header {
-  background-color: #007bff; /* Bootstrap primary color */
+  background-color: #3e96d0;/* Bootstrap primary color */
   color: #fff;
   font-weight: bold;
   font-size: 1.1em;
@@ -710,13 +710,13 @@ td.expanded {
   width: 76px; /* Adjust this percentage or use a fixed width, e.g., 100px */
 }
 
-
 .title-column {
-  width: 20%; /* Adjust this percentage or use a fixed width, e.g., 100px */
+  width: 15%; /* Adjust this percentage or use a fixed width, e.g., 100px */
 }
 
 .form-table thead {
-  color: white;
+  color: #fff;
+  background-color: #4B9CD3;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -724,3 +724,19 @@ td.expanded {
 .date-column {
   width: 160px; /* Fix the width of the Date Approved column */
 }
+
+.title-heading {
+  color: #3e96d0;
+}
+
+#togglePersonal {
+  background-color: #4B9CD3;
+}
+
+#toggleAcademic {
+  background-color: #4B9CD3;
+}
+
+
+
+
