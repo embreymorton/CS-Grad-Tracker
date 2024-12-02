@@ -10,15 +10,11 @@
   <body>
     <div class="container-fluid h-100">
       <div class="row h-100">
-        <div class="col-lg-2 sidebar text-center">
-          <%- include("../partials/logout.ejs") %>
+        <div class="col-lg-1 text-center">
         </div>
         <div align="left" class="col-lg-10 panelbg">
           <%- include("../partials/studentBarPartial.ejs") %>
           <br></br>
-
-          
-
           <% 
           const MSforms = [
             { className: 'CS01', name: 'Background Preparation', href: '/studentView/forms/CS01/false', complete: 'backgroundApproved', note: 'Complete by 3rd semester' },
@@ -44,7 +40,7 @@
             { className: '', name: 'Semester Progress Report Form', href: '/studentView/multiforms/SemesterProgressReport', complete: null, note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
           ];
           %>
-          <div class="form-table-container">
+          <div class="form-table-container text-center">
             <h4><%=student.lastName%>, <%=student.firstName%></h4>
           <table class="table table-striped table-light table-bordered table-responsive-sm form-table">
             <thead class="thead-dark">
