@@ -184,7 +184,7 @@
                         <div>
                             <div class="card bg-light">
                                 <button id="toggleAcademics" class="card-header" type="button">
-                                    General Academic Information
+                                    Show General Academic Information
                                 </button>
                              </div>
                             <div id="academicContent" class="mt-3">
@@ -610,52 +610,8 @@
             }
         }
     </script>
-    <script type="text/javascript" nonce="<%= cspNonce %>">
-    document.addEventListener("DOMContentLoaded", function () {
-      const content = document.getElementById("personalInfo");
-      const button = document.getElementById("togglePersonal");
- 
-      content.style.display = "none";
- 
-      // Ensure the button shows "Show Personal Information" on load
-      button.textContent = "Show Personal Information";
- 
-      // Add toggle functionality
-      button.addEventListener("click", function () {
-        if (content.style.display === "none") {
-          content.style.display = "block";
-          button.textContent = "Hide Personal Information";
-        } else {
-          content.style.display = "none";
-          button.textContent = "Show Personal Information";
- 
-        }
-      });
- 
-      const content1 = document.getElementById("academicInfo");
-      const button1 = document.getElementById("toggleAcademic");
- 
-      content1.style.display = "none";
- 
-      // Ensure the button shows "Show Personal Information" on load
-      button1.textContent = "Show Academic Information";
- 
-      // Add toggle functionality
-      button1.addEventListener("click", function () {
-        if (content1.style.display === "none") {
-          content1.style.display = "block";
-          button1.textContent = "Hide Academic Information";
-        } else {
-          content1.style.display = "none";
-          button1.textContent = "Show Academic Information";
- 
-        }
-      });
- 
-    });
-  </script>
   <script type="text/javascript" nonce="<%= cspNonce %>">
-    
+
     document.addEventListener("DOMContentLoaded", function () {
       const content = document.getElementById("mockContent");
       const button = document.getElementById("toggleButton");
@@ -665,8 +621,10 @@
       button.addEventListener("click", function () {
         if (content.style.display === "none") {
           content.style.display = "block";
+          button.textContent = "Hide Personal Information"
         } else {
           content.style.display = "none";
+          button.textContent = "Show Personal Information"
         }
       });
     });
@@ -679,8 +637,11 @@
      
         button.addEventListener("click", function () {
           if (content.style.display === "none") {
+            button.textContent = "Hide General Academic Information"
             content.style.display = "block";
           } else {
+            button.textContent = "Show General Academic Information"
+
             content.style.display = "none";
           }
         });
