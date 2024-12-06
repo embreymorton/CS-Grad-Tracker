@@ -14,9 +14,11 @@ project.
 In the past, Elaine Dong, Zain Khan, Shane Flannigan, Takoda Ren, and Sebastian Crowell worked on this project.
 
 # Contacts
+
 Jeff Terrell <terrell@cs.unc.edu>
 
 # Context
+
 Current graduate student forms and progress data is all either in paper or in a
 system that has limited access (only a few administrators can access it).
 
@@ -39,21 +41,23 @@ Users:
 
 # Documentation
 
-*  [Environmental Variables](#environmental-variables)
-*  [Starting the app](#starting-the-app)
-*  [Starting the App with Windows](#starting-the-app-with-windows)
-*  [File organization](#file-organization)
-*  [Testing](#testing)
-*  [Deployment](#deployment)
-*  [CI/CD](#cicd)
-*  [System overview](#system-overview)
+- [Environmental Variables](#environmental-variables)
+- [Starting the app](#starting-the-app)
+- [Starting the App with Windows](#starting-the-app-with-windows)
+- [File organization](#file-organization)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [CI/CD](#cicd)
+- [System overview](#system-overview)
 
 # Important note
+
 - MAKE SURE to acquire a copy of a .env file from someone who has worked
   previously on the project
 - Never check this into source control/git
 
 # Environmental Variables
+
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
 - There is also gmailUser and gmailPass which are used for email notifications
   through nodemailer.
@@ -62,6 +66,7 @@ Users:
   listed below to get it to run in a certain setup
 
 ## Production mode .env tweaks
+
 - `mode=production`
 - `databaseString='mongodb://localhost/cs_grad_data-prod'`
 - `AUTH0_DOMAIN=dev-v1umz16i.auth0.com`
@@ -69,15 +74,16 @@ Users:
 - `AUTH0_LOGOUT_URL=http://csgrad.cs.unc.edu`
 - `hostname="csgrad.cs.unc.edu"`
 
-
 ## Development/testing mode .env tweaks
+
 - `mode=production` or `mode=development`
 - `databaseString='mongodb://localhost/cs_grad_data-prod'` or
-  `databaseString='mongodb://localhost/cs_grad_data-dev'`
+  `databaseString='mongodb://localhost/cs_grad_data-dev'`(used to connect MongoDB Compass)
 - `AUTH0_CALLBACK_URL=http://localhost:8080/callback`
 - `AUTH0_LOGOUT_URL=http://localhost:8080`
 
 ## Using Inheritance for .env
+
 - .env.testing includes mode and databaseString for testing mode
 - .env.development includes mode and databaseString for development mode
 - in base .env file leave these two variables blank
@@ -87,6 +93,7 @@ Users:
 ## Starting the app
 
 ### Running the database
+
 First, since we are connecting to a mongodb database, download mongodb at
 
 For windows:
@@ -128,18 +135,20 @@ Now to start the app run the command:
 `npm start`
 
 ## Starting the App with Windows
+
 ### Installing Prerequisite Programs
 
 Before starting, please ensure you have installed the following programs on your device:
 
-* [Git](https://git-scm.com/downloads)
-  * make sure you add to PATH
-* [Node and NPM](https://nodejs.org/en/download/)
-  * make sure you add to PATH
-* [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
-  * follow all default settings
+- [Git](https://git-scm.com/downloads)
+  - make sure you add to PATH
+- [Node and NPM](https://nodejs.org/en/download/)
+  - make sure you add to PATH
+- [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+  - follow all default settings
 
 To test out that you installed git and node correctly, try these commands in powershell:
+
 ```ps
 git --version
 node --version
@@ -148,23 +157,32 @@ npm --version
 
 ### Pulling Code and Installing Dependencies
 
-Once you are invited into the GitLab repository, click the blue "Clone" button and copy the link using your preference of SSH or HTTPS. Open powershell and cd into a folder of your choice for code. Run `git clone <copied-link>` and cd into the created folder. 
+Once you are invited into the GitLab repository, click the blue "Clone" button and copy the link using your preference of SSH or HTTPS. Open powershell and cd into a folder of your choice for code. Run `git clone <copied-link>` and cd into the created folder.
 
 Install all the dependencies for the app by running `npm install`. It should create a `node_modules` folder, but you don't really need to touch it.
 
 ### Adding an Admin Account
+
 Open the `data/AdminInputScript.txt` file. Edit the email section to have your email. Then run `node data/AdminInputScript.txt`.
+
+This command only needs to be ran once to set up an email. This information can be viewed from MongoDB Compass.
+
+- localhost -> cs_grad_data-dev -> faculties (toggle admin to switch admin and faculty)
+- you can use `node data/FacultyInputScript.txt` to explicitly create a faculty member
+- you can use `node data/StudentInputScript.txt` to create a student (use a different emails for faculty and student)
 
 Sign into your Auth0 instance with the same email address you used in `data/AdminInputScript.txt` so that the app will recognize you as an admin user.
 
 When you first start up the app, you may be prompted to create an account under your Auth0 instance. Do so with the email of your choice.
 
 ### Starting the App
-Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line: 
+
+Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line:
 
 ```ps
 & "C:\Program Files\MongoDB\Server\<version>\bin\mongod.exe"
 ```
+
 (replace version with the version of Mongo you installed; look in the Server folder if you don't recall)
 
 Open the `package.json` file and go down to the "scripts" section. Unfortunately our environment variables don't quite work yet on Windows so you need to manually execute the start script. To do this, run this in powershell:
@@ -179,12 +197,15 @@ which, as you can see, looks just like the start script in `package.json`.
 ## File organization
 
 ### bin/www
+
 Database connection and entry point to starting the server.
 
 ### app.js
+
 Authentication logic and express setup (routes, static resources)
 
 ### routes
+
 All routes referenced in app.js are here. For each route (get/post) there is an
 associated url and controller function.
 
@@ -192,31 +213,37 @@ Many of the route files contain middleware that checks a user's role before
 allowing access.
 
 ### controllers
+
 The controllers have the referenced functions from routes and contains primary
 code and database logic and also serves the files in the views folder.
 
 ### models
+
 The one file, schema.js, in models describes all the database objects in use.
 Controllers store and retrieve data from the database as these defined objects.
 
 ### views
+
 Contains .ejs files, which are essentially html files with embedded javascript.
 Each .ejs file represents a page that a user can see, or a component that is
 reused across multiple web pages.
 
 ### public
+
 Contains css and image resources.
 
 ### data
+
 Currently used only to store test excel files, was used in the past for storing
 pdfs/documents for student objects, as mongo does not handle pdfs well.
 Contains Input Scripts as .txt files used to register new users in the database.
 Use email '+' operator for each account type.
 Ex: email+student@gmail.com
-    email+faculty@gmail.com
-    email+admin@gmail.com
+email+faculty@gmail.com
+email+admin@gmail.com
 
 ### Overview
+
 For example, app.js defines a route as
 `app.use("/course", require("./routes/course"));`
 This is causing routes/course.js to handle all requests for
@@ -229,19 +256,22 @@ will handle the request and serve the view file views/course/index.ejs.
 ## Testing
 
 ### Run Locally
-1. Configure `.env.testing` similar to your development env.    
 
-    By default it should have these values:
-    * `port=8080`
-    * `mode=testing`
-    * `databaseString='mongodb://127.0.0.1/cs_grad_data-test'`
+1. Configure `.env.testing` similar to your development env.
+
+   By default it should have these values:
+
+   - `port=8080`
+   - `mode=testing`
+   - `databaseString='mongodb://127.0.0.1/cs_grad_data-test'`
 
 2. Run the command `npm run start-ci` to create a testing instance of the webserver.
 3. In another terminal run either of these commands:
-    * `npx cypress open` - for the UI
-    * `npm run test` - for command line only
 
-    The UI will let you choose a specific test to run while automatically saving screenshots and recording browser states for you to see where your tests are failing.
+   - `npx cypress open` - for the UI
+   - `npm run test` - for command line only
+
+   The UI will let you choose a specific test to run while automatically saving screenshots and recording browser states for you to see where your tests are failing.
 
 # Deployment
 
@@ -258,7 +288,6 @@ First get access to the gitlab project, then run
 `git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git`
 
 To get the project on the VM.
-
 
 ### Database
 
@@ -290,7 +319,7 @@ To enable process restarting, use the command:
 Commands to start a fresh process that restarts on crash or vm restart.
 
 - `sudo -i`
-- `cd ../CS-Grad-Tracking`   (CD to wherever the folder containing the project is)
+- `cd ../CS-Grad-Tracking` (CD to wherever the folder containing the project is)
 - `pm2 start "npm start"`
 - `pm2 startup`
 
@@ -298,6 +327,7 @@ Now the app should be running and should continue to run after restarts or
 crashes.
 
 # CI/CD
+
 We are using Gitlab's CI/CD to automatically run tests and deploy to the
 virtual machine csgrad.cs.unc.edu
 
@@ -314,16 +344,16 @@ visit a page, submit a form, click a search button, etc. you are making a
 request to the server which then processes this request and returns appropriate
 html.
 
-
 ## Auth0
+
 We are using Auth0, this is the process we used to configure it and is what you
 should use should you ever hook up your own auth0 account.
 
-Setting up Auth0 
+Setting up Auth0
+
 - Nagivate to `http://manage.auth0.com` and create an account
 - Find "Applications" on the sidebar, and click on pre-made default app
 - Under setting, add "http://localost:8081/callback" or "http://localost:8080/callback" under Allowed Callback URLs and "http://localhost:8081" or "http://localost:8080" under Allowed Logout URLS and click save changes on the bottom.
-
 
 - In .env, update `AUTH0_CLIENT_ID`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_SECRET` to
   your values (look at Auth0 docs for where to find these)
@@ -349,7 +379,8 @@ is how we currently have it set up:
   react.
 
 ## Setting up the ssh key:
-to set up the key to be able to pull / push and deploy 
+
+to set up the key to be able to pull / push and deploy
 generate a new key and copy the content from the new generated file that has an extention of .pub and past it.
 Dont copy the one from the terminal, look for the generated file.
 This should get you all set.
