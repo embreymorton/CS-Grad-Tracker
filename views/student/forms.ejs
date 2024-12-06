@@ -17,33 +17,45 @@
           <%- include("./studentBarPartial.ejs") %>
           <br></br>
           <% 
-          const forms = [
-            { className: 'CS01', name: 'Background Preparation', href: '/student/forms/viewForm/' + student._id + '/CS01/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
-            { className: 'CS01', name: 'Background Preparation (NEW)', href: '/student/forms/viewForm/' + student._id + '/CS01NEW/false', complete: 'backgroundApproved', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
-            { className: 'CS02', name: 'Course Waiver', href: '/student/multiforms/' + student._id + '/CS02', complete: null, category: 'both', note: 'Optional for MS and PhD students requesting a breadth course waiver; complete by 3rd semester' },
-            { className: 'CS03', name: 'M.S. Program of Study', href: '/student/forms/viewForm/' + student._id + '/CS03/false', complete: 'msProgramOfStudyApproved', category: 'ms', note: 'Required for MS students; complete prior to FDOC in the semester planned to graduate' },
-            { className: 'CS04', name: 'Outside Review Option', href: '/student/forms/viewForm/' + student._id + '/CS04/false', complete: null, category: 'ms', note: 'Optional for MS students instead of CS08; for those using this option, complete in order to graduate' },
-            { className: 'CS06', name: 'Ph.D. Program of Study', href: '/student/forms/viewForm/' + student._id + '/CS06/false', complete: 'phdProgramOfStudyApproved', category: 'phd', note: 'Required for PhD students; complete by 6th semester, GSC highly encourages to submit CS06 pages 1-2 prior to finalization of committee; submit CS06 page 3 at a later date when committee is finalized' },
-            { className: 'CS08', name: 'Technical Writing Requirement', href: '/student/forms/viewForm/' + student._id + '/CS08/false', complete: 'technicalWritingApproved', category: 'both', note: 'Required for MS and PhD students; PHD: complete by 4th semester, MS: complete in order to graduate' },
-            { className: 'CS12', name: 'Report of Research Discussion', href: '/student/forms/viewForm/' + student._id + '/CS12/false', complete: 'reportOfResearchDiscussion', category: 'phd', note: 'Required for PhD students; complete by 6th semester' },
-            { className: 'CS13', name: 'Program Product Requirement', href: '/student/forms/viewForm/' + student._id + '/CS13/false', complete: 'programProductRequirement', category: 'both', note: 'Required for MS and PhD students; complete by 3rd semester' },
-            { className: '', name: 'Semester Progress Report Form', href: '/student/multiforms/' + student._id + '/SemesterProgressReport', complete: null, category: 'both', note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
+          const MSforms = [
+            { className: 'CS01', name: 'Background Preparation', href: '/studentView/forms/CS01/false', complete: 'backgroundApproved', note: 'Complete by 3rd semester' },
+            { className: 'CS01', name: 'Background Preparation (NEW)', href: '/studentView/forms/CS01NEW/false', complete: 'backgroundApproved', note: '[NEW FORM] Complete by 3rd semester' },
+            { className: 'CS02', name: 'Course Waiver', href: '/studentView/multiforms/CS02', complete: null, note: 'Optional for students requesting a breadth course waiver; complete by 3rd semester' },
+            { className: 'CS03', name: 'M.S. Program of Study', href: '/studentView/forms/CS03/false', complete: 'msProgramOfStudyApproved', note: 'Complete prior to FDOC in the semester planned to graduate' },
+            { className: 'CS04', name: 'Outside Review Option', href: '/studentView/forms/CS04/false', complete: null, note: 'Optional for students instead of CS08; for those using this option, complete in order to graduate' },
+            { className: 'CS08', name: 'Technical Writing Requirement', href: '/studentView/forms/CS08/false', complete: 'technicalWritingApproved', note: 'Complete in order to graduate' },
+            { className: 'CS13', name: 'Program Product Requirement', href: '/studentView/forms/CS13/false', complete: 'programProductRequirement', note: 'Complete by 3rd semester' },
+            { className: '', name: 'Semester Progress Report Form', href: '/studentView/multiforms/SemesterProgressReport', complete: null, note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
           ];
           %>
-          <div class="form-table-container">
+
+          <% 
+          const PHDforms = [
+            { className: 'CS01', name: 'Background Preparation', href: '/studentView/forms/CS01/false', complete: 'backgroundApproved', note: 'Complete by 3rd semester' },
+            { className: 'CS01', name: 'Background Preparation (NEW)', href: '/studentView/forms/CS01NEW/false', complete: 'backgroundApproved', note: '[NEW Form] Complete by 3rd semester' },
+            { className: 'CS02', name: 'Course Waiver', href: '/studentView/multiforms/CS02', complete: null, note: 'Optional for students requesting a breadth course waiver; complete by 3rd semester' },
+            { className: 'CS06', name: 'Ph.D. Program of Study', href: '/studentView/forms/CS06/false', complete: 'phdProgramOfStudyApproved', note: 'Complete by 6th semester, GSC highly encourages to submit CS06 pages 1-2 prior to finalization of committee; submit CS06 page 3 at a later date when committee is finalized' },
+            { className: 'CS08', name: 'Technical Writing Requirement', href: '/studentView/forms/CS08/false', complete: 'technicalWritingApproved', note: 'Complete by 4th semester' },
+            { className: 'CS12', name: 'Report of Research Discussion', href: '/studentView/forms/CS12/false', complete: 'reportOfResearchDiscussion', note: 'Complete by 6th semester' },
+            { className: 'CS13', name: 'Program Product Requirement', href: '/studentView/forms/CS13/false', complete: 'programProductRequirement', note: 'Complete by 3rd semester' },
+            { className: '', name: 'Semester Progress Report Form', href: '/studentView/multiforms/SemesterProgressReport', complete: null, note: 'Discuss semester goals and milestones with your advisor and fill out this form' },
+          ];
+          %>
+          <div class="form-table-container text-center">
             <h4><%=student.lastName%>, <%=student.firstName%></h4>
           <table class="table table-striped table-light table-bordered table-responsive-sm form-table">
             <thead class="thead-dark">
               <tr>
                 <th scope="col" class="number-column">Number</th>
-                <th scope="col" class="title-column">Title</th>
+                <th scope="col" class="title-column">Form</th>
                 <th scope="col">Note</th>
                 <th scope="col" class="date-column">Date Approved</th>
               </tr>
             </thead>
             <tbody>
-              <% forms.forEach(form => { %>
-                <% if ((form.category === 'both') || (form.category === 'ms' && student.intendedDegree === 'MASTERS') || (form.category === 'phd' && student.intendedDegree === 'PHD') || (student.intendedDegree === 'BOTH')) { %>
+              <% if (student.intendedDegree === 'MASTERS') { %>
+                <% MSforms.forEach(form => { %>
+                
                   <tr>
                     <th scope="row"><%= form.className %></th>
                     <td><a href="<%= form.href %>"><%= form.name %></a></td>
@@ -56,8 +68,27 @@
                         <% } %>
                     </td>
                   </tr>
-              <%  } %>
-              <% }); %>
+                <% }); %>
+              <% } %>
+
+              <% if (student.intendedDegree === 'PHD' || student.intendedDegree === 'BOTH') {%>
+                <% PHDforms.forEach(form => { %>
+                
+                  <tr>
+                    <th scope="row"><%= form.className %></th>
+                    <td><a href="<%= form.href %>"><%= form.name %></a></td>
+                    <td class="text-wrap"> <%= form.note %> </td>
+                    <td>
+                      <% if (form.complete && student[form.complete]) { %>
+                        <%= student[form.complete] %>
+                        <% } else if (form.complete) { %>
+                          Not Approved
+                        <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } %>
+             
             </tbody>
           </table>
         </div>
