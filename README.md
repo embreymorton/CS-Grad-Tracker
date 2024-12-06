@@ -101,7 +101,7 @@ https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 Follow all default options on the installer, after it is completed, make sure
 you have created a directory: `C:\data\db`, then in bash run
 
-    "C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe"
+    "C:\Program Files\MongoDB\Server\[version]\bin\mongod.exe"
 
 This will need to be running any time you want to start the app.
 
