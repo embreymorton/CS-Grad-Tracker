@@ -43,6 +43,7 @@
   "devDependencies": {
     "cypress": "^13.3.0",
     "cypress-file-upload": "^5.0.8",
+    "jest": "^29.7.0",
     "standard": "^16.0.4",
     "start-server-and-test": "^1.12.0",
     "webpack": "^5.88.2"
@@ -61,7 +62,8 @@
     "ci": "start-server-and-test start-ci http://localhost:8080 test",
     "migrate:up": "migrate-mongo up",
     "uptime": "cross-env NODE_ENV=development node uptime.js",
-    "uptime-prod": "cross-env NODE_ENV=production node uptime.js"
+    "uptime-prod": "cross-env NODE_ENV=production node uptime.js",
+    "unit-test": "jest" 
   },
   "repository": {
     "type": "git",
@@ -73,6 +75,10 @@
   ],
   "author": "various",
   "contributors": [
+    "Noah Hulse",
+    "Jaime Marban",
+    "Embrey Morton",
+    "Keon Marcus",
     "Vignesh Balasubramaniam",
     "Shane Flannigan",
     "Takoda Ren",

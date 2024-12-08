@@ -273,6 +273,13 @@ will handle the request and serve the view file views/course/index.ejs.
 
    The UI will let you choose a specific test to run while automatically saving screenshots and recording browser states for you to see where your tests are failing.
 
+   ### Unit Testing
+
+   Unit testing is done with Jest on the cs_grad_data-dev database.
+
+   1. Run database with databaseString='mongodb://localhost/cs_grad_data-dev'
+   2. In terminal run command: npm run unit-test
+
 # Deployment
 
 Deployed on the virtual machine csgrad.cs.unc.edu
