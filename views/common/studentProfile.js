@@ -21,6 +21,9 @@ const profileFields = (opts) => {
   const semestersField_ = admin ? semestersField : displaySemestersField
   const facAdvisorField_ = admin ? facAdvisorField : displayFacAdvisor
 
+
+  // The following return code renders Student Profile information for faculty and admin, updated to section out profile information using bootstrap cards to improve UX - Jaime M
+
   return ( //start of card creation using profileFields
     x('.container')(
       // Start of first card creation using renderCard from layoutComponents and grid.js
@@ -32,9 +35,9 @@ const profileFields = (opts) => {
           !student && admin
             ? fieldDiv(
               'CSID *',
-              x('.d-flex.align-items-center')( // Flexbox to keep input and label side by side
+              x('.d-flex.align-items-center')( 
                 x('input.form-control.col-md-6')({ required: true, name: 'csid' }),
-                x('span.ml-2')('@cs.unc.edu') // Inline text with left margin
+                x('span.ml-2')('@cs.unc.edu') 
               )
             ) : fieldDiv(
               label['csid'],

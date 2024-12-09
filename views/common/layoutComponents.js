@@ -1,5 +1,8 @@
 const x = require("hyperaxe");
 
+
+// Resusable bootstrap card for consistent use across CS Grad Tracking website - Jaime M
+
 /**
  * Creates a card container for input fields. For use in pages such as 'Create Student'
  * @param {header} header sets the heading of the card, for example 'Personal Information'
