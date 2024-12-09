@@ -8,10 +8,11 @@ Work-Study program at The University of North Carolina at Chapel Hill.
 The clients of this project are all staff/administrators that work in Sitterson
 Hall as part of graduate program for computer science students.
 
-Kevin Chen, Lia Abed, and Amin Zamani are the students currently working on this
-project.
+Elaine Dong, Zain Khan, Shane Flannigan, Takoda Ren, and Sebastian Crowell are the original developers of this project.
 
-In the past, Elaine Dong, Zain Khan, Shane Flannigan, Takoda Ren, and Sebastian Crowell worked on this project.
+Kevin Chen, Lia Abed, and Amin Zamani have also worked on this project in the past.
+
+Most recently Noah Hulse, Jaime Marban, Embrey Morton, and Keon Marcus worked on this project as a part of COMP 523. Some of the things the COMP 523 team worked on are UI improvements, adding new forms, bug fixes, and unit testing.
 
 # Contacts
 
