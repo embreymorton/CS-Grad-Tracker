@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "feature-policy": "^0.6.0",
+    "form-data": "^4.0.1",
     "formidable": "^1.2.1",
     "gridfs-stream": "^1.1.1",
     "helmet": "^4.4.1",
