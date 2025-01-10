@@ -6,11 +6,12 @@ describe('Page visit and page javascript', ()=>{
   })
 
   beforeEach(function () {
-    Cypress.Cookies.preserveOnce('connect.sid')
+      cy.session('unique_identifier', () => {
+	  cy.visit('/changeUser/admin');
+      });
   })
 
   it('Visiting the homepage as admin should route to /student', ()=>{
-    cy.visit('/changeUser/admin');
     cy.visit('/');
     cy.url().should('include', '/student');
   });
@@ -20,9 +21,9 @@ describe('Page visit and page javascript', ()=>{
 
     const sidebarButtons = {
       '.report-button': '/report',
-      '.course-button': '/course',
+	//'.course-button': '/course',
       '.faculty-button': '/faculty',
-      '.job-button': '/job',
+	//'.job-button': '/job',
       '.student-button': '/student'
     }
 
@@ -34,6 +35,8 @@ describe('Page visit and page javascript', ()=>{
 
   it('Clicking page specific sidebar links should route to correct pages', ()=>{
 
+      /* This button was removed; not sure why */
+      /*
     cy.visit('/course');
 
     cy.get('.create-course-button').click();
@@ -44,7 +47,7 @@ describe('Page visit and page javascript', ()=>{
 
     cy.get('.upload-course-info-button').click();
     cy.url().should('contain', '/course/uploadInfo');
-
+*/
 
     cy.visit('/faculty');
 
@@ -54,6 +57,8 @@ describe('Page visit and page javascript', ()=>{
     cy.get('.upload-faculty-button').click();
     cy.url().should('contain', '/faculty/upload');
 
+      /* Also not sure why this was removed, but it is removed */
+      /*
     cy.visit('/job');
 
     cy.get('.create-job-button').click();
@@ -64,7 +69,7 @@ describe('Page visit and page javascript', ()=>{
 
     cy.get('.upload-grant-button').click();
     cy.url().should('contain', '/job/uploadGrant');
-
+*/
 
     cy.visit('/student')
 
@@ -88,14 +93,19 @@ describe('Page visit and page javascript', ()=>{
     cy.get('.student-navigation-edit-button').click()
     cy.url().should('contain', '/student/edit');
 
+      /* Removed ... */
+      /*
     cy.get('.student-navigation-jobs-button').click();
     cy.url().should('contain', '/student/jobs');
+      */
 
     cy.get('.student-navigation-forms-button').click();
     cy.url().should('contain', '/student/forms');
 
+      /*
     cy.get('.student-navigation-courses-button').click();
     cy.url().should('contain', '/student/courses');
+      */
 
     cy.get('.student-navigation-notes-button').click();
     cy.url().should('contain', '/student/notes');

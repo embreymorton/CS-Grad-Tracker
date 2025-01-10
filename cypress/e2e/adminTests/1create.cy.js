@@ -11,11 +11,12 @@ describe('Upload and create data', ()=>{
   })
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
+      cy.session('unique_identifier', () => {
+	  cy.visit('/changeUser/admin');
+      });
+  });
 
   it('Uploading course info should correctly store data in database', ()=>{
-    cy.visit('/changeUser/admin');
     cy.visit('/course/uploadInfo/false');
     const fileName = '../../data/courseInfo.csv'
     cy.fixture(fileName).then(fileContent => {
@@ -137,4 +138,3 @@ describe('Upload and create data', ()=>{
     cy.contains('Graduated')
   });
 });
-

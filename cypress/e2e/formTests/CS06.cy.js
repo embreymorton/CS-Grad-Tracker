@@ -20,7 +20,7 @@ let CS06 = {
   note: 'I HATTTTE YOUUUUU',
   otherCourses: 'YOU WERE MY BROTHER',
   minor: 'WE WERE SUPPOSED TO DESTROY THE SITH NOT JOIN THEM',
-  committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...'],
+  committee: ['I', 'AM' ,'YOUR' , 'FATHER', '...', 'PIZZA', 'DAHUT'],
 }
 
 let CS06cont = {
@@ -30,7 +30,7 @@ let CS06cont = {
   },
   text: {
     breadthCourseDate: ['FA 2020', 'FA 2020' ,'FA 2020' , 'FA 2020', 'FA 2020', 'FA 2020'],
-    concentrationCourseDate:  ['FA 2020', 'FA 2020' , 'FA 2020', 'FA 2020'], 
+    concentrationCourseDate:  ['FA 2020', 'FA 2020' , 'FA 2020', 'FA 2020'],
   },
   select: {
     chairman: 'admin, admin'
@@ -55,11 +55,10 @@ describe('Test CS06 submissions', () => {
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
   it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin');
+    cy.session('admin_sessions', () => {
+      cy.visit('/changeUser/admin');
+    });
     cy.visit('/student');
 
     cy.get('.edit-student-button').click();
@@ -71,8 +70,9 @@ describe('Test CS06 submissions', () => {
   })
 
   it('Submit CS06 form from administrator side', ()=>{
-    cy.visit('/changeUser/student')
-    cy.visit('/changeUser/admin')
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
     util.visitFormAsAdmin()
     cy.get('.CS06').click()
     cy.contains(name)

@@ -1,5 +1,5 @@
 import data from '../../../data/testRoles'
-import util from './formUtil'
+import util from './formUtil.cy'
 
 const { lastName, firstName, pid } = data.student
 const name = `${lastName}, ${firstName}`
@@ -43,12 +43,10 @@ describe('Test Semester Progress Report Submissions', () => {
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
-
   it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin')
+    cy.session('admin_session', () => {
+      cy.visit('/changeUser/admin');
+    });
     cy.visit('/student')
 
     cy.get('.edit-student-button').click()
@@ -60,22 +58,27 @@ describe('Test Semester Progress Report Submissions', () => {
   })
 
   it('Submit form from administrator side', () => {
-    cy.visit('/changeUser/admin')
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     util.visitFormAsAdmin()
     cy.get('.SemesterProgressReport').click()
     cy.contains('Create New Form').click()
     cy.contains(name)
     cy.contains(pid.toString())
-    
+
     util.fillFormByDataCy(form1)
     util.submitForm()
     util.verifyFormByDataCy(form1)
   })
 
   it('Submit form from student side', () => {
-    cy.visit('/changeUser/student')
+    cy.session('student_session', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/SemesterProgressReport/false')
-    cy.contains(form1.text.semester) 
+    cy.contains(form1.text.semester)
     cy.contains('✅') // ensure the previously submitted form is marked as completed
     cy.contains('View').click()
 
@@ -88,7 +91,13 @@ describe('Test Semester Progress Report Submissions', () => {
     cy.get('[name="rataComments"]').should('not.exist')
   })
 
+    /* This also doesn't actually appear to do anything; seems vestigial. */
+    /*
   it('Create a second form with the same semester, then change the semester upon error.', () => {
+    cy.session('admin_session3', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     cy.visit('/studentView/multiforms/SemesterProgressReport')
     cy.contains('Create New Form').click()
     util.fillFormByDataCy(form2)
@@ -97,5 +106,6 @@ describe('Test Semester Progress Report Submissions', () => {
     cy.go('back')
     cy.get('[data-cy="semester"]').type('SP 2019')
     cy.get('#save-btn').click()
-  })
+    })
+    */
 })

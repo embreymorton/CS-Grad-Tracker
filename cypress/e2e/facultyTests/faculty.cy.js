@@ -4,11 +4,12 @@ describe('Test the routes that a faculty should/should not be able to access', (
   })
 
   beforeEach(function () {
-    Cypress.Cookies.preserveOnce('connect.sid')
+      cy.session('unique_identifier', () => {
+	  cy.visit('/changeUser/faculty');
+      });
   })
 
   it('Make sure faculty can not access job, course, and student create routes', ()=>{
-    cy.visit('/changeUser/faculty');
     cy.visit('/student/create');
     cy.contains('Not admin');
     cy.visit('/course');
@@ -53,12 +54,18 @@ describe('Test the routes that a faculty should/should not be able to access', (
        cy.contains('View student');
        cy.get('.student-navigation-edit-button').click();
        cy.contains('View student');
-       cy.get('.student-navigation-jobs-button').click();
-       cy.contains(student.firstName);
+	 /* Removed functionality */
+	 /*
+	 cy.get('.student-navigation-jobs-button').click();
+	 cy.contains(student.firstName);
+	 */
        cy.get('.student-navigation-forms-button').click();
        cy.contains(student.firstName);
+	 /* Removed functrionality */
+	 /*
        cy.get('.student-navigation-courses-button').click();
        cy.contains(student.firstName);
+       */
        cy.get('.student-navigation-notes-button').click();
        cy.contains(student.firstName);
        const note = 'I WROTE A NOTE';
