@@ -39,6 +39,7 @@ Users:
 
 # Documentation
 
+*  [Getting Started](#getting-started)
 *  [Environmental Variables](#environmental-variables)
 *  [Starting the app](#starting-the-app)
 *  [Starting the App with Windows](#starting-the-app-with-windows)
@@ -48,12 +49,131 @@ Users:
 *  [CI/CD](#cicd)
 *  [System overview](#system-overview)
 
-# Important note
-- MAKE SURE to acquire a copy of a .env file from someone who has worked
-  previously on the project
-- Never check this into source control/git
+# Getting Started
 
-# Environmental Variables
+The deployed version of this code currently runs in a VM on Ubuntu 24.04.
+Although the code is largely platform independent and has worked in other
+setups, Ubuntu 24.04 is the most recent platform confirmed to work.
+
+The key pieces of infrastructure you will need to set up are:
+
+1. An auth0 account for authentication.  This is needed even for local development
+   and testing, although the production deployment will not need your account.
+2. Install mongodb and create an administrative user.
+3. Install the cs grad tracking app itself.
+
+## Setting up Auth0
+We are using Auth0 as an authentication provider.  Even for development and testing,
+you will need a free account on auth0.  For production, a different auth0
+configuratin is used.
+
+Key Steps:
+- Nagivate to `http://manage.auth0.com` and create an account
+- Find "Applications" on the sidebar, and click on pre-made default app
+- In the Auth0 settings page for your app, setup the appropriate URLS, as a comma separated list on a single line:
+  - Allowed callback URLs: `http://localhost:8080/callback`, `http://localhost:8081/callback`,
+  `http://csgrad.cs.unc.edu/callback`
+  - Allowed web origins: `http://localhost:8080`, `http://localhost:8081`, `http://csgrad.cs.unc.edu`
+  - Allowed logout urls: `http://localhost:8080`, `http://localhost:8081`, `http://csgrad.cs.unc.edu`
+  - In connections, make sure Username-Password-Authentication and google-oauth2
+    are enabled.
+- Later, you will need the Domain, Client ID, and Client Secret for this application, so keep this page open.
+
+Be sure to click 'save changes' on the bottom of the page.
+
+## Install the back-end database (mongodb):
+Since we are connecting to a mongodb database, download mongodb and follow these instructions:
+
+For windows:
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+Follow all default options on the installer, after it is completed, make sure
+you have created a directory: `C:\data\db`, then in bash run
+
+    "C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe"
+
+This will need to be running any time you want to start the app.
+
+Note that because we are running "mongod.exe", it is a database running locally
+on the computer.
+
+For Ubuntu:
+
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+
+You may need to manually start the mongod service:
+`sudo service mongod start`
+
+
+## Install npm and nodejs
+
+* On Ubuntu:
+
+`apt-get install npm nodejs`
+
+* On other platforms:
+
+Download NPM and nodejs at: https://nodejs.org/en/
+Add npm to your systems PATH after it has finished installing.
+
+## Cloning and configuring the app
+
+```
+git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git
+cd CS-Grad-Tracking
+npm install
+```
+
+The final step is a one-time setup that install the required libraries.  It should create a `node_modules` folder, but you don't really need to touch it.
+
+### Configure a .env file
+
+You will need to create a file named `.env` in the root directory of the project.
+There are several examples in the `envFiles` directory.  For a beginner,
+copy `envFiles/.development.nodocker.env` to `.env` and add the following fields, to end up
+with a file similar to this one:
+
+```
+port=8080
+host=127.0.0.1
+AUTH0_DOMAIN=<garbled string from auth0>
+AUTH0_CLIENT_SECRET=<garbled string from auth0>
+AUTH0_CALLBACK_URL=http://localhost:8080/callback
+AUTH0_LOGOUT_URL=http://localhost:8080
+
+```
+
+*Never check the .env file into git*
+
+### Adding an Admin Account
+
+For development and testing in a local instance, you will need to make a fake admin account for yourself.
+
+Open the `data/AdminInputScript.txt` file. Edit the email section to have the same email as your auth0 account. Then run `node data/AdminInputScript.txt`.  For some reason this script hangs, but it is ok to Ctrl+C.
+
+## Running
+
+Run the command `npm start` to create a testing instance of the webserver.  At this point, you should be able to connect a web browser on the same system to localhost:8080
+
+When you first start up the app, you may be prompted to create an account under your Auth0 instance. Do so with the email of your choice.
+
+
+## Testing
+
+1. Run the command `npm run start-ci` to create a testing instance of the webserver.  This will switch the backing database for the application, and your previously created accounts will be unavailable.
+
+At this point, you can still see the application, say at localhost:8080.  However, to change users and test different roles, you will need to navigate to one of 'chageuser/admin', 'chageuser/student', or 'changeuser/faculty'.
+
+2. To run unit tests, in another terminal run either of these commands:
+    * `npx cypress open` - for the UI
+    * `npm run test` - for command line only
+
+    The UI will let you choose a specific test to run while automatically saving screenshots and recording browser states for you to see where your tests are failing.
+
+
+# Additional Notes on the .env file
+
+## Environmental Variables
 - There are several AUTH0 fields required, detailed in the AUTH0 section.
 - There is also gmailUser and gmailPass which are used for email notifications
   through nodemailer.
@@ -84,49 +204,6 @@ Users:
 - any values in .env will override values in other .env files, and you probably
   don't want to override mode or databaseString for both development and testing
 
-## Starting the app
-
-### Running the database
-First, since we are connecting to a mongodb database, download mongodb at
-
-For windows:
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
-Follow all default options on the installer, after it is completed, make sure
-you have created a directory: `C:\data\db`, then in bash run
-
-    "C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe"
-
-This will need to be running any time you want to start the app.
-
-For Ubuntu:
-
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
-
-Note that because we are running "mongod.exe", it is a database running locally
-on the computer.
-
-### Cloning and starting the app.
-
-If you do not have npm:
-
-Download NPM and nodejs at: https://nodejs.org/en/
-Add npm to your systems PATH after it has finished installing.
-
-Cloning and setting up the app:
-
-```
-git clone https://gitlab.com/unc-cs-toolsmiths/CS-Grad-Tracking.git
-cd CS-Grad-Tracking
-npm install
-```
-
-Select your desired environmental values from the appropriate file in envFiles,
-and add it to a .env file in the root directory (CS-Grad-Tracking)
-
-Now to start the app run the command:
-
-`npm start`
-
 ## Starting the App with Windows
 ### Installing Prerequisite Programs
 
@@ -146,21 +223,9 @@ node --version
 npm --version
 ```
 
-### Pulling Code and Installing Dependencies
 
-Once you are invited into the GitLab repository, click the blue "Clone" button and copy the link using your preference of SSH or HTTPS. Open powershell and cd into a folder of your choice for code. Run `git clone <copied-link>` and cd into the created folder. 
-
-Install all the dependencies for the app by running `npm install`. It should create a `node_modules` folder, but you don't really need to touch it.
-
-### Adding an Admin Account
-Open the `data/AdminInputScript.txt` file. Edit the email section to have your email. Then run `node data/AdminInputScript.txt`.
-
-Sign into your Auth0 instance with the same email address you used in `data/AdminInputScript.txt` so that the app will recognize you as an admin user.
-
-When you first start up the app, you may be prompted to create an account under your Auth0 instance. Do so with the email of your choice.
-
-### Starting the App
-Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line: 
+### Starting the App on Windows
+Before this next step, you should have set up your Auth0 and admin account in your local database. You should also have started running the database using this line:
 
 ```ps
 & "C:\Program Files\MongoDB\Server\<version>\bin\mongod.exe"
@@ -229,7 +294,7 @@ will handle the request and serve the view file views/course/index.ejs.
 ## Testing
 
 ### Run Locally
-1. Configure `.env.testing` similar to your development env.    
+1. Configure `.env.testing` similar to your development env.
 
     By default it should have these values:
     * `port=8080`
@@ -316,24 +381,6 @@ html.
 
 
 ## Auth0
-We are using Auth0, this is the process we used to configure it and is what you
-should use should you ever hook up your own auth0 account.
-
-Setting up Auth0 
-- Nagivate to `http://manage.auth0.com` and create an account
-- Find "Applications" on the sidebar, and click on pre-made default app
-- Under setting, add "http://localost:8081/callback" or "http://localost:8080/callback" under Allowed Callback URLs and "http://localhost:8081" or "http://localost:8080" under Allowed Logout URLS and click save changes on the bottom.
-
-
-- In .env, update `AUTH0_CLIENT_ID`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_SECRET` to
-  your values (look at Auth0 docs for where to find these)
-- In the Auth0 settings page for your app, setup the appropriate URLS
-- Allowed callback URLs: `http://localhost:8080/callback`,
-  `http://csgrad.cs.unc.edu/callback`
-- Allowed web origins: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
-- Allowed logout urls: `http://localhost:8080`, `http://csgrad.cs.unc.edu`
-- In connections, make sure Username-Password-Authentication and google-oauth2
-  are enabled.
 
 When the app is deployed on a UNC-CS virtual machine (csgrad.cs.unc.edu), this
 is how we currently have it set up:
@@ -349,7 +396,7 @@ is how we currently have it set up:
   react.
 
 ## Setting up the ssh key:
-to set up the key to be able to pull / push and deploy 
+to set up the key to be able to pull / push and deploy
 generate a new key and copy the content from the new generated file that has an extention of .pub and past it.
 Dont copy the one from the terminal, look for the generated file.
 This should get you all set.
