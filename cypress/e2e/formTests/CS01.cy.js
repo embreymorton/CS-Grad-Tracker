@@ -72,17 +72,14 @@ describe('Test CS01 submissions', ()=>{
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(function () {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
-
   const { lastName, firstName, pid } = data.student
   const name = lastName + ', ' + firstName
-  
-  it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin');
-    cy.visit('/student');
 
+  it('Give student student an advisor', () => {
+    cy.session('admin_session', () => {
+      cy.visit('/changeUser/admin');
+    });
+    cy.visit('/student');
     cy.get('.edit-student-button').click();
 
     cy.get('.student-navigation-edit-button').click()
@@ -92,21 +89,24 @@ describe('Test CS01 submissions', ()=>{
   })
 
   it('Submit CS01 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
-    cy.visit('/changeUser/admin');
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
     util.visitFormAsAdmin();
     cy.get('.CS01').click();
     cy.contains(name)
     cy.contains(pid.toString())
-    util.fillFormByDataCy(form1)
-    util.fillFormByDataCy(form2)
+    util.fillFormByDataCyFiltered(form1)
+    util.fillFormByDataCyFiltered(form2)
     util.submitForm();
     util.verifyFormByDataCy(form1);
     util.verifyFormByDataCy(form2);
   })
 
   it('Submit CS01 form from student side, check to make sure values from admin submission are there', ()=>{
-    cy.visit('/changeUser/student')
+    cy.session('student_session', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/CS01/false')
     cy.contains(name)
     cy.contains(pid.toString())

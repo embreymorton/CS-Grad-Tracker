@@ -6,7 +6,7 @@ variables:
     port: "8080"
     host: "127.0.0.1"
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
-    CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+    CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/.cache/Cypress"
     CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
 before_script:
   ##
@@ -19,7 +19,7 @@ before_script:
   ## Run ssh-agent (inside the build environment)
   ##
   - eval $(ssh-agent -s)
- 
+
   ##
   ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
   ## SSH_PRIVATE_KEY is stored on gitlab.com - Settings - CI/CD - Variables
@@ -46,19 +46,29 @@ services:
 
 stages:
   - build
+  - test
   - deploy
 
 cache:
   paths:
     - .npm
-    - node_modules/
-    - cache/Cypress
+    - ./node_modules
+    - .cache/Cypress
+    - $CI_PROJECT_DIR/.cache/Cypress
+    - $CI_PROJECT_DIR/.npm
+    - /builds/unc-cs-toolsmiths/CS-Grad-Tracking/.cache/Cypress
+  key:
+    prefix: cache-$PROJECT_DIR
+    files:
+      - ./package-lock.json
 
 install_dependencies:
   stage: build
   tags:
     - nodejs
   script:
+    - npm install
+    - ./node_modules/.bin/cypress install --force
     - npm ci
     - npx cypress cache path
     - npx cypress cache list
@@ -66,14 +76,16 @@ install_dependencies:
     paths:
       - node_modules/
 
-#testing_testing:
-#  image: cypress/base:16
-#  tags:
-#    - nodejs
-#  stage: test
-#  script:
-#    - npm install -g start-server-and-test
-#    - npm run ci
+unit_tests:
+  image: cypress/base:16
+  tags:
+    - nodejs
+  stage: test
+  script:
+    - npm install
+    - ./node_modules/.bin/cypress install --force
+    - npm install -g start-server-and-test
+    - npm run ci
 
 deployment:
   stage: deploy

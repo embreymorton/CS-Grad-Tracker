@@ -32,10 +32,10 @@ util.fillCleanFormAsAdmin =
         }
       }
     })
-  
+
   })
 util.checkFormAsAdmin =
-  makeFormDataHandler((sel, d) => 
+  makeFormDataHandler((sel, d) =>
     sel.should('have.value', d)
   )
 util.fillFormAsStudent =
@@ -65,13 +65,22 @@ const cyGetApply = (selector, values, method, makeArgs) => {
   if (Array.isArray(values)) {
     cy.get(selector).each(($el, i, $list) => i < values.length && cy.wrap($el)[method](...makeArgs(values[i]))) // quick ends loop when i >= value.length (by returning false)
   } else {
-    cy.get(selector).filter(':visible')[method](...makeArgs(values))
+      cy.get(selector)[method](...makeArgs(values))
   }
 }
 
+const cyGetApplyFiltered = (selector, values, method, makeArgs) => {
+  if (Array.isArray(values)) {
+    cy.get(selector).each(($el, i, $list) => i < values.length && cy.wrap($el)[method](...makeArgs(values[i]))) // quick ends loop when i >= value.length (by returning false)
+  } else {
+      cy.get(selector).filter(":visible")[method](...makeArgs(values))
+  }
+}
+
+
 /**
  * fills form elements with a `data-cy` attribute (https://docs.cypress.io/guides/references/best-practices#Selecting-Elements)
- * It's best to make the `data-cy` attribute equivalent to the element's `name` attribute. But we use the `data-cy` attribute as 
+ * It's best to make the `data-cy` attribute equivalent to the element's `name` attribute. But we use the `data-cy` attribute as
  * elements like buttons or especially checkboxes may just activate a script that modifies a hidden textbox.
  * Note: Checkbox should have a value of true/false corresponding to checked/unchecked
  * @param {Object} formData object with this format:
@@ -108,21 +117,44 @@ util.fillFormByDataCy = (formData) => {
       cyGetApply(datacy, value, 'check', (val) => [val])
     }
   })
-  
+
   Object.entries(formData.select || {}).forEach(([name, value]) => {
     cyGetApply(`[data-cy="${name}"]`, value, 'select', (val) => [val])
   })
-  
+
   Object.entries(formData.text || {}).forEach(([name, value]) => {
     cyGetApply(`[data-cy="${name}"]`, value, 'clear', () => [])
     cyGetApply(`[data-cy="${name}"]`, value, 'type', (val) => [val])
   })
 }
 
+util.fillFormByDataCyFiltered = (formData) => {
+  Object.entries(formData.check || {}).forEach(([name, value]) => {
+    const datacy = `[data-cy="${name}"]`
+    if (value === false) {
+      cy.get(datacy).uncheck()
+    } else if (value === true) { // is a checkbox
+      cy.get(datacy).check()
+    } else { // is a radio
+      cyGetApply(datacy, value, 'check', (val) => [val])
+    }
+  })
+
+  Object.entries(formData.select || {}).forEach(([name, value]) => {
+    cyGetApplyFiltered(`[data-cy="${name}"]`, value, 'select', (val) => [val])
+  })
+
+  Object.entries(formData.text || {}).forEach(([name, value]) => {
+    cyGetApplyFiltered(`[data-cy="${name}"]`, value, 'clear', () => [])
+    cyGetApplyFiltered(`[data-cy="${name}"]`, value, 'type', (val) => [val])
+  })
+}
+
+
 /**
  * See `fillFormByDataCy` for more info. However instead of filling out the form, it just
  * verifies that each element selected by the `data-cy` attribute has this value.
- * @param {Object} formData 
+ * @param {Object} formData
  */
 util.verifyFormByDataCy = (formData) => {
   Object.entries(formData.text || {}).forEach(([name, value]) => {

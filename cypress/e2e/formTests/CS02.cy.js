@@ -30,14 +30,12 @@ describe('Test CS02 submissions', () => {
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
-
   it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin');
-    cy.visit('/student');
+    cy.session('admin_session', () => {
+      cy.visit('/changeUser/admin');
+    });
 
+    cy.visit('/student');
     cy.get('.edit-student-button').click();
 
     cy.get('.student-navigation-edit-button').click()
@@ -47,7 +45,10 @@ describe('Test CS02 submissions', () => {
   })
 
   it('Submit CS02 form from administrator side', () => {
-    cy.visit('/changeUser/admin')
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     util.visitFormAsAdmin()
     cy.get('.CS02').click()
     cy.contains('Create New Form').click()
@@ -59,8 +60,10 @@ describe('Test CS02 submissions', () => {
     util.fillFormAsStudent(CS02)
   })
 
-  it('Submit CS02 form from student side', () => {
-    cy.visit('/changeUser/student')
+    it('Submit CS02 form from student side', () => {
+    cy.session('student_session', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/CS02/false')
     cy.contains('View').click()
     cy.contains(name)
@@ -72,7 +75,10 @@ describe('Test CS02 submissions', () => {
     util.checkFormAsStudent(CS02)
   })
 
-  it('Create a second CS02 from the student side', () => {
+    it('Create a second CS02 from the student side', () => {
+    cy.session('student_session2', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/multiforms/CS02')
     cy.contains('Create New Form').click()
     util.fillCleanFormAsAdmin(secondCS02)
@@ -80,6 +86,10 @@ describe('Test CS02 submissions', () => {
   })
 
   it('Check the second CS02 form is saved from the student side.', () => {
+    cy.session('student_session3', () => {
+      cy.visit('/changeUser/student');
+    });
+
     cy.visit('/studentView/multiforms/CS02')
     cy.contains('COMP 560')
     cy.contains('COMP 101')

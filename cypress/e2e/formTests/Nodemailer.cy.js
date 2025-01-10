@@ -7,9 +7,6 @@ describe('Checking Email Receival', ()=>{
       cy.wrap(res.body.pass).as('pass')
     })
   })
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
 
   // we assume that the previous tests have sent some emails
   it('Logging into Ethereal to check', function () {

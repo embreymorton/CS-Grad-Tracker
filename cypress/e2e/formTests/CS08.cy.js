@@ -22,11 +22,10 @@ describe('Test CS08 submissions', ()=>{
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(function () {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
   it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin');
+    cy.session('admin_sessions', () => {
+      cy.visit('/changeUser/admin');
+    });
     cy.visit('/student');
     cy.get('.edit-student-button').click();
     cy.get('.student-navigation-edit-button').click()
@@ -36,8 +35,10 @@ describe('Test CS08 submissions', ()=>{
   })
 
   it('Submit CS08 form from administrator side', ()=>{
-    cy.visit('/changeUser/student');
-    cy.visit('/changeUser/admin');
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     util.visitFormAsAdmin();
     cy.get('.CS08').click();
     cy.contains(name)
@@ -50,7 +51,9 @@ describe('Test CS08 submissions', ()=>{
   })
 
   it('Submit CS08 form from student side', ()=>{
-    cy.visit('/changeUser/student');
+    cy.session('student_session', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/CS08/false');
     cy.contains(name)
     cy.contains(pid.toString())
