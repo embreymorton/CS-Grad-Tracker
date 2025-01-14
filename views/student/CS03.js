@@ -98,10 +98,10 @@ const cs03Form = (opts) => {
         colMd(2)(
           div('Semester'),
           semesterInput(
-            'semester', 
+            'semester',
             form.semester && form.semester[i], {
-              isDisabled: !editAccess || isComplete, 
-              isRequired: false, 
+              isDisabled: !editAccess || isComplete,
+              isRequired: false,
               isSS_YYYY: false,
               placeholder: 'SS YYYY'
           }),
@@ -118,8 +118,8 @@ const cs03Form = (opts) => {
             gradeDropdown('grade', form.grade && form.grade[i], !editAccess || isComplete, {placeholder: 'None selected.'})
           ))
         ),
-        
-      ), 
+
+      ),
       hr]
     }
 
@@ -234,7 +234,7 @@ const cs03Form = (opts) => {
         ),
         colMd(2)('File Form CS-01')
       ),
-      
+
       vert,
       div('B. Program Product'),
       row(
@@ -301,7 +301,7 @@ const cs03Form = (opts) => {
       ),
 
       div(
-        {id: 'reason-section', hidden: hide(form.approve)},
+        {id: 'reason-section', hidden: hide(form.approved)},
         div('Reason for Disapproval:'),
         row(
           colMd(6)(
@@ -311,7 +311,7 @@ const cs03Form = (opts) => {
             )
           )
         ),
-        script(opts.cspNonce, 
+        script(opts.cspNonce,
           `
           document.querySelector('[name="approved"]').addEventListener('change', (e) => {
             const reasonSection = document.getElementById('reason-section')
@@ -360,8 +360,8 @@ const namePidRow = (student) => {
   )
 }
 
-function hide(arg) { 
-    if(arg === null || true){
+function hide(arg) {
+    if(arg === null || arg === true){
       return true;
     }
     else return false; }
