@@ -76,6 +76,13 @@ install_dependencies:
     paths:
       - node_modules/
 
+style_check:
+  tags:
+    - nodejs
+  stage: test
+  script:
+    - npx eslint controllers/util.js
+
 unit_tests:
   image: cypress/base:16
   tags:
