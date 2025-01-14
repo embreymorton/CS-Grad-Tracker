@@ -6,7 +6,7 @@ mongoose.connection
   .on('error', console.error.bind(console, 'connection error:'))
   .once('open', function () {
 
-    const admin = new db.admin ({
+    const admin = new db.Faculty ({
         onyen: "chandle",
         csid: "person",
         email: "azamani@unc.edu",

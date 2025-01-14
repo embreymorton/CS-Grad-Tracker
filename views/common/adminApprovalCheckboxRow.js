@@ -3,12 +3,12 @@ const { checkbox, script, input } = require('../common/baseComponents')
 
 /**
  * Like `signatureRow` except can only be checked off by admins and will include the name of the admin checking off this form! This is for Director or Chair positions. In the schema, the signature field should be a string.
- * 
+ *
  * @param {facultySchema | studentSchema} viewer from `opts`, a Faculty or Student profile of the person currently viewing the form
- * @param {String} name of schema field without the text 'Signature'. e.g. if schema field is `directorSignature`, then the argument passed should be 'director'.  
+ * @param {String} name of schema field without the text 'Signature'. e.g. if schema field is `directorSignature`, then the argument passed should be 'director'.
  * @param {CSXX} form object with a schema field
- * @param {*} nonce 
- * @returns 
+ * @param {*} nonce
+ * @returns
  */
 
 const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
@@ -35,8 +35,8 @@ const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
         isApproved,
         nonce,
         {
-          isDisabled: !((name === 'director' && viewer.directorOfGraduateStudies) || 
-                         ((name !== 'director') && viewer.admin)),
+          isDisabled: !((name === 'director' && viewer.directorOfGraduateStudies) ||
+                        viewer.admin),
           isRequired: false,
           overrideFalse: "",
           overrideTrue: viewerName
@@ -47,7 +47,7 @@ const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
         isApproved ? approvedDate.toString() : '',
         {isHidden: true}
       ),
-      x(`em#label-${fieldSignature}`)(isApproved ? 
+      x(`em#label-${fieldSignature}`)(isApproved ?
         `(${signerTitle} ${signerName} approved on ${approvedDateMMDDYYYY})` :
         hasNotYetApprovedText
       ),
@@ -66,7 +66,7 @@ const adminApprovalCheckboxRow = (viewer, name, form, nonce) => {
             dateSigned.value = null
           }
         })
-        
+
         // set initial value of checkbox's value to be whatever was originally in the db if already approved
         if (${isApproved}) {
           document.getElementById('checkboxValue-${fieldSignature}').value = "${signerName}";

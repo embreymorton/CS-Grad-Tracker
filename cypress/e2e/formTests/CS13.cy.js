@@ -23,13 +23,12 @@ describe('Test CS13 Submissions', () => {
     cy.request('/util/resetDatabaseToSnapshot')
   })
 
-  beforeEach(function () {
-    Cypress.Cookies.preserveOnce('connect.sid')
-  })
-
   it('Give student student an advisor', () => {
-    cy.visit('/changeUser/admin');
+    cy.session('admin_session', () => {
+      cy.visit('/changeUser/admin');
+    });
     cy.visit('/student');
+
     cy.get('.edit-student-button').click();
 
     cy.get('.student-navigation-edit-button').click()
@@ -39,8 +38,11 @@ describe('Test CS13 Submissions', () => {
   })
 
   it('Submit CS13 form from the student side first, with alternative filled out.', () => {
-    cy.visit('/changeUser/student')
+    cy.session('student_session', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/CS13/false')
+
     cy.contains(name)
     cy.contains(pid.toString())
 
@@ -50,11 +52,14 @@ describe('Test CS13 Submissions', () => {
     cy.get('input[name="position"]').type('Filling out required boxes that is what I do~~')
     util.fillFormByDataCy(alternativeCS13_S)
     util.submitForm()
-    util.verifyFormByDataCy(alternativeCS13_S) 
+    util.verifyFormByDataCy(alternativeCS13_S)
   })
 
   it('Edit and approve of CS13 form from the admin side.', () => {
-    cy.visit('/changeUser/admin')
+    cy.session('admin_session2', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     util.visitFormAsAdmin()
     cy.get('.CS13').click()
 
@@ -64,6 +69,10 @@ describe('Test CS13 Submissions', () => {
   })
 
   it('Check that student fields were updated upon completion of the form.', () => {
+    cy.session('admin_session3', () => {
+      cy.visit('/changeUser/admin');
+    });
+
     cy.visit('/student')
     cy.get('.edit-student-button').click()
     let date = new Date()
@@ -71,12 +80,14 @@ describe('Test CS13 Submissions', () => {
   })
 
   it('Go back to student side and checks that the submit button is gone.', () => {
-    cy.visit('/changeUser/student')
+    cy.session('student_session2', () => {
+      cy.visit('/changeUser/student');
+    });
     cy.visit('/studentView/forms/CS13/false')
     cy.contains(name)
     cy.contains(pid.toString())
 
     cy.get(`#submit-btn`).should('not.exist')
-    cy.get('textarea[name="product"]').should('not.exist') 
+    cy.get('textarea[name="product"]').should('not.exist')
   })
 })

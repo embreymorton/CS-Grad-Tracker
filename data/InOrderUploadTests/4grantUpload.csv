@@ -1,2 +1,3 @@
-name,cs_pi,other_pi
-Grant for testing,"Terrell, Jeff"
+﻿name,pi_type,cs_pi_name,other_pi_name
+Grant for testing,OTHER_PI,,"Roberts, Lee"
+Other Grant,CS_PI,"Nirjon, Shahriar",

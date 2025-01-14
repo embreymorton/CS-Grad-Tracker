@@ -3,7 +3,7 @@ var XLSX = require("xlsx");
 var schema = require("../models/schema.js");
 var _ = {};
 
-var regexSlashes = /\/*\//gi;
+var regexSlashes = /\/*\//ig;
 
 // Removes variables not defined in models and other undefined/null variables
 /*
@@ -81,7 +81,7 @@ document exist for the corresponding model
 @return true or false
 */
 
-_.allFieldsExist = function (input, model) {
+_.allFieldsExist = function(input, model) {
   var m = model.schema.obj;
   for (var key in m) {
     var v = input[key];
@@ -154,7 +154,6 @@ _.checkAdvisor = function (facultyID, studentID) {
           const researchAdvisorQuery = student.researchAdvisor
             ? { _id: student.researchAdvisor }
             : null;
-
           const advisorCheck = advisorQuery
             ? schema.Faculty.findOne(advisorQuery).exec()
             : Promise.resolve(null);
@@ -190,22 +189,12 @@ _.checkAdvisor = function (facultyID, studentID) {
 */
 _.checkAdvisorAdmin = (facultyID, studentID) =>
   new Promise((resolve, reject) =>
-    schema.Faculty.findOne({ pid: facultyID })
-      .exec()
-      .then((faculty) =>
-        faculty.admin == true
-          ? resolve(true)
-          : schema.Student.findOne({ _id: studentID })
-              .exec()
-              .then((student) =>
-                student == null || student.advisor == null
-                  ? resolve(false)
-                  : schema.Faculty.findOne({ _id: student.advisor })
-                      .exec()
-                      .then((advisor) => resolve(advisor.pid == facultyID))
-              )
-      )
-  );
+    schema.Faculty.findOne({pid: facultyID}).exec().then(faculty =>
+      faculty.admin == true ? resolve(true) :
+      schema.Student.findOne({_id: studentID}).exec().then(student =>
+        student == null || student.advisor == null ? resolve(false) :
+        schema.Faculty.findOne({_id: student.advisor}).exec().then(advisor =>
+          resolve(advisor.pid == facultyID)))));
 
 _.listObjectToString = function (input) {
   var result = "Search: ";
