@@ -1,17 +1,17 @@
-const { dropdown, makeOption, input, datalist } = require('../common/baseComponents')
+const { dropdown, makeOption, input, datalist } = require("../common/baseComponents");
 
 // const semesterToMonths = {'SP': [1, 2, 3, 4], 'S1': [5], 'S2': [6, 7], 'FA': [8, 9, 10, 11, 12]}
-const monthToSemester = (month) => {
+const monthToSemester = month => {
   if (1 <= month && month <= 4) {
-    return 'SP'
+    return "SP";
   } else if (5 <= month && month <= 5) {
-    return 'S1'
+    return "S1";
   } else if (6 <= month && month <= 7) {
-    return 'S2'
+    return "S2";
   } else {
-    return 'FA'
+    return "FA";
   }
-}
+};
 
 /**
  * 
@@ -23,17 +23,17 @@ const monthToSemester = (month) => {
  * @param {String} placeholder text displayed when no option is selected
  * @returns 
  */
-const semesterDropdown = (name, value, semesters, isDisabled, {isRequired = true, placeholder = 'Select a semester from the dropdown'} = {}) => {
+const semesterDropdown = (name, value, semesters, isDisabled, {isRequired = true, placeholder = "Select a semester from the dropdown"} = {}) => {
   return dropdown(
     name, 
-    semesters.map((semester) => makeOption(semester._id.toString(), semester.semesterString, value?.equals(semester._id))), 
+    semesters.map(semester => makeOption(semester._id.toString(), semester.semesterString, value?.equals(semester._id))), 
     {
       isDisabled, 
       isRequired,
       blankOption: placeholder
     }
-  )
-}
+  );
+};
 
 /**
  * 
@@ -46,7 +46,7 @@ const semesterDropdown = (name, value, semesters, isDisabled, {isRequired = true
  * @param {String} list id of datalist to include
  * @returns 
  */
-const semesterInput = (name, value, {isDisabled = false, isRequired = true, placeholder = 'Select a semester or type one in (FA|SP|S1|S2) YYYY format', isSS_YYYY = true, list = 'semestersDatalist'} = {}) => {
+const semesterInput = (name, value, {isDisabled = false, isRequired = true, placeholder = "Select a semester or type one in (FA|SP|S1|S2) YYYY format", isSS_YYYY = true, list = "semestersDatalist"} = {}) => {
   return input(
     name,
     value,
@@ -56,8 +56,8 @@ const semesterInput = (name, value, {isDisabled = false, isRequired = true, plac
       placeholder,
       attrs: {list, ...(isSS_YYYY ? {pattern: "^(FA|SP|S1|S2) \\d\\d\\d\\d$"} : {})}
     }
-  )
-}
+  );
+};
 
 /**
  * Generates a list of semesters and summer sessions from current date's year
@@ -65,23 +65,23 @@ const semesterInput = (name, value, {isDisabled = false, isRequired = true, plac
  * @param {Integer} forward number of years forward to generate semesters
  * @param {String} id overrides default id of this datalist
  */
-const semesterDatalist = (back, forward = 0, id = 'semestersDatalist') => {
-  const today = new Date()
-  const year = today.getFullYear()
-  const currSemester = monthToSemester(today.getMonth() + 1)
-  const order = ['SP', 'S1', 'S2', 'FA']
+const semesterDatalist = (back, forward = 0, id = "semestersDatalist") => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const currSemester = monthToSemester(today.getMonth() + 1);
+  const order = ["SP", "S1", "S2", "FA"];
 
-  const list = []
-  let i = order.indexOf(currSemester)
-  let yyyy = year - back
+  const list = [];
+  let i = order.indexOf(currSemester);
+  let yyyy = year - back;
   for (i; i < order.length*(forward+back+1); i++) {
-    const ss = order[i % order.length]
-    list.push(`${ss} ${yyyy}`)
+    const ss = order[i % order.length];
+    list.push(`${ss} ${yyyy}`);
     if (ss == order[order.length-1]) {
-      yyyy++
+      yyyy++;
     }
   }
 
-  return datalist(id, list.map(v => [v, v]).reverse())
-}
-module.exports = {semesterDropdown, semesterInput, semesterDatalist}
+  return datalist(id, list.map(v => [v, v]).reverse());
+};
+module.exports = {semesterDropdown, semesterInput, semesterDatalist};
