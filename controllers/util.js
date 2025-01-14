@@ -15,7 +15,7 @@ var regexSlashes = /\/*\//ig;
 _.validateModelData = function (input, model) {
   var result = {};
   const m = model.schema.paths;
-  const isTruthy = (val) => val == "true" || val == "on";
+  const isTruthy = val => val == "true" || val == "on";
   for (var key in m) {
     if (input[key] !== undefined && input[key] !== null && input[key] !== NaN && input[key] !== "") {
       if (m[key].instance === "Array") {
@@ -97,18 +97,17 @@ _.allFieldsExist = function(input, model) {
   @return the document with text fields as regular expressions
 */
 
-_.makeRegexp = function(input){
-  for(var key in input){
-    if(input[key].constructor == Array){
-      if(input[key][0] == "string"){
-        for(var i = 0; i < input[key].length; i++){
+_.makeRegexp = function(input) {
+  for (var key in input) {
+    if (input[key].constructor == Array) {
+      if (input[key][0] == "string") {
+        for (var i = 0; i < input[key].length; i++) {
           input[key][i] = new RegExp(input[key][i], "i");
         }
       }
-    }
-    else{
+    } else {
       //only create regexp if the field is text
-      if(typeof input[key] == "string"){
+      if (typeof input[key] == "string") {
         input[key] = new RegExp(input[key], "i");
       }
     }
@@ -117,13 +116,13 @@ _.makeRegexp = function(input){
 };
 
 //used just once to initialize all possible semesters
-_.initializeAllSemesters = function(){
+_.initializeAllSemesters = function() {
   schema.Semester.find({}).deleteMany().exec();
   var seasons = schema.Semester.schema.path("season").enumValues;
-  for(var i = 2018; i < 2040; i++){
-    for(var j = 0; j < seasons.length; j++){
+  for (var i = 2018; i < 2040; i++) {
+    for (var j = 0; j < seasons.length; j++) {
       var semester = new schema.Semester({year: i, season: seasons[j]});
-      semester.save().then(function(_){}).catch(function(_){});
+      semester.save().then(function(_) {}).catch(function(_) {});
     }
   }
 };
@@ -220,15 +219,15 @@ _.checkFormCompletion = (name, form) => {
 };
 
 /** @returns true if is multiform */
-_.isMultiform = (formName) => ["CS02", "SemesterProgressReport"].includes(formName);
+_.isMultiform = formName => ["CS02", "SemesterProgressReport"].includes(formName);
 
-  /**
-   * filterOut works just like the standard Array.filter function, but it mutates
-   * the original array by removing elements that pass the test function.
-   * @param {Array} arr
-   * @param {Function} test
-   * @returns
-   */
+/**
+ * filterOut works just like the standard Array.filter function, but it mutates
+ * the original array by removing elements that pass the test function.
+ * @param {Array} arr
+ * @param {Function} test
+ * @returns
+ */
 _.filterOut = (arr, test) => {
   const indiciesToRemove = [];
   const filteredArr = [];
@@ -283,11 +282,11 @@ _.validateFormData = (formData, formName) => { // TODO: divide this by formName 
     "rataComments",
     "employmentSignature",
     "employmentDateSigned"
-  ].forEach((key) => delete formData[key]);
+  ].forEach(key => delete formData[key]);
   return formData;
 };
 
-_.getYYYYMMDD = (str) => {
+_.getYYYYMMDD = str => {
   const date = new Date(str);
   if (isNaN(date)) {
     return "";
@@ -296,7 +295,7 @@ _.getYYYYMMDD = (str) => {
 };
 
 /** using an Express request object, creates a link to the website up to the top-level domain (does NOT include a '/' at the end) */
-_.linkHeader = (req) => `${req.protocol}://${process.env.hostname}`;
+_.linkHeader = req => `${req.protocol}://${process.env.hostname}`;
 
 /**
  * Crashes the server on purpose.
