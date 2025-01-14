@@ -15,7 +15,7 @@ var regexSlashes = /\/*\//ig;
 _.validateModelData = function (input, model) {
   var result = {};
   const m = model.schema.paths;
-  const isTruthy = (val) => val == "true" || val == "on";
+  const isTruthy = val => val == "true" || val == "on";
   for (var key in m) {
     if (
       input[key] !== undefined &&
@@ -101,7 +101,7 @@ _.allFieldsExist = function(input, model) {
   @return the document with text fields as regular expressions
 */
 
-_.makeRegexp = function (input) {
+_.makeRegexp = function(input) {
   for (var key in input) {
     if (input[key].constructor == Array) {
       if (input[key][0] == "string") {
@@ -120,7 +120,7 @@ _.makeRegexp = function (input) {
 };
 
 //used just once to initialize all possible semesters
-_.initializeAllSemesters = function () {
+_.initializeAllSemesters = function() {
   schema.Semester.find({}).deleteMany().exec();
   var seasons = schema.Semester.schema.path("season").enumValues;
   for (var i = 2018; i < 2040; i++) {
@@ -310,7 +310,7 @@ _.validateFormData = (formData, formName) => {
   return formData;
 };
 
-_.getYYYYMMDD = (str) => {
+_.getYYYYMMDD = str => {
   const date = new Date(str);
   if (isNaN(date)) {
     return "";
@@ -321,7 +321,7 @@ _.getYYYYMMDD = (str) => {
 };
 
 /** using an Express request object, creates a link to the website up to the top-level domain (does NOT include a '/' at the end) */
-_.linkHeader = (req) => `${req.protocol}://${process.env.hostname}`;
+_.linkHeader = req => `${req.protocol}://${process.env.hostname}`;
 
 /**
  * Crashes the server on purpose.
