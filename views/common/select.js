@@ -7,24 +7,29 @@ const defaultOpts = {
   values: [],
   required: false,
   blankLabel: "", // use null here to skip blank option entirely
-  optionValue: (value) => value,
-  optionLabel: (value) => value,
+  optionValue: value => value,
+  optionLabel: value => value,
   // null means no 'selected' attrs.
   // else should be a function from option value to 'selected' attr value
   optionSelected: null,
 };
 
-const makeOption = (opts) => {
+const makeOption = opts => {
   const { optionValue, optionLabel, optionSelected } = opts;
   const { option } = x;
-  const optionAttrs = (value) => ({
+  const optionAttrs = value => ({
     value: optionValue(value),
     selected: optionSelected != null && optionSelected(value) ? true : null,
   });
-  return (value) => option(optionAttrs(value), optionLabel(value));
+  return value => (
+    option(
+      optionAttrs(value),
+      optionLabel(value),
+    )
+  );
 };
 
-const select = (options) => {
+const select = options => {
   const opts = { ...defaultOpts, ...options };
   const { label, name, values, blankLabel } = opts;
   const required = opts.required || null;

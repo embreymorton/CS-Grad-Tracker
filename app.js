@@ -27,7 +27,7 @@ let auth0 = null;
 const mongoUrl = process.env.databaseString;
 
 const secret = process.env.sessionSecret;
-const store = MongoStore.create({ mongoUrl });
+const store = MongoStore.create({mongoUrl});
 const session = {
   secret,
   cookie: {},
@@ -109,6 +109,7 @@ app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")));
 //public static resource
 app.use(express.static(path.join(__dirname, "public")));
 
+
 if (process.env.mode == "production" || process.env.mode == "development") {
   const strategy = new Auth0Strategy(
     {
@@ -116,7 +117,7 @@ if (process.env.mode == "production" || process.env.mode == "development") {
       clientID: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       callbackURL:
-        process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback",
+        process.env.AUTH0_CALLBACK_URL || "http://localhost:8080/callback"
     },
     function (accessToken, refreshToken, extraParams, profile, done) {
       /**
@@ -148,7 +149,7 @@ if (process.env.mode == "production" || process.env.mode == "development") {
       var email = req.user._json.email;
       schema.Student.findOne({ email: email })
         .exec()
-        .then((result) => {
+        .then(result => {
           if (result != null) {
             req.session.userPID = result.pid;
             req.session.accessLevel = 1;
@@ -157,7 +158,7 @@ if (process.env.mode == "production" || process.env.mode == "development") {
           } else {
             schema.Faculty.findOne({ email: email })
               .exec()
-              .then((result) => {
+              .then(result => {
                 if (result != null) {
                   req.session.userPID = result.pid;
                   res.locals.user = result.csid;
@@ -213,7 +214,7 @@ if (process.env.mode == "production" || process.env.mode == "development") {
 } else if (process.env.mode == "testing") {
   schema.Semester.find({})
     .exec()
-    .then((result) => {
+    .then(result => {
       if (result.length == 0) {
         require("./controllers/util.js").initializeAllSemesters();
       }

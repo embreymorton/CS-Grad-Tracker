@@ -82,6 +82,20 @@ style_check:
   stage: test
   script:
     - npx eslint controllers/util.js
+    - npx eslint views/common/logout.js
+    - npx eslint views/common/select.js
+    - npx eslint views/common/semesterDropdown.js
+    - npx eslint views/semester/index.js
+    - npx eslint views/student/CS01.js
+    - npx eslint views/student/CS02.js
+    - npx eslint views/student/CS03.js
+    - npx eslint views/student/CS04.js
+    - npx eslint views/student/CS06.js
+    - npx eslint views/student/CS08.js
+    - npx eslint views/student/CS13.js
+    - npx eslint views/student/SemesterProgressReport.js
+    - npx eslint views/page.js
+    - npx eslint app.js
 
 unit_tests:
   image: cypress/base:16

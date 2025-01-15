@@ -1,91 +1,62 @@
-const {
-  dropdown,
-  makeOption,
-  input,
-  datalist,
-} = require("../common/baseComponents");
+const { dropdown, makeOption, input, datalist } = require("../common/baseComponents");
 
 // const semesterToMonths = {'SP': [1, 2, 3, 4], 'S1': [5], 'S2': [6, 7], 'FA': [8, 9, 10, 11, 12]}
-const monthToSemester = (month) => {
+const monthToSemester = month => {
   if (1 <= month && month <= 4) {
-    return "SPRING";
+    return "SP";
   } else if (5 <= month && month <= 5) {
-    return "SUMMER S1";
+    return "S1";
   } else if (6 <= month && month <= 7) {
-    return "SUMMER S2";
+    return "S2";
   } else {
-    return "FALL";
+    return "FA";
   }
 };
 
 /**
- *
+ * 
  * @param {String} name name of field in the schema
  * @param {Schema.Types.ObjectId} value `._id` property of the current semester schema object
  * @param {[SemesterSchema]} semesters list of semesters from opts object
  * @param {Boolean} isDisabled
  * @param {Boolean} isRequired
  * @param {String} placeholder text displayed when no option is selected
- * @returns
+ * @returns 
  */
-const semesterDropdown = (
-  name,
-  value,
-  semesters,
-  isDisabled,
-  {
-    isRequired = true,
-    placeholder = "Select a semester from the dropdown",
-  } = {}
-) => {
+const semesterDropdown = (name, value, semesters, isDisabled, {isRequired = true, placeholder = "Select a semester from the dropdown"} = {}) => {
   return dropdown(
-    name,
-    semesters.map((semester) =>
-      makeOption(
-        semester._id.toString(),
-        semester.semesterString,
-        value?.equals(semester._id)
-      )
-    ),
+    name, 
+    semesters.map(semester => makeOption(semester._id.toString(), semester.semesterString, value?.equals(semester._id))), 
     {
-      isDisabled,
+      isDisabled, 
       isRequired,
-      blankOption: placeholder,
+      blankOption: placeholder
     }
   );
 };
 
 /**
- *
+ * 
  * @param {String} name of field in schema
  * @param {String} value text stored in db for this name
- * @param {Boolean} isDisabled
+ * @param {Boolean} isDisabled 
  * @param {Boolean} isRequired
  * @param {String} placeholder
  * @param {Boolean} isSS_YYYY whether to only allow semesters in form (FA|SP|S1|S2) YYYY
  * @param {String} list id of datalist to include
- * @returns
+ * @returns 
  */
-const semesterInput = (
-  name,
-  value,
-  {
-    isDisabled = false,
-    isRequired = true,
-    placeholder = "Select a semester or type one in (FA|SP|S1|S2) YYYY format",
-    isSS_YYYY = true,
-    list = "semestersDatalist",
-  } = {}
-) => {
-  return input(name, value, {
-    isDisabled,
-    isRequired,
-    placeholder,
-    attrs: {
-      list,
-      ...(isSS_YYYY ? { pattern: "^(FA|SP|S1|S2) \\d\\d\\d\\d$" } : {}),
-    },
-  });
+const semesterInput = (name, value, {isDisabled = false, isRequired = true, placeholder = "Select a semester or type one in (FA|SP|S1|S2) YYYY format", isSS_YYYY = true, list = "semestersDatalist"} = {}) => {
+  return input(
+    name,
+    value,
+    {
+      isDisabled,
+      isRequired,
+      placeholder,
+      attrs: {list, ...(isSS_YYYY ? {pattern: "^(FA|SP|S1|S2) \\d\\d\\d\\d$"} : {})}
+    }
+  );
 };
 
 /**
@@ -103,14 +74,14 @@ const semesterDatalist = (back, forward = 0, id = "semestersDatalist") => {
   const list = [];
   let i = order.indexOf(currSemester);
   let yyyy = year - back;
-  for (i; i < order.length * (forward + back + 1); i++) {
+  for (i; i < order.length*(forward+back+1); i++) {
     const ss = order[i % order.length];
     list.push(`${ss} ${yyyy}`);
-    if (ss == order[order.length - 1]) {
+    if (ss == order[order.length-1]) {
       yyyy++;
     }
   }
 
-  return datalist(id, list.map((v) => [v, v]).reverse());
+  return datalist(id, list.map(v => [v, v]).reverse());
 };
-module.exports = { semesterDropdown, semesterInput, semesterDatalist };
+module.exports = {semesterDropdown, semesterInput, semesterDatalist};
